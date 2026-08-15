@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "id": "sorahn.sandustry-test-blocks",
   "name": "Sandustry Test Blocks",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "apiVersion": 1,
   "author": "sorahn",
   "entry": "entry.js",
