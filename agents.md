@@ -105,6 +105,10 @@ The implementation lives in `mod/entry.js` and `mod/modinfo.json`.
   with `api.ui.inject`. It reads registered element definitions for names, IDs,
   matter types, and colors. If injection or the React runtime is unavailable,
   it falls back to the text prompt.
+- `BLACKLISTED_ELEMENT_IDS` in `mod/entry.js` is the explicit blacklist for
+  unfinished or unwanted elements. The same check is applied to picker entries,
+  manual ID input, and runtime spawning. Definitions with `hidden: true` are
+  also excluded automatically.
 
 The source tracks three states by structure position:
 

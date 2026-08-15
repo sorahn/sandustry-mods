@@ -16,6 +16,11 @@ const SOURCE_SPRITE = "sandustryTestBlocksSourceSprite";
 const TRASH_SPRITE = "sandustryTestBlocksTrashSprite";
 const TICK_MS = 500;
 const DEFAULT_ELEMENT_ID = "sand";
+// Add unfinished or unwanted element IDs here. The picker, manual fallback,
+// and runtime source check all use this same list.
+const BLACKLISTED_ELEMENT_IDS = new Set([
+  // "unfinishedElementId",
+]);
 const SIZE = 4;
 const FOOTPRINT = [
   [0, 0, 0, 0],
@@ -50,12 +55,15 @@ const safe = (fn, fallback = null) => {
 
 const sourceKey = (structure) => `${structure.x},${structure.y}`;
 
+const isElementAllowed = (elementId, definition = null) => {
+  if (!elementId || BLACKLISTED_ELEMENT_IDS.has(elementId)) return false;
+  const resolved = definition || safe(() => api.elements.getDefinitionByType(api.elements.getTypeFromId(elementId)), null);
+  return !!resolved && resolved.hidden !== true;
+};
+
 const elementIdFromSource = (structure) => {
   const requested = structure.data?.elementId || DEFAULT_ELEMENT_ID;
-  return safe(() => {
-    api.elements.getTypeFromId(requested);
-    return requested;
-  }, DEFAULT_ELEMENT_ID);
+  return isElementAllowed(requested) ? requested : null;
 };
 
 const elementEntries = () =>
@@ -66,7 +74,7 @@ const elementEntries = () =>
         .map((type) => {
           const definition = api.elements.getDefinitionByType(type);
           const id = definition?.id;
-          if (!id) return null;
+          if (!id || !isElementAllowed(id, definition)) return null;
           const name = safe(() => api.i18n.getName(definition), id);
           const color =
             typeof definition.metaColor === "number"
@@ -260,9 +268,12 @@ const configureSource = async (structure) => {
       return;
     }
     const elementId = value.trim();
-    if (safe(() => api.elements.getTypeFromId(elementId), null) === null) {
+    if (
+      safe(() => api.elements.getTypeFromId(elementId), null) === null ||
+      !isElementAllowed(elementId)
+    ) {
       disabledSources.add(key);
-      api.ui.toast(`Unknown element ID: ${elementId}`);
+      api.ui.toast(`Element unavailable for spawning: ${elementId}`);
       return;
     }
 
