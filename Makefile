@@ -30,6 +30,7 @@ version:
 	node -e 'const fs=require("fs"); const part=process.argv[1]; const path="mod/modinfo.json"; const manifest=JSON.parse(fs.readFileSync(path,"utf8")); const version=manifest.version.split(".").map(Number); const index={major:0,minor:1,patch:2}[part]; if (version.length !== 3 || version.some(Number.isNaN)) throw new Error("modinfo version must be major.minor.patch"); version[index] += 1; for (let i=index+1;i<3;i+=1) version[i]=0; manifest.version=version.join("."); fs.writeFileSync(path, JSON.stringify(manifest,null,2)+"\n");' "$(word 2,$(MAKECMDGOALS))"
 	git add -- mod/modinfo.json
 	git commit -m "version incremented: v$$(node -p 'require("./mod/modinfo.json").version')" -- mod/modinfo.json
+	$(MAKE) install
 
 # These are argument targets for `make version major|minor|patch`.
 major minor patch:
