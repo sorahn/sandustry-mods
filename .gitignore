@@ -1,3 +1,4 @@
 # Generated mod packages
 *.zip
 .DS_Store
+resources/steam-mods
