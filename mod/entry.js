@@ -48,7 +48,8 @@ const FOOTPRINT = [
 
 const TEXT = {
   "structures|source|name": "Infinite Source",
-  "structures|source|description": "Creates an endless stream of the configured element.",
+  "structures|source|description":
+    "Creates an endless stream of the configured element.",
   "structures|trash|name": " Trash",
   "structures|trash|description": "An infinitely deep void for particle trash.",
 };
@@ -74,11 +75,18 @@ const sourceKey = (structure) => `${structure.x},${structure.y}`;
 
 const isElementAllowed = (elementId, definition = null) => {
   if (elementId && BLACKLISTED_ELEMENT_IDS.has(elementId)) return false;
-  const resolved = definition || safe(() => api.elements.getDefinitionByType(api.elements.getTypeFromId(elementId)), null);
+  const resolved =
+    definition ||
+    safe(
+      () =>
+        api.elements.getDefinitionByType(api.elements.getTypeFromId(elementId)),
+      null,
+    );
   return !!resolved && resolved.hidden !== true;
 };
 
-const isElementTypeAllowed = (elementType) => !BLACKLISTED_ELEMENT_TYPES.has(elementType);
+const isElementTypeAllowed = (elementType) =>
+  !BLACKLISTED_ELEMENT_TYPES.has(elementType);
 
 const elementIdFromSource = (structure) => {
   const requested = structure.data?.elementId || DEFAULT_ELEMENT_ID;
@@ -88,13 +96,25 @@ const elementIdFromSource = (structure) => {
 const elementTypeFromSource = (structure) => {
   const storedType = structure.data?.elementType;
   if (Number.isInteger(storedType)) {
-    const definition = safe(() => api.elements.getDefinitionByType(storedType), null);
-    return definition && definition.hidden !== true && isElementTypeAllowed(storedType) ? storedType : null;
+    const definition = safe(
+      () => api.elements.getDefinitionByType(storedType),
+      null,
+    );
+    return definition &&
+      definition.hidden !== true &&
+      isElementTypeAllowed(storedType)
+      ? storedType
+      : null;
   }
 
   const elementId = elementIdFromSource(structure);
-  const elementType = elementId === null ? null : safe(() => api.elements.getTypeFromId(elementId), null);
-  return elementType !== null && isElementTypeAllowed(elementType) ? elementType : null;
+  const elementType =
+    elementId === null
+      ? null
+      : safe(() => api.elements.getTypeFromId(elementId), null);
+  return elementType !== null && isElementTypeAllowed(elementType)
+    ? elementType
+    : null;
 };
 
 const elementEntries = () =>
@@ -107,7 +127,10 @@ const elementEntries = () =>
           const definition = api.elements.getDefinitionByType(type);
           const id = definition?.id || null;
           if (!definition || !isElementAllowed(id, definition)) return null;
-          const name = safe(() => api.i18n.getName(definition), id || `[type ${type}]`);
+          const name = safe(
+            () => api.i18n.getName(definition),
+            id || `[type ${type}]`,
+          );
           const color =
             typeof definition.metaColor === "number"
               ? `#${definition.metaColor.toString(16).padStart(6, "0")}`
@@ -120,9 +143,16 @@ const elementEntries = () =>
   );
 
 const matterName = (matterType) =>
-  ({ 1: "Solid", 2: "Liquid", 3: "Particle", 4: "Gas", 5: "Static", 6: "Slushy", 7: "Wisp", 8: "Powder" }[
-    matterType
-  ] || "Other");
+  ({
+    1: "Solid",
+    2: "Liquid",
+    3: "Particle",
+    4: "Gas",
+    5: "Static",
+    6: "Slushy",
+    7: "Wisp",
+    8: "Powder",
+  })[matterType] || "Other";
 
 const closePicker = (value) => {
   const current = pickerState;
@@ -151,9 +181,15 @@ const ElementPicker = () => {
       !normalizedQuery ||
       entry.name.toLowerCase().includes(normalizedQuery) ||
       (entry.id || "").toLowerCase().includes(normalizedQuery);
-    return matchesQuery && (matter === "All" || matterName(entry.matterType) === matter);
+    return (
+      matchesQuery &&
+      (matter === "All" || matterName(entry.matterType) === matter)
+    );
   });
-  const matters = ["All", ...new Set(elementEntries().map((entry) => matterName(entry.matterType)))];
+  const matters = [
+    "All",
+    ...new Set(elementEntries().map((entry) => matterName(entry.matterType))),
+  ];
   const buttonStyle = (active) => ({
     background: active ? "rgba(255, 231, 0, 0.1)" : "#000",
     border: `1px solid ${active ? "rgba(255, 231, 0, 0.5)" : "rgba(226, 232, 240, 0.25)"}`,
@@ -197,8 +233,16 @@ const ElementPicker = () => {
           justifyContent: "space-between",
         },
       },
-      UIReact.createElement("span", { style: { color: "#fff", fontSize: 12, opacity: 0.7 } }, "Source"),
-      UIReact.createElement("button", { style: buttonStyle(false), onClick: () => closePicker(null) }, "Cancel"),
+      UIReact.createElement(
+        "span",
+        { style: { color: "#fff", fontSize: 12, opacity: 0.7 } },
+        "Source",
+      ),
+      UIReact.createElement(
+        "button",
+        { style: buttonStyle(false), onClick: () => closePicker(null) },
+        "Cancel",
+      ),
     ),
     UIReact.createElement(
       "div",
@@ -207,46 +251,49 @@ const ElementPicker = () => {
           padding: "12px 16px",
           borderBottom: "1px solid #1e293b",
           display: "flex",
-          gap: 16,
-          alignItems: "center",
+          flexDirection: "column",
+          gap: 8,
+          alignItems: "stretch",
         },
       },
       UIReact.createElement(
         "div",
-        { style: { display: "flex", gap: 4, flexShrink: 0 } },
-        UIReact.createElement("button", { style: buttonStyle(matter === "All"), onClick: () => setMatter("All") }, "✓ Allow"),
-        UIReact.createElement("button", { style: buttonStyle(false), onClick: () => closePicker(null) }, "✕ Cancel"),
+        { style: { display: "flex", alignItems: "center" } },
+        UIReact.createElement("input", {
+          autoFocus: true,
+          value: query,
+          placeholder: "Search elements...",
+          maxLength: 64,
+          onChange: (event) => setQuery(event.target.value),
+          style: {
+            flex: 1,
+            width: "100%",
+            boxSizing: "border-box",
+            padding: "6px 12px",
+            background: "rgba(0, 0, 0, 0.6)",
+            border: "1px solid #334155",
+            borderRadius: 4,
+            color: "#fff",
+            fontSize: 12,
+            outline: "none",
+          },
+        }),
       ),
       UIReact.createElement(
         "div",
-        { style: { display: "flex", gap: 4, flexShrink: 0 } },
-      matters.map((name) =>
-        UIReact.createElement(
-          "button",
-          { key: name, style: buttonStyle(matter === name), onClick: () => setMatter(name) },
-          name,
+        { style: { display: "flex", gap: 4, flexWrap: "wrap" } },
+        matters.map((name) =>
+          UIReact.createElement(
+            "button",
+            {
+              key: name,
+              style: buttonStyle(matter === name),
+              onClick: () => setMatter(name),
+            },
+            name,
+          ),
         ),
       ),
-      ),
-      UIReact.createElement("input", {
-        autoFocus: true,
-        value: query,
-        placeholder: "Search elements...",
-        maxLength: 64,
-        onChange: (event) => setQuery(event.target.value),
-        style: {
-          flex: 1,
-          minWidth: 0,
-          boxSizing: "border-box",
-          padding: "6px 12px",
-          background: "rgba(0, 0, 0, 0.6)",
-          border: "1px solid #334155",
-          borderRadius: 4,
-          color: "#fff",
-          fontSize: 12,
-          outline: "none",
-        },
-      }),
     ),
     UIReact.createElement(
       "div",
@@ -255,7 +302,7 @@ const ElementPicker = () => {
           flex: 1,
           overflowY: "auto",
           maxHeight: 480,
-          padding: "8px 16px",
+          padding: "8px 16px 16px",
           display: "grid",
           gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
           gap: 6,
@@ -274,7 +321,10 @@ const ElementPicker = () => {
               minHeight: 32,
               padding: "6px 8px",
               textAlign: "left",
-              background: entry.id === pickerState.current ? "rgba(255, 231, 0, 0.1)" : "rgba(0, 0, 0, 0.4)",
+              background:
+                entry.id === pickerState.current
+                  ? "rgba(255, 231, 0, 0.1)"
+                  : "rgba(0, 0, 0, 0.4)",
               border: `1px solid ${entry.id === pickerState.current ? "#ffe700" : "#334155"}`,
               borderRadius: 4,
               color: entry.id === pickerState.current ? "#ffe700" : "#cbd5e1",
@@ -283,25 +333,35 @@ const ElementPicker = () => {
             },
           },
           UIReact.createElement("span", {
-            style: { width: 12, height: 12, flex: "0 0 auto", background: entry.color },
+            style: {
+              width: 12,
+              height: 12,
+              flex: "0 0 auto",
+              background: entry.color,
+            },
           }),
-          UIReact.createElement("span", { style: { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" } }, entry.name),
-          entry.id === pickerState.current ? UIReact.createElement("span", { style: { marginLeft: "auto", color: "#ffe700", fontSize: 10 } }, "✓") : null,
+          UIReact.createElement(
+            "span",
+            {
+              style: {
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              },
+            },
+            entry.name,
+          ),
+          entry.id === pickerState.current
+            ? UIReact.createElement(
+                "span",
+                {
+                  style: { marginLeft: "auto", color: "#ffe700", fontSize: 10 },
+                },
+                "✓",
+              )
+            : null,
         ),
       ),
-    ),
-    UIReact.createElement(
-      "div",
-      { style: { padding: "8px 16px", borderTop: "1px solid #1e293b", minHeight: 28 } },
-      pickerState.current
-        ? UIReact.createElement(
-            "div",
-            { style: { display: "flex", alignItems: "center", gap: 8, fontSize: 12 } },
-            UIReact.createElement("span", { style: { width: 12, height: 12, background: elementEntries().find((entry) => entry.id === pickerState.current)?.color || "#f4a460" } }),
-            UIReact.createElement("span", { style: { color: "#fff" } }, pickerState.current),
-            UIReact.createElement("span", { style: { color: "#34d399", marginLeft: 8 } }, "✓ Allow"),
-          )
-        : null,
     ),
   );
 };
@@ -352,10 +412,15 @@ const configureSource = async (structure) => {
       return;
     }
     if (typeof value === "object" && Number.isInteger(value.type)) {
-      const definition = safe(() => api.elements.getDefinitionByType(value.type), null);
+      const definition = safe(
+        () => api.elements.getDefinitionByType(value.type),
+        null,
+      );
       if (!definition || !isElementAllowed(value.id, definition)) {
         disabledSources.add(key);
-        api.ui.toast(`Element unavailable for spawning: ${value.name || value.type}`);
+        api.ui.toast(
+          `Element unavailable for spawning: ${value.name || value.type}`,
+        );
         return;
       }
 
@@ -371,14 +436,22 @@ const configureSource = async (structure) => {
 
     const elementId = value.trim();
     const elementType = safe(() => api.elements.getTypeFromId(elementId), null);
-    if (elementType === null || !isElementTypeAllowed(elementType) || !isElementAllowed(elementId)) {
+    if (
+      elementType === null ||
+      !isElementTypeAllowed(elementType) ||
+      !isElementAllowed(elementId)
+    ) {
       disabledSources.add(key);
       api.ui.toast(`Element unavailable for spawning: ${elementId}`);
       return;
     }
 
     disabledSources.delete(key);
-    api.structures.setData(structure, { elementId }, { propagateToWorkers: true });
+    api.structures.setData(
+      structure,
+      { elementId },
+      { propagateToWorkers: true },
+    );
     api.ui.toast(`Source configured to emit ${elementId}`);
   } catch (error) {
     console.error(`[${MOD_ID}] source configuration failed:`, error);
@@ -401,7 +474,8 @@ const sourceTick = () => {
     if (!configuredSources.has(key)) {
       configuredSources.add(key);
       const needsConfiguration =
-        !structure.data?.elementId && !Number.isInteger(structure.data?.elementType);
+        !structure.data?.elementId &&
+        !Number.isInteger(structure.data?.elementType);
       if (needsConfiguration) {
         api.structures.setData(
           structure,
@@ -441,10 +515,16 @@ const sourceTick = () => {
 
 const trashTick = () => {
   api.structures.forEachOfType(TRASH_ID, (structure) => {
-    api.grid.forEachCellInRect(structure.x, structure.y, SIZE, SIZE, (cellX, cellY) => {
-      const info = api.elements.getInfoAtCell(cellX, cellY);
-      if (info) api.elements.removeAtCellWhenIdle(cellX, cellY);
-    });
+    api.grid.forEachCellInRect(
+      structure.x,
+      structure.y,
+      SIZE,
+      SIZE,
+      (cellX, cellY) => {
+        const info = api.elements.getInfoAtCell(cellX, cellY);
+        if (info) api.elements.removeAtCellWhenIdle(cellX, cellY);
+      },
+    );
   });
 };
 
@@ -499,7 +579,6 @@ const setup = async () => {
       }
     },
   });
-
 };
 
 try {
