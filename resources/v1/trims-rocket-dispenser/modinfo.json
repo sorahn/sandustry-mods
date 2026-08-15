@@ -1,0 +1,12 @@
+{
+  "manifestVersion": 1,
+  "id": "trim.rocket-dispenser",
+  "name": "Trim's Rocket Dispenser",
+  "version": "1.0.0",
+  "apiVersion": 1,
+  "author": "Trim",
+  "entry": "entry.js",
+  "description": "A Pyro Dispenser that fires rockets instead of flames. Place it facing any of the four directions and it launches a rocket every 5 seconds, drawing 400 energy per shot from your power network. Unlocked with a 5,000 gold tech node placed directly after Copper Molds. Automated excavation for anything you can point it at.",
+  "dependencies": [],
+  "loadOrder": 0
+}

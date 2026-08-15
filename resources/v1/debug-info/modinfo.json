@@ -1,0 +1,62 @@
+{
+	"manifestVersion": 1,
+	"id": "uolkx.debug-toggle",
+	"name": "Debug Toggle",
+	"version": "0.1.0",
+	"apiVersion": 1,
+	"entry": "main.js",
+	"author": "uolkx",
+	"description": "ALPHA - early version, expect rough edges and breaking changes between updates. Feedback and bug reports are very welcome.\n\nSandustry ships with a full debug menu - cell inspector, lighting overlays, chunk borders, authorization zones. It all works. The problem is that the checkbox meant to switch it on renders on an options tab the game never displays, so there is no way to reach it in the interface.\n\nUntil now the only way in was opening developer tools and typing a localStorage command by hand. This mod puts those switches in the settings instead.\n\nWHAT YOU CAN TURN ON\n- Debug active: the debug panel, the debug brush item and the debug controls\n- Draw chunks: chunk boundary overlay, handy for seeing how the simulation is split\n- Cell inspector: live readout of the cell under your cursor\n- Show lights: visualises light sources\n- Authorization zones: draws where building is permitted\n- Show filters: filter visualisation\n- Don't draw structures: hides structures to see the material underneath\n\nWHEN CHANGES APPLY\nDebug active and Draw chunks are read by the game only while it boots, so they are saved immediately but take hold on the next launch. That applies to switching them OFF as well: debug mode wires itself up during startup - it puts an item in your inventory and binds shortcuts - and none of that can be removed by clearing the flag afterwards. So turning debug off also needs a restart. The other flags are read every frame, so in principle they can apply instantly - but only if the mod can reach the live config object rather than a copy of it. In practice, expect to restart. The mod checks whether its write actually landed and the notification tells you which case you got, so you are never left guessing.\n\nNOTE\nThese are developer tools that shipped inside the game, not something this mod adds. They are unsupported, and a future patch could rename or rewire them.\n\nThe game tracks a cheatsUsed flag on saves. I have not mapped exactly which debug actions set it, so if you care about a clean save, try this on a copy first.",
+	"dependencies": [],
+	"loadOrder": 0,
+	"configSchema": {
+		"enabled": {
+			"type": "boolean",
+			"default": true,
+			"labelKey": "Mod enabled",
+			"descriptionKey": "Turn the mod off without unsubscribing. Stops applying every debug flag below."
+		},
+		"debugActive": {
+			"type": "boolean",
+			"default": false,
+			"labelKey": "Debug active",
+			"descriptionKey": "Debug panel, debug brush and debug controls. Restart the game after changing this, in either direction."
+		},
+		"drawChunks": {
+			"type": "boolean",
+			"default": false,
+			"labelKey": "Draw chunks",
+			"descriptionKey": "Overlay showing chunk boundaries. Restart the game after changing this, in either direction."
+		},
+		"cellInspector": {
+			"type": "boolean",
+			"default": false,
+			"labelKey": "Cell inspector",
+			"descriptionKey": "Live readout of the cell under the cursor. May need a game restart to take effect."
+		},
+		"showLights": {
+			"type": "boolean",
+			"default": false,
+			"labelKey": "Show lights",
+			"descriptionKey": "Visualises light sources in the world. May need a game restart to take effect."
+		},
+		"showAuthorizationZones": {
+			"type": "boolean",
+			"default": false,
+			"labelKey": "Show authorization zones",
+			"descriptionKey": "Draws where building is permitted. May need a game restart to take effect."
+		},
+		"showFilters": {
+			"type": "boolean",
+			"default": false,
+			"labelKey": "Show filters",
+			"descriptionKey": "Filter visualisation. May need a game restart to take effect."
+		},
+		"doNotDrawStructures": {
+			"type": "boolean",
+			"default": false,
+			"labelKey": "Hide structures",
+			"descriptionKey": "Stops drawing structures so you can see the material underneath. May need a game restart to take effect."
+		}
+	}
+}
