@@ -190,6 +190,10 @@ const ElementPicker = () => {
     "All",
     ...new Set(elementEntries().map((entry) => matterName(entry.matterType))),
   ];
+  const isSelected = (entry) =>
+    entry.id === pickerState.current ||
+    (pickerState.currentType !== null &&
+      entry.type === pickerState.currentType);
   const tabClass = (active) =>
     active
       ? "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200 text-[#ffe700] border-opacity-50 bg-[#ffe700]/10"
@@ -283,10 +287,9 @@ const ElementPicker = () => {
             {
               key: entry.id || `type-${entry.type}`,
               onClick: () => closePicker(entry),
-              className:
-                entry.id === pickerState.current
-                  ? "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-[#ffe700] bg-[#ffe700]/10"
-                  : "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-slate-700 hover:border-slate-500 bg-black/40 hover:bg-black/60",
+              className: isSelected(entry)
+                ? "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-[#ffe700] bg-[#ffe700]/10"
+                : "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-slate-700 hover:border-slate-500 bg-black/40 hover:bg-black/60",
             },
             UIReact.createElement("span", {
               className: "w-3 h-3 flex-shrink-0",
@@ -295,14 +298,13 @@ const ElementPicker = () => {
             UIReact.createElement(
               "span",
               {
-                className:
-                  entry.id === pickerState.current
-                    ? "text-xs truncate transition-colors text-[#ffe700]"
-                    : "text-xs truncate transition-colors text-slate-300 group-hover:text-white",
+                className: isSelected(entry)
+                  ? "text-xs truncate transition-colors text-[#ffe700]"
+                  : "text-xs truncate transition-colors text-slate-300 group-hover:text-white",
               },
               entry.name,
             ),
-            entry.id === pickerState.current
+            isSelected(entry)
               ? UIReact.createElement(
                   "span",
                   { className: "ml-auto text-[#ffe700] text-[10px]" },
@@ -332,7 +334,11 @@ const registerPicker = () => {
 const openElementPicker = async (current) => {
   if (registerPicker()) {
     return new Promise((resolve) => {
-      pickerState = { current, resolve };
+      pickerState = {
+        current,
+        currentType: safe(() => api.elements.getTypeFromId(current), null),
+        resolve,
+      };
       if (pickerRepaint) pickerRepaint((value) => value + 1);
     });
   }
