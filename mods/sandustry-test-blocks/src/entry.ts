@@ -54,19 +54,55 @@ const TEXT = {
   "structures|trash|description": "An infinitely deep void for particle trash.",
 };
 
-const configuredSources = new Set();
-const sourceSelections = new Map();
-const configuringSources = new Set();
-const disabledSources = new Set();
+type ElementSelection = { id: string | null; type: number | null };
+type ValidElementSelection = { id: string | null; type: number };
+type ElementEntry = ValidElementSelection & {
+  name: string;
+  color: string;
+  matterType: number | undefined;
+};
+type PickerState = {
+  current: string | null;
+  currentType: number | null;
+  minimized: boolean;
+  resolve: ((value: ElementSelection | null) => void) | null;
+};
+type FocusableButtonProps = {
+  id: string;
+  onActivate: () => void;
+  neighbors?: Record<string, string | undefined>;
+  className?: string;
+  children?: any;
+  [key: string]: unknown;
+};
+type ElementGridButtonProps = {
+  entry: ElementEntry;
+  index: number;
+  entries: ElementEntry[];
+  selected: boolean;
+  onSelect: () => void;
+};
+type CurrentPickerEntry = {
+  id: string | null;
+  type: number | null;
+  name: string;
+  color: string;
+  matterType?: number;
+};
+
+const configuredSources = new Set<string>();
+const sourceSelections = new Map<string, ElementSelection>();
+const configuringSources = new Set<string>();
+const disabledSources = new Set<string>();
 const PICKER_ID = `${MOD_ID}-element-picker`;
-let pickerState = null;
+let pickerState: PickerState | null = null;
 let pickerOverlayReady = false;
-let pickerRepaint = null;
-let pickerPromise = null;
-let lastElementSelection = null;
+let pickerRepaint: ((update: (value: number) => number) => void) | null = null;
+let pickerPromise: Promise<ElementSelection | null> | null = null;
+let lastElementSelection: ElementSelection | null = null;
 const UIReact = sandkit.react ?? null;
 
-const safe = (fn, fallback = null) => {
+const safe = <T>(fn: () => T, fallback: T | null = null): T | null => {
   try {
     return fn();
   } catch (error) {
@@ -74,15 +110,18 @@ const safe = (fn, fallback = null) => {
   }
 };
 
-const sourceKey = (structure) => `${structure.x},${structure.y}`;
+const sourceKey = (structure: SandustryStructure) => `${structure.x},${structure.y}`;
 
-const selectionData = (selection) => ({
+const selectionData = (selection: ElementSelection): SandustryStructureData => ({
   elementId: selection.id || null,
   elementType: selection.type,
 });
 
-const validElementSelection = (selection) => {
-  if (!selection || !Number.isInteger(selection.type)) return null;
+const validElementSelection = (
+  selection: ElementSelection | null | undefined,
+): ValidElementSelection | null => {
+  if (!selection || typeof selection.type !== "number" || !Number.isInteger(selection.type))
+    return null;
   const definition = safe(() => api.elements.getDefinitionByType(selection.type), null);
   if (!definition || !isElementTypeAllowed(selection.type)) return null;
   if (!isElementAllowed(selection.id, definition)) return null;
@@ -109,10 +148,13 @@ const getLastElement = () => {
     candidate = { type: saved, id: null };
   }
 
-  return validElementSelection(candidate) || validElementSelection(lastElementSelection);
+  return (
+    validElementSelection(candidate as ElementSelection | null) ||
+    validElementSelection(lastElementSelection)
+  );
 };
 
-const rememberElement = (selection) => {
+const rememberElement = (selection: ElementSelection) => {
   const valid = validElementSelection(selection);
   if (valid) {
     lastElementSelection = valid;
@@ -135,15 +177,15 @@ const defaultElementSelection = () => {
   );
 };
 
-const sourceElementSelection = (structure) => {
+const sourceElementSelection = (structure: SandustryStructure) => {
   if (Number.isInteger(structure.data?.elementType)) {
     const storedId = structure.data?.elementId;
+    const elementType = structure.data?.elementType;
     const idMatchesType =
-      storedId &&
-      safe(() => api.elements.getTypeFromId(storedId), null) === structure.data.elementType;
+      storedId && safe(() => api.elements.getTypeFromId(storedId), null) === elementType;
     return validElementSelection({
       id: idMatchesType ? storedId : null,
-      type: structure.data.elementType,
+      type: elementType ?? null,
     });
   }
 
@@ -158,7 +200,10 @@ const sourceElementSelection = (structure) => {
   return defaultElementSelection();
 };
 
-const isElementAllowed = (elementId, definition = null) => {
+const isElementAllowed = (
+  elementId: string | null | undefined,
+  definition: SandustryElementDefinition | null = null,
+) => {
   if (elementId && BLACKLISTED_ELEMENT_IDS.has(elementId)) return false;
   const resolved =
     definition ||
@@ -166,16 +211,16 @@ const isElementAllowed = (elementId, definition = null) => {
   return !!resolved && resolved.hidden !== true;
 };
 
-const isElementTypeAllowed = (elementType) => !BLACKLISTED_ELEMENT_TYPES.has(elementType);
+const isElementTypeAllowed = (elementType: number) => !BLACKLISTED_ELEMENT_TYPES.has(elementType);
 
-const elementIdFromSource = (structure) => {
+const elementIdFromSource = (structure: SandustryStructure) => {
   const requested = structure.data?.elementId || DEFAULT_ELEMENT_ID;
   return isElementAllowed(requested) ? requested : null;
 };
 
-const elementTypeFromSource = (structure) => {
+const elementTypeFromSource = (structure: SandustryStructure) => {
   const storedType = structure.data?.elementType;
-  if (Number.isInteger(storedType)) {
+  if (typeof storedType === "number" && Number.isInteger(storedType)) {
     const definition = safe(() => api.elements.getDefinitionByType(storedType), null);
     return definition && definition.hidden !== true && isElementTypeAllowed(storedType)
       ? storedType
@@ -188,8 +233,8 @@ const elementTypeFromSource = (structure) => {
   return elementType !== null && isElementTypeAllowed(elementType) ? elementType : null;
 };
 
-const elementEntries = () =>
-  safe(
+const elementEntries = (): ElementEntry[] =>
+  safe<ElementEntry[]>(
     () =>
       api.elements
         .getRegisteredTypes()
@@ -198,35 +243,42 @@ const elementEntries = () =>
           const definition = api.elements.getDefinitionByType(type);
           const id = definition?.id || null;
           if (!definition || !isElementAllowed(id, definition)) return null;
-          const name = safe(() => api.i18n.getName(definition), id || `[type ${type}]`);
+          const name =
+            safe(() => api.i18n.getName(definition), id || `[type ${type}]`) ||
+            id ||
+            `[type ${type}]`;
           const color =
             typeof definition.metaColor === "number"
               ? `#${definition.metaColor.toString(16).padStart(6, "0")}`
               : "#9aa7b5";
           return { id, type, name, color, matterType: definition.matterType };
         })
-        .filter(Boolean)
+        .filter((entry): entry is ElementEntry => entry !== null)
         .sort((a, b) => a.name.localeCompare(b.name)),
     [],
-  );
+  ) || [];
 
-const matterName = (matterType) =>
-  ({
-    1: "Solid",
-    2: "Liquid",
-    3: "Particle",
-    4: "Gas",
-    5: "Static",
-    6: "Slushy",
-    7: "Wisp",
-    8: "Powder",
-  })[matterType] || "Other";
+const matterName = (matterType: number | undefined) =>
+  (
+    ({
+      1: "Solid",
+      2: "Liquid",
+      3: "Particle",
+      4: "Gas",
+      5: "Static",
+      6: "Slushy",
+      7: "Wisp",
+      8: "Powder",
+    }) as Record<number, string>
+  )[matterType ?? 0] || "Other";
 
-const closePicker = (value) => {
+const closePicker = (value: unknown) => {
   const current = pickerState;
   if (!current) return;
   const selected =
-    value && typeof value === "object" && Number.isInteger(value.type) ? value : null;
+    value && typeof value === "object" && Number.isInteger((value as ElementSelection).type)
+      ? (value as ElementSelection)
+      : null;
   pickerState = {
     ...current,
     current: selected?.id ?? current.current,
@@ -236,15 +288,16 @@ const closePicker = (value) => {
   };
   const resolve = current.resolve;
   pickerPromise = null;
-  if (resolve) resolve(value);
+  if (resolve) resolve(selected);
   if (pickerRepaint) pickerRepaint((value) => value + 1);
 };
 
 const expandPicker = () => {
-  if (!pickerState || !pickerState.minimized) return;
-  pickerState = { ...pickerState, minimized: false };
-  pickerPromise = new Promise((resolve) => {
-    pickerState = { ...pickerState, resolve };
+  const state = pickerState;
+  if (!state || !state.minimized) return;
+  pickerState = { ...state, minimized: false };
+  pickerPromise = new Promise<ElementSelection | null>((resolve) => {
+    pickerState = { ...state, minimized: false, resolve };
   });
   if (pickerRepaint) pickerRepaint((value) => value + 1);
 };
@@ -257,7 +310,15 @@ const minimizePicker = () => {
 
 const NAV_SCOPE = `${PICKER_ID}-scope`;
 
-const FocusableButton = ({ id, onActivate, neighbors, className = "", children, ...props }) => {
+const FocusableButton = ({
+  id,
+  onActivate,
+  neighbors,
+  className = "",
+  children,
+  ...props
+}: FocusableButtonProps) => {
+  if (!UIReact) return null;
   const navigation = api.ui.navigation;
   const focusable = navigation.useFocusable({
     id,
@@ -281,7 +342,14 @@ const FocusableButton = ({ id, onActivate, neighbors, className = "", children, 
   );
 };
 
-const ElementGridButton = ({ entry, index, entries, selected, onSelect }) => {
+const ElementGridButton = ({
+  entry,
+  index,
+  entries,
+  selected,
+  onSelect,
+}: ElementGridButtonProps) => {
+  if (!UIReact) return null;
   const id = `${PICKER_ID}-element-${entry.id || `type-${entry.type}`}`;
   const column = index % 4;
   const neighbors = {
@@ -337,17 +405,17 @@ const ElementGridButton = ({ entry, index, entries, selected, onSelect }) => {
   );
 };
 
-const currentPickerEntry = () => {
-  if (!pickerState) return null;
+const currentPickerEntry = (): CurrentPickerEntry | null => {
+  const state = pickerState;
+  if (!state) return null;
   return (
     elementEntries().find(
       (entry) =>
-        entry.type === pickerState.currentType ||
-        (entry.id !== null && entry.id === pickerState.current),
+        entry.type === state.currentType || (entry.id !== null && entry.id === state.current),
     ) || {
-      id: pickerState.current,
-      type: pickerState.currentType,
-      name: pickerState.current || DEFAULT_ELEMENT_ID,
+      id: state.current,
+      type: state.currentType,
+      name: state.current || DEFAULT_ELEMENT_ID,
       color: "#9aa7b5",
     }
   );
@@ -355,7 +423,7 @@ const currentPickerEntry = () => {
 
 const selectedActionIsSource = () => {
   if (!api.action) return null;
-  const selected = safe(() => api.action.getSelected(), null);
+  const selected = safe(() => api.action?.getSelected(), null);
   return selected?.id === SOURCE_ID;
 };
 
@@ -385,6 +453,7 @@ const syncPickerToSelectedAction = () => {
 };
 
 const ElementPicker = () => {
+  if (!UIReact) return null;
   const [query, setQuery] = UIReact.useState("");
   const [matter, setMatter] = UIReact.useState("All");
   const [, bump] = UIReact.useState(0);
@@ -413,7 +482,7 @@ const ElementPicker = () => {
   const searchFocus = api.ui.navigation.useFocusable({
     id: `${PICKER_ID}-search`,
     scope: NAV_SCOPE,
-    onActivate: (element) => element?.focus(),
+    onActivate: (element: HTMLElement | null) => element?.focus(),
     neighbors: {
       up: `${PICKER_ID}-minimize`,
       down: `${PICKER_ID}-matter-All`,
@@ -422,6 +491,7 @@ const ElementPicker = () => {
   });
 
   if (!pickerState) return null;
+  const picker = pickerState;
 
   if (pickerState.minimized) {
     const selected = currentPickerEntry();
@@ -469,10 +539,10 @@ const ElementPicker = () => {
     "All",
     ...new Set(elementEntries().map((entry) => matterName(entry.matterType))),
   ];
-  const isSelected = (entry) =>
-    (entry.id !== null && entry.id === pickerState.current) ||
-    (pickerState.currentType !== null && entry.type === pickerState.currentType);
-  const tabClass = (active) =>
+  const isSelected = (entry: ElementEntry): boolean =>
+    (entry.id !== null && entry.id === picker.current) ||
+    (picker.currentType !== null && entry.type === picker.currentType);
+  const tabClass = (active: boolean) =>
     active
       ? "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200 text-[#ffe700] border-opacity-50 bg-[#ffe700]/10"
       : "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200 text-white border-opacity-25 hover:text-[#ffe700] hover:border-opacity-0 bg-black";
@@ -601,10 +671,12 @@ const registerPicker = () => {
   }
 };
 
-const openElementPicker = async (current) => {
+const openElementPicker = async (
+  current: ElementSelection,
+): Promise<string | ElementSelection | null> => {
   if (registerPicker()) {
     if (pickerState && pickerState.minimized) {
-      return currentPickerEntry();
+      return currentPickerEntry() as ElementSelection | null;
     }
     if (pickerPromise) return pickerPromise;
 
@@ -629,13 +701,17 @@ const openElementPicker = async (current) => {
   );
 };
 
-const configureSource = async (structure, initialSelection) => {
+const configureSource = async (
+  structure: SandustryStructure,
+  initialSelection: ElementSelection | null,
+) => {
   const key = sourceKey(structure);
   if (configuringSources.has(key)) return;
   configuringSources.add(key);
 
   try {
-    const current = initialSelection || sourceElementSelection(structure);
+    const current =
+      initialSelection || sourceElementSelection(structure) || defaultElementSelection();
     const value = await openElementPicker(current);
 
     // Closing the dialog keeps the default. A bad ID is also rejected rather
@@ -662,6 +738,7 @@ const configureSource = async (structure, initialSelection) => {
       return;
     }
 
+    if (typeof value !== "string") return;
     const elementId = value.trim();
     const elementType = safe(() => api.elements.getTypeFromId(elementId), null);
     if (
@@ -693,7 +770,7 @@ const configureSource = async (structure, initialSelection) => {
 
 const sourceTick = () => {
   syncPickerToSelectedAction();
-  const live = new Set();
+  const live = new Set<string>();
 
   api.structures.forEachOfType(SOURCE_ID, (structure) => {
     const key = sourceKey(structure);
@@ -722,7 +799,7 @@ const sourceTick = () => {
     }
 
     const elementType = sourceSelections.get(key)?.type ?? elementTypeFromSource(structure);
-    if (elementType === null) return;
+    if (typeof elementType !== "number") return;
 
     // Fill one complete 4x4 batch directly below the structure. Occupied
     // output cells are left alone and retried on later trigger ticks.

@@ -16,8 +16,8 @@ from the demo mod, renamed to `SourceBlock.png` and `Trash.png`.
 
 Each active mod is isolated under `mods/<name>` with its source, manifest, and
 assets. Shared build rules live in `make/mod.mk`; reference material remains
-under `resources/`. The current entrypoint is still JavaScript during the
-toolchain migration. TypeScript/TSX conversion is the next mod-specific step.
+under `resources/`. The Infinite Source/Trash entrypoint is TypeScript and
+compiles to the plain JavaScript file Sandustry expects.
 
 ## Packaging
 
