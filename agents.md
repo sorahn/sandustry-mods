@@ -70,10 +70,13 @@ with required `labelKey` values. Runtime values are available through
 `api.settings.get`, `api.settings.getAll`, and `api.settings.onChange`.
 
 The project currently uses a placement-time prompt instead of an undocumented
-native structure configuration panel. On first placement, Source asks for an
-element ID, defaulting to `sand`. A valid ID is stored in structure data as
-`elementId`. Canceling or entering an invalid ID disables that Source rather
-than silently emitting Sand.
+native structure configuration panel. On first placement, Source opens a custom
+element picker modeled on the game's filter picker: searchable element grid,
+matter-type filters, color swatches, and cancel behavior. A valid ID is stored
+in structure data as `elementId`. Canceling or entering an invalid ID disables
+that Source rather than silently emitting Sand. If the runtime does not expose
+React or the expected modal overlay slot, the code falls back to the text
+prompt.
 
 ## Current implementation behavior
 
@@ -98,6 +101,10 @@ The implementation lives in `mod/entry.js` and `mod/modinfo.json`.
   `tickInterval: 500`. The earlier 100 ms interval produced material too
   quickly.
 - Trash scans and removes elements throughout its 4×4 footprint every trigger.
+- The picker uses the proven Steam-mod pattern `const React = sandkit.react`
+  with `api.ui.inject`. It reads registered element definitions for names, IDs,
+  matter types, and colors. If injection or the React runtime is unavailable,
+  it falls back to the text prompt.
 
 The source tracks three states by structure position:
 
