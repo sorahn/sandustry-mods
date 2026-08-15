@@ -1,0 +1,12 @@
+{
+  "manifestVersion": 1,
+  "id": "sorahn.sandustry-test-blocks",
+  "name": "Sandustry Test Blocks",
+  "version": "0.1.0",
+  "apiVersion": 1,
+  "author": "sorahn",
+  "entry": "entry.js",
+  "description": "Adds an infinite Source block and a Trash block to the Misc buildings menu.",
+  "dependencies": [],
+  "loadOrder": 0
+}
