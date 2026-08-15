@@ -19,8 +19,25 @@ const DEFAULT_ELEMENT_ID = "sand";
 // Add unfinished or unwanted element IDs here. The picker, manual fallback,
 // and runtime source check all use this same list.
 const BLACKLISTED_ELEMENT_IDS = new Set([
-  // "unfinishedElementId",
+  "caulk",
+  "cloud",
+  "coolant",
+  "growingVoidSeed",
+  "hyperpressure",
+  "oil",
+  "pressurizedWater",
+  "pyronol",
+  "reactorCore",
+  "retroConsoleCasing",
+  "retroConsolePixelOff",
+  "retroConsolePixelOn",
+  "slowFlow",
+  "sunsand",
+  "waterPressure",
 ]);
+// Core elements without a string ID are filtered by numeric type instead.
+// Type 2 is the element reported as [NO KEY]/[NO NAME].
+const BLACKLISTED_ELEMENT_TYPES = new Set([2]);
 const SIZE = 4;
 const FOOTPRINT = [
   [0, 0, 0, 0],
@@ -56,14 +73,28 @@ const safe = (fn, fallback = null) => {
 const sourceKey = (structure) => `${structure.x},${structure.y}`;
 
 const isElementAllowed = (elementId, definition = null) => {
-  if (!elementId || BLACKLISTED_ELEMENT_IDS.has(elementId)) return false;
+  if (elementId && BLACKLISTED_ELEMENT_IDS.has(elementId)) return false;
   const resolved = definition || safe(() => api.elements.getDefinitionByType(api.elements.getTypeFromId(elementId)), null);
   return !!resolved && resolved.hidden !== true;
 };
 
+const isElementTypeAllowed = (elementType) => !BLACKLISTED_ELEMENT_TYPES.has(elementType);
+
 const elementIdFromSource = (structure) => {
   const requested = structure.data?.elementId || DEFAULT_ELEMENT_ID;
   return isElementAllowed(requested) ? requested : null;
+};
+
+const elementTypeFromSource = (structure) => {
+  const storedType = structure.data?.elementType;
+  if (Number.isInteger(storedType)) {
+    const definition = safe(() => api.elements.getDefinitionByType(storedType), null);
+    return definition && definition.hidden !== true && isElementTypeAllowed(storedType) ? storedType : null;
+  }
+
+  const elementId = elementIdFromSource(structure);
+  const elementType = elementId === null ? null : safe(() => api.elements.getTypeFromId(elementId), null);
+  return elementType !== null && isElementTypeAllowed(elementType) ? elementType : null;
 };
 
 const elementEntries = () =>
@@ -72,15 +103,16 @@ const elementEntries = () =>
       api.elements
         .getRegisteredTypes()
         .map((type) => {
+          if (!isElementTypeAllowed(type)) return null;
           const definition = api.elements.getDefinitionByType(type);
-          const id = definition?.id;
-          if (!id || !isElementAllowed(id, definition)) return null;
-          const name = safe(() => api.i18n.getName(definition), id);
+          const id = definition?.id || null;
+          if (!definition || !isElementAllowed(id, definition)) return null;
+          const name = safe(() => api.i18n.getName(definition), id || `[type ${type}]`);
           const color =
             typeof definition.metaColor === "number"
               ? `#${definition.metaColor.toString(16).padStart(6, "0")}`
               : "#9aa7b5";
-          return { id, name, color, matterType: definition.matterType };
+          return { id, type, name, color, matterType: definition.matterType };
         })
         .filter(Boolean)
         .sort((a, b) => a.name.localeCompare(b.name)),
@@ -118,7 +150,7 @@ const ElementPicker = () => {
     const matchesQuery =
       !normalizedQuery ||
       entry.name.toLowerCase().includes(normalizedQuery) ||
-      entry.id.toLowerCase().includes(normalizedQuery);
+      (entry.id || "").toLowerCase().includes(normalizedQuery);
     return matchesQuery && (matter === "All" || matterName(entry.matterType) === matter);
   });
   const matters = ["All", ...new Set(elementEntries().map((entry) => matterName(entry.matterType)))];
@@ -195,8 +227,8 @@ const ElementPicker = () => {
         UIReact.createElement(
           "button",
           {
-            key: entry.id,
-            onClick: () => closePicker(entry.id),
+            key: entry.id || `type-${entry.type}`,
+            onClick: () => closePicker(entry),
             style: {
               display: "flex",
               alignItems: "center",
@@ -263,15 +295,31 @@ const configureSource = async (structure) => {
 
     // Closing the dialog keeps the default. A bad ID is also rejected rather
     // than leaving a source that fails on every trigger tick.
-    if (value === null || value.trim() === "") {
+    if (value === null || (typeof value === "string" && value.trim() === "")) {
       disabledSources.add(key);
       return;
     }
+    if (typeof value === "object" && Number.isInteger(value.type)) {
+      const definition = safe(() => api.elements.getDefinitionByType(value.type), null);
+      if (!definition || !isElementAllowed(value.id, definition)) {
+        disabledSources.add(key);
+        api.ui.toast(`Element unavailable for spawning: ${value.name || value.type}`);
+        return;
+      }
+
+      disabledSources.delete(key);
+      api.structures.setData(
+        structure,
+        { elementType: value.type, elementId: value.id },
+        { propagateToWorkers: true },
+      );
+      api.ui.toast(`Source configured to emit ${value.name}`);
+      return;
+    }
+
     const elementId = value.trim();
-    if (
-      safe(() => api.elements.getTypeFromId(elementId), null) === null ||
-      !isElementAllowed(elementId)
-    ) {
+    const elementType = safe(() => api.elements.getTypeFromId(elementId), null);
+    if (elementType === null || !isElementTypeAllowed(elementType) || !isElementAllowed(elementId)) {
       disabledSources.add(key);
       api.ui.toast(`Element unavailable for spawning: ${elementId}`);
       return;
@@ -300,7 +348,8 @@ const sourceTick = () => {
 
     if (!configuredSources.has(key)) {
       configuredSources.add(key);
-      const needsConfiguration = !structure.data?.elementId;
+      const needsConfiguration =
+        !structure.data?.elementId && !Number.isInteger(structure.data?.elementType);
       if (needsConfiguration) {
         api.structures.setData(
           structure,
@@ -314,10 +363,7 @@ const sourceTick = () => {
       }
     }
 
-    const elementType = safe(
-      () => api.elements.getTypeFromId(elementIdFromSource(structure)),
-      null,
-    );
+    const elementType = elementTypeFromSource(structure);
     if (elementType === null) return;
 
     // Fill one complete 4x4 batch directly below the structure. Occupied
@@ -401,6 +447,7 @@ const setup = async () => {
       }
     },
   });
+
 };
 
 try {

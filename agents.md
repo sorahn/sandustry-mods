@@ -109,6 +109,8 @@ The implementation lives in `mod/entry.js` and `mod/modinfo.json`.
   unfinished or unwanted elements. The same check is applied to picker entries,
   manual ID input, and runtime spawning. Definitions with `hidden: true` are
   also excluded automatically.
+- `BLACKLISTED_ELEMENT_TYPES` handles core elements that have no string ID; type
+  `2` is currently excluded because it appears as `[NO KEY]`/`[NO NAME]`.
 
 The source tracks three states by structure position:
 
