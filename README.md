@@ -15,9 +15,10 @@ from the demo mod, renamed to `SourceBlock.png` and `Trash.png`.
 ## Repository layout
 
 Each active mod is isolated under `mods/<name>` with its source, manifest, and
-assets. Shared build rules live in `make/mod.mk`; reference material remains
-under `resources/`. The Infinite Source/Trash entrypoint is TypeScript and
-compiles to the plain JavaScript file Sandustry expects.
+assets. Reusable TypeScript helpers live under `shared/` and are compiled into
+each standalone entrypoint. Shared build rules live in `make/mod.mk`; reference
+material remains under `resources/`. The Infinite Source/Trash entrypoint is
+TypeScript and compiles to the plain JavaScript file Sandustry expects.
 
 ## Packaging
 

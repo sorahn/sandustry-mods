@@ -7,6 +7,8 @@
 
 "use strict";
 
+import noop from "~shared/noop";
+
 const api = sandkit.api;
 const MOD_ID = "sandustry-test-blocks.source-trash";
 
@@ -102,10 +104,11 @@ let pickerPromise: Promise<ElementSelection | null> | null = null;
 let lastElementSelection: ElementSelection | null = null;
 const UIReact = sandkit.react ?? null;
 
-const safe = <T>(fn: () => T, fallback: T | null = null): T | null => {
+const safe = <T,>(fn: () => T, fallback: T | null = null): T | null => {
   try {
     return fn();
   } catch (error) {
+    noop(error);
     return fallback;
   }
 };
@@ -329,16 +332,16 @@ const FocusableButton = ({
   });
   const focusClass = navigation.controllerFocusClass(focusable.focused);
 
-  return UIReact.createElement(
-    "button",
-    {
-      ...props,
-      ref: focusable.ref,
-      type: "button",
-      onClick: onActivate,
-      className: `${className} ${focusClass}`.trim(),
-    },
-    children,
+  return (
+    <button
+      {...props}
+      ref={focusable.ref}
+      type="button"
+      onClick={onActivate}
+      className={`${className} ${focusClass}`.trim()}
+    >
+      {children}
+    </button>
   );
 };
 
@@ -381,27 +384,24 @@ const ElementGridButton = ({
     ? "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-[#ffe700] bg-[#ffe700]/10"
     : "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-slate-700 hover:border-slate-500 bg-black/40 hover:bg-black/60";
 
-  return UIReact.createElement(
-    "button",
-    {
-      ref: focusable.ref,
-      type: "button",
-      onClick: onSelect,
-      className: `${className} ${focusClass}`.trim(),
-    },
-    UIReact.createElement("span", {
-      className: "w-3 h-3 flex-shrink-0",
-      style: { backgroundColor: entry.color },
-    }),
-    UIReact.createElement(
-      "span",
-      {
-        className: selected
-          ? "text-xs truncate transition-colors text-[#ffe700]"
-          : "text-xs truncate transition-colors text-slate-300 group-hover:text-white",
-      },
-      entry.name,
-    ),
+  return (
+    <button
+      ref={focusable.ref}
+      type="button"
+      onClick={onSelect}
+      className={`${className} ${focusClass}`.trim()}
+    >
+      <span className="w-3 h-3 flex-shrink-0" style={{ backgroundColor: entry.color }} />
+      <span
+        className={
+          selected
+            ? "text-xs truncate transition-colors text-[#ffe700]"
+            : "text-xs truncate transition-colors text-slate-300 group-hover:text-white"
+        }
+      >
+        {entry.name}
+      </span>
+    </button>
   );
 };
 

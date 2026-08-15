@@ -14,6 +14,11 @@ the Infinite Source/Trash implementation is now TypeScript compiled to a plain
 JavaScript entrypoint. Generated `mods/*/build/` output and the root
 `artifacts/` archive directory must not be committed.
 
+Reusable TypeScript modules belong directly under `shared/`. Mod source can
+import them normally; esbuild resolves and bundles those imports into each
+mod's standalone entrypoint. The shipped script still has no imports or
+exports, and shared modules should avoid mod-specific side effects.
+
 ## Project goal
 
 This repository contains a Sandustry v1 mod that adds two creative utility

@@ -3,6 +3,11 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "paths": {
+      "~shared": ["./shared/index.ts"],
+      "~shared/*": ["./shared/*"]
+    },
     "jsx": "react",
     "jsxFactory": "sandkit.react.createElement",
     "strict": true,
@@ -13,6 +18,7 @@
   },
   "include": [
     "types/**/*.d.ts",
+    "shared/**/*.ts",
     "mods/*/src/**/*.ts",
     "mods/*/src/**/*.tsx",
     "tests/**/*.ts",

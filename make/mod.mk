@@ -17,11 +17,11 @@ INSTALL_DIR := $(SANDUSTRY_MODS_DIR)/$(MOD_ID)
 all: build
 build: $(ARCHIVE)
 
-$(BUILD_DIR)/entry.js: $(SRC_DIR)/entry.ts $(REPO_ROOT)/tsconfig.json $(REPO_ROOT)/types/sandustry.d.ts
+$(BUILD_DIR)/entry.js: $(SRC_DIR)/entry.tsx $(REPO_ROOT)/tsconfig.json $(REPO_ROOT)/types/sandustry.d.ts
 	@mkdir -p "$(BUILD_DIR)"
 	@echo "Compiling $(MOD_ID)"
-	@cd "$(REPO_ROOT)" && npx tsc --ignoreConfig --target ES2022 --module ESNext --moduleDetection force --jsx react --jsxFactory sandkit.react.createElement --removeComments --strict --skipLibCheck --noEmitOnError --outDir "$(BUILD_DIR)" --rootDir "$(SRC_DIR)" "$(SRC_DIR)/entry.ts" "$(REPO_ROOT)/types/sandustry.d.ts"
-	@node "$(REPO_ROOT)/scripts/strip-module-marker.mjs" "$(BUILD_DIR)/entry.js"
+	@cd "$(REPO_ROOT)" && npx tsc --noEmit
+	@cd "$(REPO_ROOT)" && npx esbuild "$(SRC_DIR)/entry.tsx" --bundle --format=esm --platform=neutral --target=es2022 --jsx-factory=sandkit.react.createElement --jsx-fragment=sandkit.react.Fragment --alias:~shared="$(REPO_ROOT)/shared" --outfile="$(BUILD_DIR)/entry.js"
 
 $(ARCHIVE): $(BUILD_DIR)/entry.js $(MANIFEST) $(shell find $(MOD_DIR)/assets -type f -print 2>/dev/null) $(wildcard $(MOD_DIR)/preview.png $(MOD_DIR)/workshop.json)
 	@rm -rf "$(PACKAGE_DIR)"
