@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "jsx": "react",
+    "jsxFactory": "sandkit.react.createElement",
+    "strict": true,
+    "noEmit": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "types": ["react", "react-dom"]
+  },
+  "include": [
+    "types/**/*.d.ts",
+    "mods/*/src/**/*.ts",
+    "mods/*/src/**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ]
+}

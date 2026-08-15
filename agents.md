@@ -1,5 +1,19 @@
 # Agent Notes
 
+## Monorepo workflow
+
+Active mods live under `mods/<name>`. Each mod owns `src/`, `modinfo.json`, and
+its assets, and has a thin Makefile that includes `make/mod.mk`. The root
+Makefile discovers active mods and supports `make build`, `make install`,
+`make check`, and `make format`; add `MOD=<name>` to target one mod. Per-mod
+Makefiles expose the same commands.
+
+The repository toolchain is pinned in `package.json` and `package-lock.json`.
+TypeScript 7 and TSX support are configured with the Sandustry JSX factory,
+but the current Infinite Source/Trash implementation remains JavaScript until
+the separate mod conversion phase. Generated `mods/*/build/` output and zip
+archives must not be committed.
+
 ## Project goal
 
 This repository contains a Sandustry v1 mod that adds two creative utility

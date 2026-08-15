@@ -1,4 +1,8 @@
-# Generated mod packages
+# Generated mod packages and build output
 *.zip
+mods/*/build/
+node_modules/
 .DS_Store
+*.tsbuildinfo
+.openai/
 resources/steam-mods

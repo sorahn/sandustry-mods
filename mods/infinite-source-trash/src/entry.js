@@ -49,8 +49,7 @@ const FOOTPRINT = [
 
 const TEXT = {
   "structures|source|name": "Infinite Source",
-  "structures|source|description":
-    "Creates an endless stream of the configured element.",
+  "structures|source|description": "Creates an endless stream of the configured element.",
   "structures|trash|name": " Trash",
   "structures|trash|description": "An infinitely deep void for particle trash.",
 };
@@ -84,10 +83,7 @@ const selectionData = (selection) => ({
 
 const validElementSelection = (selection) => {
   if (!selection || !Number.isInteger(selection.type)) return null;
-  const definition = safe(
-    () => api.elements.getDefinitionByType(selection.type),
-    null,
-  );
+  const definition = safe(() => api.elements.getDefinitionByType(selection.type), null);
   if (!definition || !isElementTypeAllowed(selection.type)) return null;
   if (!isElementAllowed(selection.id, definition)) return null;
   return {
@@ -113,10 +109,7 @@ const getLastElement = () => {
     candidate = { type: saved, id: null };
   }
 
-  return (
-    validElementSelection(candidate) ||
-    validElementSelection(lastElementSelection)
-  );
+  return validElementSelection(candidate) || validElementSelection(lastElementSelection);
 };
 
 const rememberElement = (selection) => {
@@ -147,8 +140,7 @@ const sourceElementSelection = (structure) => {
     const storedId = structure.data?.elementId;
     const idMatchesType =
       storedId &&
-      safe(() => api.elements.getTypeFromId(storedId), null) ===
-        structure.data.elementType;
+      safe(() => api.elements.getTypeFromId(storedId), null) === structure.data.elementType;
     return validElementSelection({
       id: idMatchesType ? storedId : null,
       type: structure.data.elementType,
@@ -170,16 +162,11 @@ const isElementAllowed = (elementId, definition = null) => {
   if (elementId && BLACKLISTED_ELEMENT_IDS.has(elementId)) return false;
   const resolved =
     definition ||
-    safe(
-      () =>
-        api.elements.getDefinitionByType(api.elements.getTypeFromId(elementId)),
-      null,
-    );
+    safe(() => api.elements.getDefinitionByType(api.elements.getTypeFromId(elementId)), null);
   return !!resolved && resolved.hidden !== true;
 };
 
-const isElementTypeAllowed = (elementType) =>
-  !BLACKLISTED_ELEMENT_TYPES.has(elementType);
+const isElementTypeAllowed = (elementType) => !BLACKLISTED_ELEMENT_TYPES.has(elementType);
 
 const elementIdFromSource = (structure) => {
   const requested = structure.data?.elementId || DEFAULT_ELEMENT_ID;
@@ -189,25 +176,16 @@ const elementIdFromSource = (structure) => {
 const elementTypeFromSource = (structure) => {
   const storedType = structure.data?.elementType;
   if (Number.isInteger(storedType)) {
-    const definition = safe(
-      () => api.elements.getDefinitionByType(storedType),
-      null,
-    );
-    return definition &&
-      definition.hidden !== true &&
-      isElementTypeAllowed(storedType)
+    const definition = safe(() => api.elements.getDefinitionByType(storedType), null);
+    return definition && definition.hidden !== true && isElementTypeAllowed(storedType)
       ? storedType
       : null;
   }
 
   const elementId = elementIdFromSource(structure);
   const elementType =
-    elementId === null
-      ? null
-      : safe(() => api.elements.getTypeFromId(elementId), null);
-  return elementType !== null && isElementTypeAllowed(elementType)
-    ? elementType
-    : null;
+    elementId === null ? null : safe(() => api.elements.getTypeFromId(elementId), null);
+  return elementType !== null && isElementTypeAllowed(elementType) ? elementType : null;
 };
 
 const elementEntries = () =>
@@ -220,10 +198,7 @@ const elementEntries = () =>
           const definition = api.elements.getDefinitionByType(type);
           const id = definition?.id || null;
           if (!definition || !isElementAllowed(id, definition)) return null;
-          const name = safe(
-            () => api.i18n.getName(definition),
-            id || `[type ${type}]`,
-          );
+          const name = safe(() => api.i18n.getName(definition), id || `[type ${type}]`);
           const color =
             typeof definition.metaColor === "number"
               ? `#${definition.metaColor.toString(16).padStart(6, "0")}`
@@ -251,9 +226,7 @@ const closePicker = (value) => {
   const current = pickerState;
   if (!current) return;
   const selected =
-    value && typeof value === "object" && Number.isInteger(value.type)
-      ? value
-      : null;
+    value && typeof value === "object" && Number.isInteger(value.type) ? value : null;
   pickerState = {
     ...current,
     current: selected?.id ?? current.current,
@@ -284,14 +257,7 @@ const minimizePicker = () => {
 
 const NAV_SCOPE = `${PICKER_ID}-scope`;
 
-const FocusableButton = ({
-  id,
-  onActivate,
-  neighbors,
-  className = "",
-  children,
-  ...props
-}) => {
+const FocusableButton = ({ id, onActivate, neighbors, className = "", children, ...props }) => {
   const navigation = api.ui.navigation;
   const focusable = navigation.useFocusable({
     id,
@@ -321,26 +287,18 @@ const ElementGridButton = ({ entry, index, entries, selected, onSelect }) => {
   const neighbors = {
     left:
       column > 0
-        ? `${PICKER_ID}-element-${
-            entries[index - 1].id || `type-${entries[index - 1].type}`
-          }`
+        ? `${PICKER_ID}-element-${entries[index - 1].id || `type-${entries[index - 1].type}`}`
         : `${PICKER_ID}-matter-All`,
     right:
       column < 3 && entries[index + 1]
-        ? `${PICKER_ID}-element-${
-            entries[index + 1].id || `type-${entries[index + 1].type}`
-          }`
+        ? `${PICKER_ID}-element-${entries[index + 1].id || `type-${entries[index + 1].type}`}`
         : undefined,
     up:
       index >= 4
-        ? `${PICKER_ID}-element-${
-            entries[index - 4].id || `type-${entries[index - 4].type}`
-          }`
+        ? `${PICKER_ID}-element-${entries[index - 4].id || `type-${entries[index - 4].type}`}`
         : `${PICKER_ID}-matter-All`,
     down: entries[index + 4]
-      ? `${PICKER_ID}-element-${
-          entries[index + 4].id || `type-${entries[index + 4].type}`
-        }`
+      ? `${PICKER_ID}-element-${entries[index + 4].id || `type-${entries[index + 4].type}`}`
       : undefined,
   };
   const focusable = api.ui.navigation.useFocusable({
@@ -417,11 +375,7 @@ const syncPickerToSelectedAction = () => {
     return;
   }
 
-  if (
-    sourceSelected === false &&
-    pickerState &&
-    configuringSources.size === 0
-  ) {
+  if (sourceSelected === false && pickerState && configuringSources.size === 0) {
     const resolve = pickerState.resolve;
     pickerState = null;
     pickerPromise = null;
@@ -439,9 +393,7 @@ const ElementPicker = () => {
     id: NAV_SCOPE,
     active: !!pickerState,
     priority: 100,
-    defaultId: pickerState?.minimized
-      ? `${PICKER_ID}-selected`
-      : `${PICKER_ID}-search`,
+    defaultId: pickerState?.minimized ? `${PICKER_ID}-selected` : `${PICKER_ID}-search`,
     onBack: () => {
       if (pickerState && !pickerState.minimized) {
         minimizePicker();
@@ -487,18 +439,13 @@ const ElementPicker = () => {
         },
         onClick: expandPicker,
       },
-      UIReact.createElement(
-        "span",
-        { className: "text-white text-xs opacity-70" },
-        "Source",
-      ),
+      UIReact.createElement("span", { className: "text-white text-xs opacity-70" }, "Source"),
       UIReact.createElement(
         FocusableButton,
         {
           id: `${PICKER_ID}-selected`,
           onActivate: expandPicker,
-          className:
-            "flex items-center gap-2 text-xs text-white hover:text-[#ffe700]",
+          className: "flex items-center gap-2 text-xs text-white hover:text-[#ffe700]",
         },
         UIReact.createElement("span", {
           className: "w-3 h-3 flex-shrink-0",
@@ -506,11 +453,7 @@ const ElementPicker = () => {
         }),
         selected?.name || DEFAULT_ELEMENT_ID,
       ),
-      UIReact.createElement(
-        "span",
-        { className: "text-xs text-slate-500" },
-        "Click to expand",
-      ),
+      UIReact.createElement("span", { className: "text-xs text-slate-500" }, "Click to expand"),
     );
   }
 
@@ -520,10 +463,7 @@ const ElementPicker = () => {
       !normalizedQuery ||
       entry.name.toLowerCase().includes(normalizedQuery) ||
       (entry.id || "").toLowerCase().includes(normalizedQuery);
-    return (
-      matchesQuery &&
-      (matter === "All" || matterName(entry.matterType) === matter)
-    );
+    return matchesQuery && (matter === "All" || matterName(entry.matterType) === matter);
   });
   const matters = [
     "All",
@@ -531,8 +471,7 @@ const ElementPicker = () => {
   ];
   const isSelected = (entry) =>
     (entry.id !== null && entry.id === pickerState.current) ||
-    (pickerState.currentType !== null &&
-      entry.type === pickerState.currentType);
+    (pickerState.currentType !== null && entry.type === pickerState.currentType);
   const tabClass = (active) =>
     active
       ? "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200 text-[#ffe700] border-opacity-50 bg-[#ffe700]/10"
@@ -558,14 +497,9 @@ const ElementPicker = () => {
     UIReact.createElement(
       "div",
       {
-        className:
-          "px-4 py-2 border-b border-slate-800 flex items-center justify-between",
+        className: "px-4 py-2 border-b border-slate-800 flex items-center justify-between",
       },
-      UIReact.createElement(
-        "span",
-        { className: "text-white text-xs opacity-70" },
-        "Source",
-      ),
+      UIReact.createElement("span", { className: "text-white text-xs opacity-70" }, "Source"),
       UIReact.createElement(
         "div",
         { className: "flex items-center gap-2" },
@@ -585,8 +519,7 @@ const ElementPicker = () => {
     UIReact.createElement(
       "div",
       {
-        className:
-          "px-4 py-3 border-b border-slate-800 flex flex-col gap-2 items-stretch",
+        className: "px-4 py-3 border-b border-slate-800 flex flex-col gap-2 items-stretch",
       },
       UIReact.createElement(
         "div",
@@ -615,10 +548,7 @@ const ElementPicker = () => {
               key: name,
               id: `${PICKER_ID}-matter-${name}`,
               neighbors: {
-                left:
-                  index > 0
-                    ? `${PICKER_ID}-matter-${matters[index - 1]}`
-                    : undefined,
+                left: index > 0 ? `${PICKER_ID}-matter-${matters[index - 1]}` : undefined,
                 right:
                   index + 1 < matters.length
                     ? `${PICKER_ID}-matter-${matters[index + 1]}`
@@ -715,10 +645,7 @@ const configureSource = async (structure, initialSelection) => {
       return;
     }
     if (typeof value === "object" && Number.isInteger(value.type)) {
-      const definition = safe(
-        () => api.elements.getDefinitionByType(value.type),
-        null,
-      );
+      const definition = safe(() => api.elements.getDefinitionByType(value.type), null);
       if (!definition || !isElementAllowed(value.id, definition)) {
         disabledSources.add(key);
         return;
@@ -779,8 +706,7 @@ const sourceTick = () => {
     if (!configuredSources.has(key)) {
       configuredSources.add(key);
       const needsConfiguration =
-        !structure.data?.elementId &&
-        !Number.isInteger(structure.data?.elementType);
+        !structure.data?.elementId && !Number.isInteger(structure.data?.elementType);
       if (needsConfiguration) {
         const initialSelection = sourceElementSelection(structure);
         if (!initialSelection) return;
@@ -795,8 +721,7 @@ const sourceTick = () => {
       }
     }
 
-    const elementType =
-      sourceSelections.get(key)?.type ?? elementTypeFromSource(structure);
+    const elementType = sourceSelections.get(key)?.type ?? elementTypeFromSource(structure);
     if (elementType === null) return;
 
     // Fill one complete 4x4 batch directly below the structure. Occupied
@@ -823,16 +748,10 @@ const sourceTick = () => {
 
 const trashTick = () => {
   api.structures.forEachOfType(TRASH_ID, (structure) => {
-    api.grid.forEachCellInRect(
-      structure.x,
-      structure.y,
-      SIZE,
-      SIZE,
-      (cellX, cellY) => {
-        const info = api.elements.getInfoAtCell(cellX, cellY);
-        if (info) api.elements.removeAtCellWhenIdle(cellX, cellY);
-      },
-    );
+    api.grid.forEachCellInRect(structure.x, structure.y, SIZE, SIZE, (cellX, cellY) => {
+      const info = api.elements.getInfoAtCell(cellX, cellY);
+      if (info) api.elements.removeAtCellWhenIdle(cellX, cellY);
+    });
   });
 };
 

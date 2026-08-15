@@ -1,0 +1,7 @@
+node_modules/
+mods/*/build/
+resources/
+*.zip
+package-lock.json
+MIGRATION-PLAN.md
+agents.md
