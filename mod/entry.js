@@ -20,10 +20,10 @@ const TICK_MS = 500;
 const DEFAULT_ELEMENT_ID = "sand";
 const SIZE = 4;
 const FOOTPRINT = [
-  [1, 1, 1, 1],
-  [1, 1, 1, 1],
-  [1, 1, 1, 1],
-  [1, 1, 1, 1],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0],
 ];
 
 const TEXT = {
