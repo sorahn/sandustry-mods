@@ -20,3 +20,11 @@ From the repository root, run `make install` to build the current version and
 copy the unzipped mod into an ID-named folder in the default Sandustry mods
 directory. Override the destination with
 `make install SANDUSTRY_MODS_DIR=/path/to/mods`.
+
+To bump the mod version and create a commit containing only `mod/modinfo.json`:
+
+```sh
+make version patch
+make version minor
+make version major
+```
