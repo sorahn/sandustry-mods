@@ -1,8 +1,7 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "oxc.oxc-vscode",
-  "js/ts.tsdk.path": "${workspaceFolder}/node_modules/typescript/lib",
-  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.experimental.useTsgo": true,
   "[typescript]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
   "[typescriptreact]": { "editor.defaultFormatter": "oxc.oxc-vscode" },
   "[javascript]": { "editor.defaultFormatter": "oxc.oxc-vscode" },

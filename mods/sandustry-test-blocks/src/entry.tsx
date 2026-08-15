@@ -539,10 +539,14 @@ const ElementPicker = () => {
   const isSelected = (entry: ElementEntry): boolean =>
     (entry.id !== null && entry.id === picker.current) ||
     (picker.currentType !== null && entry.type === picker.currentType);
+
+  const baseTabClass =
+    "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200";
+
   const tabClass = (active: boolean) =>
     active
-      ? "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200 text-[#ffe700] border-opacity-50 bg-[#ffe700]/10"
-      : "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200 text-white border-opacity-25 hover:text-[#ffe700] hover:border-opacity-0 bg-black";
+      ? `${baseTabClass} text-[#ffe700] border-opacity-50 bg-[#ffe700]/10`
+      : `${baseTabClass} text-white border-opacity-25 hover:text-[#ffe700] hover:border-opacity-0 bg-black`;
 
   return (
     <div
