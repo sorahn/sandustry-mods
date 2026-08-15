@@ -14,18 +14,28 @@ const SOURCE_ID = "sandustryTestBlocksSource";
 const TRASH_ID = "sandustryTestBlocksTrash";
 const SOURCE_SPRITE = "sandustryTestBlocksSourceSprite";
 const TRASH_SPRITE = "sandustryTestBlocksTrashSprite";
-const TICK_MS = 100;
+// Match the demo Creative Spawner's 500 ms tick interval. The Source can add
+// up to one 4x4 batch per tick, rather than refilling on every frame.
+const TICK_MS = 500;
 const DEFAULT_ELEMENT_ID = "sand";
+const SIZE = 4;
+const FOOTPRINT = [
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+  [1, 1, 1, 1],
+];
 
 const TEXT = {
   "structures|source|name": "Infinite Source",
   "structures|source|description": "Creates an endless stream of the configured element.",
-  "structures|trash|name": "Infinite Trash",
+  "structures|trash|name": " Trash",
   "structures|trash|description": "An infinitely deep void for particle trash.",
 };
 
 const configuredSources = new Set();
 const configuringSources = new Set();
+const disabledSources = new Set();
 
 const safe = (fn, fallback = null) => {
   try {
@@ -61,13 +71,18 @@ const configureSource = async (structure) => {
 
     // Closing the dialog keeps the default. A bad ID is also rejected rather
     // than leaving a source that fails on every trigger tick.
-    if (value === null || value.trim() === "") return;
+    if (value === null || value.trim() === "") {
+      disabledSources.add(key);
+      return;
+    }
     const elementId = value.trim();
     if (safe(() => api.elements.getTypeFromId(elementId), null) === null) {
+      disabledSources.add(key);
       api.ui.toast(`Unknown element ID: ${elementId}`);
       return;
     }
 
+    disabledSources.delete(key);
     api.structures.setData(structure, { elementId }, { propagateToWorkers: true });
     api.ui.toast(`Source configured to emit ${elementId}`);
   } catch (error) {
@@ -83,6 +98,10 @@ const sourceTick = () => {
   api.structures.forEachOfType(SOURCE_ID, (structure) => {
     const key = sourceKey(structure);
     live.add(key);
+
+    // The default value is stored immediately so the structure has valid data,
+    // but it must not be emitted while the configuration prompt is open.
+    if (configuringSources.has(key) || disabledSources.has(key)) return;
 
     if (!configuredSources.has(key)) {
       configuredSources.add(key);
@@ -100,30 +119,39 @@ const sourceTick = () => {
       }
     }
 
-    // Emit above the block when possible. The next tick will retry if the
-    // output cell is occupied, so the source never destroys existing material.
-    const outputX = structure.x;
-    const outputY = structure.y - 1;
-    if (!api.world.isCellEmptyAtCell(outputX, outputY)) return;
-
     const elementType = safe(
       () => api.elements.getTypeFromId(elementIdFromSource(structure)),
       null,
     );
     if (elementType === null) return;
 
-    api.elements.createAtCellWhenIdle(outputX, outputY, elementType);
+    // Fill one complete 4x4 batch directly below the structure. Occupied
+    // output cells are left alone and retried on later trigger ticks.
+    for (let y = 0; y < SIZE; y++) {
+      for (let x = 0; x < SIZE; x++) {
+        const outputX = structure.x + x;
+        const outputY = structure.y + SIZE + y;
+        if (api.world.isCellEmptyAtCell(outputX, outputY)) {
+          api.elements.createAtCellWhenIdle(outputX, outputY, elementType);
+        }
+      }
+    }
   });
 
   for (const key of configuredSources) {
-    if (!live.has(key)) configuredSources.delete(key);
+    if (!live.has(key)) {
+      configuredSources.delete(key);
+      disabledSources.delete(key);
+    }
   }
 };
 
 const trashTick = () => {
   api.structures.forEachOfType(TRASH_ID, (structure) => {
-    const info = api.elements.getInfoAtCell(structure.x, structure.y);
-    if (info) api.elements.removeAtCellWhenIdle(structure.x, structure.y);
+    api.grid.forEachCellInRect(structure.x, structure.y, SIZE, SIZE, (cellX, cellY) => {
+      const info = api.elements.getInfoAtCell(cellX, cellY);
+      if (info) api.elements.removeAtCellWhenIdle(cellX, cellY);
+    });
   });
 };
 
@@ -136,7 +164,7 @@ const setup = async () => {
   const common = {
     categoryKey: "misc",
     buildModes: [{ type: "single" }],
-    shape: [[1]],
+    shape: FOOTPRINT,
     render: {
       size: { width: 16, height: 16 },
       offset: { x: 0, y: 0 },
