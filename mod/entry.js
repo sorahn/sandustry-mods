@@ -739,6 +739,7 @@ const setup = async () => {
     nameKey: "structures|source|name",
     descriptionKey: "structures|source|description",
     order: 90,
+    variants: [{ id: SOURCE_ID, angles: [0, 90, 180, 270] }],
     render: { ...common.render, imageName: SOURCE_SPRITE },
   });
 
@@ -748,6 +749,7 @@ const setup = async () => {
     nameKey: "structures|trash|name",
     descriptionKey: "structures|trash|description",
     order: 91,
+    variants: [{ id: TRASH_ID, angles: [0, 90, 180, 270] }],
     render: { ...common.render, imageName: TRASH_SPRITE },
   });
 
