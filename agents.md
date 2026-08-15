@@ -80,6 +80,10 @@ expose React or the expected modal overlay slot, the code falls back to the
 text prompt. `api.action.getSelected()` identifies the held building by its
 `id`, so the compact picker is shown only while the Source action is selected
 and is removed when the player switches away.
+The picker also uses `api.ui.navigation` for a dedicated focus scope, explicit
+directional neighbors across the search, matter tabs, and four-column element
+grid, controller-focused styling, and back/Escape behavior that minimizes the
+expanded picker.
 
 ## Current implementation behavior
 

@@ -282,6 +282,103 @@ const minimizePicker = () => {
   if (pickerRepaint) pickerRepaint((value) => value + 1);
 };
 
+const NAV_SCOPE = `${PICKER_ID}-scope`;
+
+const FocusableButton = ({
+  id,
+  onActivate,
+  neighbors,
+  className = "",
+  children,
+  ...props
+}) => {
+  const navigation = api.ui.navigation;
+  const focusable = navigation.useFocusable({
+    id,
+    scope: NAV_SCOPE,
+    onActivate,
+    neighbors,
+    scrollIntoView: true,
+  });
+  const focusClass = navigation.controllerFocusClass(focusable.focused);
+
+  return UIReact.createElement(
+    "button",
+    {
+      ...props,
+      ref: focusable.ref,
+      type: "button",
+      onClick: onActivate,
+      className: `${className} ${focusClass}`.trim(),
+    },
+    children,
+  );
+};
+
+const ElementGridButton = ({ entry, index, entries, selected, onSelect }) => {
+  const id = `${PICKER_ID}-element-${entry.id || `type-${entry.type}`}`;
+  const column = index % 4;
+  const neighbors = {
+    left:
+      column > 0
+        ? `${PICKER_ID}-element-${
+            entries[index - 1].id || `type-${entries[index - 1].type}`
+          }`
+        : `${PICKER_ID}-matter-All`,
+    right:
+      column < 3 && entries[index + 1]
+        ? `${PICKER_ID}-element-${
+            entries[index + 1].id || `type-${entries[index + 1].type}`
+          }`
+        : undefined,
+    up:
+      index >= 4
+        ? `${PICKER_ID}-element-${
+            entries[index - 4].id || `type-${entries[index - 4].type}`
+          }`
+        : `${PICKER_ID}-matter-All`,
+    down: entries[index + 4]
+      ? `${PICKER_ID}-element-${
+          entries[index + 4].id || `type-${entries[index + 4].type}`
+        }`
+      : undefined,
+  };
+  const focusable = api.ui.navigation.useFocusable({
+    id,
+    scope: NAV_SCOPE,
+    onActivate: onSelect,
+    neighbors,
+    scrollIntoView: true,
+  });
+  const focusClass = api.ui.navigation.controllerFocusClass(focusable.focused);
+  const className = selected
+    ? "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-[#ffe700] bg-[#ffe700]/10"
+    : "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-slate-700 hover:border-slate-500 bg-black/40 hover:bg-black/60";
+
+  return UIReact.createElement(
+    "button",
+    {
+      ref: focusable.ref,
+      type: "button",
+      onClick: onSelect,
+      className: `${className} ${focusClass}`.trim(),
+    },
+    UIReact.createElement("span", {
+      className: "w-3 h-3 flex-shrink-0",
+      style: { backgroundColor: entry.color },
+    }),
+    UIReact.createElement(
+      "span",
+      {
+        className: selected
+          ? "text-xs truncate transition-colors text-[#ffe700]"
+          : "text-xs truncate transition-colors text-slate-300 group-hover:text-white",
+      },
+      entry.name,
+    ),
+  );
+};
+
 const currentPickerEntry = () => {
   if (!pickerState) return null;
   return (
@@ -338,12 +435,39 @@ const ElementPicker = () => {
   const [matter, setMatter] = UIReact.useState("All");
   const [, bump] = UIReact.useState(0);
 
+  api.ui.navigation.useFocusScope({
+    id: NAV_SCOPE,
+    active: !!pickerState,
+    priority: 100,
+    defaultId: pickerState?.minimized
+      ? `${PICKER_ID}-selected`
+      : `${PICKER_ID}-search`,
+    onBack: () => {
+      if (pickerState && !pickerState.minimized) {
+        minimizePicker();
+        return true;
+      }
+      return false;
+    },
+  });
+
   UIReact.useEffect(() => {
     pickerRepaint = bump;
     return () => {
       if (pickerRepaint === bump) pickerRepaint = null;
     };
   }, []);
+
+  const searchFocus = api.ui.navigation.useFocusable({
+    id: `${PICKER_ID}-search`,
+    scope: NAV_SCOPE,
+    onActivate: (element) => element?.focus(),
+    neighbors: {
+      up: `${PICKER_ID}-minimize`,
+      down: `${PICKER_ID}-matter-All`,
+    },
+    scrollIntoView: true,
+  });
 
   if (!pickerState) return null;
 
@@ -369,12 +493,12 @@ const ElementPicker = () => {
         "Source",
       ),
       UIReact.createElement(
-        "button",
+        FocusableButton,
         {
-          type: "button",
+          id: `${PICKER_ID}-selected`,
+          onActivate: expandPicker,
           className:
             "flex items-center gap-2 text-xs text-white hover:text-[#ffe700]",
-          onClick: expandPicker,
         },
         UIReact.createElement("span", {
           className: "w-3 h-3 flex-shrink-0",
@@ -446,12 +570,13 @@ const ElementPicker = () => {
         "div",
         { className: "flex items-center gap-2" },
         UIReact.createElement(
-          "button",
+          FocusableButton,
           {
-            type: "button",
+            id: `${PICKER_ID}-minimize`,
+            onActivate: minimizePicker,
+            neighbors: { down: `${PICKER_ID}-search` },
             className:
               "text-xs px-2 py-0.5 text-white bg-black border rounded-tr-lg rounded-bl-lg item-button-transition hover:text-[#ffe700] border-slate-200 border-opacity-25 hover:border-opacity-0",
-            onClick: minimizePicker,
           },
           "Minimize ▾",
         ),
@@ -467,11 +592,15 @@ const ElementPicker = () => {
         "div",
         { className: "flex items-center" },
         UIReact.createElement("input", {
+          ref: searchFocus.ref,
           autoFocus: true,
           value: query,
           placeholder: "Search elements...",
           maxLength: 64,
           onChange: (event) => setQuery(event.target.value),
+          onKeyDown: (event) => {
+            if (event.key === "Escape") minimizePicker();
+          },
           className:
             "w-full bg-black/60 border border-slate-700 px-3 py-1.5 rounded text-xs text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 transition-colors",
         }),
@@ -479,13 +608,26 @@ const ElementPicker = () => {
       UIReact.createElement(
         "div",
         { className: "flex gap-1 flex-wrap" },
-        matters.map((name) =>
+        matters.map((name, index) =>
           UIReact.createElement(
-            "button",
+            FocusableButton,
             {
               key: name,
+              id: `${PICKER_ID}-matter-${name}`,
+              neighbors: {
+                left:
+                  index > 0
+                    ? `${PICKER_ID}-matter-${matters[index - 1]}`
+                    : undefined,
+                right:
+                  index + 1 < matters.length
+                    ? `${PICKER_ID}-matter-${matters[index + 1]}`
+                    : undefined,
+                up: `${PICKER_ID}-search`,
+                down: `${PICKER_ID}-element-0`,
+              },
               className: tabClass(matter === name),
-              onClick: () => setMatter(name),
+              onActivate: () => setMatter(name),
             },
             name,
           ),
@@ -501,31 +643,15 @@ const ElementPicker = () => {
       UIReact.createElement(
         "div",
         { className: "grid grid-cols-4 gap-1.5 py-1.5" },
-        entries.map((entry) =>
-          UIReact.createElement(
-            "button",
-            {
-              key: entry.id || `type-${entry.type}`,
-              type: "button",
-              onClick: () => closePicker(entry),
-              className: isSelected(entry)
-                ? "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-[#ffe700] bg-[#ffe700]/10"
-                : "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-slate-700 hover:border-slate-500 bg-black/40 hover:bg-black/60",
-            },
-            UIReact.createElement("span", {
-              className: "w-3 h-3 flex-shrink-0",
-              style: { backgroundColor: entry.color },
-            }),
-            UIReact.createElement(
-              "span",
-              {
-                className: isSelected(entry)
-                  ? "text-xs truncate transition-colors text-[#ffe700]"
-                  : "text-xs truncate transition-colors text-slate-300 group-hover:text-white",
-              },
-              entry.name,
-            ),
-          ),
+        entries.map((entry, index) =>
+          UIReact.createElement(ElementGridButton, {
+            key: entry.id || `type-${entry.type}`,
+            entry,
+            index,
+            entries,
+            selected: isSelected(entry),
+            onSelect: () => closePicker(entry),
+          }),
         ),
       ),
     ),
