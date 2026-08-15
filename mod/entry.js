@@ -34,6 +34,11 @@ const TEXT = {
 const configuredSources = new Set();
 const configuringSources = new Set();
 const disabledSources = new Set();
+const PICKER_ID = `${MOD_ID}-element-picker`;
+let pickerState = null;
+let pickerOverlayReady = false;
+let pickerRepaint = null;
+const UIReact = sandkit.react ?? null;
 
 const safe = (fn, fallback = null) => {
   try {
@@ -53,6 +58,192 @@ const elementIdFromSource = (structure) => {
   }, DEFAULT_ELEMENT_ID);
 };
 
+const elementEntries = () =>
+  safe(
+    () =>
+      api.elements
+        .getRegisteredTypes()
+        .map((type) => {
+          const definition = api.elements.getDefinitionByType(type);
+          const id = definition?.id;
+          if (!id) return null;
+          const name = safe(() => api.i18n.getName(definition), id);
+          const color =
+            typeof definition.metaColor === "number"
+              ? `#${definition.metaColor.toString(16).padStart(6, "0")}`
+              : "#9aa7b5";
+          return { id, name, color, matterType: definition.matterType };
+        })
+        .filter(Boolean)
+        .sort((a, b) => a.name.localeCompare(b.name)),
+    [],
+  );
+
+const matterName = (matterType) =>
+  ({ 1: "Solid", 2: "Liquid", 3: "Particle", 4: "Gas", 5: "Static", 6: "Slushy", 7: "Wisp", 8: "Powder" }[
+    matterType
+  ] || "Other");
+
+const closePicker = (value) => {
+  const current = pickerState;
+  pickerState = null;
+  if (current) current.resolve(value);
+  if (pickerRepaint) pickerRepaint((value) => value + 1);
+};
+
+const ElementPicker = () => {
+  const [query, setQuery] = UIReact.useState("");
+  const [matter, setMatter] = UIReact.useState("All");
+  const [, bump] = UIReact.useState(0);
+
+  UIReact.useEffect(() => {
+    pickerRepaint = bump;
+    return () => {
+      if (pickerRepaint === bump) pickerRepaint = null;
+    };
+  }, []);
+
+  if (!pickerState) return null;
+
+  const normalizedQuery = query.trim().toLowerCase();
+  const entries = elementEntries().filter((entry) => {
+    const matchesQuery =
+      !normalizedQuery ||
+      entry.name.toLowerCase().includes(normalizedQuery) ||
+      entry.id.toLowerCase().includes(normalizedQuery);
+    return matchesQuery && (matter === "All" || matterName(entry.matterType) === matter);
+  });
+  const matters = ["All", ...new Set(elementEntries().map((entry) => matterName(entry.matterType)))];
+  const buttonStyle = (active) => ({
+    background: active ? "#26372f" : "#05090d",
+    border: `2px solid ${active ? "#ffe600" : "#33455d"}`,
+    borderRadius: 8,
+    color: active ? "#ffe600" : "#cbd5e1",
+    cursor: "pointer",
+    padding: "8px 14px",
+    fontSize: 16,
+  });
+
+  return UIReact.createElement(
+    "div",
+    {
+      style: {
+        position: "fixed",
+        inset: "8% 4%",
+        zIndex: 10000,
+        overflow: "auto",
+        padding: 24,
+        background: "rgba(8, 28, 42, 0.96)",
+        border: "2px solid #33455d",
+        borderRadius: 12,
+        color: "#cbd5e1",
+        fontFamily: "inherit",
+      },
+    },
+    UIReact.createElement(
+      "div",
+      { style: { display: "flex", alignItems: "center", gap: 16, marginBottom: 18 } },
+      UIReact.createElement("h2", { style: { margin: 0, flex: 1 } }, "Configure Infinite Source"),
+      UIReact.createElement("button", { style: buttonStyle(false), onClick: () => closePicker(null) }, "Cancel"),
+    ),
+    UIReact.createElement("input", {
+      autoFocus: true,
+      value: query,
+      placeholder: "Search elements...",
+      onChange: (event) => setQuery(event.target.value),
+      style: {
+        width: "100%",
+        boxSizing: "border-box",
+        marginBottom: 14,
+        padding: "12px 14px",
+        background: "#05090d",
+        border: "2px solid #33455d",
+        borderRadius: 8,
+        color: "#cbd5e1",
+        fontSize: 18,
+      },
+    }),
+    UIReact.createElement(
+      "div",
+      { style: { display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 18 } },
+      matters.map((name) =>
+        UIReact.createElement(
+          "button",
+          { key: name, style: buttonStyle(matter === name), onClick: () => setMatter(name) },
+          name,
+        ),
+      ),
+    ),
+    UIReact.createElement(
+      "div",
+      {
+        style: {
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: 10,
+        },
+      },
+      entries.map((entry) =>
+        UIReact.createElement(
+          "button",
+          {
+            key: entry.id,
+            onClick: () => closePicker(entry.id),
+            style: {
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              minHeight: 58,
+              padding: "10px 14px",
+              textAlign: "left",
+              background: "#071117",
+              border: `2px solid ${entry.id === pickerState.current ? "#ffe600" : "#33455d"}`,
+              borderRadius: 8,
+              color: "#cbd5e1",
+              cursor: "pointer",
+              fontSize: 17,
+            },
+          },
+          UIReact.createElement("span", {
+            style: { width: 22, height: 22, flex: "0 0 auto", background: entry.color },
+          }),
+          UIReact.createElement("span", null, entry.name),
+        ),
+      ),
+    ),
+  );
+};
+
+const registerPicker = () => {
+  if (pickerOverlayReady) return true;
+  if (!UIReact) return false;
+  try {
+    const dispose = api.ui.inject(PICKER_ID, ElementPicker);
+    pickerOverlayReady = typeof dispose === "function";
+    return pickerOverlayReady;
+  } catch (error) {
+    console.error(`[${MOD_ID}] element picker unavailable:`, error);
+    return false;
+  }
+};
+
+const openElementPicker = async (current) => {
+  if (registerPicker()) {
+    return new Promise((resolve) => {
+      pickerState = { current, resolve };
+      if (pickerRepaint) pickerRepaint((value) => value + 1);
+    });
+  }
+
+  // Fallback for runtimes that do not expose React or the modal overlay slot.
+  return api.ui.prompt(
+    `Enter an element ID to emit (default: ${current}).`,
+    current,
+    "Element ID",
+    "Configure Infinite Source",
+  );
+};
+
 const configureSource = async (structure) => {
   const key = sourceKey(structure);
   if (configuringSources.has(key)) return;
@@ -60,12 +251,7 @@ const configureSource = async (structure) => {
 
   try {
     const current = structure.data?.elementId || DEFAULT_ELEMENT_ID;
-    const value = await api.ui.prompt(
-      `Enter an element ID to emit (default: ${current}).`,
-      current,
-      "Element ID",
-      "Configure Infinite Source",
-    );
+    const value = await openElementPicker(current);
 
     // Closing the dialog keeps the default. A bad ID is also rejected rather
     // than leaving a source that fails on every trigger tick.
@@ -155,6 +341,7 @@ const trashTick = () => {
 
 const setup = async () => {
   api.i18n.register("en", TEXT);
+  registerPicker();
 
   await api.sprites.loadFromMod(SOURCE_SPRITE, "assets/SourceBlock.png");
   await api.sprites.loadFromMod(TRASH_SPRITE, "assets/Trash.png");
