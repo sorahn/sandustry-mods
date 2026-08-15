@@ -1,0 +1,13 @@
+{
+	"name": "Creative Mode",
+	"version": "1.1.3",
+	"modID": "creativemode",
+	"author": "Electric131",
+	"shortDescription": "Unlocks all technology and gives creative tools such as spawners and deleters",
+	"fluxloaderVersion": "^2.2.0",
+	"dependencies": { "corelib": "^3.0.0" },
+	"tags": ["cheat", "creative"],
+	"electronEntrypoint": "entry.electron.js",
+	"gameEntrypoint": "entry.game.js",
+	"workerEntrypoint": "entry.worker.js"
+}
