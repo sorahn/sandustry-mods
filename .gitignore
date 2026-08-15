@@ -1,4 +1,5 @@
 # Generated mod packages and build output
+artifacts/
 *.zip
 mods/*/build/
 node_modules/

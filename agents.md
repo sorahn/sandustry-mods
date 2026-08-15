@@ -11,8 +11,8 @@ Makefiles expose the same commands.
 The repository toolchain is pinned in `package.json` and `package-lock.json`.
 TypeScript 7 and TSX support are configured with the Sandustry JSX factory, and
 the Infinite Source/Trash implementation is now TypeScript compiled to a plain
-JavaScript entrypoint. Generated `mods/*/build/` output and zip archives must
-not be committed.
+JavaScript entrypoint. Generated `mods/*/build/` output and the root
+`artifacts/` archive directory must not be committed.
 
 ## Project goal
 
@@ -152,7 +152,8 @@ numeric type.
 The source files are under `mods/infinite-source-trash/`. The distributable
 archive is generated as `sandustry-test-blocks-0.1.3.zip` or the current
 Makefile-derived archive name.
-Generated zip files are ignored by `.gitignore`.
+Generated zip files are written under the root `artifacts/` directory and are
+ignored by `.gitignore`.
 
 The Makefile provides:
 

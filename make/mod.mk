@@ -7,7 +7,8 @@ MANIFEST := $(MOD_DIR)/modinfo.json
 MOD_ID := $(shell node -p 'require("$(MANIFEST)").id')
 MOD_NAME := $(shell node -p 'require("$(MANIFEST)").name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$$/g,"")')
 MOD_VERSION := $(shell node -p 'require("$(MANIFEST)").version')
-ARCHIVE := $(REPO_ROOT)/$(MOD_NAME)-$(MOD_VERSION).zip
+ARTIFACTS_DIR := $(REPO_ROOT)/artifacts
+ARCHIVE := $(ARTIFACTS_DIR)/$(MOD_NAME)-$(MOD_VERSION).zip
 PACKAGE_DIR := $(BUILD_DIR)/package
 SANDUSTRY_MODS_DIR ?= /Users/daryl/Library/Application Support/sandustry/mods
 INSTALL_DIR := $(SANDUSTRY_MODS_DIR)/$(MOD_ID)
@@ -30,6 +31,7 @@ $(ARCHIVE): $(BUILD_DIR)/entry.js $(MANIFEST) $(shell find $(MOD_DIR)/assets -ty
 	@cp -R "$(MOD_DIR)/assets/." "$(PACKAGE_DIR)/assets/"
 	@if [ -f "$(MOD_DIR)/preview.png" ]; then cp "$(MOD_DIR)/preview.png" "$(PACKAGE_DIR)/preview.png"; fi
 	@if [ -f "$(MOD_DIR)/workshop.json" ]; then cp "$(MOD_DIR)/workshop.json" "$(PACKAGE_DIR)/workshop.json"; fi
+	@mkdir -p "$(ARTIFACTS_DIR)"
 	@rm -f "$(ARCHIVE)"
 	@cd "$(PACKAGE_DIR)" && zip -qr "$(ARCHIVE)" .
 	@echo "Built $(ARCHIVE)"

@@ -48,5 +48,6 @@ The same commands are available from inside a mod directory, without the
 `MOD=` argument. The install destination can be overridden with
 `SANDUSTRY_MODS_DIR=/path/to/sandustry/mods`.
 
-Generated `build/` directories and zip archives are ignored. Reference mods in
-`resources/` are not active mods and are not packaged.
+Generated `build/` directories and the root `artifacts/` archive directory are
+ignored. Reference mods in `resources/` are not active mods and are not
+packaged.
