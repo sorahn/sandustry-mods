@@ -495,35 +495,32 @@ const ElementPicker = () => {
 
   if (pickerState.minimized) {
     const selected = currentPickerEntry();
-    return UIReact.createElement(
-      "div",
-      {
-        className:
-          "pointer-events-auto flex items-center gap-2 bg-black bg-opacity-75 border border-slate-700 rounded px-3 py-2 ui-box text-slate-300",
-        style: {
+    return (
+      <div
+        className="pointer-events-auto flex items-center gap-2 bg-black bg-opacity-75 border border-slate-700 rounded px-3 py-2 ui-box text-slate-300"
+        style={{
           position: "fixed",
           left: "50%",
           bottom: 80,
           transform: "translateX(-50%)",
           zIndex: 10000,
-        },
-        onClick: expandPicker,
-      },
-      UIReact.createElement("span", { className: "text-white text-xs opacity-70" }, "Source"),
-      UIReact.createElement(
-        FocusableButton,
-        {
-          id: `${PICKER_ID}-selected`,
-          onActivate: expandPicker,
-          className: "flex items-center gap-2 text-xs text-white hover:text-[#ffe700]",
-        },
-        UIReact.createElement("span", {
-          className: "w-3 h-3 flex-shrink-0",
-          style: { backgroundColor: selected?.color || "#9aa7b5" },
-        }),
-        selected?.name || DEFAULT_ELEMENT_ID,
-      ),
-      UIReact.createElement("span", { className: "text-xs text-slate-500" }, "Click to expand"),
+        }}
+        onClick={expandPicker}
+      >
+        <span className="text-white text-xs opacity-70">Source</span>
+        <FocusableButton
+          id={`${PICKER_ID}-selected`}
+          onActivate={expandPicker}
+          className="flex items-center gap-2 text-xs text-white hover:text-[#ffe700]"
+        >
+          <span
+            className="w-3 h-3 flex-shrink-0"
+            style={{ backgroundColor: selected?.color || "#9aa7b5" }}
+          />
+          {selected?.name || DEFAULT_ELEMENT_ID}
+        </FocusableButton>
+        <span className="text-xs text-slate-500">Click to expand</span>
+      </div>
     );
   }
 
@@ -547,12 +544,10 @@ const ElementPicker = () => {
       ? "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200 text-[#ffe700] border-opacity-50 bg-[#ffe700]/10"
       : "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200 text-white border-opacity-25 hover:text-[#ffe700] hover:border-opacity-0 bg-black";
 
-  return UIReact.createElement(
-    "div",
-    {
-      className:
-        "pointer-events-auto flex flex-col overflow-hidden bg-black bg-opacity-75 border border-slate-700 rounded ui-box text-slate-300",
-      style: {
+  return (
+    <div
+      className="pointer-events-auto flex flex-col overflow-hidden bg-black bg-opacity-75 border border-slate-700 rounded ui-box text-slate-300"
+      style={{
         position: "fixed",
         top: "auto",
         left: "50%",
@@ -562,62 +557,42 @@ const ElementPicker = () => {
         width: "640px",
         maxWidth: "92vw",
         maxHeight: "600px",
-      },
-    },
-    UIReact.createElement(
-      "div",
-      {
-        className: "px-4 py-2 border-b border-slate-800 flex items-center justify-between",
-      },
-      UIReact.createElement("span", { className: "text-white text-xs opacity-70" }, "Source"),
-      UIReact.createElement(
-        "div",
-        { className: "flex items-center gap-2" },
-        UIReact.createElement(
-          FocusableButton,
-          {
-            id: `${PICKER_ID}-minimize`,
-            onActivate: minimizePicker,
-            neighbors: { down: `${PICKER_ID}-search` },
-            className:
-              "text-xs px-2 py-0.5 text-white bg-black border rounded-tr-lg rounded-bl-lg item-button-transition hover:text-[#ffe700] border-slate-200 border-opacity-25 hover:border-opacity-0",
-          },
-          "Minimize ▾",
-        ),
-      ),
-    ),
-    UIReact.createElement(
-      "div",
-      {
-        className: "px-4 py-3 border-b border-slate-800 flex flex-col gap-2 items-stretch",
-      },
-      UIReact.createElement(
-        "div",
-        { className: "flex items-center" },
-        UIReact.createElement("input", {
-          ref: searchFocus.ref,
-          autoFocus: true,
-          value: query,
-          placeholder: "Search elements...",
-          maxLength: 64,
-          onChange: (event) => setQuery(event.target.value),
-          onKeyDown: (event) => {
-            if (event.key === "Escape") minimizePicker();
-          },
-          className:
-            "w-full bg-black/60 border border-slate-700 px-3 py-1.5 rounded text-xs text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 transition-colors",
-        }),
-      ),
-      UIReact.createElement(
-        "div",
-        { className: "flex gap-1 flex-wrap" },
-        matters.map((name, index) =>
-          UIReact.createElement(
-            FocusableButton,
-            {
-              key: name,
-              id: `${PICKER_ID}-matter-${name}`,
-              neighbors: {
+      }}
+    >
+      <div className="px-4 py-2 border-b border-slate-800 flex items-center justify-between">
+        <span className="text-white text-xs opacity-70">Source</span>
+        <div className="flex items-center gap-2">
+          <FocusableButton
+            id={`${PICKER_ID}-minimize`}
+            onActivate={minimizePicker}
+            neighbors={{ down: `${PICKER_ID}-search` }}
+            className="text-xs px-2 py-0.5 text-white bg-black border rounded-tr-lg rounded-bl-lg item-button-transition hover:text-[#ffe700] border-slate-200 border-opacity-25 hover:border-opacity-0"
+          >
+            Minimize ▾
+          </FocusableButton>
+        </div>
+      </div>
+      <div className="px-4 py-3 border-b border-slate-800 flex flex-col gap-2 items-stretch">
+        <div className="flex items-center">
+          <input
+            ref={searchFocus.ref}
+            autoFocus
+            value={query}
+            placeholder="Search elements..."
+            maxLength={64}
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") minimizePicker();
+            }}
+            className="w-full bg-black/60 border border-slate-700 px-3 py-1.5 rounded text-xs text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 transition-colors"
+          />
+        </div>
+        <div className="flex gap-1 flex-wrap">
+          {matters.map((name, index) => (
+            <FocusableButton
+              key={name}
+              id={`${PICKER_ID}-matter-${name}`}
+              neighbors={{
                 left: index > 0 ? `${PICKER_ID}-matter-${matters[index - 1]}` : undefined,
                 right:
                   index + 1 < matters.length
@@ -625,36 +600,30 @@ const ElementPicker = () => {
                     : undefined,
                 up: `${PICKER_ID}-search`,
                 down: `${PICKER_ID}-element-0`,
-              },
-              className: tabClass(matter === name),
-              onActivate: () => setMatter(name),
-            },
-            name,
-          ),
-        ),
-      ),
-    ),
-    UIReact.createElement(
-      "div",
-      {
-        className: "flex-1 overflow-y-auto px-4 py-2",
-        style: { maxHeight: 480 },
-      },
-      UIReact.createElement(
-        "div",
-        { className: "grid grid-cols-4 gap-1.5 py-1.5" },
-        entries.map((entry, index) =>
-          UIReact.createElement(ElementGridButton, {
-            key: entry.id || `type-${entry.type}`,
-            entry,
-            index,
-            entries,
-            selected: isSelected(entry),
-            onSelect: () => closePicker(entry),
-          }),
-        ),
-      ),
-    ),
+              }}
+              className={tabClass(matter === name)}
+              onActivate={() => setMatter(name)}
+            >
+              {name}
+            </FocusableButton>
+          ))}
+        </div>
+      </div>
+      <div className="flex-1 overflow-y-auto px-4 py-2" style={{ maxHeight: 480 }}>
+        <div className="grid grid-cols-4 gap-1.5 py-1.5">
+          {entries.map((entry, index) => (
+            <ElementGridButton
+              key={entry.id || `type-${entry.type}`}
+              entry={entry}
+              index={index}
+              entries={entries}
+              selected={isSelected(entry)}
+              onSelect={() => closePicker(entry)}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
