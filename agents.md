@@ -69,14 +69,17 @@ The Mods tab appears only for mods with a non-empty `configSchema` in
 with required `labelKey` values. Runtime values are available through
 `api.settings.get`, `api.settings.getAll`, and `api.settings.onChange`.
 
-The project currently uses a placement-time prompt instead of an undocumented
-native structure configuration panel. On first placement, Source opens a custom
-element picker modeled on the game's filter picker: searchable element grid,
-matter-type filters, color swatches, and cancel behavior. A valid ID is stored
-in structure data as `elementId`. Canceling or entering an invalid ID disables
-that Source rather than silently emitting Sand. If the runtime does not expose
-React or the expected modal overlay slot, the code falls back to the text
-prompt.
+The project currently uses a custom picker instead of an undocumented native
+structure configuration panel. The picker is modeled on the game's filter UI:
+it has a compact selected-element strip, expands into a searchable element grid
+with matter-type filters and color swatches, and minimizes after selection. A
+single picker promise is shared across all structures created by a line drag,
+so each placed Source receives the same selection without opening competing
+modals. A valid ID/type is stored in structure data. If the runtime does not
+expose React or the expected modal overlay slot, the code falls back to the
+text prompt. The documented API does not expose a reliable event for detecting
+which building is currently held, so the picker is opened by Source
+configuration rather than by speculative action-state inspection.
 
 ## Current implementation behavior
 
