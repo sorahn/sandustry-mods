@@ -16,6 +16,7 @@ const SOURCE_SPRITE = "sandustryTestBlocksSourceSprite";
 const TRASH_SPRITE = "sandustryTestBlocksTrashSprite";
 const TICK_MS = 500;
 const DEFAULT_ELEMENT_ID = "sand";
+const LAST_ELEMENT_KEY = `${MOD_ID}.lastElement`;
 // Add unfinished or unwanted element IDs here. The picker, manual fallback,
 // and runtime source check all use this same list.
 const BLACKLISTED_ELEMENT_IDS = new Set([
@@ -55,12 +56,14 @@ const TEXT = {
 };
 
 const configuredSources = new Set();
+const sourceSelections = new Map();
 const configuringSources = new Set();
 const disabledSources = new Set();
 const PICKER_ID = `${MOD_ID}-element-picker`;
 let pickerState = null;
 let pickerOverlayReady = false;
 let pickerRepaint = null;
+let lastElementSelection = null;
 const UIReact = sandkit.react ?? null;
 
 const safe = (fn, fallback = null) => {
@@ -72,6 +75,95 @@ const safe = (fn, fallback = null) => {
 };
 
 const sourceKey = (structure) => `${structure.x},${structure.y}`;
+
+const selectionData = (selection) => ({
+  elementId: selection.id || null,
+  elementType: selection.type,
+});
+
+const validElementSelection = (selection) => {
+  if (!selection || !Number.isInteger(selection.type)) return null;
+  const definition = safe(
+    () => api.elements.getDefinitionByType(selection.type),
+    null,
+  );
+  if (!definition || !isElementTypeAllowed(selection.type)) return null;
+  if (!isElementAllowed(selection.id, definition)) return null;
+  return {
+    id: definition.id || selection.id || null,
+    type: selection.type,
+  };
+};
+
+const getLastElement = () => {
+  const saved = safe(() => api.storage.local.get(LAST_ELEMENT_KEY));
+  let candidate = saved;
+  if (typeof saved === "string") {
+    if (saved.startsWith("type:")) {
+      candidate = { type: Number(saved.slice(5)), id: null };
+    } else if (saved.startsWith("id:")) {
+      const id = saved.slice(3);
+      candidate = {
+        id,
+        type: safe(() => api.elements.getTypeFromId(id), null),
+      };
+    }
+  } else if (Number.isInteger(saved)) {
+    candidate = { type: saved, id: null };
+  }
+
+  return (
+    validElementSelection(candidate) ||
+    validElementSelection(lastElementSelection)
+  );
+};
+
+const rememberElement = (selection) => {
+  const valid = validElementSelection(selection);
+  if (valid) {
+    lastElementSelection = valid;
+    const value = valid.id ? `id:${valid.id}` : `type:${valid.type}`;
+    safe(() => api.storage.local.set(LAST_ELEMENT_KEY, value));
+  }
+  return valid;
+};
+
+const defaultElementSelection = () => {
+  const remembered = getLastElement();
+  if (remembered) return remembered;
+
+  const type = safe(() => api.elements.getTypeFromId(DEFAULT_ELEMENT_ID), null);
+  return (
+    validElementSelection({ id: DEFAULT_ELEMENT_ID, type }) || {
+      id: DEFAULT_ELEMENT_ID,
+      type: null,
+    }
+  );
+};
+
+const sourceElementSelection = (structure) => {
+  if (Number.isInteger(structure.data?.elementType)) {
+    const storedId = structure.data?.elementId;
+    const idMatchesType =
+      storedId &&
+      safe(() => api.elements.getTypeFromId(storedId), null) ===
+        structure.data.elementType;
+    return validElementSelection({
+      id: idMatchesType ? storedId : null,
+      type: structure.data.elementType,
+    });
+  }
+
+  if (structure.data?.elementId) {
+    const id = structure.data.elementId;
+    return validElementSelection({
+      id,
+      type: safe(() => api.elements.getTypeFromId(id), null),
+    });
+  }
+
+  return defaultElementSelection();
+};
 
 const isElementAllowed = (elementId, definition = null) => {
   if (elementId && BLACKLISTED_ELEMENT_IDS.has(elementId)) return false;
@@ -191,7 +283,7 @@ const ElementPicker = () => {
     ...new Set(elementEntries().map((entry) => matterName(entry.matterType))),
   ];
   const isSelected = (entry) =>
-    entry.id === pickerState.current ||
+    (entry.id !== null && entry.id === pickerState.current) ||
     (pickerState.currentType !== null &&
       entry.type === pickerState.currentType);
   const tabClass = (active) =>
@@ -286,6 +378,7 @@ const ElementPicker = () => {
             "button",
             {
               key: entry.id || `type-${entry.type}`,
+              type: "button",
               onClick: () => closePicker(entry),
               className: isSelected(entry)
                 ? "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-[#ffe700] bg-[#ffe700]/10"
@@ -304,13 +397,6 @@ const ElementPicker = () => {
               },
               entry.name,
             ),
-            isSelected(entry)
-              ? UIReact.createElement(
-                  "span",
-                  { className: "ml-auto text-[#ffe700] text-[10px]" },
-                  "✓",
-                )
-              : null,
           ),
         ),
       ),
@@ -335,8 +421,8 @@ const openElementPicker = async (current) => {
   if (registerPicker()) {
     return new Promise((resolve) => {
       pickerState = {
-        current,
-        currentType: safe(() => api.elements.getTypeFromId(current), null),
+        current: current.id,
+        currentType: current.type,
         resolve,
       };
       if (pickerRepaint) pickerRepaint((value) => value + 1);
@@ -345,20 +431,20 @@ const openElementPicker = async (current) => {
 
   // Fallback for runtimes that do not expose React or the modal overlay slot.
   return api.ui.prompt(
-    `Enter an element ID to emit (default: ${current}).`,
-    current,
+    `Enter an element ID to emit (default: ${current.id || DEFAULT_ELEMENT_ID}).`,
+    current.id || DEFAULT_ELEMENT_ID,
     "Element ID",
     "Configure Infinite Source",
   );
 };
 
-const configureSource = async (structure) => {
+const configureSource = async (structure, initialSelection) => {
   const key = sourceKey(structure);
   if (configuringSources.has(key)) return;
   configuringSources.add(key);
 
   try {
-    const current = structure.data?.elementId || DEFAULT_ELEMENT_ID;
+    const current = initialSelection || sourceElementSelection(structure);
     const value = await openElementPicker(current);
 
     // Closing the dialog keeps the default. A bad ID is also rejected rather
@@ -381,11 +467,13 @@ const configureSource = async (structure) => {
       }
 
       disabledSources.delete(key);
-      api.structures.setData(
-        structure,
-        { elementType: value.type, elementId: value.id },
-        { propagateToWorkers: true },
-      );
+      const selection = validElementSelection(value);
+      if (!selection) return;
+      sourceSelections.set(key, selection);
+      api.structures.setData(structure, selectionData(value), {
+        propagateToWorkers: true,
+      });
+      rememberElement(selection);
       api.ui.toast(`Source configured to emit ${value.name}`);
       return;
     }
@@ -403,11 +491,16 @@ const configureSource = async (structure) => {
     }
 
     disabledSources.delete(key);
-    api.structures.setData(
-      structure,
-      { elementId },
-      { propagateToWorkers: true },
-    );
+    const selection = validElementSelection({
+      id: elementId,
+      type: elementType,
+    });
+    if (!selection) return;
+    sourceSelections.set(key, selection);
+    api.structures.setData(structure, selectionData(selection), {
+      propagateToWorkers: true,
+    });
+    rememberElement(selection);
     api.ui.toast(`Source configured to emit ${elementId}`);
   } catch (error) {
     console.error(`[${MOD_ID}] source configuration failed:`, error);
@@ -433,19 +526,21 @@ const sourceTick = () => {
         !structure.data?.elementId &&
         !Number.isInteger(structure.data?.elementType);
       if (needsConfiguration) {
-        api.structures.setData(
-          structure,
-          { elementId: DEFAULT_ELEMENT_ID },
-          { propagateToWorkers: true },
-        );
-        void configureSource(structure);
+        const initialSelection = sourceElementSelection(structure);
+        if (!initialSelection) return;
+        sourceSelections.set(key, initialSelection);
+        api.structures.setData(structure, selectionData(initialSelection), {
+          propagateToWorkers: true,
+        });
+        void configureSource(structure, initialSelection);
         // Do not emit the default element while the placement configuration
         // prompt is still open.
         return;
       }
     }
 
-    const elementType = elementTypeFromSource(structure);
+    const elementType =
+      sourceSelections.get(key)?.type ?? elementTypeFromSource(structure);
     if (elementType === null) return;
 
     // Fill one complete 4x4 batch directly below the structure. Occupied
@@ -464,6 +559,7 @@ const sourceTick = () => {
   for (const key of configuredSources) {
     if (!live.has(key)) {
       configuredSources.delete(key);
+      sourceSelections.delete(key);
       disabledSources.delete(key);
     }
   }

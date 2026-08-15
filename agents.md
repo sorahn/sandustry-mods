@@ -118,9 +118,12 @@ The source tracks three states by structure position:
 - `configuringSources`: structures whose prompt is open; these must not spawn.
 - `disabledSources`: structures canceled or given an invalid element ID.
 
-This state is session-local. The selected `elementId` is persisted through the
-structure data, so existing configured Sources do not reopen the prompt after a
-reload.
+The selected element is persisted through the structure data, so existing
+configured Sources do not reopen the prompt after a reload. The most recently
+picked element is also saved with `api.storage.local` under
+`${MOD_ID}.lastElement`, so a newly placed Source starts with that selection
+across worlds and game launches. Core elements without IDs are stored by
+numeric type.
 
 ## Assets and packaging
 
