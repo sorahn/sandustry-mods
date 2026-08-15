@@ -1,0 +1,3 @@
+[submodule "resources/sandkit-surface-map"]
+	path = resources/sandkit-surface-map
+	url = https://github.com/udkx/sandkit-surface-map.git
