@@ -7,6 +7,8 @@
 
 "use strict";
 
+import noop from "~shared/noop";
+
 const api = sandkit.api;
 const MOD_ID = "sandustry-test-blocks.source-trash";
 
@@ -49,45 +51,81 @@ const FOOTPRINT = [
 
 const TEXT = {
   "structures|source|name": "Infinite Source",
-  "structures|source|description":
-    "Creates an endless stream of the configured element.",
+  "structures|source|description": "Creates an endless stream of the configured element.",
   "structures|trash|name": " Trash",
   "structures|trash|description": "An infinitely deep void for particle trash.",
 };
 
-const configuredSources = new Set();
-const sourceSelections = new Map();
-const configuringSources = new Set();
-const disabledSources = new Set();
+type ElementSelection = { id: string | null; type: number | null };
+type ValidElementSelection = { id: string | null; type: number };
+type ElementEntry = ValidElementSelection & {
+  name: string;
+  color: string;
+  matterType: number | undefined;
+};
+type PickerState = {
+  current: string | null;
+  currentType: number | null;
+  minimized: boolean;
+  resolve: ((value: ElementSelection | null) => void) | null;
+};
+type FocusableButtonProps = {
+  id: string;
+  onActivate: () => void;
+  neighbors?: Record<string, string | undefined>;
+  className?: string;
+  children?: any;
+  [key: string]: unknown;
+};
+type ElementGridButtonProps = {
+  entry: ElementEntry;
+  index: number;
+  entries: ElementEntry[];
+  selected: boolean;
+  onSelect: () => void;
+};
+type CurrentPickerEntry = {
+  id: string | null;
+  type: number | null;
+  name: string;
+  color: string;
+  matterType?: number;
+};
+
+const configuredSources = new Set<string>();
+const sourceSelections = new Map<string, ElementSelection>();
+const configuringSources = new Set<string>();
+const disabledSources = new Set<string>();
 const PICKER_ID = `${MOD_ID}-element-picker`;
-let pickerState = null;
+let pickerState: PickerState | null = null;
 let pickerOverlayReady = false;
-let pickerRepaint = null;
-let pickerPromise = null;
-let lastElementSelection = null;
+let pickerRepaint: ((update: (value: number) => number) => void) | null = null;
+let pickerPromise: Promise<ElementSelection | null> | null = null;
+let lastElementSelection: ElementSelection | null = null;
 const UIReact = sandkit.react ?? null;
 
-const safe = (fn, fallback = null) => {
+const safe = <T,>(fn: () => T, fallback: T | null = null): T | null => {
   try {
     return fn();
   } catch (error) {
+    noop(error);
     return fallback;
   }
 };
 
-const sourceKey = (structure) => `${structure.x},${structure.y}`;
+const sourceKey = (structure: SandustryStructure) => `${structure.x},${structure.y}`;
 
-const selectionData = (selection) => ({
+const selectionData = (selection: ElementSelection): SandustryStructureData => ({
   elementId: selection.id || null,
   elementType: selection.type,
 });
 
-const validElementSelection = (selection) => {
-  if (!selection || !Number.isInteger(selection.type)) return null;
-  const definition = safe(
-    () => api.elements.getDefinitionByType(selection.type),
-    null,
-  );
+const validElementSelection = (
+  selection: ElementSelection | null | undefined,
+): ValidElementSelection | null => {
+  if (!selection || typeof selection.type !== "number" || !Number.isInteger(selection.type))
+    return null;
+  const definition = safe(() => api.elements.getDefinitionByType(selection.type), null);
   if (!definition || !isElementTypeAllowed(selection.type)) return null;
   if (!isElementAllowed(selection.id, definition)) return null;
   return {
@@ -114,12 +152,12 @@ const getLastElement = () => {
   }
 
   return (
-    validElementSelection(candidate) ||
+    validElementSelection(candidate as ElementSelection | null) ||
     validElementSelection(lastElementSelection)
   );
 };
 
-const rememberElement = (selection) => {
+const rememberElement = (selection: ElementSelection) => {
   const valid = validElementSelection(selection);
   if (valid) {
     lastElementSelection = valid;
@@ -142,16 +180,15 @@ const defaultElementSelection = () => {
   );
 };
 
-const sourceElementSelection = (structure) => {
+const sourceElementSelection = (structure: SandustryStructure) => {
   if (Number.isInteger(structure.data?.elementType)) {
     const storedId = structure.data?.elementId;
+    const elementType = structure.data?.elementType;
     const idMatchesType =
-      storedId &&
-      safe(() => api.elements.getTypeFromId(storedId), null) ===
-        structure.data.elementType;
+      storedId && safe(() => api.elements.getTypeFromId(storedId), null) === elementType;
     return validElementSelection({
       id: idMatchesType ? storedId : null,
-      type: structure.data.elementType,
+      type: elementType ?? null,
     });
   }
 
@@ -166,52 +203,41 @@ const sourceElementSelection = (structure) => {
   return defaultElementSelection();
 };
 
-const isElementAllowed = (elementId, definition = null) => {
+const isElementAllowed = (
+  elementId: string | null | undefined,
+  definition: SandustryElementDefinition | null = null,
+) => {
   if (elementId && BLACKLISTED_ELEMENT_IDS.has(elementId)) return false;
   const resolved =
     definition ||
-    safe(
-      () =>
-        api.elements.getDefinitionByType(api.elements.getTypeFromId(elementId)),
-      null,
-    );
+    safe(() => api.elements.getDefinitionByType(api.elements.getTypeFromId(elementId)), null);
   return !!resolved && resolved.hidden !== true;
 };
 
-const isElementTypeAllowed = (elementType) =>
-  !BLACKLISTED_ELEMENT_TYPES.has(elementType);
+const isElementTypeAllowed = (elementType: number) => !BLACKLISTED_ELEMENT_TYPES.has(elementType);
 
-const elementIdFromSource = (structure) => {
+const elementIdFromSource = (structure: SandustryStructure) => {
   const requested = structure.data?.elementId || DEFAULT_ELEMENT_ID;
   return isElementAllowed(requested) ? requested : null;
 };
 
-const elementTypeFromSource = (structure) => {
+const elementTypeFromSource = (structure: SandustryStructure) => {
   const storedType = structure.data?.elementType;
-  if (Number.isInteger(storedType)) {
-    const definition = safe(
-      () => api.elements.getDefinitionByType(storedType),
-      null,
-    );
-    return definition &&
-      definition.hidden !== true &&
-      isElementTypeAllowed(storedType)
+  if (typeof storedType === "number" && Number.isInteger(storedType)) {
+    const definition = safe(() => api.elements.getDefinitionByType(storedType), null);
+    return definition && definition.hidden !== true && isElementTypeAllowed(storedType)
       ? storedType
       : null;
   }
 
   const elementId = elementIdFromSource(structure);
   const elementType =
-    elementId === null
-      ? null
-      : safe(() => api.elements.getTypeFromId(elementId), null);
-  return elementType !== null && isElementTypeAllowed(elementType)
-    ? elementType
-    : null;
+    elementId === null ? null : safe(() => api.elements.getTypeFromId(elementId), null);
+  return elementType !== null && isElementTypeAllowed(elementType) ? elementType : null;
 };
 
-const elementEntries = () =>
-  safe(
+const elementEntries = (): ElementEntry[] =>
+  safe<ElementEntry[]>(
     () =>
       api.elements
         .getRegisteredTypes()
@@ -220,39 +246,41 @@ const elementEntries = () =>
           const definition = api.elements.getDefinitionByType(type);
           const id = definition?.id || null;
           if (!definition || !isElementAllowed(id, definition)) return null;
-          const name = safe(
-            () => api.i18n.getName(definition),
-            id || `[type ${type}]`,
-          );
+          const name =
+            safe(() => api.i18n.getName(definition), id || `[type ${type}]`) ||
+            id ||
+            `[type ${type}]`;
           const color =
             typeof definition.metaColor === "number"
               ? `#${definition.metaColor.toString(16).padStart(6, "0")}`
               : "#9aa7b5";
           return { id, type, name, color, matterType: definition.matterType };
         })
-        .filter(Boolean)
+        .filter((entry): entry is ElementEntry => entry !== null)
         .sort((a, b) => a.name.localeCompare(b.name)),
     [],
-  );
+  ) || [];
 
-const matterName = (matterType) =>
-  ({
-    1: "Solid",
-    2: "Liquid",
-    3: "Particle",
-    4: "Gas",
-    5: "Static",
-    6: "Slushy",
-    7: "Wisp",
-    8: "Powder",
-  })[matterType] || "Other";
+const matterName = (matterType: number | undefined) =>
+  (
+    ({
+      1: "Solid",
+      2: "Liquid",
+      3: "Particle",
+      4: "Gas",
+      5: "Static",
+      6: "Slushy",
+      7: "Wisp",
+      8: "Powder",
+    }) as Record<number, string>
+  )[matterType ?? 0] || "Other";
 
-const closePicker = (value) => {
+const closePicker = (value: unknown) => {
   const current = pickerState;
   if (!current) return;
   const selected =
-    value && typeof value === "object" && Number.isInteger(value.type)
-      ? value
+    value && typeof value === "object" && Number.isInteger((value as ElementSelection).type)
+      ? (value as ElementSelection)
       : null;
   pickerState = {
     ...current,
@@ -263,15 +291,16 @@ const closePicker = (value) => {
   };
   const resolve = current.resolve;
   pickerPromise = null;
-  if (resolve) resolve(value);
+  if (resolve) resolve(selected);
   if (pickerRepaint) pickerRepaint((value) => value + 1);
 };
 
 const expandPicker = () => {
-  if (!pickerState || !pickerState.minimized) return;
-  pickerState = { ...pickerState, minimized: false };
-  pickerPromise = new Promise((resolve) => {
-    pickerState = { ...pickerState, resolve };
+  const state = pickerState;
+  if (!state || !state.minimized) return;
+  pickerState = { ...state, minimized: false };
+  pickerPromise = new Promise<ElementSelection | null>((resolve) => {
+    pickerState = { ...state, minimized: false, resolve };
   });
   if (pickerRepaint) pickerRepaint((value) => value + 1);
 };
@@ -291,7 +320,8 @@ const FocusableButton = ({
   className = "",
   children,
   ...props
-}) => {
+}: FocusableButtonProps) => {
+  if (!UIReact) return null;
   const navigation = api.ui.navigation;
   const focusable = navigation.useFocusable({
     id,
@@ -302,45 +332,44 @@ const FocusableButton = ({
   });
   const focusClass = navigation.controllerFocusClass(focusable.focused);
 
-  return UIReact.createElement(
-    "button",
-    {
-      ...props,
-      ref: focusable.ref,
-      type: "button",
-      onClick: onActivate,
-      className: `${className} ${focusClass}`.trim(),
-    },
-    children,
+  return (
+    <button
+      {...props}
+      ref={focusable.ref}
+      type="button"
+      onClick={onActivate}
+      className={`${className} ${focusClass}`.trim()}
+    >
+      {children}
+    </button>
   );
 };
 
-const ElementGridButton = ({ entry, index, entries, selected, onSelect }) => {
+const ElementGridButton = ({
+  entry,
+  index,
+  entries,
+  selected,
+  onSelect,
+}: ElementGridButtonProps) => {
+  if (!UIReact) return null;
   const id = `${PICKER_ID}-element-${entry.id || `type-${entry.type}`}`;
   const column = index % 4;
   const neighbors = {
     left:
       column > 0
-        ? `${PICKER_ID}-element-${
-            entries[index - 1].id || `type-${entries[index - 1].type}`
-          }`
+        ? `${PICKER_ID}-element-${entries[index - 1].id || `type-${entries[index - 1].type}`}`
         : `${PICKER_ID}-matter-All`,
     right:
       column < 3 && entries[index + 1]
-        ? `${PICKER_ID}-element-${
-            entries[index + 1].id || `type-${entries[index + 1].type}`
-          }`
+        ? `${PICKER_ID}-element-${entries[index + 1].id || `type-${entries[index + 1].type}`}`
         : undefined,
     up:
       index >= 4
-        ? `${PICKER_ID}-element-${
-            entries[index - 4].id || `type-${entries[index - 4].type}`
-          }`
+        ? `${PICKER_ID}-element-${entries[index - 4].id || `type-${entries[index - 4].type}`}`
         : `${PICKER_ID}-matter-All`,
     down: entries[index + 4]
-      ? `${PICKER_ID}-element-${
-          entries[index + 4].id || `type-${entries[index + 4].type}`
-        }`
+      ? `${PICKER_ID}-element-${entries[index + 4].id || `type-${entries[index + 4].type}`}`
       : undefined,
   };
   const focusable = api.ui.navigation.useFocusable({
@@ -355,41 +384,38 @@ const ElementGridButton = ({ entry, index, entries, selected, onSelect }) => {
     ? "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-[#ffe700] bg-[#ffe700]/10"
     : "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-slate-700 hover:border-slate-500 bg-black/40 hover:bg-black/60";
 
-  return UIReact.createElement(
-    "button",
-    {
-      ref: focusable.ref,
-      type: "button",
-      onClick: onSelect,
-      className: `${className} ${focusClass}`.trim(),
-    },
-    UIReact.createElement("span", {
-      className: "w-3 h-3 flex-shrink-0",
-      style: { backgroundColor: entry.color },
-    }),
-    UIReact.createElement(
-      "span",
-      {
-        className: selected
-          ? "text-xs truncate transition-colors text-[#ffe700]"
-          : "text-xs truncate transition-colors text-slate-300 group-hover:text-white",
-      },
-      entry.name,
-    ),
+  return (
+    <button
+      ref={focusable.ref}
+      type="button"
+      onClick={onSelect}
+      className={`${className} ${focusClass}`.trim()}
+    >
+      <span className="w-3 h-3 flex-shrink-0" style={{ backgroundColor: entry.color }} />
+      <span
+        className={
+          selected
+            ? "text-xs truncate transition-colors text-[#ffe700]"
+            : "text-xs truncate transition-colors text-slate-300 group-hover:text-white"
+        }
+      >
+        {entry.name}
+      </span>
+    </button>
   );
 };
 
-const currentPickerEntry = () => {
-  if (!pickerState) return null;
+const currentPickerEntry = (): CurrentPickerEntry | null => {
+  const state = pickerState;
+  if (!state) return null;
   return (
     elementEntries().find(
       (entry) =>
-        entry.type === pickerState.currentType ||
-        (entry.id !== null && entry.id === pickerState.current),
+        entry.type === state.currentType || (entry.id !== null && entry.id === state.current),
     ) || {
-      id: pickerState.current,
-      type: pickerState.currentType,
-      name: pickerState.current || DEFAULT_ELEMENT_ID,
+      id: state.current,
+      type: state.currentType,
+      name: state.current || DEFAULT_ELEMENT_ID,
       color: "#9aa7b5",
     }
   );
@@ -397,7 +423,7 @@ const currentPickerEntry = () => {
 
 const selectedActionIsSource = () => {
   if (!api.action) return null;
-  const selected = safe(() => api.action.getSelected(), null);
+  const selected = safe(() => api.action?.getSelected(), null);
   return selected?.id === SOURCE_ID;
 };
 
@@ -417,11 +443,7 @@ const syncPickerToSelectedAction = () => {
     return;
   }
 
-  if (
-    sourceSelected === false &&
-    pickerState &&
-    configuringSources.size === 0
-  ) {
+  if (sourceSelected === false && pickerState && configuringSources.size === 0) {
     const resolve = pickerState.resolve;
     pickerState = null;
     pickerPromise = null;
@@ -431,6 +453,7 @@ const syncPickerToSelectedAction = () => {
 };
 
 const ElementPicker = () => {
+  if (!UIReact) return null;
   const [query, setQuery] = UIReact.useState("");
   const [matter, setMatter] = UIReact.useState("All");
   const [, bump] = UIReact.useState(0);
@@ -439,9 +462,7 @@ const ElementPicker = () => {
     id: NAV_SCOPE,
     active: !!pickerState,
     priority: 100,
-    defaultId: pickerState?.minimized
-      ? `${PICKER_ID}-selected`
-      : `${PICKER_ID}-search`,
+    defaultId: pickerState?.minimized ? `${PICKER_ID}-selected` : `${PICKER_ID}-search`,
     onBack: () => {
       if (pickerState && !pickerState.minimized) {
         minimizePicker();
@@ -461,7 +482,7 @@ const ElementPicker = () => {
   const searchFocus = api.ui.navigation.useFocusable({
     id: `${PICKER_ID}-search`,
     scope: NAV_SCOPE,
-    onActivate: (element) => element?.focus(),
+    onActivate: (element: HTMLElement | null) => element?.focus(),
     neighbors: {
       up: `${PICKER_ID}-minimize`,
       down: `${PICKER_ID}-matter-All`,
@@ -470,47 +491,36 @@ const ElementPicker = () => {
   });
 
   if (!pickerState) return null;
+  const picker = pickerState;
 
   if (pickerState.minimized) {
     const selected = currentPickerEntry();
-    return UIReact.createElement(
-      "div",
-      {
-        className:
-          "pointer-events-auto flex items-center gap-2 bg-black bg-opacity-75 border border-slate-700 rounded px-3 py-2 ui-box text-slate-300",
-        style: {
+    return (
+      <div
+        className="pointer-events-auto flex items-center gap-2 bg-black bg-opacity-75 border border-slate-700 rounded px-3 py-2 ui-box text-slate-300"
+        style={{
           position: "fixed",
           left: "50%",
           bottom: 80,
           transform: "translateX(-50%)",
           zIndex: 10000,
-        },
-        onClick: expandPicker,
-      },
-      UIReact.createElement(
-        "span",
-        { className: "text-white text-xs opacity-70" },
-        "Source",
-      ),
-      UIReact.createElement(
-        FocusableButton,
-        {
-          id: `${PICKER_ID}-selected`,
-          onActivate: expandPicker,
-          className:
-            "flex items-center gap-2 text-xs text-white hover:text-[#ffe700]",
-        },
-        UIReact.createElement("span", {
-          className: "w-3 h-3 flex-shrink-0",
-          style: { backgroundColor: selected?.color || "#9aa7b5" },
-        }),
-        selected?.name || DEFAULT_ELEMENT_ID,
-      ),
-      UIReact.createElement(
-        "span",
-        { className: "text-xs text-slate-500" },
-        "Click to expand",
-      ),
+        }}
+        onClick={expandPicker}
+      >
+        <span className="text-white text-xs opacity-70">Source</span>
+        <FocusableButton
+          id={`${PICKER_ID}-selected`}
+          onActivate={expandPicker}
+          className="flex items-center gap-2 text-xs text-white hover:text-[#ffe700]"
+        >
+          <span
+            className="w-3 h-3 flex-shrink-0"
+            style={{ backgroundColor: selected?.color || "#9aa7b5" }}
+          />
+          {selected?.name || DEFAULT_ELEMENT_ID}
+        </FocusableButton>
+        <span className="text-xs text-slate-500">Click to expand</span>
+      </div>
     );
   }
 
@@ -520,30 +530,24 @@ const ElementPicker = () => {
       !normalizedQuery ||
       entry.name.toLowerCase().includes(normalizedQuery) ||
       (entry.id || "").toLowerCase().includes(normalizedQuery);
-    return (
-      matchesQuery &&
-      (matter === "All" || matterName(entry.matterType) === matter)
-    );
+    return matchesQuery && (matter === "All" || matterName(entry.matterType) === matter);
   });
   const matters = [
     "All",
     ...new Set(elementEntries().map((entry) => matterName(entry.matterType))),
   ];
-  const isSelected = (entry) =>
-    (entry.id !== null && entry.id === pickerState.current) ||
-    (pickerState.currentType !== null &&
-      entry.type === pickerState.currentType);
-  const tabClass = (active) =>
+  const isSelected = (entry: ElementEntry): boolean =>
+    (entry.id !== null && entry.id === picker.current) ||
+    (picker.currentType !== null && entry.type === picker.currentType);
+  const tabClass = (active: boolean) =>
     active
       ? "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200 text-[#ffe700] border-opacity-50 bg-[#ffe700]/10"
       : "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200 text-white border-opacity-25 hover:text-[#ffe700] hover:border-opacity-0 bg-black";
 
-  return UIReact.createElement(
-    "div",
-    {
-      className:
-        "pointer-events-auto flex flex-col overflow-hidden bg-black bg-opacity-75 border border-slate-700 rounded ui-box text-slate-300",
-      style: {
+  return (
+    <div
+      className="pointer-events-auto flex flex-col overflow-hidden bg-black bg-opacity-75 border border-slate-700 rounded ui-box text-slate-300"
+      style={{
         position: "fixed",
         top: "auto",
         left: "50%",
@@ -553,108 +557,73 @@ const ElementPicker = () => {
         width: "640px",
         maxWidth: "92vw",
         maxHeight: "600px",
-      },
-    },
-    UIReact.createElement(
-      "div",
-      {
-        className:
-          "px-4 py-2 border-b border-slate-800 flex items-center justify-between",
-      },
-      UIReact.createElement(
-        "span",
-        { className: "text-white text-xs opacity-70" },
-        "Source",
-      ),
-      UIReact.createElement(
-        "div",
-        { className: "flex items-center gap-2" },
-        UIReact.createElement(
-          FocusableButton,
-          {
-            id: `${PICKER_ID}-minimize`,
-            onActivate: minimizePicker,
-            neighbors: { down: `${PICKER_ID}-search` },
-            className:
-              "text-xs px-2 py-0.5 text-white bg-black border rounded-tr-lg rounded-bl-lg item-button-transition hover:text-[#ffe700] border-slate-200 border-opacity-25 hover:border-opacity-0",
-          },
-          "Minimize ▾",
-        ),
-      ),
-    ),
-    UIReact.createElement(
-      "div",
-      {
-        className:
-          "px-4 py-3 border-b border-slate-800 flex flex-col gap-2 items-stretch",
-      },
-      UIReact.createElement(
-        "div",
-        { className: "flex items-center" },
-        UIReact.createElement("input", {
-          ref: searchFocus.ref,
-          autoFocus: true,
-          value: query,
-          placeholder: "Search elements...",
-          maxLength: 64,
-          onChange: (event) => setQuery(event.target.value),
-          onKeyDown: (event) => {
-            if (event.key === "Escape") minimizePicker();
-          },
-          className:
-            "w-full bg-black/60 border border-slate-700 px-3 py-1.5 rounded text-xs text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 transition-colors",
-        }),
-      ),
-      UIReact.createElement(
-        "div",
-        { className: "flex gap-1 flex-wrap" },
-        matters.map((name, index) =>
-          UIReact.createElement(
-            FocusableButton,
-            {
-              key: name,
-              id: `${PICKER_ID}-matter-${name}`,
-              neighbors: {
-                left:
-                  index > 0
-                    ? `${PICKER_ID}-matter-${matters[index - 1]}`
-                    : undefined,
+      }}
+    >
+      <div className="px-4 py-2 border-b border-slate-800 flex items-center justify-between">
+        <span className="text-white text-xs opacity-70">Source</span>
+        <div className="flex items-center gap-2">
+          <FocusableButton
+            id={`${PICKER_ID}-minimize`}
+            onActivate={minimizePicker}
+            neighbors={{ down: `${PICKER_ID}-search` }}
+            className="text-xs px-2 py-0.5 text-white bg-black border rounded-tr-lg rounded-bl-lg item-button-transition hover:text-[#ffe700] border-slate-200 border-opacity-25 hover:border-opacity-0"
+          >
+            Minimize ▾
+          </FocusableButton>
+        </div>
+      </div>
+      <div className="px-4 py-3 border-b border-slate-800 flex flex-col gap-2 items-stretch">
+        <div className="flex items-center">
+          <input
+            ref={searchFocus.ref}
+            autoFocus
+            value={query}
+            placeholder="Search elements..."
+            maxLength={64}
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") minimizePicker();
+            }}
+            className="w-full bg-black/60 border border-slate-700 px-3 py-1.5 rounded text-xs text-white placeholder-slate-600 focus:outline-none focus:border-slate-500 transition-colors"
+          />
+        </div>
+        <div className="flex gap-1 flex-wrap">
+          {matters.map((name, index) => (
+            <FocusableButton
+              key={name}
+              id={`${PICKER_ID}-matter-${name}`}
+              neighbors={{
+                left: index > 0 ? `${PICKER_ID}-matter-${matters[index - 1]}` : undefined,
                 right:
                   index + 1 < matters.length
                     ? `${PICKER_ID}-matter-${matters[index + 1]}`
                     : undefined,
                 up: `${PICKER_ID}-search`,
                 down: `${PICKER_ID}-element-0`,
-              },
-              className: tabClass(matter === name),
-              onActivate: () => setMatter(name),
-            },
-            name,
-          ),
-        ),
-      ),
-    ),
-    UIReact.createElement(
-      "div",
-      {
-        className: "flex-1 overflow-y-auto px-4 py-2",
-        style: { maxHeight: 480 },
-      },
-      UIReact.createElement(
-        "div",
-        { className: "grid grid-cols-4 gap-1.5 py-1.5" },
-        entries.map((entry, index) =>
-          UIReact.createElement(ElementGridButton, {
-            key: entry.id || `type-${entry.type}`,
-            entry,
-            index,
-            entries,
-            selected: isSelected(entry),
-            onSelect: () => closePicker(entry),
-          }),
-        ),
-      ),
-    ),
+              }}
+              className={tabClass(matter === name)}
+              onActivate={() => setMatter(name)}
+            >
+              {name}
+            </FocusableButton>
+          ))}
+        </div>
+      </div>
+      <div className="flex-1 overflow-y-auto px-4 py-2" style={{ maxHeight: 480 }}>
+        <div className="grid grid-cols-4 gap-1.5 py-1.5">
+          {entries.map((entry, index) => (
+            <ElementGridButton
+              key={entry.id || `type-${entry.type}`}
+              entry={entry}
+              index={index}
+              entries={entries}
+              selected={isSelected(entry)}
+              onSelect={() => closePicker(entry)}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -671,10 +640,12 @@ const registerPicker = () => {
   }
 };
 
-const openElementPicker = async (current) => {
+const openElementPicker = async (
+  current: ElementSelection,
+): Promise<string | ElementSelection | null> => {
   if (registerPicker()) {
     if (pickerState && pickerState.minimized) {
-      return currentPickerEntry();
+      return currentPickerEntry() as ElementSelection | null;
     }
     if (pickerPromise) return pickerPromise;
 
@@ -699,13 +670,17 @@ const openElementPicker = async (current) => {
   );
 };
 
-const configureSource = async (structure, initialSelection) => {
+const configureSource = async (
+  structure: SandustryStructure,
+  initialSelection: ElementSelection | null,
+) => {
   const key = sourceKey(structure);
   if (configuringSources.has(key)) return;
   configuringSources.add(key);
 
   try {
-    const current = initialSelection || sourceElementSelection(structure);
+    const current =
+      initialSelection || sourceElementSelection(structure) || defaultElementSelection();
     const value = await openElementPicker(current);
 
     // Closing the dialog keeps the default. A bad ID is also rejected rather
@@ -715,10 +690,7 @@ const configureSource = async (structure, initialSelection) => {
       return;
     }
     if (typeof value === "object" && Number.isInteger(value.type)) {
-      const definition = safe(
-        () => api.elements.getDefinitionByType(value.type),
-        null,
-      );
+      const definition = safe(() => api.elements.getDefinitionByType(value.type), null);
       if (!definition || !isElementAllowed(value.id, definition)) {
         disabledSources.add(key);
         return;
@@ -735,6 +707,7 @@ const configureSource = async (structure, initialSelection) => {
       return;
     }
 
+    if (typeof value !== "string") return;
     const elementId = value.trim();
     const elementType = safe(() => api.elements.getTypeFromId(elementId), null);
     if (
@@ -766,7 +739,7 @@ const configureSource = async (structure, initialSelection) => {
 
 const sourceTick = () => {
   syncPickerToSelectedAction();
-  const live = new Set();
+  const live = new Set<string>();
 
   api.structures.forEachOfType(SOURCE_ID, (structure) => {
     const key = sourceKey(structure);
@@ -779,8 +752,7 @@ const sourceTick = () => {
     if (!configuredSources.has(key)) {
       configuredSources.add(key);
       const needsConfiguration =
-        !structure.data?.elementId &&
-        !Number.isInteger(structure.data?.elementType);
+        !structure.data?.elementId && !Number.isInteger(structure.data?.elementType);
       if (needsConfiguration) {
         const initialSelection = sourceElementSelection(structure);
         if (!initialSelection) return;
@@ -795,9 +767,8 @@ const sourceTick = () => {
       }
     }
 
-    const elementType =
-      sourceSelections.get(key)?.type ?? elementTypeFromSource(structure);
-    if (elementType === null) return;
+    const elementType = sourceSelections.get(key)?.type ?? elementTypeFromSource(structure);
+    if (typeof elementType !== "number") return;
 
     // Fill one complete 4x4 batch directly below the structure. Occupied
     // output cells are left alone and retried on later trigger ticks.
@@ -823,16 +794,10 @@ const sourceTick = () => {
 
 const trashTick = () => {
   api.structures.forEachOfType(TRASH_ID, (structure) => {
-    api.grid.forEachCellInRect(
-      structure.x,
-      structure.y,
-      SIZE,
-      SIZE,
-      (cellX, cellY) => {
-        const info = api.elements.getInfoAtCell(cellX, cellY);
-        if (info) api.elements.removeAtCellWhenIdle(cellX, cellY);
-      },
-    );
+    api.grid.forEachCellInRect(structure.x, structure.y, SIZE, SIZE, (cellX, cellY) => {
+      const info = api.elements.getInfoAtCell(cellX, cellY);
+      if (info) api.elements.removeAtCellWhenIdle(cellX, cellY);
+    });
   });
 };
 

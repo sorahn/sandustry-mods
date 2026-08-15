@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "paths": {
+      "~shared": ["./shared/index.ts"],
+      "~shared/*": ["./shared/*"]
+    },
+    "jsx": "react",
+    "jsxFactory": "sandkit.react.createElement",
+    "strict": true,
+    "noEmit": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "types": ["react", "react-dom"]
+  },
+  "include": [
+    "types/**/*.d.ts",
+    "shared/**/*.ts",
+    "mods/*/src/**/*.ts",
+    "mods/*/src/**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ]
+}

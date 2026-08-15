@@ -1,5 +1,24 @@
 # Agent Notes
 
+## Monorepo workflow
+
+Active mods live under `mods/<name>`. Each mod owns `src/`, `modinfo.json`, and
+its assets, and has a thin Makefile that includes `make/mod.mk`. The root
+Makefile discovers active mods and supports `make build`, `make install`,
+`make check`, and `make format`; add `MOD=<name>` to target one mod. Per-mod
+Makefiles expose the same commands.
+
+The repository toolchain is pinned in `package.json` and `package-lock.json`.
+TypeScript 7 and TSX support are configured with the Sandustry JSX factory, and
+the Infinite Source/Trash implementation is now TypeScript compiled to a plain
+JavaScript entrypoint. Generated `mods/*/build/` output and the root
+`artifacts/` archive directory must not be committed.
+
+Reusable TypeScript modules belong directly under `shared/`. Mod source can
+import them normally; esbuild resolves and bundles those imports into each
+mod's standalone entrypoint. The shipped script still has no imports or
+exports, and shared modules should avoid mod-specific side effects.
+
 ## Project goal
 
 This repository contains a Sandustry v1 mod that adds two creative utility
@@ -87,17 +106,18 @@ expanded picker.
 
 ## Current implementation behavior
 
-The implementation lives in `mod/entry.js` and `mod/modinfo.json`.
+The implementation lives in `mods/infinite-source-trash/src/entry.ts` and its
+manifest is `mods/infinite-source-trash/modinfo.json`.
 
 - Mod ID: `sorahn.sandustry-test-blocks`
-- Current version: `0.1.0`
+- Current version: `0.1.3`
 - Entrypoint: `entry.js`
 - Structures: `sandustryTestBlocksSource` and
   `sandustryTestBlocksTrash`
 - Category: `misc`
 - Both structures use a 4×4 footprint and the demo icons:
-  - `mod/assets/SourceBlock.png`
-  - `mod/assets/Trash.png`
+  - `mods/infinite-source-trash/assets/SourceBlock.png`
+  - `mods/infinite-source-trash/assets/Trash.png`
 - The structure shape is intentionally four rows of zeroes, matching the demo
   blocks. This makes the structures non-blocking overlays and avoids the red
   occupied-footprint rendering caused by an all-ones shape.
@@ -134,9 +154,11 @@ numeric type.
 
 ## Assets and packaging
 
-The source files are under `mod/`. The distributable archive is generated as
-`infinite-source-trash-0.1.0.zip` or the current Makefile-derived archive name.
-Generated zip files are ignored by `.gitignore`.
+The source files are under `mods/infinite-source-trash/`. The distributable
+archive is generated as `sandustry-test-blocks-0.1.3.zip` or the current
+Makefile-derived archive name.
+Generated zip files are written under the root `artifacts/` directory and are
+ignored by `.gitignore`.
 
 The Makefile provides:
 
@@ -145,8 +167,8 @@ make build
 make install
 ```
 
-`make build` packages the contents of `mod/` with `modinfo.json` at the archive
-root. `make install` installs the unzipped mod contents into a directory named
+`make build` packages the contents of the selected mod with `modinfo.json` at
+the archive root. `make install` installs the unzipped mod contents into a directory named
 exactly after the manifest ID under:
 
 ```text
@@ -167,8 +189,8 @@ step for local runtime testing.
 
 Checks performed during development:
 
-- `node --check mod/entry.js`
-- JSON parsing of `mod/modinfo.json`
+- `node --check mods/infinite-source-trash/build/entry.js`
+- JSON parsing of `mods/infinite-source-trash/modinfo.json`
 - Makefile dry runs with `make -n install`
 - Archive content inspection with `unzip -l`
 
