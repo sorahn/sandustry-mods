@@ -14,8 +14,6 @@ const SOURCE_ID = "sandustryTestBlocksSource";
 const TRASH_ID = "sandustryTestBlocksTrash";
 const SOURCE_SPRITE = "sandustryTestBlocksSourceSprite";
 const TRASH_SPRITE = "sandustryTestBlocksTrashSprite";
-// Match the demo Creative Spawner's 500 ms tick interval. The Source can add
-// up to one 4x4 batch per tick, rather than refilling on every frame.
 const TICK_MS = 500;
 const DEFAULT_ELEMENT_ID = "sand";
 const SIZE = 4;
@@ -158,8 +156,8 @@ const trashTick = () => {
 const setup = async () => {
   api.i18n.register("en", TEXT);
 
-  await api.sprites.loadFromMod(SOURCE_SPRITE, "assets/CreativeSpawner.png");
-  await api.sprites.loadFromMod(TRASH_SPRITE, "assets/CreativeDeleter.png");
+  await api.sprites.loadFromMod(SOURCE_SPRITE, "assets/SourceBlock.png");
+  await api.sprites.loadFromMod(TRASH_SPRITE, "assets/Trash.png");
 
   const common = {
     categoryKey: "misc",

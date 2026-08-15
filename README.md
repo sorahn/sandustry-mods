@@ -9,7 +9,7 @@ This is a Sandustry v1 mod. It adds two creative utility structures to the
 - **Infinite Trash** removes an element occupying its cell.
 
 The block icons currently reuse the Creative Spawner and Creative Deleter icons
-from the demo mod.
+from the demo mod, renamed to `SourceBlock.png` and `Trash.png`.
 
 ## Packaging
 

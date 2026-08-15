@@ -1,2 +1,3 @@
 # Generated mod packages
 *.zip
+.DS_Store

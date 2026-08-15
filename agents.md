@@ -86,8 +86,8 @@ The implementation lives in `mod/entry.js` and `mod/modinfo.json`.
   `sandustryTestBlocksTrash`
 - Category: `misc`
 - Both structures use a 4×4 footprint and the demo icons:
-  - `mod/assets/CreativeSpawner.png`
-  - `mod/assets/CreativeDeleter.png`
+  - `mod/assets/SourceBlock.png`
+  - `mod/assets/Trash.png`
 - The structure shape is intentionally four rows of zeroes, matching the demo
   blocks. This makes the structures non-blocking overlays and avoids the red
   occupied-footprint rendering caused by an all-ones shape.
