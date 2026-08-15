@@ -69,14 +69,17 @@ The Mods tab appears only for mods with a non-empty `configSchema` in
 with required `labelKey` values. Runtime values are available through
 `api.settings.get`, `api.settings.getAll`, and `api.settings.onChange`.
 
-The project currently uses a placement-time prompt instead of an undocumented
-native structure configuration panel. On first placement, Source opens a custom
-element picker modeled on the game's filter picker: searchable element grid,
-matter-type filters, color swatches, and cancel behavior. A valid ID is stored
-in structure data as `elementId`. Canceling or entering an invalid ID disables
-that Source rather than silently emitting Sand. If the runtime does not expose
-React or the expected modal overlay slot, the code falls back to the text
-prompt.
+The project currently uses a custom picker instead of an undocumented native
+structure configuration panel. The picker is modeled on the game's filter UI:
+it has a compact selected-element strip, expands into a searchable element grid
+with matter-type filters and color swatches, and minimizes after selection. A
+single picker promise is shared across all structures created by a line drag,
+so each placed Source receives the same selection without opening competing
+modals. A valid ID/type is stored in structure data. If the runtime does not
+expose React or the expected modal overlay slot, the code falls back to the
+text prompt. `api.action.getSelected()` identifies the held building by its
+`id`, so the compact picker is shown only while the Source action is selected
+and is removed when the player switches away.
 
 ## Current implementation behavior
 
@@ -118,9 +121,12 @@ The source tracks three states by structure position:
 - `configuringSources`: structures whose prompt is open; these must not spawn.
 - `disabledSources`: structures canceled or given an invalid element ID.
 
-This state is session-local. The selected `elementId` is persisted through the
-structure data, so existing configured Sources do not reopen the prompt after a
-reload.
+The selected element is persisted through the structure data, so existing
+configured Sources do not reopen the prompt after a reload. The most recently
+picked element is also saved with `api.storage.local` under
+`${MOD_ID}.lastElement`, so a newly placed Source starts with that selection
+across worlds and game launches. Core elements without IDs are stored by
+numeric type.
 
 ## Assets and packaging
 
