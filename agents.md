@@ -77,9 +77,9 @@ single picker promise is shared across all structures created by a line drag,
 so each placed Source receives the same selection without opening competing
 modals. A valid ID/type is stored in structure data. If the runtime does not
 expose React or the expected modal overlay slot, the code falls back to the
-text prompt. The documented API does not expose a reliable event for detecting
-which building is currently held, so the picker is opened by Source
-configuration rather than by speculative action-state inspection.
+text prompt. `api.action.getSelected()` identifies the held building by its
+`id`, so the compact picker is shown only while the Source action is selected
+and is removed when the player switches away.
 
 ## Current implementation behavior
 

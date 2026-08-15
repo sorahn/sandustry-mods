@@ -258,7 +258,7 @@ const closePicker = (value) => {
     ...current,
     current: selected?.id ?? current.current,
     currentType: selected?.type ?? current.currentType,
-    expanded: false,
+    minimized: current.minimized,
     resolve: null,
   };
   const resolve = current.resolve;
@@ -268,11 +268,17 @@ const closePicker = (value) => {
 };
 
 const expandPicker = () => {
-  if (!pickerState || pickerState.expanded) return;
-  pickerState = { ...pickerState, expanded: true };
+  if (!pickerState || !pickerState.minimized) return;
+  pickerState = { ...pickerState, minimized: false };
   pickerPromise = new Promise((resolve) => {
     pickerState = { ...pickerState, resolve };
   });
+  if (pickerRepaint) pickerRepaint((value) => value + 1);
+};
+
+const minimizePicker = () => {
+  if (!pickerState || pickerState.minimized) return;
+  pickerState = { ...pickerState, minimized: true };
   if (pickerRepaint) pickerRepaint((value) => value + 1);
 };
 
@@ -292,6 +298,41 @@ const currentPickerEntry = () => {
   );
 };
 
+const selectedActionIsSource = () => {
+  if (!api.action) return null;
+  const selected = safe(() => api.action.getSelected(), null);
+  return selected?.id === SOURCE_ID;
+};
+
+const syncPickerToSelectedAction = () => {
+  if (!UIReact || !registerPicker()) return;
+
+  const sourceSelected = selectedActionIsSource();
+  if (sourceSelected && !pickerState) {
+    const current = defaultElementSelection();
+    pickerState = {
+      current: current.id,
+      currentType: current.type,
+      minimized: true,
+      resolve: null,
+    };
+    if (pickerRepaint) pickerRepaint((value) => value + 1);
+    return;
+  }
+
+  if (
+    sourceSelected === false &&
+    pickerState &&
+    configuringSources.size === 0
+  ) {
+    const resolve = pickerState.resolve;
+    pickerState = null;
+    pickerPromise = null;
+    if (resolve) resolve(null);
+    if (pickerRepaint) pickerRepaint((value) => value + 1);
+  }
+};
+
 const ElementPicker = () => {
   const [query, setQuery] = UIReact.useState("");
   const [matter, setMatter] = UIReact.useState("All");
@@ -306,13 +347,13 @@ const ElementPicker = () => {
 
   if (!pickerState) return null;
 
-  if (!pickerState.expanded) {
+  if (pickerState.minimized) {
     const selected = currentPickerEntry();
     return UIReact.createElement(
       "div",
       {
         className:
-          "flex items-center gap-2 bg-black bg-opacity-75 border border-slate-700 rounded px-3 py-2 ui-box text-slate-300",
+          "pointer-events-auto flex items-center gap-2 bg-black bg-opacity-75 border border-slate-700 rounded px-3 py-2 ui-box text-slate-300",
         style: {
           position: "fixed",
           left: "50%",
@@ -320,6 +361,7 @@ const ElementPicker = () => {
           transform: "translateX(-50%)",
           zIndex: 10000,
         },
+        onClick: expandPicker,
       },
       UIReact.createElement(
         "span",
@@ -376,7 +418,7 @@ const ElementPicker = () => {
     "div",
     {
       className:
-        "flex flex-col overflow-hidden bg-black bg-opacity-75 border border-slate-700 rounded ui-box text-slate-300",
+        "pointer-events-auto flex flex-col overflow-hidden bg-black bg-opacity-75 border border-slate-700 rounded ui-box text-slate-300",
       style: {
         position: "fixed",
         top: "auto",
@@ -401,13 +443,18 @@ const ElementPicker = () => {
         "Source",
       ),
       UIReact.createElement(
-        "button",
-        {
-          className:
-            "text-xs px-2 py-0.5 text-white bg-black border rounded-tr-lg rounded-bl-lg item-button-transition hover:text-[#ffe700] border-slate-200 border-opacity-25 hover:border-opacity-0",
-          onClick: () => closePicker(null),
-        },
-        "Cancel",
+        "div",
+        { className: "flex items-center gap-2" },
+        UIReact.createElement(
+          "button",
+          {
+            type: "button",
+            className:
+              "text-xs px-2 py-0.5 text-white bg-black border rounded-tr-lg rounded-bl-lg item-button-transition hover:text-[#ffe700] border-slate-200 border-opacity-25 hover:border-opacity-0",
+            onClick: minimizePicker,
+          },
+          "Minimize ▾",
+        ),
       ),
     ),
     UIReact.createElement(
@@ -500,7 +547,7 @@ const registerPicker = () => {
 
 const openElementPicker = async (current) => {
   if (registerPicker()) {
-    if (pickerState && !pickerState.expanded) {
+    if (pickerState && pickerState.minimized) {
       return currentPickerEntry();
     }
     if (pickerPromise) return pickerPromise;
@@ -509,7 +556,7 @@ const openElementPicker = async (current) => {
       pickerState = {
         current: current.id,
         currentType: current.type,
-        expanded: true,
+        minimized: false,
         resolve,
       };
       if (pickerRepaint) pickerRepaint((value) => value + 1);
@@ -548,9 +595,6 @@ const configureSource = async (structure, initialSelection) => {
       );
       if (!definition || !isElementAllowed(value.id, definition)) {
         disabledSources.add(key);
-        api.ui.toast(
-          `Element unavailable for spawning: ${value.name || value.type}`,
-        );
         return;
       }
 
@@ -562,7 +606,6 @@ const configureSource = async (structure, initialSelection) => {
         propagateToWorkers: true,
       });
       rememberElement(selection);
-      api.ui.toast(`Source configured to emit ${value.name}`);
       return;
     }
 
@@ -574,7 +617,6 @@ const configureSource = async (structure, initialSelection) => {
       !isElementAllowed(elementId)
     ) {
       disabledSources.add(key);
-      api.ui.toast(`Element unavailable for spawning: ${elementId}`);
       return;
     }
 
@@ -589,7 +631,6 @@ const configureSource = async (structure, initialSelection) => {
       propagateToWorkers: true,
     });
     rememberElement(selection);
-    api.ui.toast(`Source configured to emit ${elementId}`);
   } catch (error) {
     console.error(`[${MOD_ID}] source configuration failed:`, error);
   } finally {
@@ -598,6 +639,7 @@ const configureSource = async (structure, initialSelection) => {
 };
 
 const sourceTick = () => {
+  syncPickerToSelectedAction();
   const live = new Set();
 
   api.structures.forEachOfType(SOURCE_ID, (structure) => {
