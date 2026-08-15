@@ -94,6 +94,9 @@ const sourceTick = () => {
           { propagateToWorkers: true },
         );
         void configureSource(structure);
+        // Do not emit the default element while the placement configuration
+        // prompt is still open.
+        return;
       }
     }
 
