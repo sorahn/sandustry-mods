@@ -20,11 +20,10 @@ install:
 	@if [ -n "$(MOD)" ]; then if [ -z "$(MOD_DIR)" ]; then echo "Unknown MOD='$(MOD)'. Available mods: $(MOD_NAMES)" >&2; exit 2; fi; $(MAKE) -C "mods/$(MOD_DIR)" install; else for mod in $(MODS); do $(MAKE) -C "mods/$$mod" install || exit $$?; done; fi
 
 check:
-	@npm run check
-	@if [ -n "$(MOD)" ]; then if [ -z "$(MOD_DIR)" ]; then echo "Unknown MOD='$(MOD)'. Available mods: $(MOD_NAMES)" >&2; exit 2; fi; $(MAKE) -C "mods/$(MOD_DIR)" check; else for mod in $(MODS); do $(MAKE) -C "mods/$$mod" check || exit $$?; done; fi
+	@if [ -n "$(MOD)" ]; then if [ -z "$(MOD_DIR)" ]; then echo "Unknown MOD='$(MOD)'. Available mods: $(MOD_NAMES)" >&2; exit 2; fi; $(MAKE) -C "mods/$(MOD_DIR)" check; else npm run check && for mod in $(MODS); do $(MAKE) -C "mods/$$mod" check || exit $$?; done; fi
 
 format:
-	@npm run format
+	@if [ -n "$(MOD)" ]; then if [ -z "$(MOD_DIR)" ]; then echo "Unknown MOD='$(MOD)'. Available mods: $(MOD_NAMES)" >&2; exit 2; fi; $(MAKE) -C "mods/$(MOD_DIR)" format; else npm run format; fi
 
 version:
 	@if [ -z "$(MOD)" ]; then echo "Usage: make version MOD=<mod> major|minor|patch" >&2; exit 2; fi
