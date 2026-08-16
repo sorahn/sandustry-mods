@@ -8,7 +8,7 @@ import {
   type Blueprint,
 } from "../utils/blueprint";
 import { catalogEntry } from "../utils/catalog";
-import { DebugComponentWrapper } from "../components/DebugComponentWrapper";
+import { debugComponent } from "../components/DebugComponentWrapper";
 
 export function AppLayout() {
   return (
@@ -22,9 +22,11 @@ export function AppLayout() {
             <Link to="/" activeProps={{ className: "text-yellow-300" }}>
               Home
             </Link>
-            <Link to="/inspect" activeProps={{ className: "text-yellow-300" }}>
-              Inspect
-            </Link>
+            {debugComponent(Link, {
+              to: "/inspect",
+              activeProps: { className: "text-yellow-300" },
+              children: "Inspect",
+            })}
             <Link to="/codec" activeProps={{ className: "text-yellow-300" }}>
               Encode / Decode
             </Link>
@@ -542,6 +544,19 @@ export function BlueprintInspectorPage() {
       setMessage(error instanceof Error ? error.message : "Unable to inspect blueprint.");
     }
   };
+  const rememberHeader = debugComponent(Checkbox, {
+    boxed: true,
+    checked: remember,
+    label: "remember",
+    size: "small",
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+      const nextRemember = event.target.checked;
+      setRemember(nextRemember);
+      writeLocalValue(REMEMBER_BLUEPRINT_KEY, String(nextRemember));
+      if (nextRemember) writeLocalValue(SAVED_BLUEPRINT_KEY, encoded);
+      else removeLocalValue(SAVED_BLUEPRINT_KEY);
+    },
+  });
   return (
     <section className="space-y-6">
       <div>
@@ -554,26 +569,7 @@ export function BlueprintInspectorPage() {
           instead of being discarded, and can be selected for their raw details.
         </p>
       </div>
-      <Panel
-        title="Blueprint string"
-        header={
-          <DebugComponentWrapper>
-            <Checkbox
-              boxed
-              checked={remember}
-              label="remember"
-              size="small"
-              onChange={(event) => {
-                const nextRemember = event.target.checked;
-                setRemember(nextRemember);
-                writeLocalValue(REMEMBER_BLUEPRINT_KEY, String(nextRemember));
-                if (nextRemember) writeLocalValue(SAVED_BLUEPRINT_KEY, encoded);
-                else removeLocalValue(SAVED_BLUEPRINT_KEY);
-              }}
-            />
-          </DebugComponentWrapper>
-        }
-      >
+      <Panel title="Blueprint string" header={rememberHeader}>
         <div className="space-y-4 p-4">
           <TextArea
             value={encoded}
