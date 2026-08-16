@@ -41,6 +41,7 @@ const BLACKLISTED_ELEMENT_IDS = new Set([
 // Core elements without a string ID are filtered by numeric type instead.
 // Type 2 is the element reported as [NO KEY]/[NO NAME].
 const BLACKLISTED_ELEMENT_TYPES = new Set([2]);
+const GAS_MATTER_TYPE = 4;
 const SIZE = 4;
 const FOOTPRINT = [
   [0, 0, 0, 0],
@@ -783,14 +784,19 @@ const sourceTick = () => {
     const elementType = sourceSelections.get(key)?.type ?? elementTypeFromSource(structure);
     if (typeof elementType !== "number") return;
 
-    // Fill one complete 4x4 batch directly below the structure. Occupied
-    // output cells are left alone and retried on later trigger ticks.
+    const definition = safe(() => api.elements.getDefinitionByType(elementType), null);
+    const outputY =
+      definition?.matterType === GAS_MATTER_TYPE ? structure.y - SIZE : structure.y + SIZE;
+
+    // Gases vent through the top of the structure; all other elements keep
+    // the existing output below it. Occupied output cells are left alone and
+    // retried on later trigger ticks.
     for (let y = 0; y < SIZE; y++) {
       for (let x = 0; x < SIZE; x++) {
         const outputX = structure.x + x;
-        const outputY = structure.y + SIZE + y;
-        if (api.world.isCellEmptyAtCell(outputX, outputY)) {
-          api.elements.createAtCellWhenIdle(outputX, outputY, elementType);
+        const cellY = outputY + y;
+        if (api.world.isCellEmptyAtCell(outputX, cellY)) {
+          api.elements.createAtCellWhenIdle(outputX, cellY, elementType);
         }
       }
     }

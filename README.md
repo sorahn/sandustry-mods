@@ -4,9 +4,10 @@ This repository is a Sandustry v1 mods monorepo. The current mod,
 `infinite-source-trash`, adds two creative utility structures to the `Misc`
 building category:
 
-- **Infinite Source** creates `sand` above itself when the output cell is empty.
-  When first placed, it opens a configuration prompt where you can enter a
-  registered element ID such as `sand` or `copper`.
+- **Infinite Source** emits configured gases above itself and other elements
+  below it when the output cell is empty. When first placed, it opens a
+  configuration prompt where you can enter a registered element ID such as
+  `sand` or `copper`.
 - **Infinite Trash** removes an element occupying its cell.
 
 The block icons currently reuse the Creative Spawner and Creative Deleter icons
