@@ -35,7 +35,10 @@ jobs:
           node-version: lts/*
           cache: npm
       - name: Install dependencies
-        run: npm ci
+        # npm ci rejects this macOS-generated lockfile because optional native
+        # packages are platform-specific. npm install resolves the Linux
+        # packages required by the Pages runner while honoring the lockfile.
+        run: npm install --no-audit --no-fund
       - name: Build blueprint site
         run: npm run build --workspace @sandustry/blueprint-site
       - name: Setup Pages
