@@ -2,7 +2,9 @@
   "name": "sandustry-mods",
   "private": true,
   "scripts": {
-    "check": "tsc --noEmit && node scripts/check-jsx.mjs && oxlint --ignore-pattern '**/build/**' --ignore-pattern 'resources/**' --ignore-pattern '*.zip' tests scripts types mods",
+    "tsc": "tsc --noEmit",
+    "lint": "node scripts/check-jsx.mjs && oxlint --ignore-pattern '**/build/**' --ignore-pattern 'resources/**' --ignore-pattern '*.zip' tests scripts types mods",
+    "check": "npm run tsc && npm run lint",
     "format": "oxfmt --write .",
     "format:check": "oxfmt --check .",
     "prepare": "husky"

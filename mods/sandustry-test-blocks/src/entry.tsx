@@ -102,6 +102,7 @@ let pickerOverlayReady = false;
 let pickerRepaint: ((update: (value: number) => number) => void) | null = null;
 let pickerPromise: Promise<ElementSelection | null> | null = null;
 let lastElementSelection: ElementSelection | null = null;
+let pickerTarget: SandustryStructure | null = null;
 const UIReact = sandkit.react ?? null;
 
 const safe = <T,>(fn: () => T, fallback: T | null = null): T | null => {
@@ -275,6 +276,22 @@ const matterName = (matterType: number | undefined) =>
     }) as Record<number, string>
   )[matterType ?? 0] || "Other";
 
+const applySourceSelection = (structure: SandustryStructure, value: ElementSelection) => {
+  const definition = safe(() => api.elements.getDefinitionByType(value.type), null);
+  if (!definition || !isElementAllowed(value.id, definition)) return false;
+
+  const selection = validElementSelection(value);
+  if (!selection) return false;
+  const key = sourceKey(structure);
+  sourceSelections.set(key, selection);
+  api.structures.setData(structure, selectionData(selection), {
+    propagateToWorkers: true,
+  });
+  rememberElement(selection);
+  disabledSources.delete(key);
+  return true;
+};
+
 const closePicker = (value: unknown) => {
   const current = pickerState;
   if (!current) return;
@@ -284,13 +301,17 @@ const closePicker = (value: unknown) => {
       : null;
   pickerState = {
     ...current,
-    current: selected?.id ?? current.current,
-    currentType: selected?.type ?? current.currentType,
-    minimized: current.minimized,
+    current: selected ? selected.id : current.current,
+    currentType: selected ? selected.type : current.currentType,
+    // Completing a selection closes the expanded grid. This also removes the
+    // previously controller-focused button so only the selected value remains
+    // visibly active in the compact picker.
+    minimized: true,
     resolve: null,
   };
   const resolve = current.resolve;
   pickerPromise = null;
+  if (selected && pickerTarget) applySourceSelection(pickerTarget, selected);
   if (resolve) resolve(selected);
   if (pickerRepaint) pickerRepaint((value) => value + 1);
 };
@@ -380,6 +401,10 @@ const ElementGridButton = ({
     scrollIntoView: true,
   });
   const focusClass = api.ui.navigation.controllerFocusClass(focusable.focused);
+  const select = () => {
+    focusable.focus();
+    onSelect();
+  };
   const className = selected
     ? "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-[#ffe700] bg-[#ffe700]/10"
     : "group flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border transition-all duration-200 border-slate-700 hover:border-slate-500 bg-black/40 hover:bg-black/60";
@@ -388,7 +413,7 @@ const ElementGridButton = ({
     <button
       ref={focusable.ref}
       type="button"
-      onClick={onSelect}
+      onClick={select}
       className={`${className} ${focusClass}`.trim()}
     >
       <span className="w-3 h-3 flex-shrink-0" style={{ backgroundColor: entry.color }} />
@@ -408,11 +433,10 @@ const ElementGridButton = ({
 const currentPickerEntry = (): CurrentPickerEntry | null => {
   const state = pickerState;
   if (!state) return null;
+  const entries = elementEntries();
   return (
-    elementEntries().find(
-      (entry) =>
-        entry.type === state.currentType || (entry.id !== null && entry.id === state.current),
-    ) || {
+    entries.find((entry) => entry.id !== null && entry.id === state.current) ||
+    entries.find((entry) => entry.type === state.currentType) || {
       id: state.current,
       type: state.currentType,
       name: state.current || DEFAULT_ELEMENT_ID,
@@ -537,8 +561,9 @@ const ElementPicker = () => {
     ...new Set(elementEntries().map((entry) => matterName(entry.matterType))),
   ];
   const isSelected = (entry: ElementEntry): boolean =>
-    (entry.id !== null && entry.id === picker.current) ||
-    (picker.currentType !== null && entry.type === picker.currentType);
+    picker.currentType !== null
+      ? entry.type === picker.currentType
+      : entry.id !== null && entry.id === picker.current;
 
   const baseTabClass =
     "text-xs px-3 py-1 border rounded-tr-lg rounded-bl-lg item-button-transition border-slate-200";
@@ -646,7 +671,9 @@ const registerPicker = () => {
 
 const openElementPicker = async (
   current: ElementSelection,
+  target: SandustryStructure,
 ): Promise<string | ElementSelection | null> => {
+  pickerTarget = target;
   if (registerPicker()) {
     if (pickerState && pickerState.minimized) {
       return currentPickerEntry() as ElementSelection | null;
@@ -685,7 +712,7 @@ const configureSource = async (
   try {
     const current =
       initialSelection || sourceElementSelection(structure) || defaultElementSelection();
-    const value = await openElementPicker(current);
+    const value = await openElementPicker(current, structure);
 
     // Closing the dialog keeps the default. A bad ID is also rejected rather
     // than leaving a source that fails on every trigger tick.
@@ -694,20 +721,10 @@ const configureSource = async (
       return;
     }
     if (typeof value === "object" && Number.isInteger(value.type)) {
-      const definition = safe(() => api.elements.getDefinitionByType(value.type), null);
-      if (!definition || !isElementAllowed(value.id, definition)) {
+      if (!applySourceSelection(structure, value)) {
         disabledSources.add(key);
         return;
       }
-
-      disabledSources.delete(key);
-      const selection = validElementSelection(value);
-      if (!selection) return;
-      sourceSelections.set(key, selection);
-      api.structures.setData(structure, selectionData(value), {
-        propagateToWorkers: true,
-      });
-      rememberElement(selection);
       return;
     }
 
@@ -723,17 +740,12 @@ const configureSource = async (
       return;
     }
 
-    disabledSources.delete(key);
     const selection = validElementSelection({
       id: elementId,
       type: elementType,
     });
     if (!selection) return;
-    sourceSelections.set(key, selection);
-    api.structures.setData(structure, selectionData(selection), {
-      propagateToWorkers: true,
-    });
-    rememberElement(selection);
+    applySourceSelection(structure, selection);
   } catch (error) {
     console.error(`[${MOD_ID}] source configuration failed:`, error);
   } finally {
@@ -747,6 +759,7 @@ const sourceTick = () => {
 
   api.structures.forEachOfType(SOURCE_ID, (structure) => {
     const key = sourceKey(structure);
+    if (selectedActionIsSource()) pickerTarget = structure;
     live.add(key);
 
     // The default value is stored immediately so the structure has valid data,

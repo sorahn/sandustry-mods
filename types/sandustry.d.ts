@@ -24,6 +24,7 @@ interface SandustryElementInfo {
 interface SandustryFocusable {
   focused: boolean;
   ref: (element: HTMLElement | null) => void;
+  focus: () => void;
 }
 
 interface SandustryNavigation {
