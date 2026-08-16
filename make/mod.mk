@@ -17,7 +17,7 @@ INSTALL_DIR := $(SANDUSTRY_MODS_DIR)/$(MOD_ID)
 all: build
 build: $(ARCHIVE)
 
-$(BUILD_DIR)/entry.js: $(SRC_DIR)/entry.tsx $(REPO_ROOT)/tsconfig.json $(REPO_ROOT)/types/sandustry.d.ts
+$(BUILD_DIR)/entry.js: $(shell find $(SRC_DIR) -type f -print 2>/dev/null) $(REPO_ROOT)/tsconfig.json $(REPO_ROOT)/types/sandustry.d.ts
 	@mkdir -p "$(BUILD_DIR)"
 	@echo "Compiling $(MOD_ID)"
 	@cd "$(REPO_ROOT)" && npx tsc --noEmit
