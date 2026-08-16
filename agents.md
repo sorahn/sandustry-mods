@@ -39,6 +39,10 @@ separate dependency graphs:
 - Preserve the boundary with workspace/package rules or automated import checks
   so accidental cross-project dependencies fail early.
 
+## Git workflow
+
+Keep commit messages short, lowercase, and minimally punctuated.
+
 ## Planning workflow
 
 Repository-level implementation plans live locally in the top-level directory
