@@ -215,7 +215,13 @@ function tileColor(type: Blueprint["data"][number]["type"]) {
   return ["#4b3c62", "#315a5e", "#66522f", "#563d46"][Math.abs(hash) % 4];
 }
 
-function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
+function BlueprintMap({
+  blueprint,
+  debugGradient,
+}: {
+  blueprint: Blueprint;
+  debugGradient: boolean;
+}) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [zoom, setZoom] = useState(1);
   const padding = 2;
@@ -242,6 +248,8 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const viewHeight = height / zoom;
   const viewX = (width - viewWidth) / 2;
   const viewY = (height - viewHeight) / 2;
+  const fadeSize = cell * 2;
+  const fadeBleed = 1;
   const point = (x: number, y: number) => ({
     x: (x - minX + padding + 0.5) * cell,
     y: (y - minY + padding + 0.5) * cell,
@@ -295,10 +303,108 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                 strokeWidth="1"
               />
             </pattern>
+            <linearGradient id="map-fade-left" gradientUnits="userSpaceOnUse" x1="0" x2={fadeSize}>
+              <stop offset="0%" stopColor="#33a8ff" />
+              <stop offset="12.5%" stopColor="#00ff1e" />
+              <stop offset="50%" stopColor="#ff1f6d" />
+              <stop offset="87.5%" stopColor="#ffe900" />
+              <stop offset="100%" stopColor="#ffe900" />
+            </linearGradient>
+            <linearGradient
+              id="map-fade-right"
+              gradientUnits="userSpaceOnUse"
+              x1={width}
+              x2={width - fadeSize}
+            >
+              <stop offset="0%" stopColor="#33a8ff" />
+              <stop offset="12.5%" stopColor="#00ff1e" />
+              <stop offset="50%" stopColor="#ff1f6d" />
+              <stop offset="87.5%" stopColor="#ffe900" />
+              <stop offset="100%" stopColor="#ffe900" />
+            </linearGradient>
+            <linearGradient
+              id="map-fade-top"
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              x2="0"
+              y1="0"
+              y2={fadeSize}
+            >
+              <stop offset="0%" stopColor="#33a8ff" />
+              <stop offset="12.5%" stopColor="#00ff1e" />
+              <stop offset="50%" stopColor="#ff1f6d" />
+              <stop offset="87.5%" stopColor="#ffe900" />
+              <stop offset="100%" stopColor="#ffe900" />
+            </linearGradient>
+            <linearGradient
+              id="map-fade-bottom"
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              x2="0"
+              y1={height}
+              y2={height - fadeSize}
+            >
+              <stop offset="0%" stopColor="#33a8ff" />
+              <stop offset="12.5%" stopColor="#00ff1e" />
+              <stop offset="50%" stopColor="#ff1f6d" />
+              <stop offset="87.5%" stopColor="#ffe900" />
+              <stop offset="100%" stopColor="#ffe900" />
+            </linearGradient>
+            <linearGradient
+              id="map-opacity-left"
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              x2={fadeSize}
+            >
+              <stop offset="0%" stopColor="#33a8ff" />
+              <stop offset="12.5%" stopColor="#33a8ff" />
+              <stop offset="50%" stopColor="#33a8ff" stopOpacity="0.5" />
+              <stop offset="87.5%" stopColor="#33a8ff" stopOpacity="0" />
+              <stop offset="100%" stopColor="#33a8ff" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient
+              id="map-opacity-right"
+              gradientUnits="userSpaceOnUse"
+              x1={width}
+              x2={width - fadeSize}
+            >
+              <stop offset="0%" stopColor="#33a8ff" />
+              <stop offset="12.5%" stopColor="#33a8ff" />
+              <stop offset="50%" stopColor="#33a8ff" stopOpacity="0.5" />
+              <stop offset="87.5%" stopColor="#33a8ff" stopOpacity="0" />
+              <stop offset="100%" stopColor="#33a8ff" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient
+              id="map-opacity-top"
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              x2="0"
+              y1="0"
+              y2={fadeSize}
+            >
+              <stop offset="0%" stopColor="#33a8ff" />
+              <stop offset="12.5%" stopColor="#33a8ff" />
+              <stop offset="50%" stopColor="#33a8ff" stopOpacity="0.5" />
+              <stop offset="87.5%" stopColor="#33a8ff" stopOpacity="0" />
+              <stop offset="100%" stopColor="#33a8ff" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient
+              id="map-opacity-bottom"
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              x2="0"
+              y1={height}
+              y2={height - fadeSize}
+            >
+              <stop offset="0%" stopColor="#33a8ff" />
+              <stop offset="12.5%" stopColor="#33a8ff" />
+              <stop offset="50%" stopColor="#33a8ff" stopOpacity="0.5" />
+              <stop offset="87.5%" stopColor="#33a8ff" stopOpacity="0" />
+              <stop offset="100%" stopColor="#33a8ff" stopOpacity="0" />
+            </linearGradient>
           </defs>
           <rect width={width} height={height} fill="#33a8ff" />
           <rect width={width} height={height} fill="url(#blueprint-grid)" />
-          <rect width={width} height={height} fill="none" stroke="#17202c" strokeWidth="1" />
           {(blueprint.signalLinks ?? []).map((link, index) => {
             const from = point(link.from.x, link.from.y);
             const to = point(link.to.x, link.to.y);
@@ -365,6 +471,69 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
               </g>
             );
           })}
+          {debugGradient ? (
+            <>
+              <rect
+                x={-fadeBleed}
+                width={fadeSize + fadeBleed}
+                height={height}
+                fill="url(#map-fade-left)"
+                pointerEvents="none"
+              />
+              <rect
+                x={width - fadeSize}
+                width={fadeSize + fadeBleed}
+                height={height}
+                fill="url(#map-fade-right)"
+                pointerEvents="none"
+              />
+              <rect
+                y={-fadeBleed}
+                width={width}
+                height={fadeSize + fadeBleed}
+                fill="url(#map-fade-top)"
+                pointerEvents="none"
+              />
+              <rect
+                y={height - fadeSize}
+                width={width}
+                height={fadeSize + fadeBleed}
+                fill="url(#map-fade-bottom)"
+                pointerEvents="none"
+              />
+            </>
+          ) : (
+            <>
+              <rect
+                x={-fadeBleed}
+                width={fadeSize + fadeBleed}
+                height={height}
+                fill="url(#map-opacity-left)"
+                pointerEvents="none"
+              />
+              <rect
+                x={width - fadeSize}
+                width={fadeSize + fadeBleed}
+                height={height}
+                fill="url(#map-opacity-right)"
+                pointerEvents="none"
+              />
+              <rect
+                y={-fadeBleed}
+                width={width}
+                height={fadeSize + fadeBleed}
+                fill="url(#map-opacity-top)"
+                pointerEvents="none"
+              />
+              <rect
+                y={height - fadeSize}
+                width={width}
+                height={fadeSize + fadeBleed}
+                fill="url(#map-opacity-bottom)"
+                pointerEvents="none"
+              />
+            </>
+          )}
         </svg>
       </div>
       <aside className="border-l border-slate-800 pl-4 text-xs text-slate-400">
@@ -410,6 +579,7 @@ export function BlueprintInspectorPage() {
   const [encoded, setEncoded] = useState("");
   const [blueprint, setBlueprint] = useState<Blueprint | null>(null);
   const [summary, setSummary] = useState<BlueprintSummary | null>(null);
+  const [debugGradient, setDebugGradient] = useState(true);
   const [message, setMessage] = useState("Paste a v2 blueprint string to inspect it.");
   const inspect = () => {
     const value = encoded.trim();
@@ -498,9 +668,17 @@ export function BlueprintInspectorPage() {
               </span>
             </div>
           </Panel>
-          <Panel title="Blueprint map">
+          <Panel title="Blueprint map" className="blueprint-map-panel">
+            <label className="blueprint-map__debug-toggle">
+              <input
+                type="checkbox"
+                checked={debugGradient}
+                onChange={(event) => setDebugGradient(event.target.checked)}
+              />
+              <span>debug gradient</span>
+            </label>
             <div className="p-4">
-              <BlueprintMap blueprint={blueprint} />
+              <BlueprintMap blueprint={blueprint} debugGradient={debugGradient} />
               <p className="mt-4 text-xs text-slate-500">
                 A small verified native/repository catalog supplies names and footprints. Other
                 content remains visible through the unknown-ID fallback.
