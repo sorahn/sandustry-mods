@@ -1,0 +1,3144 @@
+{
+  "format": 1,
+  "generatedAt": "2026-08-16T22:40:08.906Z",
+  "locale": "en",
+  "entries": [
+    {
+      "type": 1,
+      "name": "[NO KEY]",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [19, 19, 19, 19],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "definition": {
+        "shape": [
+          [19, 19, 19, 19],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ]
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 2,
+      "name": "Conveyor Belt",
+      "nameKey": "structures|conveyor|name",
+      "descriptionKey": "structures|conveyor|description",
+      "category": "logistics",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [20, 20, 20, 20],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [
+        { "id": 1, "angles": [-180, 180] },
+        { "id": 2, "angles": [0] }
+      ],
+      "definition": {
+        "shape": [
+          [20, 20, 20, 20],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [
+          { "id": 1, "angles": [-180, 180] },
+          { "id": 2, "angles": [0] }
+        ],
+        "nameKey": "structures|conveyor|name",
+        "descriptionKey": "structures|conveyor|description",
+        "categoryKey": "logistics",
+        "order": 10
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 3,
+      "name": "[NO KEY]",
+      "footprint": { "width": 1, "height": 1 },
+      "definition": {},
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 4,
+      "name": "Shaker",
+      "nameKey": "structures|shaker|name",
+      "descriptionKey": "structures|shaker|description",
+      "category": "production",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "line", "directions": ["diagonal"] }],
+      "variants": [
+        { "id": 3, "angles": [-45, 135] },
+        { "id": 4, "angles": [45, -135] }
+      ],
+      "definition": {
+        "buildModes": [{ "type": "line", "directions": ["diagonal"] }],
+        "variants": [
+          { "id": 3, "angles": [-45, 135] },
+          { "id": 4, "angles": [45, -135] }
+        ],
+        "nameKey": "structures|shaker|name",
+        "descriptionKey": "structures|shaker|description",
+        "categoryKey": "production"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 5,
+      "name": "Launcher",
+      "nameKey": "structures|launcher|name",
+      "descriptionKey": "structures|launcher|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["vertical", "diagonal"] },
+        { "type": "launcherRectUp" },
+        { "type": "launcherRectSide" }
+      ],
+      "variants": [
+        { "id": 6, "angles": [-135, 45] },
+        { "id": 5, "angles": [-90, 90] },
+        { "id": 7, "angles": [-45, 135] }
+      ],
+      "definition": {
+        "buildModes": [
+          { "type": "line", "directions": ["vertical", "diagonal"] },
+          { "type": "launcherRectUp" },
+          { "type": "launcherRectSide" }
+        ],
+        "variants": [
+          { "id": 6, "angles": [-135, 45] },
+          { "id": 5, "angles": [-90, 90] },
+          { "id": 7, "angles": [-45, 135] }
+        ],
+        "nameKey": "structures|launcher|name",
+        "descriptionKey": "structures|launcher|description",
+        "categoryKey": "logistics",
+        "order": 20
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 6,
+      "name": "[NO KEY]",
+      "footprint": { "width": 1, "height": 1 },
+      "definition": {},
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 7,
+      "name": "[NO KEY]",
+      "footprint": { "width": 1, "height": 1 },
+      "definition": {},
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 8,
+      "name": "[NO KEY]",
+      "category": "logistics",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [0, 0, 16, 0],
+        [0, 0, 0, 16],
+        [0, 0, 0, 15],
+        [0, 0, 0, 15]
+      ],
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [
+        { "id": 8, "angles": [180] },
+        { "id": 9, "angles": [0] }
+      ],
+      "definition": {
+        "shape": [
+          [0, 0, 16, 0],
+          [0, 0, 0, 16],
+          [0, 0, 0, 15],
+          [0, 0, 0, 15]
+        ],
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [
+          { "id": 8, "angles": [180] },
+          { "id": 9, "angles": [0] }
+        ],
+        "categoryKey": "logistics",
+        "order": 30
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 9,
+      "name": "[NO KEY]",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [0, 16, 0, 0],
+        [16, 0, 0, 0],
+        [15, 0, 0, 0],
+        [15, 0, 0, 0]
+      ],
+      "definition": {
+        "shape": [
+          [0, 16, 0, 0],
+          [16, 0, 0, 0],
+          [15, 0, 0, 0],
+          [15, 0, 0, 0]
+        ]
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 10,
+      "name": "[NO KEY]",
+      "category": "logistics",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [16, 0, 0, 16],
+        [16, 0, 16, 15],
+        [16, 0, 15, 15],
+        [0, 16, 15, 15]
+      ],
+      "buildModes": [{ "type": "single" }],
+      "variants": [{ "id": 10, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+      "definition": {
+        "shape": [
+          [16, 0, 0, 16],
+          [16, 0, 16, 15],
+          [16, 0, 15, 15],
+          [0, 16, 15, 15]
+        ],
+        "buildModes": [{ "type": "single" }],
+        "variants": [{ "id": 10, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+        "categoryKey": "logistics",
+        "order": 40
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 11,
+      "name": "Foundation",
+      "nameKey": "structures|foundation|name",
+      "descriptionKey": "structures|foundation|description",
+      "category": "blocks",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [
+        { "id": 12, "angles": [135] },
+        { "id": 15, "angles": [-45] },
+        { "id": 14, "angles": [45] },
+        { "id": 13, "angles": [-135] },
+        { "id": 11, "angles": [-180, -90, 0, 90, 180] }
+      ],
+      "definition": {
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [
+          { "id": 12, "angles": [135] },
+          { "id": 15, "angles": [-45] },
+          { "id": 14, "angles": [45] },
+          { "id": 13, "angles": [-135] },
+          { "id": 11, "angles": [-180, -90, 0, 90, 180] }
+        ],
+        "nameKey": "structures|foundation|name",
+        "descriptionKey": "structures|foundation|description",
+        "categoryKey": "blocks"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 12,
+      "name": "[NO KEY]",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [0, 0, 0, 17],
+        [0, 0, 17, 15],
+        [0, 17, 15, 15],
+        [17, 15, 15, 15]
+      ],
+      "definition": {
+        "shape": [
+          [0, 0, 0, 17],
+          [0, 0, 17, 15],
+          [0, 17, 15, 15],
+          [17, 15, 15, 15]
+        ]
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 13,
+      "name": "[NO KEY]",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [0, 15, 15, 15],
+        [0, 0, 15, 15],
+        [0, 0, 0, 15]
+      ],
+      "definition": {
+        "shape": [
+          [15, 15, 15, 15],
+          [0, 15, 15, 15],
+          [0, 0, 15, 15],
+          [0, 0, 0, 15]
+        ]
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 14,
+      "name": "[NO KEY]",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [18, 0, 0, 0],
+        [15, 18, 0, 0],
+        [15, 15, 18, 0],
+        [15, 15, 15, 18]
+      ],
+      "definition": {
+        "shape": [
+          [18, 0, 0, 0],
+          [15, 18, 0, 0],
+          [15, 15, 18, 0],
+          [15, 15, 15, 18]
+        ]
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 15,
+      "name": "[NO KEY]",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 0],
+        [15, 15, 0, 0],
+        [15, 0, 0, 0]
+      ],
+      "variants": [{ "id": 15, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+      "definition": {
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 0],
+          [15, 15, 0, 0],
+          [15, 0, 0, 0]
+        ],
+        "variants": [{ "id": 15, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }]
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 16,
+      "name": "Collector",
+      "nameKey": "structures|collector|name",
+      "descriptionKey": "structures|collector|description",
+      "category": "economy",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "rectangle" },
+        { "type": "line", "directions": ["horizontal", "vertical"] }
+      ],
+      "variants": [{ "id": 16, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+      "definition": {
+        "buildModes": [
+          { "type": "rectangle" },
+          { "type": "line", "directions": ["horizontal", "vertical"] }
+        ],
+        "variants": [{ "id": 16, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+        "nameKey": "structures|collector|name",
+        "descriptionKey": "structures|collector|description",
+        "categoryKey": "economy"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 17,
+      "name": "[NO KEY]",
+      "footprint": { "width": 1, "height": 1 },
+      "tooltipHover": { "type": "filter" },
+      "definition": { "tooltipHover": { "type": "filter" } },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 18,
+      "name": "Filter",
+      "nameKey": "structures|filter|name",
+      "descriptionKey": "structures|filter|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal"] },
+        { "type": "line", "directions": ["vertical"] }
+      ],
+      "variants": [
+        { "id": 17, "angles": [-180, 180] },
+        { "id": 18, "angles": [0] },
+        { "id": "filterWall", "angles": [-90, 90] }
+      ],
+      "tooltipHover": { "type": "filter" },
+      "definition": {
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal"] },
+          { "type": "line", "directions": ["vertical"] }
+        ],
+        "variants": [
+          { "id": 17, "angles": [-180, 180] },
+          { "id": 18, "angles": [0] },
+          { "id": "filterWall", "angles": [-90, 90] }
+        ],
+        "nameKey": "structures|filter|name",
+        "descriptionKey": "structures|filter|description",
+        "categoryKey": "logistics",
+        "order": 50,
+        "tooltipHover": { "type": "filter" }
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 19,
+      "name": "[NO KEY]",
+      "category": "blocks",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [16, 16, 16, 16],
+        [16, 16, 16, 16],
+        [16, 16, 16, 16],
+        [16, 16, 16, 16]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": 19, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+      "definition": {
+        "shape": [
+          [16, 16, 16, 16],
+          [16, 16, 16, 16],
+          [16, 16, 16, 16],
+          [16, 16, 16, 16]
+        ],
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": 19, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+        "categoryKey": "blocks"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 20,
+      "name": "Kinetic Press",
+      "nameKey": "structures|velocitySoaker|name",
+      "descriptionKey": "structures|velocitySoaker|description",
+      "category": "production",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [24, 24, 24, 24],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ],
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [{ "id": 20, "angles": [-180, 0, 180] }],
+      "definition": {
+        "shape": [
+          [24, 24, 24, 24],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "altOriginOffsetY": 100,
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [{ "id": 20, "angles": [-180, 0, 180] }],
+        "nameKey": "structures|velocitySoaker|name",
+        "descriptionKey": "structures|velocitySoaker|description",
+        "categoryKey": "production"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 21,
+      "name": "Planter Box",
+      "nameKey": "structures|grower|name",
+      "descriptionKey": "structures|grower|description",
+      "category": "production",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [{ "id": 21, "angles": [-180, 0, 180] }],
+      "definition": {
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [{ "id": 21, "angles": [-180, 0, 180] }],
+        "nameKey": "structures|grower|name",
+        "descriptionKey": "structures|grower|description",
+        "categoryKey": "production"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 22,
+      "name": "[NO KEY]",
+      "category": "logic",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [{ "id": 22, "angles": [-180, 0, 180] }],
+      "definition": {
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [{ "id": 22, "angles": [-180, 0, 180] }],
+        "categoryKey": "logic"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 23,
+      "name": "Pipe",
+      "nameKey": "structures|pipe|name",
+      "descriptionKey": "structures|pipe|description",
+      "category": "fluids",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "line", "directions": ["horizontal", "vertical"] }],
+      "variants": [{ "id": 23, "angles": [-180, -90, 0, 90, 180] }],
+      "definition": {
+        "buildModes": [{ "type": "line", "directions": ["horizontal", "vertical"] }],
+        "variants": [{ "id": 23, "angles": [-180, -90, 0, 90, 180] }],
+        "nameKey": "structures|pipe|name",
+        "descriptionKey": "structures|pipe|description",
+        "categoryKey": "fluids"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 24,
+      "name": "Pump",
+      "nameKey": "structures|pump|name",
+      "descriptionKey": "structures|pump|description",
+      "category": "fluids",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "single" },
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": 24, "angles": [-180, -90, 0, 90, 180] }],
+      "definition": {
+        "buildModes": [
+          { "type": "single" },
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": 24, "angles": [-180, -90, 0, 90, 180] }],
+        "nameKey": "structures|pump|name",
+        "descriptionKey": "structures|pump|description",
+        "categoryKey": "fluids"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 25,
+      "name": "Liquid Vent",
+      "nameKey": "structures|liquidVent|name",
+      "descriptionKey": "structures|liquidVent|description",
+      "category": "fluids",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "single" },
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": 25, "angles": [-180, -90, 0, 90, 180] }],
+      "definition": {
+        "buildModes": [
+          { "type": "single" },
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": 25, "angles": [-180, -90, 0, 90, 180] }],
+        "nameKey": "structures|liquidVent|name",
+        "descriptionKey": "structures|liquidVent|description",
+        "categoryKey": "fluids"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 26,
+      "name": "Wall Light",
+      "nameKey": "structures|light|name",
+      "descriptionKey": "structures|light|description",
+      "category": "lighting",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "single" }],
+      "variants": [{ "id": 26, "angles": [0] }],
+      "definition": {
+        "buildModes": [{ "type": "single" }],
+        "variants": [{ "id": 26, "angles": [0] }],
+        "nameKey": "structures|light|name",
+        "descriptionKey": "structures|light|description",
+        "categoryKey": "lighting"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": 27,
+      "name": "Flux Emanator",
+      "nameKey": "structures|gloomEmitter|name",
+      "descriptionKey": "structures|gloomEmitter|description",
+      "category": "special",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "single" }],
+      "variants": [{ "id": 27, "angles": [0] }],
+      "definition": {
+        "buildModes": [{ "type": "single" }],
+        "variants": [{ "id": 27, "angles": [0] }],
+        "nameKey": "structures|gloomEmitter|name",
+        "descriptionKey": "structures|gloomEmitter|description",
+        "order": 15,
+        "categoryKey": "special"
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "aurixiteCrystallizer",
+      "name": "Synthesizer",
+      "nameKey": "structures|aurixiteCrystallizer|name",
+      "descriptionKey": "structures|aurixiteCrystallizer|description",
+      "category": "production",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [{ "id": "aurixiteCrystallizer", "angles": [-180, 0, 180] }],
+      "render": {
+        "imageName": "aurixiteCrystallizer",
+        "size": { "width": 24, "height": 24 },
+        "offset": { "x": -4, "y": -1 },
+        "z": 0.8,
+        "ui": {
+          "imageName": "synthesizer_icon",
+          "offset": { "x": 0, "y": 0 },
+          "size": { "width": 16, "height": 16 }
+        }
+      },
+      "tooltipHover": {
+        "type": "custom",
+        "messageKey": "mods|power|consumption",
+        "messageParams": { "amount": 800 }
+      },
+      "definition": {
+        "id": "aurixiteCrystallizer",
+        "nameKey": "structures|aurixiteCrystallizer|name",
+        "descriptionKey": "structures|aurixiteCrystallizer|description",
+        "descriptionParams": { "amount": 800 },
+        "categoryKey": "production",
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [{ "id": "aurixiteCrystallizer", "angles": [-180, 0, 180] }],
+        "render": {
+          "imageName": "aurixiteCrystallizer",
+          "size": { "width": 24, "height": 24 },
+          "offset": { "x": -4, "y": -1 },
+          "z": 0.8,
+          "ui": {
+            "imageName": "synthesizer_icon",
+            "offset": { "x": 0, "y": 0 },
+            "size": { "width": 16, "height": 16 }
+          }
+        },
+        "tooltipHover": {
+          "type": "custom",
+          "messageKey": "mods|power|consumption",
+          "messageParams": { "amount": 800 }
+        },
+        "name": "Synthesizer",
+        "description": "Converts matters by transmuting one resource into another. This allows transformations such as Florinol into Aurixite.\n\nConsumes {amount} Energy per conversion."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "burnerBeltLeft",
+      "name": "[NO KEY]",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": "[Circular]",
+      "variants": [
+        { "id": "burnerBeltLeft", "angles": [-180, 180] },
+        { "id": "burnerBeltRight", "angles": [0] }
+      ],
+      "render": { "imageName": "burner_belt_left", "z": 0.5 },
+      "definition": {
+        "id": "burnerBeltLeft",
+        "shape": [
+          [19, 19, 19, 19],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "categoryKey": "thermal",
+        "order": 60,
+        "variants": [
+          { "id": "burnerBeltLeft", "angles": [-180, 180] },
+          { "id": "burnerBeltRight", "angles": [0] }
+        ],
+        "render": { "imageName": "burner_belt_left", "z": 0.5 }
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "burnerBeltRight",
+      "name": "Burner Belt",
+      "nameKey": "structures|burnerBeltRight|name",
+      "descriptionKey": "structures|burnerBeltRight|description",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": "[Circular]",
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": "[Circular]",
+      "render": { "imageName": "burner_belt_right", "z": 0.5, "ui": { "outline": true } },
+      "definition": {
+        "id": "burnerBeltRight",
+        "shape": [
+          [20, 20, 20, 20],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "nameKey": "structures|burnerBeltRight|name",
+        "descriptionKey": "structures|burnerBeltRight|description",
+        "categoryKey": "thermal",
+        "order": 60,
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [
+          { "id": "burnerBeltLeft", "angles": [-180, 180] },
+          { "id": "burnerBeltRight", "angles": [0] }
+        ],
+        "render": { "imageName": "burner_belt_right", "z": 0.5, "ui": { "outline": true } },
+        "name": "Burner Belt",
+        "description": "Moves elements at regular belt speed. Ignites flammable materials above when fueled by an adjacent Thermal Buffer. Without heat, acts as a normal belt."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "clearingFrameLeft",
+      "name": "[NO KEY]",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "variants": [
+        { "id": "clearingFrameLeft", "angles": [-180, 180] },
+        { "id": "clearingFrameRight", "angles": [0] }
+      ],
+      "render": { "imageName": "clearing_frame_left", "z": 0.5, "ambienceGroup": "clearingFrames" },
+      "definition": {
+        "id": "clearingFrameLeft",
+        "categoryKey": "logistics",
+        "variants": [
+          { "id": "clearingFrameLeft", "angles": [-180, 180] },
+          { "id": "clearingFrameRight", "angles": [0] }
+        ],
+        "render": {
+          "imageName": "clearing_frame_left",
+          "z": 0.5,
+          "ambienceGroup": "clearingFrames"
+        }
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "clearingFrameRight",
+      "name": "Clearing Frame",
+      "nameKey": "structures|clearingFrameRight|name",
+      "descriptionKey": "structures|clearingFrameRight|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal"] },
+        { "type": "rectangleDirectional" }
+      ],
+      "variants": "[Circular]",
+      "render": {
+        "imageName": "clearing_frame_right",
+        "z": 0.5,
+        "ambienceGroup": "clearingFrames",
+        "ui": { "outline": true }
+      },
+      "definition": {
+        "id": "clearingFrameRight",
+        "nameKey": "structures|clearingFrameRight|name",
+        "descriptionKey": "structures|clearingFrameRight|description",
+        "categoryKey": "logistics",
+        "order": 70,
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal"] },
+          { "type": "rectangleDirectional" }
+        ],
+        "variants": [
+          { "id": "clearingFrameLeft", "angles": [-180, 180] },
+          { "id": "clearingFrameRight", "angles": [0] }
+        ],
+        "render": {
+          "imageName": "clearing_frame_right",
+          "z": 0.5,
+          "ambienceGroup": "clearingFrames",
+          "ui": { "outline": true }
+        },
+        "name": "Clearing Frame",
+        "description": "Moves elements inside."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "conveyorLeftMk2",
+      "name": "[NO KEY]",
+      "category": "logistics",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": "[Circular]",
+      "variants": [
+        { "id": "conveyorLeftMk2", "angles": [-180, 180] },
+        { "id": "conveyorRightMk2", "angles": [0] }
+      ],
+      "render": { "imageName": "conveyor_left_mk2", "z": 0.5 },
+      "definition": {
+        "id": "conveyorLeftMk2",
+        "shape": [
+          [19, 19, 19, 19],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "categoryKey": "logistics",
+        "variants": [
+          { "id": "conveyorLeftMk2", "angles": [-180, 180] },
+          { "id": "conveyorRightMk2", "angles": [0] }
+        ],
+        "render": { "imageName": "conveyor_left_mk2", "z": 0.5 }
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "conveyorRightMk2",
+      "name": "Conveyor Belt Mk.2",
+      "nameKey": "structures|conveyorRightMk2|name",
+      "descriptionKey": "structures|conveyorRightMk2|description",
+      "category": "logistics",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": "[Circular]",
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": "[Circular]",
+      "render": { "imageName": "conveyor_right_mk2", "z": 0.5, "ui": { "outline": true } },
+      "definition": {
+        "id": "conveyorRightMk2",
+        "shape": [
+          [20, 20, 20, 20],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "nameKey": "structures|conveyorRightMk2|name",
+        "descriptionKey": "structures|conveyorRightMk2|description",
+        "categoryKey": "logistics",
+        "order": 11,
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [
+          { "id": "conveyorLeftMk2", "angles": [-180, 180] },
+          { "id": "conveyorRightMk2", "angles": [0] }
+        ],
+        "render": { "imageName": "conveyor_right_mk2", "z": 0.5, "ui": { "outline": true } },
+        "name": "Conveyor Belt Mk.2",
+        "description": "Moves elements faster."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "copperMold",
+      "name": "Copper Mold",
+      "nameKey": "structures|copperMold|name",
+      "descriptionKey": "structures|copperMold|description",
+      "category": "energy",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "rectangle" },
+        { "type": "line", "directions": ["horizontal", "vertical"] }
+      ],
+      "variants": [{ "id": "copperMold", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "copperMold", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "copperMold",
+        "nameKey": "structures|copperMold|name",
+        "descriptionKey": "structures|copperMold|description",
+        "categoryKey": "energy",
+        "buildModes": [
+          { "type": "rectangle" },
+          { "type": "line", "directions": ["horizontal", "vertical"] }
+        ],
+        "variants": [{ "id": "copperMold", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "copperMold", "size": { "width": 16, "height": 16 } },
+        "name": "Copper Mold",
+        "description": "A mold that only accepts Liquid Copper. When filled, it transforms into a solid Power Brick that can be used to store Energy.\n\nThe Power Brick can be charged by transferring Energy from a Florinol Battery using an Energy Siphon, or by connecting it to a Steam Turbine."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "critterFence",
+      "name": "Critter Fence",
+      "nameKey": "structures|critterFence|name",
+      "descriptionKey": "structures|critterFence|description",
+      "category": "blocks",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "critterFence", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "critter_fence", "size": { "width": 16, "height": 16 }, "z": 0.85 },
+      "tooltipHover": { "type": "filter" },
+      "definition": {
+        "id": "critterFence",
+        "nameKey": "structures|critterFence|name",
+        "descriptionKey": "structures|critterFence|description",
+        "categoryKey": "blocks",
+        "tooltipHover": { "type": "filter" },
+        "defaultData": { "filterPassThrough": true },
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "critterFence", "angles": [0, 90, 180, 270] }],
+        "render": {
+          "imageName": "critter_fence",
+          "size": { "width": 16, "height": 16 },
+          "z": 0.85
+        },
+        "name": "Critter Fence",
+        "description": "A barrier that lets every element pass through but keeps critters from crossing."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "earthStratacore",
+      "name": "Earth Stratacore",
+      "nameKey": "structures|earthStratacore|name",
+      "descriptionKey": "structures|earthStratacore|description",
+      "category": "production",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "single" }],
+      "variants": [{ "id": "earthStratacore", "angles": [0] }],
+      "render": {
+        "imageName": "earthStratacore",
+        "size": { "width": 18, "height": 18 },
+        "offset": { "x": -1, "y": -1 }
+      },
+      "definition": {
+        "id": "earthStratacore",
+        "nameKey": "structures|earthStratacore|name",
+        "descriptionKey": "structures|earthStratacore|description",
+        "categoryKey": "production",
+        "buildModes": [{ "type": "single" }],
+        "variants": [{ "id": "earthStratacore", "angles": [0] }],
+        "render": {
+          "imageName": "earthStratacore",
+          "size": { "width": 18, "height": 18 },
+          "offset": { "x": -1, "y": -1 }
+        },
+        "hideFromBuildMenu": true,
+        "name": "Earth Stratacore",
+        "description": "Slowly generates and reinforces Earth Strataform. Only one can be placed at a time."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "electricityConnector",
+      "name": "Energy Connector",
+      "nameKey": "structures|electricityConnector|name",
+      "descriptionKey": "structures|electricityConnector|description",
+      "category": "energy",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [{ "type": "line", "directions": ["horizontal", "vertical"] }],
+      "variants": [{ "id": "electricityConnector", "angles": [0, 90, 180, 270] }],
+      "render": {
+        "imageName": "electricity_connector",
+        "size": { "width": 16, "height": 16 },
+        "offset": { "x": 0, "y": 0 },
+        "ui": { "outline": true }
+      },
+      "definition": {
+        "id": "electricityConnector",
+        "nameKey": "structures|electricityConnector|name",
+        "descriptionKey": "structures|electricityConnector|description",
+        "categoryKey": "energy",
+        "buildModes": [{ "type": "line", "directions": ["horizontal", "vertical"] }],
+        "variants": [{ "id": "electricityConnector", "angles": [0, 90, 180, 270] }],
+        "render": {
+          "imageName": "electricity_connector",
+          "size": { "width": 16, "height": 16 },
+          "offset": { "x": 0, "y": 0 },
+          "ui": { "outline": true }
+        },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "Energy Connector",
+        "description": "A passive conductor that bridges power structures so Energy can flow between them. For example, connecting a Steam Turbine to a Power Brick network.\n\nStores no Energy itself."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "filterLeftMk2",
+      "name": "Advanced Filter",
+      "nameKey": "structures|filterMk2|name",
+      "descriptionKey": "structures|filterMk2|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "variants": [
+        { "id": "filterLeftMk2", "angles": [-180, 180] },
+        { "id": "filterRightMk2", "angles": [0] },
+        { "id": "filterWallMk2", "angles": [-90, 90] }
+      ],
+      "render": { "imageName": "filter_left_mk2", "z": 0.85 },
+      "tooltipHover": { "type": "filter" },
+      "definition": {
+        "id": "filterLeftMk2",
+        "nameKey": "structures|filterMk2|name",
+        "descriptionKey": "structures|filterMk2|description",
+        "categoryKey": "logistics",
+        "tooltipHover": { "type": "filter" },
+        "variants": [
+          { "id": "filterLeftMk2", "angles": [-180, 180] },
+          { "id": "filterRightMk2", "angles": [0] },
+          { "id": "filterWallMk2", "angles": [-90, 90] }
+        ],
+        "render": { "imageName": "filter_left_mk2", "z": 0.85 },
+        "name": "Advanced Filter",
+        "description": "Filters multiple element types at once, including liquids and gases."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "filterRightMk2",
+      "name": "Advanced Filter",
+      "nameKey": "structures|filterMk2|name",
+      "descriptionKey": "structures|filterMk2|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal"] },
+        { "type": "line", "directions": ["vertical"] }
+      ],
+      "variants": "[Circular]",
+      "render": {
+        "imageName": "filter_right_mk2",
+        "z": 0.85,
+        "ui": { "outline": true, "width": "18px", "height": "18px" }
+      },
+      "tooltipHover": { "type": "filter" },
+      "definition": {
+        "id": "filterRightMk2",
+        "nameKey": "structures|filterMk2|name",
+        "descriptionKey": "structures|filterMk2|description",
+        "categoryKey": "logistics",
+        "order": 51,
+        "tooltipHover": { "type": "filter" },
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal"] },
+          { "type": "line", "directions": ["vertical"] }
+        ],
+        "variants": [
+          { "id": "filterLeftMk2", "angles": [-180, 180] },
+          { "id": "filterRightMk2", "angles": [0] },
+          { "id": "filterWallMk2", "angles": [-90, 90] }
+        ],
+        "render": {
+          "imageName": "filter_right_mk2",
+          "z": 0.85,
+          "ui": { "outline": true, "width": "18px", "height": "18px" }
+        },
+        "name": "Advanced Filter",
+        "description": "Filters multiple element types at once, including liquids and gases."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "filterWall",
+      "name": "Filter Wall",
+      "nameKey": "structures|filterWall|name",
+      "descriptionKey": "structures|filterWall|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "variants": [{ "id": "filterWall", "angles": [-90, 90] }],
+      "render": {
+        "imageName": "filter_wall",
+        "size": { "width": 18, "height": 18 },
+        "offset": { "x": -1, "y": -1 },
+        "z": 0.85
+      },
+      "tooltipHover": { "type": "filter" },
+      "definition": {
+        "id": "filterWall",
+        "nameKey": "structures|filterWall|name",
+        "descriptionKey": "structures|filterWall|description",
+        "categoryKey": "logistics",
+        "tooltipHover": { "type": "filter" },
+        "defaultData": { "filterPassThrough": true },
+        "variants": [{ "id": "filterWall", "angles": [-90, 90] }],
+        "render": {
+          "imageName": "filter_wall",
+          "size": { "width": 18, "height": 18 },
+          "offset": { "x": -1, "y": -1 },
+          "z": 0.85
+        },
+        "name": "Filter Wall",
+        "description": "Filters elements based on filter settings without acting as a conveyor."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "filterWallMk2",
+      "name": "Advanced Filter Wall",
+      "nameKey": "structures|filterWallMk2|name",
+      "descriptionKey": "structures|filterWallMk2|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "variants": [{ "id": "filterWallMk2", "angles": [-90, 90] }],
+      "render": {
+        "imageName": "filter_wall_mk2",
+        "size": { "width": 18, "height": 18 },
+        "offset": { "x": -1, "y": -1 },
+        "z": 0.85
+      },
+      "tooltipHover": { "type": "filter" },
+      "definition": {
+        "id": "filterWallMk2",
+        "nameKey": "structures|filterWallMk2|name",
+        "descriptionKey": "structures|filterWallMk2|description",
+        "categoryKey": "logistics",
+        "tooltipHover": { "type": "filter" },
+        "defaultData": { "filterPassThrough": true },
+        "variants": [{ "id": "filterWallMk2", "angles": [-90, 90] }],
+        "render": {
+          "imageName": "filter_wall_mk2",
+          "size": { "width": 18, "height": 18 },
+          "offset": { "x": -1, "y": -1 },
+          "z": 0.85
+        },
+        "name": "Advanced Filter Wall",
+        "description": "Filters multiple element types at once, including liquids and gases, without acting as a conveyor."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "glassFoundation",
+      "name": "Glass Foundation",
+      "nameKey": "structures|glassFoundation|name",
+      "descriptionKey": "structures|glassFoundation|description",
+      "category": "blocks",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [45, 45, 45, 45],
+        [45, 45, 45, 45],
+        [45, 45, 45, 45],
+        [45, 45, 45, 45]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "glassFoundation", "angles": [-180, -90, 0, 90, 180] }],
+      "definition": {
+        "id": "glassFoundation",
+        "nameKey": "structures|glassFoundation|name",
+        "descriptionKey": "structures|glassFoundation|description",
+        "categoryKey": "blocks",
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "glassFoundation", "angles": [-180, -90, 0, 90, 180] }],
+        "shape": [
+          [45, 45, 45, 45],
+          [45, 45, 45, 45],
+          [45, 45, 45, 45],
+          [45, 45, 45, 45]
+        ],
+        "name": "Glass Foundation",
+        "description": "A transparent glass foundation."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "goldBattery",
+      "name": "Florinol Battery",
+      "nameKey": "structures|goldBattery|name",
+      "descriptionKey": "structures|goldBattery|description",
+      "category": "energy",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "rectangle" },
+        { "type": "line", "directions": ["horizontal", "vertical"] }
+      ],
+      "variants": [{ "id": "goldBattery", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "goldBattery", "size": { "width": 16, "height": 16 } },
+      "tooltipHover": {
+        "type": "custom",
+        "dataFieldMessage": {
+          "messageKey": "mods|energyStorage|tooltip",
+          "fields": [
+            { "param": "current", "field": "storedEnergy", "round": true, "fallback": 0 },
+            { "param": "max", "field": "maxEnergy", "fallback": 16 }
+          ]
+        }
+      },
+      "definition": {
+        "id": "goldBattery",
+        "nameKey": "structures|goldBattery|name",
+        "descriptionKey": "structures|goldBattery|description",
+        "categoryKey": "energy",
+        "buildModes": [
+          { "type": "rectangle" },
+          { "type": "line", "directions": ["horizontal", "vertical"] }
+        ],
+        "skipCopyData": true,
+        "variants": [{ "id": "goldBattery", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "goldBattery", "size": { "width": 16, "height": 16 } },
+        "tooltipHover": {
+          "type": "custom",
+          "dataFieldMessage": {
+            "messageKey": "mods|energyStorage|tooltip",
+            "fields": [
+              { "param": "current", "field": "storedEnergy", "round": true, "fallback": 0 },
+              { "param": "max", "field": "maxEnergy", "fallback": 16 }
+            ]
+          }
+        },
+        "name": "Florinol Battery",
+        "description": "Putting Florinol in a battery generates and stores Energy.\n\nWhen used up, it hardens and can be destroyed or burned to recycle back into Energy."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "heatCannonDown",
+      "name": "Pyro Dispenser",
+      "nameKey": "structures|heatCannon|name",
+      "descriptionKey": "structures|heatCannon|description",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [{ "type": "singleDirectional" }],
+      "variants": [
+        { "id": "heatCannonRight", "angles": [0] },
+        { "id": "heatCannonDown", "angles": [90] },
+        { "id": "heatCannonLeft", "angles": [180, -180] },
+        { "id": "heatCannonUp", "angles": [-90] }
+      ],
+      "render": {
+        "imageName": "heatCannon",
+        "size": { "width": 23, "height": 16 },
+        "offset": { "x": 0, "y": 0 }
+      },
+      "definition": {
+        "id": "heatCannonDown",
+        "nameKey": "structures|heatCannon|name",
+        "descriptionKey": "structures|heatCannon|description",
+        "descriptionParams": { "seconds": 3 },
+        "categoryKey": "thermal",
+        "order": 70,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "heatCannonRight", "angles": [0] },
+          { "id": "heatCannonDown", "angles": [90] },
+          { "id": "heatCannonLeft", "angles": [180, -180] },
+          { "id": "heatCannonUp", "angles": [-90] }
+        ],
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "render": {
+          "imageName": "heatCannon",
+          "size": { "width": 23, "height": 16 },
+          "offset": { "x": 0, "y": 0 }
+        },
+        "name": "Pyro Dispenser",
+        "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "heatCannonLeft",
+      "name": "Pyro Dispenser",
+      "nameKey": "structures|heatCannon|name",
+      "descriptionKey": "structures|heatCannon|description",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": "[Circular]",
+      "variants": "[Circular]",
+      "render": "[Circular]",
+      "definition": {
+        "id": "heatCannonLeft",
+        "nameKey": "structures|heatCannon|name",
+        "descriptionKey": "structures|heatCannon|description",
+        "descriptionParams": { "seconds": 3 },
+        "categoryKey": "thermal",
+        "order": 70,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "heatCannonRight", "angles": [0] },
+          { "id": "heatCannonDown", "angles": [90] },
+          { "id": "heatCannonLeft", "angles": [180, -180] },
+          { "id": "heatCannonUp", "angles": [-90] }
+        ],
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "render": {
+          "imageName": "heatCannon",
+          "size": { "width": 23, "height": 16 },
+          "offset": { "x": 0, "y": 0 }
+        },
+        "name": "Pyro Dispenser",
+        "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "heatCannonRight",
+      "name": "Pyro Dispenser",
+      "nameKey": "structures|heatCannon|name",
+      "descriptionKey": "structures|heatCannon|description",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": "[Circular]",
+      "variants": "[Circular]",
+      "render": "[Circular]",
+      "definition": {
+        "id": "heatCannonRight",
+        "nameKey": "structures|heatCannon|name",
+        "descriptionKey": "structures|heatCannon|description",
+        "descriptionParams": { "seconds": 3 },
+        "categoryKey": "thermal",
+        "order": 70,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "heatCannonRight", "angles": [0] },
+          { "id": "heatCannonDown", "angles": [90] },
+          { "id": "heatCannonLeft", "angles": [180, -180] },
+          { "id": "heatCannonUp", "angles": [-90] }
+        ],
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "render": {
+          "imageName": "heatCannon",
+          "size": { "width": 23, "height": 16 },
+          "offset": { "x": 0, "y": 0 }
+        },
+        "name": "Pyro Dispenser",
+        "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "heatCannonUp",
+      "name": "Pyro Dispenser",
+      "nameKey": "structures|heatCannon|name",
+      "descriptionKey": "structures|heatCannon|description",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": "[Circular]",
+      "variants": "[Circular]",
+      "render": "[Circular]",
+      "definition": {
+        "id": "heatCannonUp",
+        "nameKey": "structures|heatCannon|name",
+        "descriptionKey": "structures|heatCannon|description",
+        "descriptionParams": { "seconds": 3 },
+        "categoryKey": "thermal",
+        "order": 70,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "heatCannonRight", "angles": [0] },
+          { "id": "heatCannonDown", "angles": [90] },
+          { "id": "heatCannonLeft", "angles": [180, -180] },
+          { "id": "heatCannonUp", "angles": [-90] }
+        ],
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "render": {
+          "imageName": "heatCannon",
+          "size": { "width": 23, "height": 16 },
+          "offset": { "x": 0, "y": 0 }
+        },
+        "name": "Pyro Dispenser",
+        "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "kineticFieldEmitter",
+      "name": "Aerokinetic Fan",
+      "nameKey": "structures|kineticFieldEmitter|name",
+      "descriptionKey": "structures|kineticFieldEmitter|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "singleDirectional" }],
+      "variants": [
+        { "id": "kineticFieldEmitter", "angles": [0] },
+        { "id": "kineticFieldEmitterDownRight", "angles": [45] },
+        { "id": "kineticFieldEmitterDown", "angles": [90] },
+        { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
+        { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
+        { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
+        { "id": "kineticFieldEmitterUp", "angles": [-90] },
+        { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+      ],
+      "render": {
+        "imageName": "kineticFieldEmitter",
+        "size": { "width": 23, "height": 16 },
+        "ui": {
+          "size": { "width": 11, "height": 16 },
+          "width": "11px",
+          "height": "16px",
+          "objectPosition": "top right"
+        }
+      },
+      "definition": {
+        "id": "kineticFieldEmitter",
+        "nameKey": "structures|kineticFieldEmitter|name",
+        "descriptionKey": "structures|kineticFieldEmitter|description",
+        "categoryKey": "logistics",
+        "order": 80,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "kineticFieldEmitter", "angles": [0] },
+          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
+          { "id": "kineticFieldEmitterDown", "angles": [90] },
+          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
+          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
+          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
+          { "id": "kineticFieldEmitterUp", "angles": [-90] },
+          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+        ],
+        "render": {
+          "imageName": "kineticFieldEmitter",
+          "size": { "width": 23, "height": 16 },
+          "ui": {
+            "size": { "width": 11, "height": 16 },
+            "width": "11px",
+            "height": "16px",
+            "objectPosition": "top right"
+          }
+        },
+        "name": "Aerokinetic Fan",
+        "description": "Blows petals and powders through the air, such as Amethelis and Snow."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "kineticFieldEmitterDown",
+      "name": "Aerokinetic Fan",
+      "nameKey": "structures|kineticFieldEmitter|name",
+      "descriptionKey": "structures|kineticFieldEmitter|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": "[Circular]",
+      "variants": "[Circular]",
+      "render": "[Circular]",
+      "definition": {
+        "id": "kineticFieldEmitterDown",
+        "nameKey": "structures|kineticFieldEmitter|name",
+        "descriptionKey": "structures|kineticFieldEmitter|description",
+        "categoryKey": "logistics",
+        "order": 80,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "kineticFieldEmitter", "angles": [0] },
+          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
+          { "id": "kineticFieldEmitterDown", "angles": [90] },
+          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
+          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
+          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
+          { "id": "kineticFieldEmitterUp", "angles": [-90] },
+          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+        ],
+        "render": {
+          "imageName": "kineticFieldEmitter",
+          "size": { "width": 23, "height": 16 },
+          "ui": {
+            "size": { "width": 11, "height": 16 },
+            "width": "11px",
+            "height": "16px",
+            "objectPosition": "top right"
+          }
+        },
+        "name": "Aerokinetic Fan",
+        "description": "Blows petals and powders through the air, such as Amethelis and Snow."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "kineticFieldEmitterDownLeft",
+      "name": "Aerokinetic Fan",
+      "nameKey": "structures|kineticFieldEmitter|name",
+      "descriptionKey": "structures|kineticFieldEmitter|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": "[Circular]",
+      "variants": "[Circular]",
+      "render": "[Circular]",
+      "definition": {
+        "id": "kineticFieldEmitterDownLeft",
+        "nameKey": "structures|kineticFieldEmitter|name",
+        "descriptionKey": "structures|kineticFieldEmitter|description",
+        "categoryKey": "logistics",
+        "order": 80,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "kineticFieldEmitter", "angles": [0] },
+          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
+          { "id": "kineticFieldEmitterDown", "angles": [90] },
+          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
+          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
+          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
+          { "id": "kineticFieldEmitterUp", "angles": [-90] },
+          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+        ],
+        "render": {
+          "imageName": "kineticFieldEmitter",
+          "size": { "width": 23, "height": 16 },
+          "ui": {
+            "size": { "width": 11, "height": 16 },
+            "width": "11px",
+            "height": "16px",
+            "objectPosition": "top right"
+          }
+        },
+        "name": "Aerokinetic Fan",
+        "description": "Blows petals and powders through the air, such as Amethelis and Snow."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "kineticFieldEmitterDownRight",
+      "name": "Aerokinetic Fan",
+      "nameKey": "structures|kineticFieldEmitter|name",
+      "descriptionKey": "structures|kineticFieldEmitter|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": "[Circular]",
+      "variants": "[Circular]",
+      "render": "[Circular]",
+      "definition": {
+        "id": "kineticFieldEmitterDownRight",
+        "nameKey": "structures|kineticFieldEmitter|name",
+        "descriptionKey": "structures|kineticFieldEmitter|description",
+        "categoryKey": "logistics",
+        "order": 80,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "kineticFieldEmitter", "angles": [0] },
+          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
+          { "id": "kineticFieldEmitterDown", "angles": [90] },
+          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
+          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
+          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
+          { "id": "kineticFieldEmitterUp", "angles": [-90] },
+          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+        ],
+        "render": {
+          "imageName": "kineticFieldEmitter",
+          "size": { "width": 23, "height": 16 },
+          "ui": {
+            "size": { "width": 11, "height": 16 },
+            "width": "11px",
+            "height": "16px",
+            "objectPosition": "top right"
+          }
+        },
+        "name": "Aerokinetic Fan",
+        "description": "Blows petals and powders through the air, such as Amethelis and Snow."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "kineticFieldEmitterLeft",
+      "name": "Aerokinetic Fan",
+      "nameKey": "structures|kineticFieldEmitter|name",
+      "descriptionKey": "structures|kineticFieldEmitter|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": "[Circular]",
+      "variants": "[Circular]",
+      "render": "[Circular]",
+      "definition": {
+        "id": "kineticFieldEmitterLeft",
+        "nameKey": "structures|kineticFieldEmitter|name",
+        "descriptionKey": "structures|kineticFieldEmitter|description",
+        "categoryKey": "logistics",
+        "order": 80,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "kineticFieldEmitter", "angles": [0] },
+          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
+          { "id": "kineticFieldEmitterDown", "angles": [90] },
+          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
+          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
+          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
+          { "id": "kineticFieldEmitterUp", "angles": [-90] },
+          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+        ],
+        "render": {
+          "imageName": "kineticFieldEmitter",
+          "size": { "width": 23, "height": 16 },
+          "ui": {
+            "size": { "width": 11, "height": 16 },
+            "width": "11px",
+            "height": "16px",
+            "objectPosition": "top right"
+          }
+        },
+        "name": "Aerokinetic Fan",
+        "description": "Blows petals and powders through the air, such as Amethelis and Snow."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "kineticFieldEmitterUp",
+      "name": "Aerokinetic Fan",
+      "nameKey": "structures|kineticFieldEmitter|name",
+      "descriptionKey": "structures|kineticFieldEmitter|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": "[Circular]",
+      "variants": "[Circular]",
+      "render": "[Circular]",
+      "definition": {
+        "id": "kineticFieldEmitterUp",
+        "nameKey": "structures|kineticFieldEmitter|name",
+        "descriptionKey": "structures|kineticFieldEmitter|description",
+        "categoryKey": "logistics",
+        "order": 80,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "kineticFieldEmitter", "angles": [0] },
+          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
+          { "id": "kineticFieldEmitterDown", "angles": [90] },
+          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
+          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
+          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
+          { "id": "kineticFieldEmitterUp", "angles": [-90] },
+          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+        ],
+        "render": {
+          "imageName": "kineticFieldEmitter",
+          "size": { "width": 23, "height": 16 },
+          "ui": {
+            "size": { "width": 11, "height": 16 },
+            "width": "11px",
+            "height": "16px",
+            "objectPosition": "top right"
+          }
+        },
+        "name": "Aerokinetic Fan",
+        "description": "Blows petals and powders through the air, such as Amethelis and Snow."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "kineticFieldEmitterUpLeft",
+      "name": "Aerokinetic Fan",
+      "nameKey": "structures|kineticFieldEmitter|name",
+      "descriptionKey": "structures|kineticFieldEmitter|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": "[Circular]",
+      "variants": "[Circular]",
+      "render": "[Circular]",
+      "definition": {
+        "id": "kineticFieldEmitterUpLeft",
+        "nameKey": "structures|kineticFieldEmitter|name",
+        "descriptionKey": "structures|kineticFieldEmitter|description",
+        "categoryKey": "logistics",
+        "order": 80,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "kineticFieldEmitter", "angles": [0] },
+          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
+          { "id": "kineticFieldEmitterDown", "angles": [90] },
+          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
+          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
+          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
+          { "id": "kineticFieldEmitterUp", "angles": [-90] },
+          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+        ],
+        "render": {
+          "imageName": "kineticFieldEmitter",
+          "size": { "width": 23, "height": 16 },
+          "ui": {
+            "size": { "width": 11, "height": 16 },
+            "width": "11px",
+            "height": "16px",
+            "objectPosition": "top right"
+          }
+        },
+        "name": "Aerokinetic Fan",
+        "description": "Blows petals and powders through the air, such as Amethelis and Snow."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "kineticFieldEmitterUpRight",
+      "name": "Aerokinetic Fan",
+      "nameKey": "structures|kineticFieldEmitter|name",
+      "descriptionKey": "structures|kineticFieldEmitter|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": "[Circular]",
+      "variants": "[Circular]",
+      "render": "[Circular]",
+      "definition": {
+        "id": "kineticFieldEmitterUpRight",
+        "nameKey": "structures|kineticFieldEmitter|name",
+        "descriptionKey": "structures|kineticFieldEmitter|description",
+        "categoryKey": "logistics",
+        "order": 80,
+        "buildModes": [{ "type": "singleDirectional" }],
+        "ignoreAngleLock": true,
+        "variants": [
+          { "id": "kineticFieldEmitter", "angles": [0] },
+          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
+          { "id": "kineticFieldEmitterDown", "angles": [90] },
+          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
+          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
+          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
+          { "id": "kineticFieldEmitterUp", "angles": [-90] },
+          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+        ],
+        "render": {
+          "imageName": "kineticFieldEmitter",
+          "size": { "width": 23, "height": 16 },
+          "ui": {
+            "size": { "width": 11, "height": 16 },
+            "width": "11px",
+            "height": "16px",
+            "objectPosition": "top right"
+          }
+        },
+        "name": "Aerokinetic Fan",
+        "description": "Blows petals and powders through the air, such as Amethelis and Snow."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "launcherLeftMk2",
+      "name": "[NO KEY]",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "variants": [
+        { "id": "launcherLeftMk2", "angles": [-135, 45] },
+        { "id": "launcherUpMk2", "angles": [-90, 90] },
+        { "id": "launcherRightMk2", "angles": [-45, 135] }
+      ],
+      "render": {
+        "imageName": "launcher_left_mk2",
+        "size": { "width": 18, "height": 26 },
+        "offset": { "x": -1, "y": -1 },
+        "z": 0.4,
+        "ambienceGroup": "launchers"
+      },
+      "definition": {
+        "id": "launcherLeftMk2",
+        "categoryKey": "logistics",
+        "variants": [
+          { "id": "launcherLeftMk2", "angles": [-135, 45] },
+          { "id": "launcherUpMk2", "angles": [-90, 90] },
+          { "id": "launcherRightMk2", "angles": [-45, 135] }
+        ],
+        "render": {
+          "imageName": "launcher_left_mk2",
+          "size": { "width": 18, "height": 26 },
+          "offset": { "x": -1, "y": -1 },
+          "z": 0.4,
+          "ambienceGroup": "launchers"
+        }
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "launcherRightMk2",
+      "name": "[NO KEY]",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "variants": "[Circular]",
+      "render": {
+        "imageName": "launcher_right_mk2",
+        "size": { "width": 18, "height": 26 },
+        "offset": { "x": -1, "y": -1 },
+        "z": 0.4,
+        "ambienceGroup": "launchers"
+      },
+      "definition": {
+        "id": "launcherRightMk2",
+        "categoryKey": "logistics",
+        "variants": [
+          { "id": "launcherLeftMk2", "angles": [-135, 45] },
+          { "id": "launcherUpMk2", "angles": [-90, 90] },
+          { "id": "launcherRightMk2", "angles": [-45, 135] }
+        ],
+        "render": {
+          "imageName": "launcher_right_mk2",
+          "size": { "width": 18, "height": 26 },
+          "offset": { "x": -1, "y": -1 },
+          "z": 0.4,
+          "ambienceGroup": "launchers"
+        }
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "launcherUpMk2",
+      "name": "Launcher Mk.2",
+      "nameKey": "structures|launcherUpMk2|name",
+      "descriptionKey": "structures|launcherUpMk2|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["vertical", "diagonal"] },
+        { "type": "launcherRectUp" },
+        { "type": "launcherRectSide" }
+      ],
+      "variants": "[Circular]",
+      "render": {
+        "imageName": "launcher_mk2",
+        "size": { "width": 18, "height": 18 },
+        "offset": { "x": -1, "y": -1 },
+        "z": 0.45,
+        "ui": {
+          "outline": true,
+          "width": "auto",
+          "height": "auto",
+          "size": { "width": 16, "height": 16 },
+          "offset": { "x": 0, "y": 0 }
+        },
+        "ambienceGroup": "launchers"
+      },
+      "definition": {
+        "id": "launcherUpMk2",
+        "nameKey": "structures|launcherUpMk2|name",
+        "descriptionKey": "structures|launcherUpMk2|description",
+        "categoryKey": "logistics",
+        "order": 21,
+        "buildModes": [
+          { "type": "line", "directions": ["vertical", "diagonal"] },
+          { "type": "launcherRectUp" },
+          { "type": "launcherRectSide" }
+        ],
+        "variants": [
+          { "id": "launcherLeftMk2", "angles": [-135, 45] },
+          { "id": "launcherUpMk2", "angles": [-90, 90] },
+          { "id": "launcherRightMk2", "angles": [-45, 135] }
+        ],
+        "render": {
+          "imageName": "launcher_mk2",
+          "size": { "width": 18, "height": 18 },
+          "offset": { "x": -1, "y": -1 },
+          "z": 0.45,
+          "ui": {
+            "outline": true,
+            "width": "auto",
+            "height": "auto",
+            "size": { "width": 16, "height": 16 },
+            "offset": { "x": 0, "y": 0 }
+          },
+          "ambienceGroup": "launchers"
+        },
+        "name": "Launcher Mk.2",
+        "description": "Launches elements faster."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "prismalineWell",
+      "name": "Prismaline Well",
+      "nameKey": "structures|prismalineWell|name",
+      "descriptionKey": "structures|prismalineWell|description",
+      "category": "special",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "single" }],
+      "variants": [{ "id": "prismalineWell", "angles": [0] }],
+      "render": { "imageName": "prismalineWell", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "prismalineWell",
+        "nameKey": "structures|prismalineWell|name",
+        "descriptionKey": "structures|prismalineWell|description",
+        "categoryKey": "special",
+        "order": 40,
+        "buildModes": [{ "type": "single" }],
+        "variants": [{ "id": "prismalineWell", "angles": [0] }],
+        "render": { "imageName": "prismalineWell", "size": { "width": 16, "height": 16 } },
+        "name": "Prismaline Well",
+        "description": "Drains the Prismaline buffer and emits Prismaline above at a fixed rate. Must be built just outside the disk of the Aura Extractor.\n\nIts purpose remains unknown... for now."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "prismiteWell",
+      "name": "Prismite Well",
+      "nameKey": "structures|prismiteWell|name",
+      "descriptionKey": "structures|prismiteWell|description",
+      "category": "special",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "single" }],
+      "variants": [{ "id": "prismiteWell", "angles": [0] }],
+      "render": { "imageName": "prismiteWell", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "prismiteWell",
+        "nameKey": "structures|prismiteWell|name",
+        "descriptionKey": "structures|prismiteWell|description",
+        "categoryKey": "special",
+        "order": 30,
+        "buildModes": [{ "type": "single" }],
+        "variants": [{ "id": "prismiteWell", "angles": [0] }],
+        "render": { "imageName": "prismiteWell", "size": { "width": 16, "height": 16 } },
+        "name": "Prismite Well",
+        "description": "Drains the Prismite buffer and emits Prismite below at a fixed rate. Must be built just outside the disk of the Aura Extractor.\n\nIts purpose remains unknown... for now."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "quantumPortal",
+      "name": "Conveyor Portal",
+      "nameKey": "structures|quantumPortal|name",
+      "descriptionKey": "structures|quantumPortal|description",
+      "category": "logistics",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [{ "id": "quantumPortal", "angles": [-180, 0, 180] }],
+      "render": {
+        "imageName": "quantumPortal",
+        "size": { "width": 18, "height": 18 },
+        "offset": { "x": -1, "y": -1 }
+      },
+      "definition": {
+        "id": "quantumPortal",
+        "nameKey": "structures|quantumPortal|name",
+        "descriptionKey": "structures|quantumPortal|description",
+        "categoryKey": "logistics",
+        "order": 60,
+        "linkedClearance": "allOrNothing",
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [{ "id": "quantumPortal", "angles": [-180, 0, 180] }],
+        "render": {
+          "imageName": "quantumPortal",
+          "size": { "width": 18, "height": 18 },
+          "offset": { "x": -1, "y": -1 }
+        },
+        "name": "Conveyor Portal",
+        "description": "A linked pair of short-range portals used to move elements across gaps or over other conveyor belt lines."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "quantumPortalExit",
+      "name": "[NO KEY]",
+      "footprint": { "width": 1, "height": 1 },
+      "render": {
+        "imageName": "quantumPortalExit",
+        "size": { "width": 18, "height": 18 },
+        "offset": { "x": -1, "y": -1 }
+      },
+      "definition": {
+        "id": "quantumPortalExit",
+        "disallowPick": true,
+        "unlockedBy": "quantumPortal",
+        "render": {
+          "imageName": "quantumPortalExit",
+          "size": { "width": 18, "height": 18 },
+          "offset": { "x": -1, "y": -1 }
+        }
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "retroConsole",
+      "name": "Retro Console",
+      "nameKey": "structures|retroConsole|name",
+      "descriptionKey": "structures|retroConsole|description",
+      "category": "misc",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "single" }],
+      "variants": [{ "id": "retroConsole", "angles": [0] }],
+      "render": { "imageName": "retroConsole", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "retroConsole",
+        "nameKey": "structures|retroConsole|name",
+        "descriptionKey": "structures|retroConsole|description",
+        "categoryKey": "misc",
+        "type": "retroConsole",
+        "buildModes": [{ "type": "single" }],
+        "variants": [{ "id": "retroConsole", "angles": [0] }],
+        "render": { "imageName": "retroConsole", "size": { "width": 16, "height": 16 } },
+        "name": "Retro Console",
+        "description": "A playable gaming console. Place it and use Game Controller to play by hovering the console and pressing the arrow keys."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "sandustryTestBlocksSource",
+      "name": "Infinite Source",
+      "nameKey": "structures|source|name",
+      "descriptionKey": "structures|source|description",
+      "category": "misc",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ],
+      "buildModes": [
+        { "type": "single" },
+        { "type": "line", "directions": ["horizontal", "vertical"] }
+      ],
+      "variants": [{ "id": "sandustryTestBlocksSource", "angles": [0, 90, 180, 270] }],
+      "render": {
+        "size": { "width": 16, "height": 16 },
+        "offset": { "x": 0, "y": 0 },
+        "imageName": "sandustryTestBlocksSourceSprite"
+      },
+      "definition": {
+        "categoryKey": "misc",
+        "buildModes": [
+          { "type": "single" },
+          { "type": "line", "directions": ["horizontal", "vertical"] }
+        ],
+        "shape": [
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "render": {
+          "size": { "width": 16, "height": 16 },
+          "offset": { "x": 0, "y": 0 },
+          "imageName": "sandustryTestBlocksSourceSprite"
+        },
+        "id": "sandustryTestBlocksSource",
+        "nameKey": "structures|source|name",
+        "descriptionKey": "structures|source|description",
+        "order": 90,
+        "variants": [{ "id": "sandustryTestBlocksSource", "angles": [0, 90, 180, 270] }],
+        "name": "Infinite Source",
+        "description": "Creates an endless stream of the configured element."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "sandustryTestBlocksTrash",
+      "name": " Trash",
+      "nameKey": "structures|trash|name",
+      "descriptionKey": "structures|trash|description",
+      "category": "misc",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]
+      ],
+      "buildModes": "[Circular]",
+      "variants": [{ "id": "sandustryTestBlocksTrash", "angles": [0, 90, 180, 270] }],
+      "render": {
+        "size": "[Circular]",
+        "offset": "[Circular]",
+        "imageName": "sandustryTestBlocksTrashSprite"
+      },
+      "definition": {
+        "categoryKey": "misc",
+        "buildModes": [
+          { "type": "single" },
+          { "type": "line", "directions": ["horizontal", "vertical"] }
+        ],
+        "shape": [
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0]
+        ],
+        "render": {
+          "size": { "width": 16, "height": 16 },
+          "offset": { "x": 0, "y": 0 },
+          "imageName": "sandustryTestBlocksTrashSprite"
+        },
+        "id": "sandustryTestBlocksTrash",
+        "nameKey": "structures|trash|name",
+        "descriptionKey": "structures|trash|description",
+        "order": 91,
+        "variants": [{ "id": "sandustryTestBlocksTrash", "angles": [0, 90, 180, 270] }],
+        "name": " Trash",
+        "description": "An infinitely deep void for particle trash."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalAnd",
+      "name": "AND Gate",
+      "nameKey": "structures|signalAnd|name",
+      "descriptionKey": "structures|signalAnd|description",
+      "category": "logic",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalAnd", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalAnd", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalAnd",
+        "nameKey": "structures|signalAnd|name",
+        "descriptionKey": "structures|signalAnd|description",
+        "categoryKey": "logic",
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalAnd", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalAnd", "size": { "width": 16, "height": 16 } },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "AND Gate",
+        "description": "Outputs On only if all inputs are On."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalBuffer",
+      "name": "Buffer",
+      "nameKey": "structures|signalBuffer|name",
+      "descriptionKey": "structures|signalBuffer|description",
+      "category": "logic",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalBuffer", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalBuffer", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalBuffer",
+        "nameKey": "structures|signalBuffer|name",
+        "descriptionKey": "structures|signalBuffer|description",
+        "categoryKey": "logic",
+        "order": 70,
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalBuffer", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalBuffer", "size": { "width": 16, "height": 16 } },
+        "name": "Buffer",
+        "description": "Forwards its input unchanged."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalButton",
+      "name": "Signal Button",
+      "nameKey": "structures|signalButton|name",
+      "descriptionKey": "structures|signalButton|description",
+      "category": "logic",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalButton", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalButton", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalButton",
+        "nameKey": "structures|signalButton|name",
+        "descriptionKey": "structures|signalButton|description",
+        "categoryKey": "logic",
+        "order": 30,
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalButton", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalButton", "size": { "width": 16, "height": 16 } },
+        "name": "Signal Button",
+        "description": "Press to pulse a linked signal."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalGate",
+      "name": "Door",
+      "nameKey": "structures|signalGate|name",
+      "descriptionKey": "structures|signalGate|description",
+      "category": "blocks",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalGate", "angles": [-180, -90, 0, 90, 180] }],
+      "render": {
+        "imageName": "signalGate",
+        "size": { "width": 18, "height": 18 },
+        "offset": { "x": -1, "y": -1 },
+        "z": 0.8
+      },
+      "definition": {
+        "id": "signalGate",
+        "nameKey": "structures|signalGate|name",
+        "descriptionKey": "structures|signalGate|description",
+        "categoryKey": "blocks",
+        "dynamicShape": true,
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalGate", "angles": [-180, -90, 0, 90, 180] }],
+        "render": {
+          "imageName": "signalGate",
+          "size": { "width": 18, "height": 18 },
+          "offset": { "x": -1, "y": -1 },
+          "z": 0.8
+        },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "Door",
+        "description": "Door that can be toggled by pressing or via sensor signals."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalLamp",
+      "name": "Signal Lamp",
+      "nameKey": "structures|signalLamp|name",
+      "descriptionKey": "structures|signalLamp|description",
+      "category": "logic",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalLamp", "angles": [-180, -90, 0, 90, 180] }],
+      "render": { "imageName": "signalLamp", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalLamp",
+        "nameKey": "structures|signalLamp|name",
+        "descriptionKey": "structures|signalLamp|description",
+        "categoryKey": "logic",
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalLamp", "angles": [-180, -90, 0, 90, 180] }],
+        "render": { "imageName": "signalLamp", "size": { "width": 16, "height": 16 } },
+        "name": "Signal Lamp",
+        "description": "Indicator that lights up when its linked signal is On."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalNand",
+      "name": "NAND Gate",
+      "nameKey": "structures|signalNand|name",
+      "descriptionKey": "structures|signalNand|description",
+      "category": "logic",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalNand", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalNand", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalNand",
+        "nameKey": "structures|signalNand|name",
+        "descriptionKey": "structures|signalNand|description",
+        "categoryKey": "logic",
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalNand", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalNand", "size": { "width": 16, "height": 16 } },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "NAND Gate",
+        "description": "Outputs On unless all inputs are On."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalNor",
+      "name": "NOR Gate",
+      "nameKey": "structures|signalNor|name",
+      "descriptionKey": "structures|signalNor|description",
+      "category": "logic",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalNor", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalNor", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalNor",
+        "nameKey": "structures|signalNor|name",
+        "descriptionKey": "structures|signalNor|description",
+        "categoryKey": "logic",
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalNor", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalNor", "size": { "width": 16, "height": 16 } },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "NOR Gate",
+        "description": "Outputs On only if all inputs are Off."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalNot",
+      "name": "NOT Gate",
+      "nameKey": "structures|signalNot|name",
+      "descriptionKey": "structures|signalNot|description",
+      "category": "logic",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalNot", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalNot", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalNot",
+        "nameKey": "structures|signalNot|name",
+        "descriptionKey": "structures|signalNot|description",
+        "categoryKey": "logic",
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalNot", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalNot", "size": { "width": 16, "height": 16 } },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "NOT Gate",
+        "description": "Outputs the inverse of a single input (requires exactly 1 input)."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalOr",
+      "name": "OR Gate",
+      "nameKey": "structures|signalOr|name",
+      "descriptionKey": "structures|signalOr|description",
+      "category": "logic",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalOr", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalOr", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalOr",
+        "nameKey": "structures|signalOr|name",
+        "descriptionKey": "structures|signalOr|description",
+        "categoryKey": "logic",
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalOr", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalOr", "size": { "width": 16, "height": 16 } },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "OR Gate",
+        "description": "Outputs On if any input is On."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalPresenceSensor",
+      "name": "Presence Sensor",
+      "nameKey": "structures|signalPresenceSensor|name",
+      "descriptionKey": "structures|signalPresenceSensor|description",
+      "category": "logic",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalPresenceSensor", "angles": [-180, -90, 0, 90, 180] }],
+      "render": { "imageName": "signalPresenceSensor", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalPresenceSensor",
+        "nameKey": "structures|signalPresenceSensor|name",
+        "descriptionKey": "structures|signalPresenceSensor|description",
+        "categoryKey": "logic",
+        "order": 60,
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalPresenceSensor", "angles": [-180, -90, 0, 90, 180] }],
+        "render": { "imageName": "signalPresenceSensor", "size": { "width": 16, "height": 16 } },
+        "name": "Presence Sensor",
+        "description": "Emits a signal while at least one element is inside its 4x4 area."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalPulseSensor",
+      "name": "Pulse Sensor",
+      "nameKey": "structures|signalPulseSensor|name",
+      "descriptionKey": "structures|signalPulseSensor|description",
+      "category": "logic",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalPulseSensor", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalPulseSensor", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalPulseSensor",
+        "nameKey": "structures|signalPulseSensor|name",
+        "descriptionKey": "structures|signalPulseSensor|description",
+        "categoryKey": "logic",
+        "order": 50,
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalPulseSensor", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalPulseSensor", "size": { "width": 16, "height": 16 } },
+        "name": "Pulse Sensor",
+        "description": "Emits a short On pulse when its 4x4 area becomes full."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalRepeater",
+      "name": "Repeater",
+      "nameKey": "structures|signalRepeater|name",
+      "descriptionKey": "structures|signalRepeater|description",
+      "category": "logic",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalRepeater", "angles": [-180, -90, 0, 90, 180] }],
+      "render": { "imageName": "signalRepeater", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalRepeater",
+        "nameKey": "structures|signalRepeater|name",
+        "descriptionKey": "structures|signalRepeater|description",
+        "categoryKey": "logic",
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalRepeater", "angles": [-180, -90, 0, 90, 180] }],
+        "render": { "imageName": "signalRepeater", "size": { "width": 16, "height": 16 } },
+        "name": "Repeater",
+        "description": "Delays signal by one tick."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalSensor",
+      "name": "Signal Sensor",
+      "nameKey": "structures|signalSensor|name",
+      "descriptionKey": "structures|signalSensor|description",
+      "category": "logic",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalSensor", "angles": [-180, -90, 0, 90, 180] }],
+      "render": { "imageName": "signalSensor", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalSensor",
+        "nameKey": "structures|signalSensor|name",
+        "descriptionKey": "structures|signalSensor|description",
+        "categoryKey": "logic",
+        "order": 40,
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalSensor", "angles": [-180, -90, 0, 90, 180] }],
+        "render": { "imageName": "signalSensor", "size": { "width": 16, "height": 16 } },
+        "name": "Signal Sensor",
+        "description": "Emits a signal when its 4x4 area is full of elements."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalSwitch",
+      "name": "Signal Switch",
+      "nameKey": "structures|signalSwitch|name",
+      "descriptionKey": "structures|signalSwitch|description",
+      "category": "logic",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalSwitch", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalSwitch", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalSwitch",
+        "nameKey": "structures|signalSwitch|name",
+        "descriptionKey": "structures|signalSwitch|description",
+        "categoryKey": "logic",
+        "order": 20,
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalSwitch", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalSwitch", "size": { "width": 16, "height": 16 } },
+        "name": "Signal Switch",
+        "description": "Press to toggle a linked signal."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalToggle",
+      "name": "Toggle (T-FlipFlop)",
+      "nameKey": "structures|signalToggle|name",
+      "descriptionKey": "structures|signalToggle|description",
+      "category": "logic",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalToggle", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalToggle", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalToggle",
+        "nameKey": "structures|signalToggle|name",
+        "descriptionKey": "structures|signalToggle|description",
+        "categoryKey": "logic",
+        "order": 80,
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalToggle", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalToggle", "size": { "width": 16, "height": 16 } },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "Toggle (T-FlipFlop)",
+        "description": "Memory bit. Toggles On/Off on each input pulse (rising edge)."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalXnor",
+      "name": "XNOR Gate",
+      "nameKey": "structures|signalXnor|name",
+      "descriptionKey": "structures|signalXnor|description",
+      "category": "logic",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalXnor", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalXnor", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalXnor",
+        "nameKey": "structures|signalXnor|name",
+        "descriptionKey": "structures|signalXnor|description",
+        "categoryKey": "logic",
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalXnor", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalXnor", "size": { "width": 16, "height": 16 } },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "XNOR Gate",
+        "description": "Outputs On if an even number of inputs are On."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "signalXor",
+      "name": "XOR Gate",
+      "nameKey": "structures|signalXor|name",
+      "descriptionKey": "structures|signalXor|description",
+      "category": "logic",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "signalXor", "angles": [0, 90, 180, 270] }],
+      "render": { "imageName": "signalXor", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "signalXor",
+        "nameKey": "structures|signalXor|name",
+        "descriptionKey": "structures|signalXor|description",
+        "categoryKey": "logic",
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "signalXor", "angles": [0, 90, 180, 270] }],
+        "render": { "imageName": "signalXor", "size": { "width": 16, "height": 16 } },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "XOR Gate",
+        "description": "Outputs On if an odd number of inputs are On."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "smelter",
+      "name": "Smelter",
+      "nameKey": "structures|smelter|name",
+      "descriptionKey": "structures|smelter|description",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [{ "id": "smelter", "angles": [0, 90, 180, 270] }],
+      "render": {
+        "imageName": "smelter",
+        "size": { "width": 16, "height": 16 },
+        "offset": { "x": 0, "y": 0 },
+        "ui": { "outline": true }
+      },
+      "definition": {
+        "id": "smelter",
+        "nameKey": "structures|smelter|name",
+        "descriptionKey": "structures|smelter|description",
+        "categoryKey": "thermal",
+        "order": 40,
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [{ "id": "smelter", "angles": [0, 90, 180, 270] }],
+        "render": {
+          "imageName": "smelter",
+          "size": { "width": 16, "height": 16 },
+          "offset": { "x": 0, "y": 0 },
+          "ui": { "outline": true }
+        },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "Smelter",
+        "description": "Periodically smelts resources placed on top into liquid form. Uses heat from an adjacent Thermal Buffer or Lava."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "snowmaker",
+      "name": "Snowmaker",
+      "nameKey": "structures|snowmaker|name",
+      "descriptionKey": "structures|snowmaker|description",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [{ "id": "snowmaker", "angles": [0, 90, 180, 270] }],
+      "render": {
+        "imageName": "snowmaker",
+        "size": { "width": 16, "height": 16 },
+        "offset": { "x": 0, "y": 0 },
+        "ui": { "outline": true }
+      },
+      "tooltipHover": {
+        "type": "custom",
+        "messageKey": "mods|power|consumption",
+        "messageParams": { "amount": 1 }
+      },
+      "definition": {
+        "id": "snowmaker",
+        "nameKey": "structures|snowmaker|name",
+        "descriptionKey": "structures|snowmaker|description",
+        "descriptionParams": { "amount": 1 },
+        "categoryKey": "thermal",
+        "order": 30,
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [{ "id": "snowmaker", "angles": [0, 90, 180, 270] }],
+        "render": {
+          "imageName": "snowmaker",
+          "size": { "width": 16, "height": 16 },
+          "offset": { "x": 0, "y": 0 },
+          "ui": { "outline": true }
+        },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "tooltipHover": {
+          "type": "custom",
+          "messageKey": "mods|power|consumption",
+          "messageParams": { "amount": 1 }
+        },
+        "name": "Snowmaker",
+        "description": "Consumes Water above and {amount} Energy to spawn Snow below."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "steamTurbine",
+      "name": "Steam Turbine",
+      "nameKey": "structures|steamTurbine|name",
+      "descriptionKey": "structures|steamTurbine|description",
+      "category": "energy",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [{ "id": "steamTurbine", "angles": [0, 90, 180, 270] }],
+      "render": {
+        "imageName": "steamTurbine",
+        "size": { "width": 16, "height": 16 },
+        "offset": { "x": 0, "y": 0 },
+        "ambienceGroup": "steamTurbines"
+      },
+      "definition": {
+        "id": "steamTurbine",
+        "nameKey": "structures|steamTurbine|name",
+        "descriptionKey": "structures|steamTurbine|description",
+        "categoryKey": "energy",
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [{ "id": "steamTurbine", "angles": [0, 90, 180, 270] }],
+        "render": {
+          "imageName": "steamTurbine",
+          "size": { "width": 16, "height": 16 },
+          "offset": { "x": 0, "y": 0 },
+          "ambienceGroup": "steamTurbines"
+        },
+        "name": "Steam Turbine",
+        "description": "Generates energy when Steam passes through the turbine.\n\nConnect it directly to a Power Brick (a Copper Mold filled with Liquid Copper) to store the Energy."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "swarmConsole",
+      "name": "Aura Extractor",
+      "nameKey": "structures|swarmConsole|name",
+      "descriptionKey": "structures|swarmConsole|description",
+      "category": "special",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "single" }],
+      "variants": [{ "id": "swarmConsole", "angles": [0] }],
+      "render": { "imageName": "swarmConsole", "size": { "width": 16, "height": 16 } },
+      "definition": {
+        "id": "swarmConsole",
+        "nameKey": "structures|swarmConsole|name",
+        "descriptionKey": "structures|swarmConsole|description",
+        "categoryKey": "special",
+        "order": 20,
+        "buildModes": [{ "type": "single" }],
+        "variants": [{ "id": "swarmConsole", "angles": [0] }],
+        "render": { "imageName": "swarmConsole", "size": { "width": 16, "height": 16 } },
+        "name": "Aura Extractor",
+        "description": "Creates the Aura Extractor. Press the placed structure to command the swarm."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "thermalRelay",
+      "name": "Thermal Buffer",
+      "nameKey": "structures|thermalRelay|name",
+      "descriptionKey": "structures|thermalRelay|description",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [
+        { "type": "line", "directions": ["horizontal", "vertical"] },
+        { "type": "rectangle" }
+      ],
+      "variants": [{ "id": "thermalRelay", "angles": [-180, -90, 0, 90, 180] }],
+      "render": {
+        "imageName": "thermal_relay",
+        "size": { "width": 16, "height": 16 },
+        "offset": { "x": 0, "y": 0 },
+        "ui": { "outline": true }
+      },
+      "tooltipHover": {
+        "type": "custom",
+        "showForItemIds": [12, 15],
+        "dataFieldIconValue": {
+          "field": "temperature",
+          "iconPath": "mods/thermal_icon.png",
+          "round": true
+        }
+      },
+      "definition": {
+        "id": "thermalRelay",
+        "nameKey": "structures|thermalRelay|name",
+        "descriptionKey": "structures|thermalRelay|description",
+        "categoryKey": "thermal",
+        "order": 50,
+        "buildModes": [
+          { "type": "line", "directions": ["horizontal", "vertical"] },
+          { "type": "rectangle" }
+        ],
+        "variants": [{ "id": "thermalRelay", "angles": [-180, -90, 0, 90, 180] }],
+        "copyData": false,
+        "render": {
+          "imageName": "thermal_relay",
+          "size": { "width": 16, "height": 16 },
+          "offset": { "x": 0, "y": 0 },
+          "ui": { "outline": true }
+        },
+        "defaultData": { "temperature": 0 },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "tooltipHover": {
+          "type": "custom",
+          "showForItemIds": [12, 15],
+          "dataFieldIconValue": {
+            "field": "temperature",
+            "iconPath": "mods/thermal_icon.png",
+            "round": true
+          }
+        },
+        "name": "Thermal Buffer",
+        "description": "Stores and exchanges heat. Charge it with the Flamethrower, or let it consume adjacent Lava / Snow. Connected buffers equalize temperature.\n\nHover with the Grabber to see temperature.",
+        "skipCopyData": true
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "thermodryer",
+      "name": "Steam Dryer",
+      "nameKey": "structures|thermodryer|name",
+      "descriptionKey": "structures|thermodryer|description",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [{ "id": "thermodryer", "angles": [0, 90, 180, 270] }],
+      "render": {
+        "imageName": "thermodryer",
+        "size": { "width": 16, "height": 16 },
+        "offset": { "x": 0, "y": 0 },
+        "ui": { "outline": true }
+      },
+      "definition": {
+        "id": "thermodryer",
+        "nameKey": "structures|thermodryer|name",
+        "descriptionKey": "structures|thermodryer|description",
+        "categoryKey": "thermal",
+        "order": 10,
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [{ "id": "thermodryer", "angles": [0, 90, 180, 270] }],
+        "render": {
+          "imageName": "thermodryer",
+          "size": { "width": 16, "height": 16 },
+          "offset": { "x": 0, "y": 0 },
+          "ui": { "outline": true }
+        },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "Steam Dryer",
+        "description": "Converts Amethelis into Dry Amethelis when put on top, using Steam below as fuel."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "thermofroster",
+      "name": "Condenser",
+      "nameKey": "structures|thermofroster|name",
+      "descriptionKey": "structures|thermofroster|description",
+      "category": "thermal",
+      "footprint": { "width": 4, "height": 4 },
+      "shape": [
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15],
+        [15, 15, 15, 15]
+      ],
+      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "variants": [{ "id": "thermofroster", "angles": [0, 90, 180, 270] }],
+      "render": {
+        "imageName": "thermofroster",
+        "size": { "width": 16, "height": 16 },
+        "offset": { "x": 0, "y": 0 },
+        "ui": { "outline": true }
+      },
+      "definition": {
+        "id": "thermofroster",
+        "nameKey": "structures|thermofroster|name",
+        "descriptionKey": "structures|thermofroster|description",
+        "categoryKey": "thermal",
+        "order": 20,
+        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "variants": [{ "id": "thermofroster", "angles": [0, 90, 180, 270] }],
+        "render": {
+          "imageName": "thermofroster",
+          "size": { "width": 16, "height": 16 },
+          "offset": { "x": 0, "y": 0 },
+          "ui": { "outline": true }
+        },
+        "shape": [
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15],
+          [15, 15, 15, 15]
+        ],
+        "name": "Condenser",
+        "description": "Condenses adjacent gases into their liquid forms (e.g. Florin into Florinol). Uses cold from an adjacent Thermal Buffer or Snow above."
+      },
+      "source": "runtime structure definition"
+    },
+    {
+      "type": "voidRift",
+      "name": "Void Rift",
+      "nameKey": "structures|voidRift|name",
+      "descriptionKey": "structures|voidRift|description",
+      "category": "special",
+      "footprint": { "width": 1, "height": 1 },
+      "buildModes": [{ "type": "single" }],
+      "variants": [{ "id": "voidRift", "angles": [0, 90, 180, 270] }],
+      "render": {
+        "imageName": "voidRift",
+        "size": { "width": 64, "height": 64 },
+        "offset": { "x": -24, "y": -24 },
+        "ui": {
+          "imageName": "voidRiftIcon",
+          "width": "16px",
+          "height": "16px",
+          "offset": { "x": 0, "y": 0 },
+          "size": { "width": 16, "height": 16 }
+        }
+      },
+      "definition": {
+        "id": "voidRift",
+        "nameKey": "structures|voidRift|name",
+        "descriptionKey": "structures|voidRift|description",
+        "categoryKey": "special",
+        "order": 10,
+        "buildModes": [{ "type": "single" }],
+        "variants": [{ "id": "voidRift", "angles": [0, 90, 180, 270] }],
+        "render": {
+          "imageName": "voidRift",
+          "size": { "width": 64, "height": 64 },
+          "offset": { "x": -24, "y": -24 },
+          "ui": {
+            "imageName": "voidRiftIcon",
+            "width": "16px",
+            "height": "16px",
+            "offset": { "x": 0, "y": 0 },
+            "size": { "width": 16, "height": 16 }
+          }
+        },
+        "name": "Void Rift",
+        "description": "Opens a mysterious rift that produces Void Seed from the depths of space."
+      },
+      "source": "runtime structure definition"
+    }
+  ]
+}

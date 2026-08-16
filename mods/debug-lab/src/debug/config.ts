@@ -9,6 +9,7 @@ export const ENABLED_PROBES = {
   catalog: true,
   catalogReads: true,
   knownStructureDefinitions: true,
+  structureCatalog: true,
   clipboard: false,
   clipboardReads: false,
 } as const;

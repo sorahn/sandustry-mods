@@ -11,6 +11,7 @@ import {
 } from "./debug/namespace";
 import { dumpRuntimeSurface } from "./debug/runtime-surface";
 import {
+  copyStructureCatalog,
   dumpCatalogNamespaces,
   probeCatalogReads,
   probeKnownStructureDefinitions,
@@ -32,6 +33,7 @@ function dumpEnabledProbes(): void {
   if (ENABLED_PROBES.catalog) dumpCatalogNamespaces(context);
   if (ENABLED_PROBES.catalogReads) probeCatalogReads(context);
   if (ENABLED_PROBES.knownStructureDefinitions) probeKnownStructureDefinitions(context);
+  if (ENABLED_PROBES.structureCatalog) copyStructureCatalog(context);
   if (ENABLED_PROBES.clipboard) dumpClipboardNamespace(context);
   if (ENABLED_PROBES.clipboardReads) probeClipboardReads(context);
 }
@@ -54,6 +56,6 @@ if (ENABLED_PROBES.clipboardCursorWatch) startClipboardCursorWatch(context);
 
 setTimeout(() => {
   console.info(
-    "[Sandustry Debug Lab] loaded. F8 runs enabled probes, F9 copies hotbar JSON, and F10 pastes a complete hotbar snapshot.",
+    "[Sandustry Debug Lab] loaded. F8 runs enabled probes including structure catalog JSON, F9 copies hotbar JSON, and F10 pastes a complete hotbar snapshot.",
   );
 }, 0);

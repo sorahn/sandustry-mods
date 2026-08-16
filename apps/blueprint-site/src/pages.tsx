@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, Outlet } from "@tanstack/react-router";
 import { Button, Panel, Select, TextArea } from "@sandustry/ui/react";
 import { decodeBlueprint, emptyBlueprint, encodeBlueprint, type Blueprint } from "./blueprint";
+import { catalogEntry } from "./catalog";
 
 export function AppLayout() {
   return (
@@ -216,16 +217,31 @@ function tileColor(type: Blueprint["data"][number]["type"]) {
 
 function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const padding = 1.5;
+  const [zoom, setZoom] = useState(1);
+  const padding = 2;
   const cell = 56;
-  const xs = blueprint.data.length ? blueprint.data.map(({ x }) => x) : [0];
-  const ys = blueprint.data.length ? blueprint.data.map(({ y }) => y) : [0];
+  const xs = blueprint.data.length
+    ? blueprint.data.flatMap((structure) => {
+        const width = catalogEntry(structure.type)?.footprint.width ?? 1;
+        return [structure.x, structure.x + width - 1];
+      })
+    : [0];
+  const ys = blueprint.data.length
+    ? blueprint.data.flatMap((structure) => {
+        const height = catalogEntry(structure.type)?.footprint.height ?? 1;
+        return [structure.y, structure.y + height - 1];
+      })
+    : [0];
   const minX = Math.min(...xs);
   const maxX = Math.max(...xs);
   const minY = Math.min(...ys);
   const maxY = Math.max(...ys);
   const width = (maxX - minX + padding * 2 + 1) * cell;
   const height = (maxY - minY + padding * 2 + 1) * cell;
+  const viewWidth = width / zoom;
+  const viewHeight = height / zoom;
+  const viewX = (width - viewWidth) / 2;
+  const viewY = (height - viewHeight) / 2;
   const point = (x: number, y: number) => ({
     x: (x - minX + padding + 0.5) * cell,
     y: (y - minY + padding + 0.5) * cell,
@@ -233,9 +249,38 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
-      <div className="blueprint-map__viewport overflow-auto rounded border border-slate-800 bg-[#080b10] p-3">
+      <div className="blueprint-map__viewport overflow-hidden rounded border border-slate-800 bg-[#33a8ff] p-3">
+        <div className="mb-3 flex items-center justify-end gap-2 font-mono text-xs text-slate-500">
+          <span className="mr-1">{Math.round(zoom * 100)}%</span>
+          <button
+            type="button"
+            className="sd-button sd-button--compact"
+            onClick={() => setZoom((value) => Math.max(0.75, value / 1.25))}
+            disabled={zoom <= 0.75}
+            aria-label="Zoom out"
+          >
+            −
+          </button>
+          <button
+            type="button"
+            className="sd-button sd-button--compact"
+            onClick={() => setZoom(1)}
+            disabled={zoom === 1}
+          >
+            Fit
+          </button>
+          <button
+            type="button"
+            className="sd-button sd-button--compact"
+            onClick={() => setZoom((value) => Math.min(4, value * 1.25))}
+            disabled={zoom >= 4}
+            aria-label="Zoom in"
+          >
+            +
+          </button>
+        </div>
         <svg
-          viewBox={`0 0 ${width} ${height}`}
+          viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
           role="img"
           aria-label={`${blueprint.name} structure map`}
           preserveAspectRatio="xMidYMid meet"
@@ -251,7 +296,9 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
               />
             </pattern>
           </defs>
+          <rect width={width} height={height} fill="#33a8ff" />
           <rect width={width} height={height} fill="url(#blueprint-grid)" />
+          <rect width={width} height={height} fill="none" stroke="#17202c" strokeWidth="1" />
           {(blueprint.signalLinks ?? []).map((link, index) => {
             const from = point(link.from.x, link.from.y);
             const to = point(link.to.x, link.to.y);
@@ -270,7 +317,15 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
             );
           })}
           {blueprint.data.map((structure, index) => {
+            const entry = catalogEntry(structure.type);
+            const footprint = entry?.footprint ?? { width: 1, height: 1 };
             const position = point(structure.x, structure.y);
+            const left = (structure.x - minX + padding) * cell + 3;
+            const top = (structure.y - minY + padding) * cell + 3;
+            const tileWidth = footprint.width * cell - 6;
+            const tileHeight = footprint.height * cell - 6;
+            const labelX = left + tileWidth / 2;
+            const labelY = top + tileHeight / 2 + 4;
             const isSelected = selectedIndex === index;
             return (
               <g
@@ -285,24 +340,27 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                 className="cursor-pointer"
               >
                 <rect
-                  x={position.x - cell / 2 + 3}
-                  y={position.y - cell / 2 + 3}
-                  width={cell - 6}
-                  height={cell - 6}
+                  x={left}
+                  y={top}
+                  width={tileWidth}
+                  height={tileHeight}
                   rx="5"
                   fill={tileColor(structure.type)}
                   stroke={isSelected ? "#ffe700" : "#8491a3"}
                   strokeWidth={isSelected ? "4" : "1.5"}
                 />
                 <text
-                  x={position.x}
-                  y={position.y + 4}
+                  x={labelX}
+                  y={labelY}
                   textAnchor="middle"
                   fill="#f8fafc"
                   fontSize="11"
                   fontFamily="ui-monospace, monospace"
                 >
-                  {typeof structure.type === "number" ? structure.type : structure.type.slice(0, 8)}
+                  {entry?.name ??
+                    (typeof structure.type === "number"
+                      ? structure.type
+                      : structure.type.slice(0, 8))}
                 </text>
               </g>
             );
@@ -313,7 +371,18 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
         <p className="font-mono uppercase tracking-[0.18em] text-slate-500">Selected record</p>
         {selected ? (
           <div className="mt-3 space-y-3">
-            <p className="break-all font-mono text-yellow-200">{structureLabel(selected.type)}</p>
+            <p className="break-all font-mono text-yellow-200">
+              {catalogEntry(selected.type)?.name ?? structureLabel(selected.type)}
+            </p>
+            {catalogEntry(selected.type) ? (
+              <p>
+                Catalog footprint{" "}
+                <strong className="text-white">
+                  {catalogEntry(selected.type)!.footprint.width}×
+                  {catalogEntry(selected.type)!.footprint.height}
+                </strong>
+              </p>
+            ) : null}
             <p>
               Position{" "}
               <strong className="text-white">
@@ -380,6 +449,12 @@ export function BlueprintInspectorPage() {
           <TextArea
             value={encoded}
             onChange={(event) => setEncoded(event.target.value)}
+            onKeyDown={(event) => {
+              if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+                event.preventDefault();
+                inspect();
+              }
+            }}
             placeholder="SAND:BP:v2:..."
             spellCheck={false}
             className="min-h-48 placeholder:text-slate-600"
@@ -427,8 +502,8 @@ export function BlueprintInspectorPage() {
             <div className="p-4">
               <BlueprintMap blueprint={blueprint} />
               <p className="mt-4 text-xs text-slate-500">
-                Native and mod structure visuals are not bundled yet, so tiles use stable labels and
-                colors until a compatible catalog is selected.
+                A small verified native/repository catalog supplies names and footprints. Other
+                content remains visible through the unknown-ID fallback.
               </p>
             </div>
           </Panel>
