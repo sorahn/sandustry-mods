@@ -1,0 +1,19 @@
+:root {
+  --sd-panel: rgb(0 0 0 / 0.75);
+  --sd-slate-700: #334155;
+  --sd-slate-800: #1d2530;
+  --sd-yellow: #ffe700;
+  --sd-yellow-soft: rgb(255 231 0 / 0.1);
+  --sd-radius: 4px;
+}
+
+sd-panel { display: block; }
+sd-button { display: inline-block; }
+
+.sd-panel { overflow: hidden; border: 1px solid var(--sd-slate-700); border-radius: var(--sd-radius); background: var(--sd-panel); box-shadow: 0 8px 22px rgb(0 0 0 / 0.45); }
+.sd-panel__header { border-bottom: 1px solid var(--sd-slate-800); padding: 8px 16px; }
+.sd-label { color: rgb(255 255 255 / 0.7); font-size: 11px; }
+.sd-button { border: 1px solid rgb(203 213 225 / 0.25); border-radius: 4px 0 4px 0; background: #000; color: #fff; cursor: pointer; font: inherit; font-size: 11px; padding: 6px 10px; transition: border-color 150ms, color 150ms, background 150ms; }
+.sd-button:hover, .sd-button:focus-visible { border-color: transparent; color: var(--sd-yellow); outline: 0; }
+.sd-button--accent { border-color: rgb(255 231 0 / 0.5); color: var(--sd-yellow); background: var(--sd-yellow-soft); }
+.sd-button:disabled { border-color: rgb(100 116 139 / 0.1); color: #475569; cursor: not-allowed; }
