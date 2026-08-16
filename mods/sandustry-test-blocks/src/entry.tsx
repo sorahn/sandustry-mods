@@ -102,7 +102,6 @@ let pickerOverlayReady = false;
 let pickerRepaint: ((update: (value: number) => number) => void) | null = null;
 let pickerPromise: Promise<ElementSelection | null> | null = null;
 let lastElementSelection: ElementSelection | null = null;
-let pickerTarget: SandustryStructure | null = null;
 const UIReact = sandkit.react ?? null;
 
 const safe = <T,>(fn: () => T, fallback: T | null = null): T | null => {
@@ -311,7 +310,7 @@ const closePicker = (value: unknown) => {
   };
   const resolve = current.resolve;
   pickerPromise = null;
-  if (selected && pickerTarget) applySourceSelection(pickerTarget, selected);
+  if (selected) rememberElement(selected);
   if (resolve) resolve(selected);
   if (pickerRepaint) pickerRepaint((value) => value + 1);
 };
@@ -671,9 +670,7 @@ const registerPicker = () => {
 
 const openElementPicker = async (
   current: ElementSelection,
-  target: SandustryStructure,
 ): Promise<string | ElementSelection | null> => {
-  pickerTarget = target;
   if (registerPicker()) {
     if (pickerState && pickerState.minimized) {
       return currentPickerEntry() as ElementSelection | null;
@@ -712,7 +709,7 @@ const configureSource = async (
   try {
     const current =
       initialSelection || sourceElementSelection(structure) || defaultElementSelection();
-    const value = await openElementPicker(current, structure);
+    const value = await openElementPicker(current);
 
     // Closing the dialog keeps the default. A bad ID is also rejected rather
     // than leaving a source that fails on every trigger tick.
@@ -759,7 +756,6 @@ const sourceTick = () => {
 
   api.structures.forEachOfType(SOURCE_ID, (structure) => {
     const key = sourceKey(structure);
-    if (selectedActionIsSource()) pickerTarget = structure;
     live.add(key);
 
     // The default value is stored immediately so the structure has valid data,
