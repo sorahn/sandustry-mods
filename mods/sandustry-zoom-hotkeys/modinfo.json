@@ -1,0 +1,12 @@
+{
+  "manifestVersion": 1,
+  "id": "sorahn.sandustry-zoom-hotkeys",
+  "name": "Sandustry Zoom Hotkeys",
+  "version": "0.1.0",
+  "apiVersion": 1,
+  "author": "sorahn",
+  "entry": "entry.js",
+  "description": "Adds configurable hotkeys for the game's video zoom setting.",
+  "dependencies": [],
+  "loadOrder": 0
+}

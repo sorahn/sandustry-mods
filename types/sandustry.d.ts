@@ -78,6 +78,9 @@ interface SandustryApi {
     navigation: SandustryNavigation;
     prompt(...args: string[]): Promise<string | null>;
   };
+  rendering: {
+    getGridMetrics(): { cellSize: number; snapGridCellSize: number };
+  };
   world: { isCellEmptyAtCell(x: number, y: number): boolean };
   action?: { getSelected(): { id?: string } | null };
   input: {
