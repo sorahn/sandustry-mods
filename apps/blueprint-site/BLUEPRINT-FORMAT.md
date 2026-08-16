@@ -40,10 +40,11 @@ type Blueprint = {
 };
 ```
 
-Legacy `SAND:BP:v1:` strings are not renderer input. The browser conversion
+Legacy `SAND:BACKUP:v1:` strings are not renderer input. The browser conversion
 tool supports them through a separate compatibility adapter and can explicitly
-encode normalized JSON back to v1. Worker and Discord renderer integrations
-must reject v1 rather than silently converting it.
+encode normalized JSON back to v1. The older `SAND:BP:v1:` spelling is accepted
+as a decode-only alias. Worker and Discord renderer integrations must reject v1
+rather than silently converting it.
 
 Malformed or truncated payloads, invalid base64, invalid text bytes, unknown
 prefixes, unsupported binary versions, invalid type indexes, and invalid JSON

@@ -11,7 +11,8 @@ import {
 export type { Blueprint, BlueprintStructure, BlueprintType, SignalLink };
 export { emptyBlueprint };
 
-const LEGACY_PREFIX = "SAND:BP:v1:";
+const LEGACY_PREFIX = "SAND:BACKUP:v1:";
+const LEGACY_ALIASES = [LEGACY_PREFIX, "SAND:BP:v1:"];
 
 function encodeLegacyBlueprint(blueprint: Blueprint) {
   const json = JSON.stringify({ n: blueprint.name, d: blueprint.data });
@@ -22,7 +23,9 @@ function encodeLegacyBlueprint(blueprint: Blueprint) {
 }
 
 function decodeLegacyBlueprint(value: string): Blueprint {
-  const binary = atob(value.slice(LEGACY_PREFIX.length));
+  const prefix = LEGACY_ALIASES.find((candidate) => value.startsWith(candidate));
+  if (!prefix) throw new Error("Unsupported legacy blueprint prefix");
+  const binary = atob(value.slice(prefix.length));
   const encoded = Array.from(
     binary,
     (character) => `%${character.charCodeAt(0).toString(16).padStart(2, "0")}`,
@@ -46,5 +49,7 @@ export function encodeBlueprint(
 
 export function decodeBlueprint(input: string): Blueprint {
   const value = input.trim();
-  return value.startsWith(LEGACY_PREFIX) ? decodeLegacyBlueprint(value) : decodeV2Blueprint(value);
+  return LEGACY_ALIASES.some((prefix) => value.startsWith(prefix))
+    ? decodeLegacyBlueprint(value)
+    : decodeV2Blueprint(value);
 }

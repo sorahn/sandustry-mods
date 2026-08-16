@@ -23,6 +23,7 @@ export type Blueprint = {
 const BINARY_PREFIX = "SAND:BP:v2:";
 const TEXT_PREFIX = "SAND:BP:v2t:";
 const LEGACY_PREFIX = "SAND:BP:v1:";
+const LEGACY_BACKUP_PREFIX = "SAND:BACKUP:v1:";
 
 function writeVarInt(value: number, output: number[]) {
   if (!Number.isSafeInteger(value) || value < 0)
@@ -222,7 +223,7 @@ export function decodeBlueprint(input: string): Blueprint {
       throw new Error("Invalid v2 text blueprint data");
     return decodeBytes(Uint8Array.from(values));
   }
-  if (value.startsWith(LEGACY_PREFIX))
+  if (value.startsWith(LEGACY_PREFIX) || value.startsWith(LEGACY_BACKUP_PREFIX))
     throw new Error("Legacy v1 blueprint strings are not supported");
   throw new Error("Unsupported blueprint prefix. Expected SAND:BP:v2: or SAND:BP:v2t:");
 }

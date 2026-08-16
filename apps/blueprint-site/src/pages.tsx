@@ -15,6 +15,9 @@ export function AppLayout() {
             <Link to="/" activeProps={{ className: "text-yellow-300" }}>
               Home
             </Link>
+            <Link to="/inspect" activeProps={{ className: "text-yellow-300" }}>
+              Inspect
+            </Link>
             <Link to="/codec" activeProps={{ className: "text-yellow-300" }}>
               Encode / Decode
             </Link>
@@ -162,6 +165,313 @@ export function BlueprintCodecPage() {
       >
         {message}
       </p>
+    </section>
+  );
+}
+
+type BlueprintSummary = {
+  format: string;
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
+  types: number;
+  numericTypes: number;
+  stringTypes: number;
+  filters: number;
+  dataRecords: number;
+  links: number;
+};
+
+function summarizeBlueprint(input: string, blueprint: Blueprint): BlueprintSummary {
+  const xs = blueprint.data.length ? blueprint.data.map(({ x }) => x) : [0];
+  const ys = blueprint.data.length ? blueprint.data.map(({ y }) => y) : [0];
+  const types = new Set(blueprint.data.map(({ type }) => type));
+  const numericTypes = [...types].filter((type) => typeof type === "number").length;
+  return {
+    format: input.trim().startsWith("SAND:BP:v2t:") ? "v2 text" : "v2 binary",
+    minX: Math.min(...xs),
+    maxX: Math.max(...xs),
+    minY: Math.min(...ys),
+    maxY: Math.max(...ys),
+    types: types.size,
+    numericTypes,
+    stringTypes: types.size - numericTypes,
+    filters: blueprint.data.filter(({ filter }) => filter !== undefined).length,
+    dataRecords: blueprint.data.filter(({ data }) => data !== undefined).length,
+    links: blueprint.signalLinks?.length ?? 0,
+  };
+}
+
+function structureLabel(type: Blueprint["data"][number]["type"]) {
+  return typeof type === "number" ? `native ${type}` : type;
+}
+
+function tileColor(type: Blueprint["data"][number]["type"]) {
+  if (typeof type === "number") return "#314158";
+  let hash = 0;
+  for (const character of type) hash = (hash * 31 + character.charCodeAt(0)) | 0;
+  return ["#4b3c62", "#315a5e", "#66522f", "#563d46"][Math.abs(hash) % 4];
+}
+
+function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const padding = 1.5;
+  const cell = 56;
+  const xs = blueprint.data.length ? blueprint.data.map(({ x }) => x) : [0];
+  const ys = blueprint.data.length ? blueprint.data.map(({ y }) => y) : [0];
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const width = (maxX - minX + padding * 2 + 1) * cell;
+  const height = (maxY - minY + padding * 2 + 1) * cell;
+  const point = (x: number, y: number) => ({
+    x: (x - minX + padding + 0.5) * cell,
+    y: (y - minY + padding + 0.5) * cell,
+  });
+  const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
+  return (
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <div className="blueprint-map__viewport overflow-auto rounded border border-slate-800 bg-[#080b10] p-3">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          role="img"
+          aria-label={`${blueprint.name} structure map`}
+          preserveAspectRatio="xMidYMid meet"
+          className="blueprint-map__canvas w-full"
+        >
+          <defs>
+            <pattern id="blueprint-grid" width={cell} height={cell} patternUnits="userSpaceOnUse">
+              <path
+                d={`M ${cell} 0 L 0 0 0 ${cell}`}
+                fill="none"
+                stroke="#17202c"
+                strokeWidth="1"
+              />
+            </pattern>
+          </defs>
+          <rect width={width} height={height} fill="url(#blueprint-grid)" />
+          {(blueprint.signalLinks ?? []).map((link, index) => {
+            const from = point(link.from.x, link.from.y);
+            const to = point(link.to.x, link.to.y);
+            return (
+              <line
+                key={`link-${index}`}
+                x1={from.x}
+                y1={from.y}
+                x2={to.x}
+                y2={to.y}
+                stroke={link.on ? "#ffe700" : "#657082"}
+                strokeDasharray={link.on ? undefined : "5 4"}
+                strokeWidth="3"
+                opacity=".8"
+              />
+            );
+          })}
+          {blueprint.data.map((structure, index) => {
+            const position = point(structure.x, structure.y);
+            const isSelected = selectedIndex === index;
+            return (
+              <g
+                key={`${index}-${structure.x}-${structure.y}`}
+                role="button"
+                tabIndex={0}
+                aria-label={`Select ${structureLabel(structure.type)} at ${structure.x}, ${structure.y}`}
+                onClick={() => setSelectedIndex(index)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") setSelectedIndex(index);
+                }}
+                className="cursor-pointer"
+              >
+                <rect
+                  x={position.x - cell / 2 + 3}
+                  y={position.y - cell / 2 + 3}
+                  width={cell - 6}
+                  height={cell - 6}
+                  rx="5"
+                  fill={tileColor(structure.type)}
+                  stroke={isSelected ? "#ffe700" : "#8491a3"}
+                  strokeWidth={isSelected ? "4" : "1.5"}
+                />
+                <text
+                  x={position.x}
+                  y={position.y + 4}
+                  textAnchor="middle"
+                  fill="#f8fafc"
+                  fontSize="11"
+                  fontFamily="ui-monospace, monospace"
+                >
+                  {typeof structure.type === "number" ? structure.type : structure.type.slice(0, 8)}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      <aside className="border-l border-slate-800 pl-4 text-xs text-slate-400">
+        <p className="font-mono uppercase tracking-[0.18em] text-slate-500">Selected record</p>
+        {selected ? (
+          <div className="mt-3 space-y-3">
+            <p className="break-all font-mono text-yellow-200">{structureLabel(selected.type)}</p>
+            <p>
+              Position{" "}
+              <strong className="text-white">
+                {selected.x}, {selected.y}
+              </strong>
+            </p>
+            <p className="break-all whitespace-pre-wrap">
+              {selected.filter ? `filter ${JSON.stringify(selected.filter, null, 2)}` : "No filter"}
+            </p>
+            <p className="break-all whitespace-pre-wrap">
+              {selected.data !== undefined
+                ? `data ${JSON.stringify(selected.data, null, 2)}`
+                : "No structure data"}
+            </p>
+          </div>
+        ) : (
+          <p className="mt-3 leading-6">Choose a tile to inspect its raw blueprint record.</p>
+        )}
+      </aside>
+    </div>
+  );
+}
+
+export function BlueprintInspectorPage() {
+  const [encoded, setEncoded] = useState("");
+  const [blueprint, setBlueprint] = useState<Blueprint | null>(null);
+  const [summary, setSummary] = useState<BlueprintSummary | null>(null);
+  const [message, setMessage] = useState("Paste a v2 blueprint string to inspect it.");
+  const inspect = () => {
+    const value = encoded.trim();
+    if (value.startsWith("SAND:BP:v1:") || value.startsWith("SAND:BACKUP:v1:")) {
+      setBlueprint(null);
+      setSummary(null);
+      setMessage(
+        "Legacy v1 strings are available in the codec, but are not supported by the renderer inspector.",
+      );
+      return;
+    }
+    try {
+      const decoded = decodeBlueprint(value);
+      setBlueprint(decoded);
+      setSummary(summarizeBlueprint(value, decoded));
+      setMessage(`Inspected ${decoded.data.length} structure(s) from ${decoded.name}.`);
+    } catch (error) {
+      setBlueprint(null);
+      setSummary(null);
+      setMessage(error instanceof Error ? error.message : "Unable to inspect blueprint.");
+    }
+  };
+  return (
+    <section className="space-y-6">
+      <div>
+        <Link to="/" className="font-mono text-xs text-slate-500 hover:text-yellow-300">
+          ← Home
+        </Link>
+        <h1 className="mt-4 font-mono text-3xl font-bold text-white">Blueprint inspector</h1>
+        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
+          Inspect the decoded v2 records with a catalog-independent map. Unknown IDs remain visible
+          instead of being discarded, and can be selected for their raw details.
+        </p>
+      </div>
+      <Panel title="Blueprint string">
+        <div className="space-y-4 p-4">
+          <TextArea
+            value={encoded}
+            onChange={(event) => setEncoded(event.target.value)}
+            placeholder="SAND:BP:v2:..."
+            spellCheck={false}
+            className="min-h-48 placeholder:text-slate-600"
+          />
+          <Button accent onClick={inspect}>
+            Inspect blueprint
+          </Button>
+        </div>
+      </Panel>
+      <p
+        role="status"
+        className="border-l-2 border-yellow-300/60 bg-black/40 px-3 py-2 font-mono text-xs text-slate-400"
+      >
+        {message}
+      </p>
+      {blueprint && summary ? (
+        <>
+          <Panel title={`${blueprint.name} · ${summary.format}`}>
+            <div className="grid gap-3 p-4 text-xs text-slate-300 sm:grid-cols-2 lg:grid-cols-4">
+              <span>
+                Structures <strong className="text-white">{blueprint.data.length}</strong>
+              </span>
+              <span>
+                Types <strong className="text-white">{summary.types}</strong> (
+                {summary.numericTypes} native / {summary.stringTypes} string)
+              </span>
+              <span>
+                Bounds{" "}
+                <strong className="text-white">
+                  {summary.minX},{summary.minY}
+                </strong>{" "}
+                →{" "}
+                <strong className="text-white">
+                  {summary.maxX},{summary.maxY}
+                </strong>
+              </span>
+              <span>
+                Links <strong className="text-white">{summary.links}</strong> · Filters{" "}
+                <strong className="text-white">{summary.filters}</strong> · Data{" "}
+                <strong className="text-white">{summary.dataRecords}</strong>
+              </span>
+            </div>
+          </Panel>
+          <Panel title="Blueprint map">
+            <div className="p-4">
+              <BlueprintMap blueprint={blueprint} />
+              <p className="mt-4 text-xs text-slate-500">
+                Native and mod structure visuals are not bundled yet, so tiles use stable labels and
+                colors until a compatible catalog is selected.
+              </p>
+            </div>
+          </Panel>
+          <Panel title="Structures">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[42rem] text-left font-mono text-xs">
+                <thead className="border-b border-slate-800 text-slate-500">
+                  <tr>
+                    <th className="px-4 py-3">#</th>
+                    <th className="px-4 py-3">type</th>
+                    <th className="px-4 py-3">position</th>
+                    <th className="px-4 py-3">details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {blueprint.data.map((structure, index) => (
+                    <tr
+                      key={`${index}-${structure.x}-${structure.y}`}
+                      className="border-b border-slate-900 align-top text-slate-300"
+                    >
+                      <td className="px-4 py-3 text-slate-600">{index + 1}</td>
+                      <td className="px-4 py-3 break-all text-yellow-200">
+                        {structureLabel(structure.type)}
+                      </td>
+                      <td className="whitespace-nowrap px-4 py-3">
+                        {structure.x}, {structure.y}
+                      </td>
+                      <td className="max-w-xl whitespace-pre-wrap break-all px-4 py-3 text-slate-500">
+                        {structure.filter ? `filter ${JSON.stringify(structure.filter)}` : ""}
+                        {structure.filter && structure.data !== undefined ? " · " : ""}
+                        {structure.data !== undefined
+                          ? `data ${JSON.stringify(structure.data)}`
+                          : ""}
+                        {structure.filter === undefined && structure.data === undefined ? "—" : ""}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Panel>
+        </>
+      ) : null}
     </section>
   );
 }

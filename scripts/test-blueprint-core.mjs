@@ -27,6 +27,7 @@ assert.deepEqual(core.decodeBlueprint(core.encodeBlueprint({ name: "Empty", data
 
 const errors = [
   ["SAND:BP:v1:ignored", "Legacy v1 blueprint strings are not supported"],
+  ["SAND:BACKUP:v1:ignored", "Legacy v1 blueprint strings are not supported"],
   ["SAND:BP:v2:not-base64!", "Invalid base64 blueprint data"],
   ["SAND:BP:v2t:4,1", "Invalid or truncated"],
   ["SAND:UNKNOWN:value", "Unsupported blueprint prefix"],

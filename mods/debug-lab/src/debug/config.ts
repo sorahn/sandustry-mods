@@ -1,11 +1,14 @@
 export const ENABLED_PROBES = {
   runtimeSurface: false,
-  enums: true,
-  hotbar: true,
-  clipboardCursor: true,
-  clipboardCursorWatch: true,
+  enums: false,
+  hotbar: false,
+  clipboardCursor: false,
+  clipboardCursorWatch: false,
   blueprints: false,
   blueprintReads: false,
+  catalog: true,
+  catalogReads: true,
+  knownStructureDefinitions: true,
   clipboard: false,
   clipboardReads: false,
 } as const;

@@ -10,3 +10,5 @@ body { margin: 0; min-width: 320px; }
 button, a { -webkit-tap-highlight-color: transparent; }
 a { text-decoration: none; }
 *:focus-visible { outline: 2px solid #ffe700; outline-offset: 3px; }
+.blueprint-map__viewport { max-height: min(70vh, 40rem); }
+.blueprint-map__canvas { height: min(70vh, 40rem); min-height: 20rem; }

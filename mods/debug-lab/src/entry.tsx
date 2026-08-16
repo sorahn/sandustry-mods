@@ -10,6 +10,11 @@ import {
   probeClipboardReads,
 } from "./debug/namespace";
 import { dumpRuntimeSurface } from "./debug/runtime-surface";
+import {
+  dumpCatalogNamespaces,
+  probeCatalogReads,
+  probeKnownStructureDefinitions,
+} from "./debug/catalog";
 
 const context: DebugContext = {
   api: sandkit.api,
@@ -24,6 +29,9 @@ function dumpEnabledProbes(): void {
   if (ENABLED_PROBES.clipboardCursor) dumpClipboardCursor(context);
   if (ENABLED_PROBES.blueprints) dumpBlueprintNamespace(context);
   if (ENABLED_PROBES.blueprintReads) probeBlueprintReads(context);
+  if (ENABLED_PROBES.catalog) dumpCatalogNamespaces(context);
+  if (ENABLED_PROBES.catalogReads) probeCatalogReads(context);
+  if (ENABLED_PROBES.knownStructureDefinitions) probeKnownStructureDefinitions(context);
   if (ENABLED_PROBES.clipboard) dumpClipboardNamespace(context);
   if (ENABLED_PROBES.clipboardReads) probeClipboardReads(context);
 }
