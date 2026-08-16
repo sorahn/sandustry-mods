@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@sandustry/blueprint-core": "0.0.0",
     "@sandustry/ui": "0.0.0",
     "@tanstack/react-router": "1.170.29",
     "react": "19.2.8",

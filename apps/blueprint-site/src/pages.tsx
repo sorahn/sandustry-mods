@@ -73,7 +73,7 @@ export function BlueprintCodecPage() {
   const [encoded, setEncoded] = useState("");
   const [json, setJson] = useState(JSON.stringify(emptyBlueprint, null, 2));
   const [message, setMessage] = useState("Paste a blueprint string or edit the normalized JSON.");
-  const [format, setFormat] = useState<"binary" | "text">("binary");
+  const [format, setFormat] = useState<"binary" | "text" | "legacy">("binary");
   const decode = () => {
     try {
       const value = decodeBlueprint(encoded);
@@ -88,7 +88,9 @@ export function BlueprintCodecPage() {
       const value = JSON.parse(json) as Blueprint;
       setEncoded(encodeBlueprint(value, format));
       setMessage(
-        `Encoded ${value.data.length} structure(s) as ${format === "binary" ? "v2 binary" : "v2 text"}.`,
+        format === "legacy"
+          ? `Encoded ${value.data.length} structure(s) as legacy v1. Legacy v1 is for browser conversion only.`
+          : `Encoded ${value.data.length} structure(s) as ${format === "binary" ? "v2 binary" : "v2 text"}.`,
       );
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Unable to encode JSON.");
@@ -136,11 +138,14 @@ export function BlueprintCodecPage() {
                 Format{" "}
                 <Select
                   value={format}
-                  onChange={(event) => setFormat(event.target.value as "binary" | "text")}
+                  onChange={(event) =>
+                    setFormat(event.target.value as "binary" | "text" | "legacy")
+                  }
                   className="ml-2"
                 >
                   <option value="binary">v2 binary</option>
                   <option value="text">v2 text</option>
+                  <option value="legacy">legacy v1 (conversion only)</option>
                 </Select>
               </label>
               <Button accent onClick={encode}>
