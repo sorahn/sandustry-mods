@@ -1,0 +1,12 @@
+{
+  "manifestVersion": 1,
+  "id": "sorahn.sandustry-debug-lab",
+  "name": "Sandustry Debug Lab",
+  "version": "0.1.0",
+  "apiVersion": 1,
+  "author": "sorahn",
+  "entry": "entry.js",
+  "description": "Developer-only experiments for discovering Sandustry mod escape hatches.",
+  "dependencies": [],
+  "loadOrder": 1000
+}
