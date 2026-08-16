@@ -151,7 +151,10 @@ const indexRoute = createRoute({
 });
 
 const routeTree = rootRoute.addChildren([indexRoute, codecRoute]);
-export const router = createRouter({ routeTree });
+export const router = createRouter({
+  routeTree,
+  basepath: import.meta.env.DEV ? "/" : "/sandustry-tools/",
+});
 
 declare module "@tanstack/react-router" {
   interface Register {
