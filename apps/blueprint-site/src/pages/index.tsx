@@ -16,7 +16,7 @@ export function AppLayout() {
       <header className="border-b border-slate-800/80 bg-black/50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link to="/" className="font-mono text-sm font-bold tracking-[0.2em] text-yellow-300">
-            SANDUSTRY / BLUEPRINTS
+            SANDUSTRY / BLUEPRINT TOOLS
           </Link>
           <nav className="flex gap-4 font-mono text-xs text-slate-400">
             <Link to="/" activeProps={{ className: "text-yellow-300" }}>
