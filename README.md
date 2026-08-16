@@ -23,12 +23,12 @@ TypeScript and compiles to the plain JavaScript file Sandustry expects.
 
 ## Packaging
 
-The root Makefile builds all active mods. Use `MOD=infinite-source-trash` to
-target one mod:
+The root Makefile builds all active mods. Use a short mod name to target one
+mod:
 
 ```sh
 make build
-make build MOD=infinite-source-trash
+make build MOD=zoom-hotkeys
 make check
 make format
 ```
@@ -41,10 +41,24 @@ directory. Override the destination with
 To bump one mod's version and create a commit containing only its manifest:
 
 ```sh
-make version MOD=infinite-source-trash patch
-make version MOD=infinite-source-trash minor
-make version MOD=infinite-source-trash major
+make version MOD=zoom-hotkeys patch
+make version MOD=zoom-hotkeys minor
+make version MOD=zoom-hotkeys major
 ```
+
+### Make completion
+
+The mod names used by `MOD=` are discovered from `mods/*`. Source the
+completion helper for your shell from the repository root:
+
+```sh
+source make/completion.zsh   # zsh
+source make/completion.bash  # bash
+source make/completion.fish  # fish
+```
+
+Then `make build MOD=<tab>` (or any other Make target) completes the current
+mod names. Set `SANDUSTRY_MODS_ROOT` if sourcing the helper from elsewhere.
 
 The same commands are available from inside a mod directory, without the
 `MOD=` argument. The install destination can be overridden with
