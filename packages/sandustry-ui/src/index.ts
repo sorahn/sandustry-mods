@@ -2,7 +2,11 @@ class SdPanel extends HTMLElement {
   connectedCallback() {
     this.classList.add("sd-panel");
     const title = this.getAttribute("title");
-    if (title && !this.querySelector(".sd-panel__header")) {
+    if (
+      title &&
+      !this.hasAttribute("data-panel-header") &&
+      !this.querySelector(".sd-panel__header")
+    ) {
       const header = document.createElement("div");
       header.className = "sd-panel__header";
       const label = document.createElement("span");

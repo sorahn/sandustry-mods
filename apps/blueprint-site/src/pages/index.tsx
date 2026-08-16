@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, Outlet } from "@tanstack/react-router";
-import { Button, Panel, Select, TextArea } from "@sandustry/ui/react";
-import { decodeBlueprint, emptyBlueprint, encodeBlueprint, type Blueprint } from "./blueprint";
-import { catalogEntry } from "./catalog";
+import { Button, Checkbox, Panel, Select, TextArea } from "@sandustry/ui/react";
+import {
+  decodeBlueprint,
+  emptyBlueprint,
+  encodeBlueprint,
+  type Blueprint,
+} from "../utils/blueprint";
+import { catalogEntry } from "../utils/catalog";
+import { DebugComponentWrapper } from "../components/DebugComponentWrapper";
 
 export function AppLayout() {
   return (
@@ -215,15 +221,44 @@ function tileColor(type: Blueprint["data"][number]["type"]) {
   return ["#4b3c62", "#315a5e", "#66522f", "#563d46"][Math.abs(hash) % 4];
 }
 
-function BlueprintMap({
-  blueprint,
-  debugGradient,
-}: {
-  blueprint: Blueprint;
-  debugGradient: boolean;
-}) {
+const REMEMBER_BLUEPRINT_KEY = "sandustry.blueprintInspector.remember";
+const SAVED_BLUEPRINT_KEY = "sandustry.blueprintInspector.string";
+
+function readLocalValue(key: string) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeLocalValue(key: string, value: string) {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Local storage can be unavailable in private browsing contexts.
+  }
+}
+
+function removeLocalValue(key: string) {
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    // Local storage can be unavailable in private browsing contexts.
+  }
+}
+
+function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const dragRef = useRef<{
+    pointerId: number;
+    lastX: number;
+    lastY: number;
+    moved: boolean;
+  } | null>(null);
+  const suppressClickRef = useRef(false);
   const padding = 2;
   const cell = 56;
   const xs = blueprint.data.length
@@ -246,24 +281,35 @@ function BlueprintMap({
   const height = (maxY - minY + padding * 2 + 1) * cell;
   const viewWidth = width / zoom;
   const viewHeight = height / zoom;
-  const viewX = (width - viewWidth) / 2;
-  const viewY = (height - viewHeight) / 2;
-  const fadeSize = cell * 2;
-  const fadeBleed = 1;
+  const maxPanX = (width - viewWidth) / 2;
+  const maxPanY = (height - viewHeight) / 2;
+  const viewX = maxPanX + pan.x;
+  const viewY = maxPanY + pan.y;
   const point = (x: number, y: number) => ({
     x: (x - minX + padding + 0.5) * cell,
     y: (y - minY + padding + 0.5) * cell,
   });
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
+  useEffect(() => {
+    setPan({ x: 0, y: 0 });
+    setSelectedIndex(null);
+  }, [blueprint]);
+  const setMapZoom = (nextZoom: number) => {
+    setZoom(nextZoom);
+    setPan({ x: 0, y: 0 });
+  };
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
-      <div className="blueprint-map__viewport overflow-hidden rounded border border-slate-800 bg-[#33a8ff] p-3">
+      <div
+        className="blueprint-map__viewport overflow-hidden rounded border border-slate-800 bg-[#33a8ff] p-3"
+        translate="no"
+      >
         <div className="mb-3 flex items-center justify-end gap-2 font-mono text-xs text-slate-500">
           <span className="mr-1">{Math.round(zoom * 100)}%</span>
           <button
             type="button"
             className="sd-button sd-button--compact"
-            onClick={() => setZoom((value) => Math.max(0.75, value / 1.25))}
+            onClick={() => setMapZoom(Math.max(0.75, zoom / 1.25))}
             disabled={zoom <= 0.75}
             aria-label="Zoom out"
           >
@@ -272,7 +318,7 @@ function BlueprintMap({
           <button
             type="button"
             className="sd-button sd-button--compact"
-            onClick={() => setZoom(1)}
+            onClick={() => setMapZoom(1)}
             disabled={zoom === 1}
           >
             Fit
@@ -280,7 +326,7 @@ function BlueprintMap({
           <button
             type="button"
             className="sd-button sd-button--compact"
-            onClick={() => setZoom((value) => Math.min(4, value * 1.25))}
+            onClick={() => setMapZoom(Math.min(4, zoom * 1.25))}
             disabled={zoom >= 4}
             aria-label="Zoom in"
           >
@@ -293,6 +339,49 @@ function BlueprintMap({
           aria-label={`${blueprint.name} structure map`}
           preserveAspectRatio="xMidYMid meet"
           className="blueprint-map__canvas w-full"
+          style={{
+            cursor: dragRef.current ? "grabbing" : "grab",
+            touchAction: "none",
+            userSelect: "none",
+          }}
+          onPointerDown={(event) => {
+            if (event.pointerType === "mouse" && event.button !== 0) return;
+            dragRef.current = {
+              pointerId: event.pointerId,
+              lastX: event.clientX,
+              lastY: event.clientY,
+              moved: false,
+            };
+          }}
+          onPointerMove={(event) => {
+            const drag = dragRef.current;
+            if (!drag || drag.pointerId !== event.pointerId) return;
+            const dx = event.clientX - drag.lastX;
+            const dy = event.clientY - drag.lastY;
+            if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
+              drag.moved = true;
+              if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+                event.currentTarget.setPointerCapture(event.pointerId);
+              }
+            }
+            const rect = event.currentTarget.getBoundingClientRect();
+            setPan((current) => ({
+              x: Math.max(-maxPanX, Math.min(maxPanX, current.x - (dx / rect.width) * viewWidth)),
+              y: Math.max(-maxPanY, Math.min(maxPanY, current.y - (dy / rect.height) * viewHeight)),
+            }));
+            drag.lastX = event.clientX;
+            drag.lastY = event.clientY;
+          }}
+          onPointerUp={(event) => {
+            const drag = dragRef.current;
+            if (!drag || drag.pointerId !== event.pointerId) return;
+            suppressClickRef.current = drag.moved;
+            dragRef.current = null;
+            event.currentTarget.releasePointerCapture(event.pointerId);
+          }}
+          onPointerCancel={() => {
+            dragRef.current = null;
+          }}
         >
           <defs>
             <pattern id="blueprint-grid" width={cell} height={cell} patternUnits="userSpaceOnUse">
@@ -303,105 +392,6 @@ function BlueprintMap({
                 strokeWidth="1"
               />
             </pattern>
-            <linearGradient id="map-fade-left" gradientUnits="userSpaceOnUse" x1="0" x2={fadeSize}>
-              <stop offset="0%" stopColor="#33a8ff" />
-              <stop offset="12.5%" stopColor="#00ff1e" />
-              <stop offset="50%" stopColor="#ff1f6d" />
-              <stop offset="87.5%" stopColor="#ffe900" />
-              <stop offset="100%" stopColor="#ffe900" />
-            </linearGradient>
-            <linearGradient
-              id="map-fade-right"
-              gradientUnits="userSpaceOnUse"
-              x1={width}
-              x2={width - fadeSize}
-            >
-              <stop offset="0%" stopColor="#33a8ff" />
-              <stop offset="12.5%" stopColor="#00ff1e" />
-              <stop offset="50%" stopColor="#ff1f6d" />
-              <stop offset="87.5%" stopColor="#ffe900" />
-              <stop offset="100%" stopColor="#ffe900" />
-            </linearGradient>
-            <linearGradient
-              id="map-fade-top"
-              gradientUnits="userSpaceOnUse"
-              x1="0"
-              x2="0"
-              y1="0"
-              y2={fadeSize}
-            >
-              <stop offset="0%" stopColor="#33a8ff" />
-              <stop offset="12.5%" stopColor="#00ff1e" />
-              <stop offset="50%" stopColor="#ff1f6d" />
-              <stop offset="87.5%" stopColor="#ffe900" />
-              <stop offset="100%" stopColor="#ffe900" />
-            </linearGradient>
-            <linearGradient
-              id="map-fade-bottom"
-              gradientUnits="userSpaceOnUse"
-              x1="0"
-              x2="0"
-              y1={height}
-              y2={height - fadeSize}
-            >
-              <stop offset="0%" stopColor="#33a8ff" />
-              <stop offset="12.5%" stopColor="#00ff1e" />
-              <stop offset="50%" stopColor="#ff1f6d" />
-              <stop offset="87.5%" stopColor="#ffe900" />
-              <stop offset="100%" stopColor="#ffe900" />
-            </linearGradient>
-            <linearGradient
-              id="map-opacity-left"
-              gradientUnits="userSpaceOnUse"
-              x1="0"
-              x2={fadeSize}
-            >
-              <stop offset="0%" stopColor="#33a8ff" />
-              <stop offset="12.5%" stopColor="#33a8ff" />
-              <stop offset="50%" stopColor="#33a8ff" stopOpacity="0.5" />
-              <stop offset="87.5%" stopColor="#33a8ff" stopOpacity="0" />
-              <stop offset="100%" stopColor="#33a8ff" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient
-              id="map-opacity-right"
-              gradientUnits="userSpaceOnUse"
-              x1={width}
-              x2={width - fadeSize}
-            >
-              <stop offset="0%" stopColor="#33a8ff" />
-              <stop offset="12.5%" stopColor="#33a8ff" />
-              <stop offset="50%" stopColor="#33a8ff" stopOpacity="0.5" />
-              <stop offset="87.5%" stopColor="#33a8ff" stopOpacity="0" />
-              <stop offset="100%" stopColor="#33a8ff" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient
-              id="map-opacity-top"
-              gradientUnits="userSpaceOnUse"
-              x1="0"
-              x2="0"
-              y1="0"
-              y2={fadeSize}
-            >
-              <stop offset="0%" stopColor="#33a8ff" />
-              <stop offset="12.5%" stopColor="#33a8ff" />
-              <stop offset="50%" stopColor="#33a8ff" stopOpacity="0.5" />
-              <stop offset="87.5%" stopColor="#33a8ff" stopOpacity="0" />
-              <stop offset="100%" stopColor="#33a8ff" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient
-              id="map-opacity-bottom"
-              gradientUnits="userSpaceOnUse"
-              x1="0"
-              x2="0"
-              y1={height}
-              y2={height - fadeSize}
-            >
-              <stop offset="0%" stopColor="#33a8ff" />
-              <stop offset="12.5%" stopColor="#33a8ff" />
-              <stop offset="50%" stopColor="#33a8ff" stopOpacity="0.5" />
-              <stop offset="87.5%" stopColor="#33a8ff" stopOpacity="0" />
-              <stop offset="100%" stopColor="#33a8ff" stopOpacity="0" />
-            </linearGradient>
           </defs>
           <rect width={width} height={height} fill="#33a8ff" />
           <rect width={width} height={height} fill="url(#blueprint-grid)" />
@@ -439,7 +429,13 @@ function BlueprintMap({
                 role="button"
                 tabIndex={0}
                 aria-label={`Select ${structureLabel(structure.type)} at ${structure.x}, ${structure.y}`}
-                onClick={() => setSelectedIndex(index)}
+                onClick={() => {
+                  if (suppressClickRef.current) {
+                    suppressClickRef.current = false;
+                    return;
+                  }
+                  setSelectedIndex(index);
+                }}
                 onKeyDown={(event) => {
                   if (event.key === "Enter" || event.key === " ") setSelectedIndex(index);
                 }}
@@ -471,69 +467,6 @@ function BlueprintMap({
               </g>
             );
           })}
-          {debugGradient ? (
-            <>
-              <rect
-                x={-fadeBleed}
-                width={fadeSize + fadeBleed}
-                height={height}
-                fill="url(#map-fade-left)"
-                pointerEvents="none"
-              />
-              <rect
-                x={width - fadeSize}
-                width={fadeSize + fadeBleed}
-                height={height}
-                fill="url(#map-fade-right)"
-                pointerEvents="none"
-              />
-              <rect
-                y={-fadeBleed}
-                width={width}
-                height={fadeSize + fadeBleed}
-                fill="url(#map-fade-top)"
-                pointerEvents="none"
-              />
-              <rect
-                y={height - fadeSize}
-                width={width}
-                height={fadeSize + fadeBleed}
-                fill="url(#map-fade-bottom)"
-                pointerEvents="none"
-              />
-            </>
-          ) : (
-            <>
-              <rect
-                x={-fadeBleed}
-                width={fadeSize + fadeBleed}
-                height={height}
-                fill="url(#map-opacity-left)"
-                pointerEvents="none"
-              />
-              <rect
-                x={width - fadeSize}
-                width={fadeSize + fadeBleed}
-                height={height}
-                fill="url(#map-opacity-right)"
-                pointerEvents="none"
-              />
-              <rect
-                y={-fadeBleed}
-                width={width}
-                height={fadeSize + fadeBleed}
-                fill="url(#map-opacity-top)"
-                pointerEvents="none"
-              />
-              <rect
-                y={height - fadeSize}
-                width={width}
-                height={fadeSize + fadeBleed}
-                fill="url(#map-opacity-bottom)"
-                pointerEvents="none"
-              />
-            </>
-          )}
         </svg>
       </div>
       <aside className="border-l border-slate-800 pl-4 text-xs text-slate-400">
@@ -576,10 +509,17 @@ function BlueprintMap({
 }
 
 export function BlueprintInspectorPage() {
-  const [encoded, setEncoded] = useState("");
+  const [remember, setRemember] = useState(
+    () => typeof window !== "undefined" && readLocalValue(REMEMBER_BLUEPRINT_KEY) === "true",
+  );
+  const [encoded, setEncoded] = useState(() => {
+    if (typeof window === "undefined" || readLocalValue(REMEMBER_BLUEPRINT_KEY) !== "true") {
+      return "";
+    }
+    return readLocalValue(SAVED_BLUEPRINT_KEY) ?? "";
+  });
   const [blueprint, setBlueprint] = useState<Blueprint | null>(null);
   const [summary, setSummary] = useState<BlueprintSummary | null>(null);
-  const [debugGradient, setDebugGradient] = useState(true);
   const [message, setMessage] = useState("Paste a v2 blueprint string to inspect it.");
   const inspect = () => {
     const value = encoded.trim();
@@ -614,11 +554,34 @@ export function BlueprintInspectorPage() {
           instead of being discarded, and can be selected for their raw details.
         </p>
       </div>
-      <Panel title="Blueprint string">
+      <Panel
+        title="Blueprint string"
+        header={
+          <DebugComponentWrapper>
+            <Checkbox
+              boxed
+              checked={remember}
+              label="remember"
+              size="small"
+              onChange={(event) => {
+                const nextRemember = event.target.checked;
+                setRemember(nextRemember);
+                writeLocalValue(REMEMBER_BLUEPRINT_KEY, String(nextRemember));
+                if (nextRemember) writeLocalValue(SAVED_BLUEPRINT_KEY, encoded);
+                else removeLocalValue(SAVED_BLUEPRINT_KEY);
+              }}
+            />
+          </DebugComponentWrapper>
+        }
+      >
         <div className="space-y-4 p-4">
           <TextArea
             value={encoded}
-            onChange={(event) => setEncoded(event.target.value)}
+            onChange={(event) => {
+              const value = event.target.value;
+              setEncoded(value);
+              if (remember) writeLocalValue(SAVED_BLUEPRINT_KEY, value);
+            }}
             onKeyDown={(event) => {
               if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
                 event.preventDefault();
@@ -668,17 +631,9 @@ export function BlueprintInspectorPage() {
               </span>
             </div>
           </Panel>
-          <Panel title="Blueprint map" className="blueprint-map-panel">
-            <label className="blueprint-map__debug-toggle">
-              <input
-                type="checkbox"
-                checked={debugGradient}
-                onChange={(event) => setDebugGradient(event.target.checked)}
-              />
-              <span>debug gradient</span>
-            </label>
+          <Panel title="Blueprint map">
             <div className="p-4">
-              <BlueprintMap blueprint={blueprint} debugGradient={debugGradient} />
+              <BlueprintMap blueprint={blueprint} />
               <p className="mt-4 text-xs text-slate-500">
                 A small verified native/repository catalog supplies names and footprints. Other
                 content remains visible through the unknown-ID fallback.

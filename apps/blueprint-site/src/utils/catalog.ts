@@ -1,5 +1,5 @@
 import type { BlueprintType } from "@sandustry/blueprint-core";
-import generatedCatalog from "./structure-catalog.json";
+import generatedCatalog from "../structure-catalog.json";
 
 export type CatalogEntry = {
   type: BlueprintType;

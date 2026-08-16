@@ -16,7 +16,7 @@ sd-panel { display: block; }
 sd-button { display: inline-block; }
 
 .sd-panel { overflow: hidden; border: 1px solid var(--sd-slate-700); border-radius: var(--sd-radius); background: var(--sd-panel); box-shadow: var(--sd-panel-shadow); }
-.sd-panel__header { border-bottom: 1px solid var(--sd-slate-800); padding: calc(var(--sd-space) * 2) calc(var(--sd-space) * 4); }
+.sd-panel__header { display: flex; min-height: var(--sd-control-height); box-sizing: border-box; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--sd-slate-800); padding: calc(var(--sd-space) * 2) calc(var(--sd-space) * 4); }
 .sd-label { color: rgb(255 255 255 / 0.7); font-size: 11px; }
 .sd-button { min-height: var(--sd-control-height); border: 1px solid rgb(203 213 225 / 0.25); border-radius: var(--sd-radius) 0 var(--sd-radius) 0; background: #000; color: #fff; cursor: pointer; font: inherit; font-size: 11px; padding: calc(var(--sd-space) * 1.5) calc(var(--sd-space) * 2.5); transition: border-color 150ms, color 150ms, background 150ms; }
 .sd-button:hover, .sd-button:focus-visible { border-color: transparent; color: var(--sd-yellow); outline: 0; }
@@ -27,5 +27,9 @@ sd-button { display: inline-block; }
 .sd-select-wrap { position: relative; display: inline-block; }
 .sd-select-wrap::after { position: absolute; top: 50%; right: var(--sd-caret-inset); width: var(--sd-caret-size); height: var(--sd-caret-size); border-right: 1px solid #94a3b8; border-bottom: 1px solid #94a3b8; content: ""; pointer-events: none; transform: translateY(-65%) rotate(45deg); }
 .sd-select { min-height: var(--sd-control-height); appearance: none; border-radius: var(--sd-radius) 0 var(--sd-radius) 0; padding: calc(var(--sd-space) * 1.5) calc(var(--sd-space) * 5) calc(var(--sd-space) * 1.5) calc(var(--sd-space) * 2.5); font-size: 11px; line-height: normal; }
+.sd-checkbox { display: inline-flex; align-items: center; gap: calc(var(--sd-space) * 1.5); color: #94a3b8; cursor: pointer; font: 11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.sd-checkbox--small { min-height: 24px; gap: var(--sd-space); font-size: 10px; }
+.sd-checkbox--boxed { border: 1px solid rgb(203 213 225 / 0.25); border-radius: var(--sd-radius) 0 var(--sd-radius) 0; background: #000; padding: var(--sd-space) calc(var(--sd-space) * 2.5); }
+.sd-checkbox__input { accent-color: var(--sd-yellow); cursor: pointer; }
 .sd-textarea::placeholder { color: #475569; }
 .sd-textarea:focus, .sd-select:focus { border-color: var(--sd-slate-500, #64748b); outline: 2px solid var(--sd-yellow); outline-offset: 2px; }

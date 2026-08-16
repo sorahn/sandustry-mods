@@ -12,6 +12,4 @@ a { text-decoration: none; }
 *:focus-visible { outline: 2px solid #ffe700; outline-offset: 3px; }
 .blueprint-map__viewport { height: min(70vh, 40rem); max-height: min(70vh, 40rem); display: flex; flex-direction: column; }
 .blueprint-map__canvas { flex: 1 1 0; height: 0; min-height: 0; }
-.blueprint-map-panel { position: relative; }
-.blueprint-map__debug-toggle { position: absolute; top: 0.45rem; right: 1rem; z-index: 1; display: flex; align-items: center; gap: 0.4rem; color: #94a3b8; font: 11px ui-monospace, monospace; cursor: pointer; }
-.blueprint-map__debug-toggle input { accent-color: #ffe700; }
+.blueprint-map__canvas text { user-select: none; }
