@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet } from "@tanstack/react-router";
-import { Button, Panel } from "@sandustry/ui/react";
+import { Button, Panel, Select, TextArea } from "@sandustry/ui/react";
 import { decodeBlueprint, emptyBlueprint, encodeBlueprint, type Blueprint } from "./blueprint";
 
 export function AppLayout() {
@@ -109,12 +109,12 @@ export function BlueprintCodecPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel title="Blueprint string">
           <div className="space-y-4 p-4">
-            <textarea
+            <TextArea
               value={encoded}
               onChange={(event) => setEncoded(event.target.value)}
               placeholder="SAND:BP:v2:..."
               spellCheck={false}
-              className="min-h-80 w-full resize-y border border-slate-700 bg-black/70 p-3 font-mono text-xs leading-6 text-slate-200 placeholder:text-slate-600"
+              className="placeholder:text-slate-600"
             />
             <div className="flex flex-wrap gap-3">
               <Button accent onClick={decode}>
@@ -126,23 +126,22 @@ export function BlueprintCodecPage() {
         </Panel>
         <Panel title="Normalized JSON">
           <div className="space-y-4 p-4">
-            <textarea
+            <TextArea
               value={json}
               onChange={(event) => setJson(event.target.value)}
               spellCheck={false}
-              className="min-h-80 w-full resize-y border border-slate-700 bg-black/70 p-3 font-mono text-xs leading-6 text-slate-200"
             />
             <div className="flex flex-wrap items-center gap-3">
               <label className="font-mono text-xs text-slate-400">
                 Format{" "}
-                <select
+                <Select
                   value={format}
                   onChange={(event) => setFormat(event.target.value as "binary" | "text")}
-                  className="ml-2 border border-slate-700 bg-black px-2 py-1 text-xs text-slate-200"
+                  className="ml-2"
                 >
                   <option value="binary">v2 binary</option>
                   <option value="text">v2 text</option>
-                </select>
+                </Select>
               </label>
               <Button accent onClick={encode}>
                 Encode string
