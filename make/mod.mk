@@ -25,10 +25,10 @@ $(BUILD_DIR)/entry.js: $(SRC_DIR)/entry.tsx $(REPO_ROOT)/tsconfig.json $(REPO_RO
 
 $(ARCHIVE): $(BUILD_DIR)/entry.js $(MANIFEST) $(shell find $(MOD_DIR)/assets -type f -print 2>/dev/null) $(wildcard $(MOD_DIR)/preview.png $(MOD_DIR)/workshop.json)
 	@rm -rf "$(PACKAGE_DIR)"
-	@mkdir -p "$(PACKAGE_DIR)/assets"
+	@mkdir -p "$(PACKAGE_DIR)"
 	@cp "$(BUILD_DIR)/entry.js" "$(PACKAGE_DIR)/entry.js"
 	@cp "$(MANIFEST)" "$(PACKAGE_DIR)/modinfo.json"
-	@cp -R "$(MOD_DIR)/assets/." "$(PACKAGE_DIR)/assets/"
+	@if [ -d "$(MOD_DIR)/assets" ]; then mkdir -p "$(PACKAGE_DIR)/assets"; cp -R "$(MOD_DIR)/assets/." "$(PACKAGE_DIR)/assets/"; fi
 	@if [ -f "$(MOD_DIR)/preview.png" ]; then cp "$(MOD_DIR)/preview.png" "$(PACKAGE_DIR)/preview.png"; fi
 	@if [ -f "$(MOD_DIR)/workshop.json" ]; then cp "$(MOD_DIR)/workshop.json" "$(PACKAGE_DIR)/workshop.json"; fi
 	@mkdir -p "$(ARTIFACTS_DIR)"

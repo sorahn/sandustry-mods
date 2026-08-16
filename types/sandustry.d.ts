@@ -71,16 +71,43 @@ interface SandustryApi {
   };
   triggers: { register(id: string, definition: { interval: number; callback: () => void }): void };
   ui: {
+    update(componentId: number | string, options?: Record<string, unknown>): void;
+    openPauseMenu(): void;
+    toast(message: string, options?: Record<string, unknown>): void;
     inject(id: string, component: () => unknown): unknown;
     navigation: SandustryNavigation;
     prompt(...args: string[]): Promise<string | null>;
   };
   world: { isCellEmptyAtCell(x: number, y: number): boolean };
   action?: { getSelected(): { id?: string } | null };
+  input: {
+    registerBinding(
+      bindingId: string,
+      defaultKeys: string[],
+      definition: Record<string, unknown>,
+    ): string;
+  };
+}
+
+interface SandustryEngineState {
+  session: {
+    cinematic?: unknown;
+    settings: { videoZoom: number };
+    windows: {
+      menu: { open: boolean };
+      options: { open: boolean };
+    };
+  };
+}
+
+interface SandustryEngine {
+  api: Record<string, unknown>;
+  state: SandustryEngineState;
 }
 
 declare const sandkit: {
   api: SandustryApi;
+  engine: SandustryEngine;
   react: typeof import("react") & { Fragment?: unknown };
 };
 
