@@ -41,9 +41,12 @@ separate dependency graphs:
 
 ## Planning workflow
 
-Repository-level implementation plans live in the top-level directory as
-descriptive Markdown files, for example `PICKER-CLEANUP-PLAN.md`,
-`BLUEPRINT-RENDERER-PLAN.md`, and `HOTBAR-PRESETS-PLAN.md`.
+Repository-level implementation plans live locally in the top-level directory
+as descriptive Markdown files. Every plan filename must end with `-PLAN.md`,
+such as `PICKER-CLEANUP-PLAN.md`, `BLUEPRINT-RENDERER-PLAN.md`, and
+`HOTBAR-PRESETS-PLAN.md`. Plans and reverse-engineering resources are local
+working material and are ignored by Git; do not rely on them being present in a
+fresh clone.
 
 - Create or update a plan when a task spans multiple implementation areas,
   involves discovery or reverse engineering, or has meaningful compatibility,
