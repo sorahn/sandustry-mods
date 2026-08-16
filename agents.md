@@ -19,6 +19,35 @@ import them normally; esbuild resolves and bundles those imports into each
 mod's standalone entrypoint. The shipped script still has no imports or
 exports, and shared modules should avoid mod-specific side effects.
 
+## Planning workflow
+
+Repository-level implementation plans live in the top-level directory as
+descriptive Markdown files, for example `PICKER-CLEANUP-PLAN.md`,
+`BLUEPRINT-RENDERER-PLAN.md`, and `HOTBAR-PRESETS-PLAN.md`.
+
+- Create or update a plan when a task spans multiple implementation areas,
+  involves discovery or reverse engineering, or has meaningful compatibility,
+  safety, or deployment concerns.
+- Use Markdown checkboxes for actionable work: unchecked items are pending and
+  checked items are complete.
+- Organize plans into implementation phases, verification work, and completion
+  criteria. Include a suggested implementation order when the steps have
+  dependencies.
+- Keep the plan behavior-focused and specific enough that another agent can
+  continue the work without reconstructing the original conversation.
+- Record important constraints, discovered runtime behavior, fallback behavior,
+  and licensing or deployment limitations in the plan.
+- Update the plan as implementation progresses; do not leave completed work
+  represented only in conversation notes.
+- Do not mark a checkbox complete merely because code was written. Mark it
+  complete after the relevant check, inspection, or runtime verification has
+  been performed.
+- Keep generated build output and archives out of plans and commits unless the
+  task explicitly requires them.
+- When a plan is complete, leave the completed checklist as a record and add
+  follow-up work as a new section or a new plan rather than replacing the
+  historical context.
+
 ## Project goal
 
 This repository contains a Sandustry v1 mod that adds two creative utility
