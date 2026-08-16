@@ -1,4 +1,5 @@
 import { createRootRoute, createRoute, createRouter, Link, Outlet } from "@tanstack/react-router";
+import { Button, Panel } from "@sandustry/ui/react";
 
 const rootRoute = createRootRoute({
   component: () => (
@@ -28,7 +29,7 @@ const indexRoute = createRoute({
   path: "/",
   component: () => (
     <section className="grid min-h-[60vh] place-items-center">
-      <div className="w-full max-w-2xl border border-slate-700 bg-black/70 p-8 shadow-2xl shadow-black/40 [border-radius:4px_0_4px_0]">
+      <Panel className="w-full max-w-2xl p-8">
         <p className="mb-3 font-mono text-xs uppercase tracking-[0.25em] text-slate-500">
           Universal blueprint renderer
         </p>
@@ -38,14 +39,10 @@ const indexRoute = createRoute({
           import/export will be added here without depending on the Sandustry mod runtime.
         </p>
         <div className="mt-8 flex gap-3">
-          <button className="border border-yellow-300/60 bg-yellow-300/10 px-4 py-2 font-mono text-xs text-yellow-300 transition hover:bg-yellow-300/20">
-            Open blueprint
-          </button>
-          <button className="border border-slate-700 bg-black/50 px-4 py-2 font-mono text-xs text-slate-300 transition hover:border-slate-500 hover:text-white">
-            Documentation
-          </button>
+          <Button accent>Open blueprint</Button>
+          <Button>Documentation</Button>
         </div>
-      </div>
+      </Panel>
     </section>
   ),
 });

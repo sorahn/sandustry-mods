@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../../../packages/sandustry-ui/src";
 
 @theme {
   --color-sd-950: #090b0f;
