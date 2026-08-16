@@ -212,7 +212,16 @@ make install SANDUSTRY_MODS_DIR=/path/to/mods
 
 After making mod changes, run `make install` so the unzipped current version is
 updated in the local Sandustry mods directory. This is the standard handoff
-step for local runtime testing.
+step for local runtime testing. Because the default destination is outside the
+workspace, always run the install with requested elevated permissions when the
+sandbox blocks it:
+
+```sh
+make install
+```
+
+Use the command tool's `require_escalated` permission with a concise approval
+request; do not silently skip installation after a permission failure.
 
 ## Verification and limitations
 

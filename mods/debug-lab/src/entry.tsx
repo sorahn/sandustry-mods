@@ -2,6 +2,7 @@ import { ENABLED_PROBES } from "./debug/config";
 import { DebugContext } from "./debug/common";
 import { dumpEnums } from "./debug/enums";
 import { copyHotbar, dumpHotbar, pasteHotbarFromClipboard } from "./debug/hotbar";
+import { dumpClipboardCursor, startClipboardCursorWatch } from "./debug/clipboard-cursor";
 import {
   dumpBlueprintNamespace,
   dumpClipboardNamespace,
@@ -20,6 +21,7 @@ function dumpEnabledProbes(): void {
   if (ENABLED_PROBES.runtimeSurface) dumpRuntimeSurface(context);
   if (ENABLED_PROBES.enums) dumpEnums(context);
   if (ENABLED_PROBES.hotbar) dumpHotbar(context);
+  if (ENABLED_PROBES.clipboardCursor) dumpClipboardCursor(context);
   if (ENABLED_PROBES.blueprints) dumpBlueprintNamespace(context);
   if (ENABLED_PROBES.blueprintReads) probeBlueprintReads(context);
   if (ENABLED_PROBES.clipboard) dumpClipboardNamespace(context);
@@ -39,6 +41,8 @@ registerBinding("Debug Lab - Copy Hotbar JSON", ["F9"], () => copyHotbar(context
 registerBinding("Debug Lab - Paste Hotbar JSON", ["F10"], () => {
   void pasteHotbarFromClipboard(context);
 });
+
+if (ENABLED_PROBES.clipboardCursorWatch) startClipboardCursorWatch(context);
 
 setTimeout(() => {
   console.info(

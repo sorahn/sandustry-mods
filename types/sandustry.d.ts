@@ -7,6 +7,7 @@ interface SandustryStructureData {
 interface SandustryStructure {
   x: number;
   y: number;
+  trapped?: boolean;
   data?: SandustryStructureData;
 }
 
@@ -63,11 +64,20 @@ interface SandustryApi {
   structures: {
     forEachOfType(id: string, callback: (structure: SandustryStructure) => void): void;
     register(definition: Record<string, any>): void;
+    setSpritesheetIndex(structure: SandustryStructure, index: number): void;
+    update(structure: SandustryStructure, options?: Record<string, unknown>): void;
     setData(
       structure: SandustryStructure,
       data: SandustryStructureData,
       options?: Record<string, any>,
     ): void;
+  };
+  terrains: {
+    getTypeFromId(id: string): number | null;
+    getTypeAtCell(x: number, y: number): number | null;
+    isTypeAtCell(x: number, y: number, type: string): boolean;
+    createAtCellWhenIdle(x: number, y: number, type: string): void;
+    removeAtCellWhenIdle(x: number, y: number, options?: Record<string, unknown>): void;
   };
   triggers: { register(id: string, definition: { interval: number; callback: () => void }): void };
   ui: {
