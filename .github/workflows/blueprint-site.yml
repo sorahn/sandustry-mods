@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "apps/blueprint-site/**"
+      - "packages/sandustry-ui/**"
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/blueprint-site.yml"

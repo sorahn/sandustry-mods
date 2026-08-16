@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "postbuild": "node scripts/copy-404.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
