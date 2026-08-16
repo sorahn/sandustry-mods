@@ -1,6 +1,10 @@
 {
   "name": "sandustry-mods",
   "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
     "tsc": "tsc --noEmit",
     "lint": "node scripts/check-jsx.mjs && oxlint --ignore-pattern '**/build/**' --ignore-pattern 'resources/**' --ignore-pattern '*.zip' tests scripts types mods",

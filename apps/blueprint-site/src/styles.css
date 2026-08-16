@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sd-950: #090b0f;
+}
+
+:root { color-scheme: dark; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background: #090b0f; }
+body { margin: 0; min-width: 320px; }
+button, a { -webkit-tap-highlight-color: transparent; }
+a { text-decoration: none; }
+*:focus-visible { outline: 2px solid #ffe700; outline-offset: 3px; }

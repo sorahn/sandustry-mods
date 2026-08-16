@@ -202,6 +202,17 @@ decoded data should remain local by default; no upload endpoint is required.
 
 ## 12. Build a GitHub Pages static site
 
+The site should live at `apps/blueprint-site/` and consume the reusable
+browser kit from `packages/sandustry-ui/` through a workspace dependency. The
+site owns blueprint-specific composition and deployment; the UI package owns
+general application chrome and controls.
+
+The site and UI package are intentionally outside the mod dependency graph.
+They must not import mod source, Sandustry runtime types, `sandkit`, `shared/`,
+or game-installed assets. Reverse-engineering material can be used as input for
+catalog generation, but the deployed site must contain only browser-ready
+artifacts.
+
 - [ ] Choose a static site toolchain that produces plain HTML, CSS, JavaScript,
       and assets.
 - [ ] Keep the blueprint codec usable without a server or API route.

@@ -19,6 +19,26 @@ import them normally; esbuild resolves and bundles those imports into each
 mod's standalone entrypoint. The shipped script still has no imports or
 exports, and shared modules should avoid mod-specific side effects.
 
+## Browser workspace boundary
+
+The standalone browser projects live alongside the mods but are completely
+separate dependency graphs:
+
+- Put the reusable browser UI kit in `packages/sandustry-ui/` and the blueprint
+  site in `apps/blueprint-site/`.
+- Browser projects must not import from `mods/`, `shared/`,
+  `types/sandustry.d.ts`, or any Sandustry runtime/game API.
+- Browser projects must not depend on `sandkit`, mod manifests, mod entrypoint
+  conventions, or game-installed assets at runtime.
+- Mod source must not import the browser UI kit. In-game UI remains a separate
+  mod implementation using the game runtime.
+- Give browser projects their own package manifests, TypeScript, Tailwind,
+  build, and test configuration; do not extend the mod build rules for them.
+- Reference material and DOM captures may inform browser implementations, but
+  are research data/documentation, not shared executable code.
+- Preserve the boundary with workspace/package rules or automated import checks
+  so accidental cross-project dependencies fail early.
+
 ## Planning workflow
 
 Repository-level implementation plans live in the top-level directory as

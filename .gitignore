@@ -2,6 +2,7 @@
 artifacts/
 *.zip
 mods/*/build/
+apps/*/dist/
 node_modules/
 .DS_Store
 *.tsbuildinfo
