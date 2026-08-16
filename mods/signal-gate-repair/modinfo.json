@@ -1,0 +1,20 @@
+{
+  "manifestVersion": 1,
+  "id": "sorahn.sandustry-signal-gate-repair",
+  "name": "Signal Gate Repair",
+  "version": "0.1.0",
+  "apiVersion": 1,
+  "author": "sorahn",
+  "entry": "entry.js",
+  "description": "Repairs open Signal Gates that retain stale Block terrain after loading.",
+  "dependencies": [],
+  "loadOrder": 1000,
+  "configSchema": {
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "labelKey": "Signal Gate repair enabled",
+      "descriptionKey": "Repairs Signal Gate terrain and state when a world loads."
+    }
+  }
+}
