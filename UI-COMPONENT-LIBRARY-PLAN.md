@@ -34,6 +34,20 @@ focus/selection, compact typography, and pixel-art-friendly imagery.
   is needed, whether it ships to runtime, and what browser/platform support it
   adds.
 
+## Framework boundary
+
+The core UI kit is framework-agnostic. Its public foundation is semantic HTML,
+CSS/Tailwind output, Web Components where behavior is needed, and normal DOM
+events/properties. Framework integrations are thin optional shims:
+
+- `@sandustry/ui` contains framework-neutral elements and styles.
+- `@sandustry/ui/react` contains React wrappers only; it is not the source of
+  component behavior or styling.
+- Future Vue/Svelte/etc. adapters should follow the same pattern and remain
+  optional exports.
+- The browser site may use the React adapter, but vanilla consumers should be
+  able to import the core package without React.
+
 ## Repository placement
 
 Keep the kit and site adjacent without mixing them into the mod pipeline:
