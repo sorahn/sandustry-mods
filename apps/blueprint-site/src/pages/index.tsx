@@ -644,7 +644,7 @@ function BlueprintMap({
           <span className="mr-1">{Math.round(zoom * 100)}%</span>
           <button
             type="button"
-            className="sd-button sd-button--compact"
+            className="sd-button sd-button--compact sd-button--no-shift"
             onClick={() => {
               const index = MAP_ZOOM_LEVELS.indexOf(snapMapZoom(zoom));
               setMapZoom(MAP_ZOOM_LEVELS[Math.max(0, index - 1)]);
@@ -656,7 +656,7 @@ function BlueprintMap({
           </button>
           <button
             type="button"
-            className="sd-button sd-button--compact"
+            className="sd-button sd-button--compact sd-button--no-shift"
             onClick={() => setMapZoom(1)}
             disabled={zoom === 1}
           >
@@ -664,7 +664,7 @@ function BlueprintMap({
           </button>
           <button
             type="button"
-            className="sd-button sd-button--compact"
+            className="sd-button sd-button--compact sd-button--no-shift"
             onClick={() => {
               const index = MAP_ZOOM_LEVELS.indexOf(snapMapZoom(zoom));
               setMapZoom(MAP_ZOOM_LEVELS[Math.min(MAP_ZOOM_LEVELS.length - 1, index + 1)]);
