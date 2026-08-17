@@ -9,6 +9,7 @@ import {
 } from "../utils/blueprint";
 import { catalogEntry, catalogRender, catalogRenderSize } from "../utils/catalog";
 import { debugComponent } from "../components/DebugComponentWrapper";
+import { catalogVisualFixture } from "../visual-fixtures/catalog";
 
 export function AppLayout() {
   return (
@@ -1432,7 +1433,7 @@ function BlueprintMap({
   );
 }
 
-export function BlueprintInspectorPage() {
+function BlueprintInspectorEditorPage() {
   const [remember, setRemember] = useState(
     () => typeof window !== "undefined" && readLocalValue(REMEMBER_BLUEPRINT_KEY) === "true",
   );
@@ -1670,4 +1671,38 @@ export function BlueprintInspectorPage() {
       ) : null}
     </section>
   );
+}
+
+export function BlueprintInspectorPage() {
+  const visualParams =
+    typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const visualFixture = visualParams?.get("visualFixture");
+  const visualBlueprintInput = visualParams?.get("visualBlueprint");
+  let visualBlueprint = visualFixture === "catalog" ? catalogVisualFixture : null;
+  if (visualBlueprintInput) {
+    try {
+      visualBlueprint = decodeBlueprint(visualBlueprintInput);
+    } catch (error) {
+      return (
+        <pre className="blueprint-visual-test-error">
+          {error instanceof Error ? error.message : "Unable to decode visual blueprint."}
+        </pre>
+      );
+    }
+  }
+  if (visualBlueprint) {
+    return (
+      <div className="blueprint-visual-test">
+        <BlueprintMap
+          blueprint={visualBlueprint}
+          remember={false}
+          blueprintKey={`visual-${visualBlueprint.name}`}
+          showSidebar={false}
+          showGrid={true}
+          showPngBackground={true}
+        />
+      </div>
+    );
+  }
+  return <BlueprintInspectorEditorPage />;
 }

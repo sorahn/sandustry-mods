@@ -33,3 +33,28 @@ a {
 .blueprint-map__canvas text {
   user-select: none;
 }
+
+.blueprint-visual-test {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  min-height: 100vh;
+  padding: 1rem;
+  background: #33a8ff;
+}
+
+.blueprint-visual-test .blueprint-map__viewport {
+  width: 100%;
+  height: calc(100vh - 2rem);
+  min-height: 0;
+}
+
+.blueprint-visual-test-error {
+  position: fixed;
+  inset: 1rem;
+  z-index: 100;
+  padding: 1rem;
+  color: #fecaca;
+  background: #1e293b;
+  white-space: pre-wrap;
+}

@@ -10,6 +10,8 @@
     "lint": "node scripts/check-jsx.mjs && oxlint --ignore-pattern '**/build/**' --ignore-pattern 'resources/**' --ignore-pattern '*.zip' tests scripts types mods",
     "check": "npm run tsc && npm run lint",
     "test:blueprint": "node scripts/test-blueprint-core.mjs",
+    "visual:render": "node scripts/render-blueprint-visual.mjs",
+    "visual:diff": "node scripts/render-blueprint-visual.mjs --diff",
     "catalog:extract": "node scripts/extract-native-catalog.mjs",
     "format:bundles": "node scripts/format-bundles.mjs",
     "format": "oxfmt --write .",

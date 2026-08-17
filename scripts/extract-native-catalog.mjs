@@ -210,6 +210,32 @@ const assetPresentationOverrides = new Map([
     "clearingFrameRight",
     { assetFrame: { width: 16, height: 20 }, assetClip: true, assetOffset: { y: -4 } },
   ],
+  // These native exports are complete sprites even though their presentation
+  // metadata uses a normal 16x16 frame. Keep the extractor from treating them
+  // as missing/cropped assets when the source dimensions are inspected.
+  ["snowmaker", { assetFrame: { width: 16, height: 16 }, assetClip: false }],
+  ["thermofroster", { assetFrame: { width: 16, height: 16 }, assetClip: false }],
+  [
+    "burnerBeltLeft",
+    { assetFrame: { width: 64, height: 16 }, assetClip: false },
+  ],
+  [
+    "burnerBeltRight",
+    { assetFrame: { width: 64, height: 16 }, assetClip: false },
+  ],
+  [
+    "heatCannonRight",
+    { assetFrame: { width: 23, height: 16 }, assetClip: false },
+  ],
+  ["heatCannonUp", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
+  [
+    "heatCannonLeft",
+    { assetFrame: { width: 23, height: 16 }, assetClip: false },
+  ],
+  [
+    "heatCannonDown",
+    { assetFrame: { width: 23, height: 16 }, assetClip: false },
+  ],
   ["kineticFieldEmitter", { assetOffset: { x: -16 } }],
   ["kineticFieldEmitterDown", { assetClip: false, assetOffset: { x: -16 } }],
   ["kineticFieldEmitterLeft", { assetClip: false, assetOffset: { x: -16 } }],

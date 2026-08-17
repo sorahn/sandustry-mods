@@ -1578,7 +1578,12 @@
       "assetSize": {
         "width": 64,
         "height": 16
-      }
+      },
+      "assetFrame": {
+        "width": 64,
+        "height": 16
+      },
+      "assetClip": false
     },
     {
       "type": "burnerBeltRight",
@@ -1651,9 +1656,10 @@
         "height": 16
       },
       "assetFrame": {
-        "width": 16,
+        "width": 64,
         "height": 16
-      }
+      },
+      "assetClip": false
     },
     {
       "type": "clearingFrameLeft",
@@ -2859,7 +2865,7 @@
         "height": 16
       },
       "assetFrame": {
-        "width": 16,
+        "width": 23,
         "height": 16
       },
       "assetClip": false,
@@ -2945,7 +2951,7 @@
         "height": 16
       },
       "assetFrame": {
-        "width": 16,
+        "width": 23,
         "height": 16
       },
       "assetClip": false,
@@ -3031,7 +3037,7 @@
         "height": 16
       },
       "assetFrame": {
-        "width": 16,
+        "width": 23,
         "height": 16
       },
       "assetClip": false
@@ -3116,7 +3122,7 @@
         "height": 16
       },
       "assetFrame": {
-        "width": 16,
+        "width": 23,
         "height": 16
       },
       "assetClip": false,
@@ -6265,7 +6271,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": false
     },
     {
       "type": "steamTurbine",
@@ -6724,7 +6731,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": false
     },
     {
       "type": "voidRift",

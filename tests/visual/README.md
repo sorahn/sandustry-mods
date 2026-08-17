@@ -1,0 +1,45 @@
+# Blueprint visual regression tests
+
+The catalog fixture and every `.txt` file in `blueprints/` render through the
+actual blueprint site and capture a PNG with headless Chrome. The current
+images and ImageMagick diffs are written under `artifacts/visual/`.
+
+Put one encoded blueprint per file in `tests/visual/blueprints/`, for example
+`tests/visual/blueprints/thermal-line.txt`. Both v2 binary strings and v2 text
+strings are accepted.
+
+Create or replace the checked-in baseline with:
+
+```sh
+npm run visual:render -- --update
+```
+
+Update one snapshot by its fixture name or blueprint filename without the
+`.txt` extension:
+
+```sh
+npm run visual:render -- --update --only thermal-line
+```
+
+Render without changing the baseline with:
+
+```sh
+npm run visual:render
+```
+
+Compare the current image with the baseline with:
+
+```sh
+npm run visual:diff
+```
+
+The same selector can limit comparisons:
+
+```sh
+npm run visual:diff -- --only thermal-line
+```
+
+The built-in catalog fixture is in
+`apps/blueprint-site/src/visual-fixtures/catalog.ts`. It intentionally covers
+the sprite families currently being corrected, including belts, pyros, and
+directional fans.
