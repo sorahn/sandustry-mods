@@ -1105,7 +1105,9 @@ function BlueprintMap({
                   }
                   // Sprites own their visible shape. A generic footprint border
                   // leaks through the transparent corners of triangle foundations.
-                  stroke={isSelected ? "#ffe700" : entry?.assetPath ? "none" : "#8491a3"}
+                  stroke={
+                    isSelected ? "#ffe700" : isCustomShape || entry?.assetPath ? "none" : "#8491a3"
+                  }
                   strokeWidth={isSelected ? "4" : "1.5"}
                 />
                 {isCustomShape
@@ -1120,7 +1122,7 @@ function BlueprintMap({
                             height={cell}
                             rx="2"
                             fill="#a47a45"
-                            stroke={isSelected ? "#ffe700" : "#6e4c2c"}
+                            stroke={showDebugCells ? (isSelected ? "#ffe700" : "#6e4c2c") : "none"}
                             strokeWidth={isSelected ? "2" : "1"}
                             pointerEvents="none"
                           />
