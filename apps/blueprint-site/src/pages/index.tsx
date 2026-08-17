@@ -710,9 +710,15 @@ function BlueprintMap({
   });
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
   const renderStructures = blueprint.data
-    .map((structure, index) => ({ structure, index }))
+    .map((structure, index) => {
+      const entry = catalogEntry(structure.type);
+      const render = entry ? catalogRender(entry) : undefined;
+      const z = typeof render?.z === "number" ? render.z : 0.5;
+      return { structure, index, z };
+    })
     .sort(
       (left, right) =>
+        left.z - right.z ||
         left.structure.y - right.structure.y ||
         left.structure.x - right.structure.x ||
         left.index - right.index,

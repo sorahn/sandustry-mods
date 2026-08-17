@@ -53,36 +53,12 @@ const DIRECTIONAL_NAME_ALIASES: Record<string, string> = {
 // intentionally continue through the renderer's unknown-content fallback.
 const MANUAL_CATALOG: CatalogEntry[] = [
   {
-    type: 11,
-    name: "Foundation",
-    category: "blocks",
-    footprint: { width: 4, height: 4 },
-    rotations: [-180, -90, 0, 90, 180],
-    source: "bundle structure definition + English localization",
-  },
-  {
     type: 17,
     name: "Filter",
     category: "logistics",
     footprint: { width: 4, height: 4 },
     rotations: [-180, 0, 180],
     source: "runtime definition + English localization",
-  },
-  {
-    type: 25,
-    name: "Liquid Vent",
-    category: "fluids",
-    footprint: { width: 4, height: 4 },
-    rotations: [-180, -90, 0, 90, 180],
-    source: "runtime definition + English localization",
-  },
-  {
-    type: "filterWall",
-    name: "Filter Wall",
-    category: "logistics",
-    footprint: { width: 4, height: 4 },
-    rotations: [-90, 90],
-    source: "runtime definition probe",
   },
   {
     type: "sandustryTestBlocksSource",
@@ -114,107 +90,6 @@ const CATALOG_OVERRIDES: Partial<Record<BlueprintType, Partial<CatalogEntry>>> =
     assetFrame: { width: 16, height: 20 },
     assetClip: true,
     assetOffset: { y: -4 },
-  },
-  snowmaker: {
-    assetFrame: { width: 16, height: 16 },
-    assetClip: false,
-  },
-  aurixiteCrystallizer: {
-    assetFrame: { width: 24, height: 24 },
-    assetClip: false,
-    assetScaleFactor: 14 / 16,
-    assetOffset: { x: 1.5, y: 1 },
-  },
-  launcherLeftMk2: {
-    assetScaleFactor: 14 / 16,
-    assetOffset: { x: 1, y: 1 },
-  },
-  launcherRightMk2: {
-    assetScaleFactor: 14 / 16,
-    assetOffset: { x: 1, y: 1 },
-  },
-  launcherUpMk2: {
-    assetScaleFactor: 14 / 16,
-    assetOffset: { x: 1, y: 1 },
-  },
-  signalGate: {
-    assetScaleFactor: 14 / 16,
-    assetOffset: { x: 1, y: 1 },
-  },
-  filterWall: {
-    // The exported wall sprite is 18×18 native pixels, but its structure
-    // footprint is 16×16. Scale it to the footprint and cancel the runtime
-    // render offset that centered the unscaled sprite.
-    assetScaleFactor: 16 / 18,
-    assetOffset: { x: 1, y: 1 },
-  },
-  kineticFieldEmitter: {
-    assetPath: "catalog/mods__kinetic_field_emitter.png",
-    assetSize: { width: 23, height: 16 },
-    assetFrame: { width: 23, height: 16 },
-    assetClip: false,
-    assetScaleFactor: 14 / 14,
-    assetOffset: { x: -16 },
-    assetRotation: 0,
-  },
-  kineticFieldEmitterDown: {
-    assetPath: "catalog/mods__kinetic_field_emitter.png",
-    assetSize: { width: 23, height: 16 },
-    assetFrame: { width: 23, height: 16 },
-    assetClip: false,
-    assetScaleFactor: 14 / 14,
-    assetOffset: { x: -16 },
-    assetRotation: 90,
-  },
-  kineticFieldEmitterLeft: {
-    assetPath: "catalog/mods__kinetic_field_emitter.png",
-    assetSize: { width: 23, height: 16 },
-    assetFrame: { width: 23, height: 16 },
-    assetClip: false,
-    assetScaleFactor: 14 / 14,
-    assetOffset: { x: -16 },
-    assetRotation: 180,
-  },
-  kineticFieldEmitterUp: {
-    assetPath: "catalog/mods__kinetic_field_emitter.png",
-    assetSize: { width: 23, height: 16 },
-    assetFrame: { width: 23, height: 16 },
-    assetClip: false,
-    assetScaleFactor: 14 / 14,
-    assetOffset: { x: -16 },
-    assetRotation: 270,
-  },
-  kineticFieldEmitterDownRight: {
-    assetPath: "catalog/mods__kinetic_field_emitter_diagonal.png",
-    assetSize: { width: 15, height: 15 },
-    assetFrame: { width: 15, height: 15 },
-    assetClip: false,
-    assetOffset: { x: -8, y: 8 },
-    assetRotation: 90,
-  },
-  kineticFieldEmitterDownLeft: {
-    assetPath: "catalog/mods__kinetic_field_emitter_diagonal.png",
-    assetSize: { width: 15, height: 15 },
-    assetFrame: { width: 15, height: 15 },
-    assetClip: false,
-    assetOffset: { x: -8, y: 8 },
-    assetRotation: 180,
-  },
-  kineticFieldEmitterUpLeft: {
-    assetPath: "catalog/mods__kinetic_field_emitter_diagonal.png",
-    assetSize: { width: 15, height: 15 },
-    assetFrame: { width: 15, height: 15 },
-    assetClip: false,
-    assetOffset: { x: -8, y: 8 },
-    assetRotation: 270,
-  },
-  kineticFieldEmitterUpRight: {
-    assetPath: "catalog/mods__kinetic_field_emitter_diagonal.png",
-    assetSize: { width: 15, height: 15 },
-    assetFrame: { width: 15, height: 15 },
-    assetClip: false,
-    assetOffset: { x: -8, y: 8 },
-    assetRotation: 0,
   },
 };
 

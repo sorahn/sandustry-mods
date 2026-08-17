@@ -185,7 +185,8 @@
       "assetFrame": {
         "width": 18,
         "height": 18
-      }
+      },
+      "assetRotation": 45
     },
     {
       "type": 5,
@@ -261,7 +262,12 @@
       "assetSize": {
         "width": 18,
         "height": 18
-      }
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      },
+      "assetRotation": 270
     },
     {
       "type": 6,
@@ -443,7 +449,12 @@
         "categoryKey": "logistics",
         "order": 40
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__block.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": 11,
@@ -611,8 +622,7 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      },
-      "assetRotation": 180
+      }
     },
     {
       "type": 14,
@@ -646,7 +656,7 @@
         "width": 16,
         "height": 16
       },
-      "assetRotation": 0
+      "assetRotation": 180
     },
     {
       "type": 15,
@@ -914,7 +924,16 @@
         ],
         "categoryKey": "blocks"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__velocity.png",
+      "assetSize": {
+        "width": 18,
+        "height": 417
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": 20,
@@ -1029,8 +1048,8 @@
         "height": 18
       },
       "assetFrame": {
-        "width": 18,
-        "height": 18
+        "width": 16,
+        "height": 16
       }
     },
     {
@@ -1069,7 +1088,16 @@
         ],
         "categoryKey": "logic"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__pipes_icon.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": 23,
@@ -1517,10 +1545,6 @@
       "assetPath": "catalog/mods__burner_belt_left.png",
       "assetSize": {
         "width": 64,
-        "height": 16
-      },
-      "assetFrame": {
-        "width": 16,
         "height": 16
       }
     },
@@ -2548,7 +2572,16 @@
         "name": "Glass Foundation",
         "description": "A transparent glass foundation."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__block.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "goldBattery",
@@ -2949,8 +2982,7 @@
         "width": 16,
         "height": 16
       },
-      "assetClip": false,
-      "assetRotation": 0
+      "assetClip": false
     },
     {
       "type": "heatCannonUp",
@@ -3255,7 +3287,13 @@
         "name": "Aerokinetic Fan",
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetRotation": 90
     },
     {
       "type": "kineticFieldEmitterDownLeft",
@@ -3336,7 +3374,17 @@
         "name": "Aerokinetic Fan",
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 15,
+        "height": 15
+      },
+      "assetRotation": 135
     },
     {
       "type": "kineticFieldEmitterDownRight",
@@ -3417,7 +3465,17 @@
         "name": "Aerokinetic Fan",
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 15,
+        "height": 15
+      },
+      "assetRotation": 45
     },
     {
       "type": "kineticFieldEmitterLeft",
@@ -3498,7 +3556,13 @@
         "name": "Aerokinetic Fan",
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetRotation": 180
     },
     {
       "type": "kineticFieldEmitterUp",
@@ -3579,7 +3643,13 @@
         "name": "Aerokinetic Fan",
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetRotation": 270
     },
     {
       "type": "kineticFieldEmitterUpLeft",
@@ -3660,7 +3730,17 @@
         "name": "Aerokinetic Fan",
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 15,
+        "height": 15
+      },
+      "assetRotation": 225
     },
     {
       "type": "kineticFieldEmitterUpRight",
@@ -3741,7 +3821,17 @@
         "name": "Aerokinetic Fan",
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 15,
+        "height": 15
+      },
+      "assetRotation": 315
     },
     {
       "type": "launcherLeftMk2",
@@ -4006,7 +4096,8 @@
       "assetFrame": {
         "width": 18,
         "height": 18
-      }
+      },
+      "assetRotation": 270
     },
     {
       "type": "prismalineWell",
