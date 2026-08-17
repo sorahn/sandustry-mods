@@ -320,9 +320,17 @@ const SAVED_BLUEPRINT_KEY = "sandustry.blueprintInspector.string";
 const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
 const SHOW_DEBUG_CELLS_KEY = "sandustry.blueprintInspector.showDebugCells";
 const SHOW_NAMES_KEY = "sandustry.blueprintInspector.showNames";
+const SHOW_MAP_SIDEBAR_KEY = "sandustry.blueprintInspector.showMapSidebar";
+const MAP_ZOOM_LEVELS = [0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
 const KINETIC_PRESS_SCALE = 4;
 const KINETIC_PRESS_EXPECTED_HEIGHT = 468;
 const KINETIC_PRESS_ANCHOR_OFFSET_CELLS = 3;
+
+function snapMapZoom(value: number) {
+  return MAP_ZOOM_LEVELS.reduce((nearest, level) =>
+    Math.abs(level - value) < Math.abs(nearest - value) ? level : nearest,
+  );
+}
 
 function readLocalValue(key: string) {
   try {
@@ -493,17 +501,19 @@ function BlueprintMap({
   blueprint,
   remember,
   blueprintKey,
+  showSidebar,
 }: {
   blueprint: Blueprint;
   remember: boolean;
   blueprintKey: string;
+  showSidebar: boolean;
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showDebugCells, setShowDebugCells] = useState(() =>
     readStoredBoolean(SHOW_DEBUG_CELLS_KEY, false),
   );
   const [showNames, setShowNames] = useState(() => readStoredBoolean(SHOW_NAMES_KEY, false));
-  const [zoom, setZoom] = useState(() => readStoredMapView(blueprintKey)?.zoom ?? 1);
+  const [zoom, setZoom] = useState(() => snapMapZoom(readStoredMapView(blueprintKey)?.zoom ?? 1));
   const [pan, setPan] = useState(() => readStoredMapView(blueprintKey)?.pan ?? { x: 0, y: 0 });
   const dragRef = useRef<{
     pointerId: number;
@@ -512,7 +522,7 @@ function BlueprintMap({
     moved: boolean;
   } | null>(null);
   const suppressClickRef = useRef(false);
-  const padding = 2;
+  const padding = 6;
   const cell = 56;
   const xs = blueprint.data.length
     ? blueprint.data.flatMap((structure) => {
@@ -538,10 +548,12 @@ function BlueprintMap({
   const height = (maxY - minY + padding * 2 + 1) * cell;
   const viewWidth = width / zoom;
   const viewHeight = height / zoom;
-  const maxPanX = Math.max(0, (width - viewWidth) / 2);
-  const maxPanY = Math.max(0, (height - viewHeight) / 2);
-  const viewX = maxPanX + pan.x;
-  const viewY = maxPanY + pan.y;
+  const centeredViewX = (width - viewWidth) / 2;
+  const centeredViewY = (height - viewHeight) / 2;
+  const maxPanX = zoom <= 1 ? 0 : Math.abs(centeredViewX);
+  const maxPanY = zoom <= 1 ? 0 : Math.abs(centeredViewY);
+  const viewX = centeredViewX + pan.x;
+  const viewY = centeredViewY + pan.y;
   const point = (x: number, y: number) => ({
     x: (x - minX + padding + 0.5) * cell,
     y: (y - minY + padding + 0.5) * cell,
@@ -580,9 +592,9 @@ function BlueprintMap({
   });
   useEffect(() => {
     const stored = remember ? readStoredMapView(blueprintKey) : null;
-    const restoredZoom = stored?.zoom ?? 1;
-    const restoredMaxPanX = Math.max(0, (width - width / restoredZoom) / 2);
-    const restoredMaxPanY = Math.max(0, (height - height / restoredZoom) / 2);
+    const restoredZoom = snapMapZoom(stored?.zoom ?? 1);
+    const restoredMaxPanX = restoredZoom <= 1 ? 0 : Math.abs((width - width / restoredZoom) / 2);
+    const restoredMaxPanY = restoredZoom <= 1 ? 0 : Math.abs((height - height / restoredZoom) / 2);
     setZoom(restoredZoom);
     setPan({
       x: Math.max(-restoredMaxPanX, Math.min(restoredMaxPanX, stored?.pan.x ?? 0)),
@@ -595,31 +607,49 @@ function BlueprintMap({
     writeLocalValue(SAVED_MAP_VIEW_KEY, JSON.stringify({ blueprint: blueprintKey, zoom, pan }));
   }, [blueprintKey, pan, remember, zoom]);
   const setMapZoom = (nextZoom: number) => {
-    const nextViewWidth = width / nextZoom;
-    const nextViewHeight = height / nextZoom;
-    const nextMaxPanX = Math.max(0, (width - nextViewWidth) / 2);
-    const nextMaxPanY = Math.max(0, (height - nextViewHeight) / 2);
+    const snappedZoom = snapMapZoom(nextZoom);
+    const nextViewWidth = width / snappedZoom;
+    const nextViewHeight = height / snappedZoom;
+    const nextCenteredViewX = (width - nextViewWidth) / 2;
+    const nextCenteredViewY = (height - nextViewHeight) / 2;
+    const nextMaxPanX = snappedZoom <= 1 ? 0 : Math.abs(nextCenteredViewX);
+    const nextMaxPanY = snappedZoom <= 1 ? 0 : Math.abs(nextCenteredViewY);
     const centerX = viewX + viewWidth / 2;
     const centerY = viewY + viewHeight / 2;
-    setZoom(nextZoom);
+    setZoom(snappedZoom);
     setPan({
-      x: Math.max(-nextMaxPanX, Math.min(nextMaxPanX, centerX - nextViewWidth / 2 - nextMaxPanX)),
-      y: Math.max(-nextMaxPanY, Math.min(nextMaxPanY, centerY - nextViewHeight / 2 - nextMaxPanY)),
+      x: Math.max(
+        -nextMaxPanX,
+        Math.min(nextMaxPanX, centerX - nextViewWidth / 2 - nextCenteredViewX),
+      ),
+      y: Math.max(
+        -nextMaxPanY,
+        Math.min(nextMaxPanY, centerY - nextViewHeight / 2 - nextCenteredViewY),
+      ),
     });
   };
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
+    <div
+      className={
+        showSidebar
+          ? "grid items-stretch gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]"
+          : "grid items-stretch"
+      }
+    >
       <div
-        className="blueprint-map__viewport overflow-hidden rounded border border-slate-800 bg-[#33a8ff] p-3"
+        className="blueprint-map__viewport relative min-h-[32rem] overflow-hidden rounded border border-slate-800 bg-[#33a8ff]"
         translate="no"
       >
-        <div className="mb-3 flex items-center justify-end gap-2 font-mono text-xs text-slate-500">
+        <div className="absolute right-3 top-3 z-10 flex items-center gap-2 rounded border border-slate-700/80 bg-slate-950/60 p-2 font-mono text-xs text-slate-300 shadow-lg backdrop-blur-sm">
           <span className="mr-1">{Math.round(zoom * 100)}%</span>
           <button
             type="button"
             className="sd-button sd-button--compact"
-            onClick={() => setMapZoom(Math.max(0.75, zoom / 1.25))}
-            disabled={zoom <= 0.75}
+            onClick={() => {
+              const index = MAP_ZOOM_LEVELS.indexOf(snapMapZoom(zoom));
+              setMapZoom(MAP_ZOOM_LEVELS[Math.max(0, index - 1)]);
+            }}
+            disabled={zoom <= MAP_ZOOM_LEVELS[0]}
             aria-label="Zoom out"
           >
             −
@@ -635,8 +665,11 @@ function BlueprintMap({
           <button
             type="button"
             className="sd-button sd-button--compact"
-            onClick={() => setMapZoom(Math.min(4, zoom * 1.25))}
-            disabled={zoom >= 4}
+            onClick={() => {
+              const index = MAP_ZOOM_LEVELS.indexOf(snapMapZoom(zoom));
+              setMapZoom(MAP_ZOOM_LEVELS[Math.min(MAP_ZOOM_LEVELS.length - 1, index + 1)]);
+            }}
+            disabled={zoom >= MAP_ZOOM_LEVELS[MAP_ZOOM_LEVELS.length - 1]}
             aria-label="Zoom in"
           >
             +
@@ -647,7 +680,7 @@ function BlueprintMap({
           role="img"
           aria-label={`${blueprint.name} structure map`}
           preserveAspectRatio="xMidYMid meet"
-          className="blueprint-map__canvas w-full"
+          className="blueprint-map__canvas absolute inset-0 h-full w-full"
           style={{
             cursor: dragRef.current ? "grabbing" : "grab",
             touchAction: "none",
@@ -920,84 +953,88 @@ function BlueprintMap({
           })}
         </svg>
       </div>
-      <aside className="flex flex-col border-l border-slate-800 pl-4 text-xs text-slate-400">
-        <p className="font-mono uppercase tracking-[0.18em] text-slate-500">Selected record</p>
-        {selected ? (
-          <div className="mt-3 space-y-3">
-            {(() => {
-              const entry = catalogEntry(selected.type);
-              const render = entry ? catalogRender(entry) : undefined;
-              const renderSize = render ? catalogRenderSize(render) : undefined;
-              return (
-                <>
-                  <p className="break-all font-mono text-yellow-200">
-                    {entry?.name ?? structureLabel(selected.type)}
-                  </p>
-                  {entry ? (
-                    <>
-                      <p>
-                        Catalog footprint{" "}
-                        <strong className="text-white">
-                          {entry.footprint.width}×{entry.footprint.height}
-                        </strong>
-                      </p>
-                      {entry.category ? (
+      {showSidebar ? (
+        <aside className="flex flex-col border-l border-slate-800 pl-4 text-xs text-slate-400">
+          <p className="font-mono uppercase tracking-[0.18em] text-slate-500">Selected record</p>
+          {selected ? (
+            <div className="mt-3 space-y-3">
+              {(() => {
+                const entry = catalogEntry(selected.type);
+                const render = entry ? catalogRender(entry) : undefined;
+                const renderSize = render ? catalogRenderSize(render) : undefined;
+                return (
+                  <>
+                    <p className="break-all font-mono text-yellow-200">
+                      {entry?.name ?? structureLabel(selected.type)}
+                    </p>
+                    {entry ? (
+                      <>
                         <p>
-                          Category <strong className="text-white">{entry.category}</strong>
+                          Catalog footprint{" "}
+                          <strong className="text-white">
+                            {entry.footprint.width}×{entry.footprint.height}
+                          </strong>
                         </p>
-                      ) : null}
-                      {entry.buildModes ? (
-                        <p className="break-all">Build modes {JSON.stringify(entry.buildModes)}</p>
-                      ) : null}
-                      {entry.variants ? (
-                        <p className="break-all">Variants {JSON.stringify(entry.variants)}</p>
-                      ) : null}
-                      {render?.imageName ? (
-                        <p className="break-all">
-                          Render asset <strong className="text-white">{render.imageName}</strong>
-                          {renderSize ? ` · ${renderSize.width}×${renderSize.height}px` : ""}
-                        </p>
-                      ) : null}
-                      <details className="rounded border border-slate-800 bg-black/30 p-2">
-                        <summary className="cursor-pointer text-slate-300">
-                          Runtime definition
-                        </summary>
-                        <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-all text-[11px] leading-5 text-slate-500">
-                          {JSON.stringify(entry.definition ?? entry, null, 2)}
-                        </pre>
-                      </details>
-                    </>
-                  ) : null}
-                  <p>
-                    Position{" "}
-                    <strong className="text-white">
-                      {selected.x}, {selected.y}
-                    </strong>
-                  </p>
-                  <p className="break-all whitespace-pre-wrap">
-                    {selected.filter
-                      ? `filter ${JSON.stringify(selected.filter, null, 2)}`
-                      : "No filter"}
-                  </p>
-                  <p className="break-all whitespace-pre-wrap">
-                    {selected.data !== undefined
-                      ? `data ${JSON.stringify(selected.data, null, 2)}`
-                      : "No structure data"}
-                  </p>
-                </>
-              );
-            })()}
-          </div>
-        ) : (
-          <p className="mt-3 leading-6">Choose a tile to inspect its raw blueprint record.</p>
-        )}
-        {debugCellsToggle || debugNamesToggle ? (
-          <div className="mt-auto flex flex-col items-end gap-2 pt-4">
-            {debugNamesToggle}
-            {debugCellsToggle}
-          </div>
-        ) : null}
-      </aside>
+                        {entry.category ? (
+                          <p>
+                            Category <strong className="text-white">{entry.category}</strong>
+                          </p>
+                        ) : null}
+                        {entry.buildModes ? (
+                          <p className="break-all">
+                            Build modes {JSON.stringify(entry.buildModes)}
+                          </p>
+                        ) : null}
+                        {entry.variants ? (
+                          <p className="break-all">Variants {JSON.stringify(entry.variants)}</p>
+                        ) : null}
+                        {render?.imageName ? (
+                          <p className="break-all">
+                            Render asset <strong className="text-white">{render.imageName}</strong>
+                            {renderSize ? ` · ${renderSize.width}×${renderSize.height}px` : ""}
+                          </p>
+                        ) : null}
+                        <details className="rounded border border-slate-800 bg-black/30 p-2">
+                          <summary className="cursor-pointer text-slate-300">
+                            Runtime definition
+                          </summary>
+                          <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-all text-[11px] leading-5 text-slate-500">
+                            {JSON.stringify(entry.definition ?? entry, null, 2)}
+                          </pre>
+                        </details>
+                      </>
+                    ) : null}
+                    <p>
+                      Position{" "}
+                      <strong className="text-white">
+                        {selected.x}, {selected.y}
+                      </strong>
+                    </p>
+                    <p className="break-all whitespace-pre-wrap">
+                      {selected.filter
+                        ? `filter ${JSON.stringify(selected.filter, null, 2)}`
+                        : "No filter"}
+                    </p>
+                    <p className="break-all whitespace-pre-wrap">
+                      {selected.data !== undefined
+                        ? `data ${JSON.stringify(selected.data, null, 2)}`
+                        : "No structure data"}
+                    </p>
+                  </>
+                );
+              })()}
+            </div>
+          ) : (
+            <p className="mt-3 leading-6">Choose a tile to inspect its raw blueprint record.</p>
+          )}
+          {debugCellsToggle || debugNamesToggle ? (
+            <div className="mt-auto flex flex-col items-end gap-2 pt-4">
+              {debugNamesToggle}
+              {debugCellsToggle}
+            </div>
+          ) : null}
+        </aside>
+      ) : null}
     </div>
   );
 }
@@ -1013,6 +1050,9 @@ export function BlueprintInspectorPage() {
     return readLocalValue(SAVED_BLUEPRINT_KEY) ?? "";
   });
   const [blueprint, setBlueprint] = useState<Blueprint | null>(null);
+  const [showMapSidebar, setShowMapSidebar] = useState(() =>
+    readStoredBoolean(SHOW_MAP_SIDEBAR_KEY, false),
+  );
   const [inspectedBlueprintKey, setInspectedBlueprintKey] = useState("");
   const [summary, setSummary] = useState<BlueprintSummary | null>(null);
   const [message, setMessage] = useState("Paste a v2 blueprint string to inspect it.");
@@ -1127,12 +1167,31 @@ export function BlueprintInspectorPage() {
               </span>
             </div>
           </Panel>
-          <Panel title="Blueprint map">
+          <Panel
+            title="Blueprint map"
+            header={
+              <button
+                type="button"
+                className="sd-button sd-button--compact"
+                onClick={() => {
+                  setShowMapSidebar((visible) => {
+                    const nextValue = !visible;
+                    writeLocalValue(SHOW_MAP_SIDEBAR_KEY, String(nextValue));
+                    return nextValue;
+                  });
+                }}
+                aria-expanded={showMapSidebar}
+              >
+                {showMapSidebar ? "Hide sidebar" : "Show sidebar"}
+              </button>
+            }
+          >
             <div className="p-4">
               <BlueprintMap
                 blueprint={blueprint}
                 remember={remember}
                 blueprintKey={inspectedBlueprintKey}
+                showSidebar={showMapSidebar}
               />
               <p className="mt-4 text-xs text-slate-500">
                 The captured native runtime catalog supplies names and footprints. Other content

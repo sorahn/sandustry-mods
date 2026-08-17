@@ -95,6 +95,11 @@ sd-button {
   color: var(--sd-yellow);
   background: var(--sd-yellow-soft);
 }
+.sd-button--compact {
+  min-height: 0;
+  padding: calc(var(--sd-space) * 0.75) calc(var(--sd-space) * 1.5);
+  font-size: 10px;
+}
 .sd-button:disabled {
   left: 0;
   border-color: rgb(100 116 139 / 0.1);

@@ -1518,6 +1518,10 @@
       "assetSize": {
         "width": 64,
         "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
       }
     },
     {
