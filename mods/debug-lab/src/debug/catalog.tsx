@@ -12,6 +12,89 @@ import {
 
 type StructureType = string | number;
 
+const CATALOG_EXPORT_ID = "sandustry-debug-lab-catalog-export";
+let catalogExportText = "";
+let catalogExportOpen = false;
+let catalogExportRepaint: ((value: (current: number) => number) => void) | null = null;
+let catalogExportContext: DebugContext | null = null;
+
+function CatalogExportModal(): unknown {
+  const React = catalogExportContext?.sandkit.react as UnknownRecord | undefined;
+  if (!React) return null;
+  const [, repaint] = React.useState(0);
+  React.useEffect(() => {
+    catalogExportRepaint = repaint;
+    return () => {
+      if (catalogExportRepaint === repaint) catalogExportRepaint = null;
+    };
+  }, []);
+  if (!catalogExportOpen) return null;
+
+  const context = catalogExportContext;
+  const close = () => {
+    catalogExportOpen = false;
+    catalogExportRepaint?.((value) => value + 1);
+  };
+  const copy = () => {
+    void navigator.clipboard
+      ?.writeText(catalogExportText)
+      .then(() => toast(context!, "structure catalog JSON copied to the clipboard"))
+      .catch(() => toast(context!, "catalog is shown in the modal; clipboard access failed"));
+  };
+  return (
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/70 p-6"
+      onClick={close}
+    >
+      <div
+        className="flex h-[min(80vh,700px)] w-[min(90vw,1000px)] flex-col rounded border border-slate-700 bg-slate-950 p-4 shadow-2xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className="mb-3 flex items-center justify-between gap-4">
+          <div>
+            <div className="font-mono text-sm font-bold text-white">Structure catalog export</div>
+            <div className="mt-1 font-mono text-xs text-slate-400">F8 generated report</div>
+          </div>
+          <button type="button" className="sd-button sd-button--compact" onClick={close}>
+            Close
+          </button>
+        </div>
+        <textarea
+          className="min-h-0 flex-1 resize-none rounded border border-slate-700 bg-black p-3 font-mono text-xs leading-5 text-slate-300 outline-none"
+          value={catalogExportText}
+          readOnly
+          spellCheck={false}
+          onFocus={(event) => event.currentTarget.select()}
+        />
+        <div className="mt-3 flex justify-end gap-2">
+          <button type="button" className="sd-button sd-button--accent" onClick={copy}>
+            Copy JSON
+          </button>
+          <button type="button" className="sd-button" onClick={close}>
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function openCatalogExport(context: DebugContext, text: string): void {
+  catalogExportContext = context;
+  catalogExportText = text;
+  catalogExportOpen = true;
+  try {
+    const dispose = context.api.ui.inject(CATALOG_EXPORT_ID, CatalogExportModal);
+    if (typeof dispose !== "function") {
+      toast(context, "catalog generated; UI injection is unavailable");
+      return;
+    }
+    catalogExportRepaint?.((value) => value + 1);
+  } catch {
+    toast(context, "catalog generated; UI injection failed");
+  }
+}
+
 function isStructureLikePath(path: string[]): boolean {
   return path.some((part) => /structure|building|block/i.test(part));
 }
@@ -131,13 +214,15 @@ export function copyStructureCatalog(context: DebugContext): void {
         : null,
     entries,
   };
+  const exportText = JSON.stringify(jsonSafe(catalog), null, 2);
   console.group(`${LOG_PREFIX} structure catalog`);
   console.log(
     `discovered ${entries.length} structure definition(s) from ${candidates.size} candidate value(s)`,
   );
   logCopyable("STRUCTURE_CATALOG", catalog);
   console.groupEnd();
-  toast(context, `copied ${entries.length} structure definitions to the console`);
+  openCatalogExport(context, exportText);
+  toast(context, `generated ${entries.length} structure definitions`);
 }
 
 export function dumpCatalogNamespaces(context: DebugContext): void {

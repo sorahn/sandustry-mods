@@ -273,3 +273,11 @@ further debugging, test these cases in Sandustry:
 If the game does not accept the all-zero structure shape or the `single` build
 mode, compare against the supplied v1 Rocket Dispenser and adjust the structure
 registration while preserving the 4×4 geometry and `misc` category.
+
+## Debug Lab F8 snapshots
+
+The latest manually captured Debug Lab F8 export belongs in
+`resources/f8-results.json`. It may be empty until the user performs an F8
+export. When populated, treat it as the authoritative snapshot for structure
+catalog and runtime-debugging work, and expect the user to replace it with the
+most recent F8 results when needed.
