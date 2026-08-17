@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-17T05:14:02.762Z",
+  "generatedAt": "2026-08-17T05:38:27.469Z",
   "source": "local Sandustry app.asar + building-menu.html",
   "assets": [
     {
@@ -2925,6 +2925,1131 @@
       "size": {
         "width": 16,
         "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/5050.png",
+      "file": "catalog/mods__5050.png",
+      "bytes": 203,
+      "size": {
+        "width": 24,
+        "height": 24
+      }
+    },
+    {
+      "source": "dist/mods/activity_heatmap_icon.png",
+      "file": "catalog/mods__activity_heatmap_icon.png",
+      "bytes": 354,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/aurixite_crystallizer.png",
+      "file": "catalog/mods__aurixite_crystallizer.png",
+      "bytes": 260,
+      "size": {
+        "width": 24,
+        "height": 24
+      }
+    },
+    {
+      "source": "dist/mods/burner_belt_left.png",
+      "file": "catalog/mods__burner_belt_left.png",
+      "bytes": 438,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/burner_belt_right.png",
+      "file": "catalog/mods__burner_belt_right.png",
+      "bytes": 441,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/caulkGun.png",
+      "file": "catalog/mods__caulkGun.png",
+      "bytes": 341,
+      "size": {
+        "width": 22,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/clearing_frame_left.png",
+      "file": "catalog/mods__clearing_frame_left.png",
+      "bytes": 524,
+      "size": {
+        "width": 64,
+        "height": 20
+      }
+    },
+    {
+      "source": "dist/mods/clearing_frame_right.png",
+      "file": "catalog/mods__clearing_frame_right.png",
+      "bytes": 517,
+      "size": {
+        "width": 64,
+        "height": 20
+      }
+    },
+    {
+      "source": "dist/mods/cold_icon.png",
+      "file": "catalog/mods__cold_icon.png",
+      "bytes": 147,
+      "size": {
+        "width": 9,
+        "height": 9
+      }
+    },
+    {
+      "source": "dist/mods/conveyor_left_mk2_hollow.png",
+      "file": "catalog/mods__conveyor_left_mk2_hollow.png",
+      "bytes": 218,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/conveyor_left_mk2.png",
+      "file": "catalog/mods__conveyor_left_mk2.png",
+      "bytes": 516,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/conveyor_right_mk2_hollow.png",
+      "file": "catalog/mods__conveyor_right_mk2_hollow.png",
+      "bytes": 218,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/conveyor_right_mk2.png",
+      "file": "catalog/mods__conveyor_right_mk2.png",
+      "bytes": 505,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/conveyor_tube_right.png",
+      "file": "catalog/mods__conveyor_tube_right.png",
+      "bytes": 428,
+      "size": {
+        "width": 64,
+        "height": 20
+      }
+    },
+    {
+      "source": "dist/mods/copperBlock.png",
+      "file": "catalog/mods__copperBlock.png",
+      "bytes": 1217,
+      "size": {
+        "width": 160,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/copperMold.png",
+      "file": "catalog/mods__copperMold.png",
+      "bytes": 281,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/corraller_icon.png",
+      "file": "catalog/mods__corraller_icon.png",
+      "bytes": 375,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/corraller.png",
+      "file": "catalog/mods__corraller.png",
+      "bytes": 356,
+      "size": {
+        "width": 30,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/critter_fence.png",
+      "file": "catalog/mods__critter_fence.png",
+      "bytes": 344,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/crystal.png",
+      "file": "catalog/mods__crystal.png",
+      "bytes": 169,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/crystal2.png",
+      "file": "catalog/mods__crystal2.png",
+      "bytes": 145,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/crystal3.png",
+      "file": "catalog/mods__crystal3.png",
+      "bytes": 152,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/drill_icon.png",
+      "file": "catalog/mods__drill_icon.png",
+      "bytes": 234,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/drill.png",
+      "file": "catalog/mods__drill.png",
+      "bytes": 412,
+      "size": {
+        "width": 30,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/earth_stratacore.png",
+      "file": "catalog/mods__earth_stratacore.png",
+      "bytes": 351,
+      "size": {
+        "width": 18,
+        "height": 18
+      }
+    },
+    {
+      "source": "dist/mods/electricity_connector.png",
+      "file": "catalog/mods__electricity_connector.png",
+      "bytes": 388,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/energy_siphon.png",
+      "file": "catalog/mods__energy_siphon.png",
+      "bytes": 297,
+      "size": {
+        "width": 26,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/entity_count_icon.png",
+      "file": "catalog/mods__entity_count_icon.png",
+      "bytes": 423,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/eyes.png",
+      "file": "catalog/mods__eyes.png",
+      "bytes": 265,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/fan_diagonal.png",
+      "file": "catalog/mods__fan_diagonal.png",
+      "bytes": 404,
+      "size": {
+        "width": 15,
+        "height": 15
+      }
+    },
+    {
+      "source": "dist/mods/fan.png",
+      "file": "catalog/mods__fan.png",
+      "bytes": 332,
+      "size": {
+        "width": 23,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/filter_left_mk2.png",
+      "file": "catalog/mods__filter_left_mk2.png",
+      "bytes": 444,
+      "size": {
+        "width": 72,
+        "height": 18
+      }
+    },
+    {
+      "source": "dist/mods/filter_right_mk2.png",
+      "file": "catalog/mods__filter_right_mk2.png",
+      "bytes": 451,
+      "size": {
+        "width": 72,
+        "height": 18
+      }
+    },
+    {
+      "source": "dist/mods/filter_wall_mk2.png",
+      "file": "catalog/mods__filter_wall_mk2.png",
+      "bytes": 253,
+      "size": {
+        "width": 18,
+        "height": 18
+      }
+    },
+    {
+      "source": "dist/mods/filter_wall.png",
+      "file": "catalog/mods__filter_wall.png",
+      "bytes": 216,
+      "size": {
+        "width": 18,
+        "height": 18
+      }
+    },
+    {
+      "source": "dist/mods/flare_gun_icon.png",
+      "file": "catalog/mods__flare_gun_icon.png",
+      "bytes": 444,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/flare.png",
+      "file": "catalog/mods__flare.png",
+      "bytes": 139,
+      "size": {
+        "width": 17,
+        "height": 17
+      }
+    },
+    {
+      "source": "dist/mods/flareGun.png",
+      "file": "catalog/mods__flareGun.png",
+      "bytes": 301,
+      "size": {
+        "width": 22,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/flashlight_icon.png",
+      "file": "catalog/mods__flashlight_icon.png",
+      "bytes": 333,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/flashlight.png",
+      "file": "catalog/mods__flashlight.png",
+      "bytes": 221,
+      "size": {
+        "width": 22,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/foliage.png",
+      "file": "catalog/mods__foliage.png",
+      "bytes": 198,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/foliage2.png",
+      "file": "catalog/mods__foliage2.png",
+      "bytes": 202,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/foliage3.png",
+      "file": "catalog/mods__foliage3.png",
+      "bytes": 188,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/goldBattery.png",
+      "file": "catalog/mods__goldBattery.png",
+      "bytes": 387,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/grass.png",
+      "file": "catalog/mods__grass.png",
+      "bytes": 158,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/grass2.png",
+      "file": "catalog/mods__grass2.png",
+      "bytes": 163,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/grass3.png",
+      "file": "catalog/mods__grass3.png",
+      "bytes": 171,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/heat_cannon.png",
+      "file": "catalog/mods__heat_cannon.png",
+      "bytes": 410,
+      "size": {
+        "width": 23,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/heat_icon.png",
+      "file": "catalog/mods__heat_icon.png",
+      "bytes": 171,
+      "size": {
+        "width": 9,
+        "height": 9
+      }
+    },
+    {
+      "source": "dist/mods/implosion_gun.png",
+      "file": "catalog/mods__implosion_gun.png",
+      "bytes": 316,
+      "size": {
+        "width": 22,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/kinetic_field_emitter_diagonal.png",
+      "file": "catalog/mods__kinetic_field_emitter_diagonal.png",
+      "bytes": 439,
+      "size": {
+        "width": 15,
+        "height": 15
+      }
+    },
+    {
+      "source": "dist/mods/kinetic_field_emitter.png",
+      "file": "catalog/mods__kinetic_field_emitter.png",
+      "bytes": 370,
+      "size": {
+        "width": 23,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/laser_icon.png",
+      "file": "catalog/mods__laser_icon.png",
+      "bytes": 236,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/laser.png",
+      "file": "catalog/mods__laser.png",
+      "bytes": 299,
+      "size": {
+        "width": 26,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/launcher_left_mk2.png",
+      "file": "catalog/mods__launcher_left_mk2.png",
+      "bytes": 350,
+      "size": {
+        "width": 18,
+        "height": 26
+      }
+    },
+    {
+      "source": "dist/mods/launcher_mk2.png",
+      "file": "catalog/mods__launcher_mk2.png",
+      "bytes": 190,
+      "size": {
+        "width": 18,
+        "height": 18
+      }
+    },
+    {
+      "source": "dist/mods/launcher_right_mk2.png",
+      "file": "catalog/mods__launcher_right_mk2.png",
+      "bytes": 332,
+      "size": {
+        "width": 18,
+        "height": 26
+      }
+    },
+    {
+      "source": "dist/mods/light_bug.png",
+      "file": "catalog/mods__light_bug.png",
+      "bytes": 241,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/locator.png",
+      "file": "catalog/mods__locator.png",
+      "bytes": 299,
+      "size": {
+        "width": 22,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/lumling.png",
+      "file": "catalog/mods__lumling.png",
+      "bytes": 373,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/minimap_icon.png",
+      "file": "catalog/mods__minimap_icon.png",
+      "bytes": 244,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/mushroom.png",
+      "file": "catalog/mods__mushroom.png",
+      "bytes": 145,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/mushroom2.png",
+      "file": "catalog/mods__mushroom2.png",
+      "bytes": 150,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/mushroom3.png",
+      "file": "catalog/mods__mushroom3.png",
+      "bytes": 160,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/no_energy.png",
+      "file": "catalog/mods__no_energy.png",
+      "bytes": 160,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/no_heat.png",
+      "file": "catalog/mods__no_heat.png",
+      "bytes": 234,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/playerhead.png",
+      "file": "catalog/mods__playerhead.png",
+      "bytes": 165,
+      "size": {
+        "width": 18,
+        "height": 18
+      }
+    },
+    {
+      "source": "dist/mods/powerBrick.png",
+      "file": "catalog/mods__powerBrick.png",
+      "bytes": 1267,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/prismite_well.png",
+      "file": "catalog/mods__prismite_well.png",
+      "bytes": 272,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/quantum_portal_exit.png",
+      "file": "catalog/mods__quantum_portal_exit.png",
+      "bytes": 382,
+      "size": {
+        "width": 18,
+        "height": 18
+      }
+    },
+    {
+      "source": "dist/mods/quantum_portal.png",
+      "file": "catalog/mods__quantum_portal.png",
+      "bytes": 386,
+      "size": {
+        "width": 18,
+        "height": 18
+      }
+    },
+    {
+      "source": "dist/mods/quantumPortal.png",
+      "file": "catalog/mods__quantumPortal.png",
+      "bytes": 323,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/quantumPortalExit.png",
+      "file": "catalog/mods__quantumPortalExit.png",
+      "bytes": 324,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/recall_shard_icon.png",
+      "file": "catalog/mods__recall_shard_icon.png",
+      "bytes": 427,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/recall_shard.png",
+      "file": "catalog/mods__recall_shard.png",
+      "bytes": 271,
+      "size": {
+        "width": 22,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/recon_drone.png",
+      "file": "catalog/mods__recon_drone.png",
+      "bytes": 212,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/resin_weaver.png",
+      "file": "catalog/mods__resin_weaver.png",
+      "bytes": 275,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/shinelet.png",
+      "file": "catalog/mods__shinelet.png",
+      "bytes": 292,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalAnd.png",
+      "file": "catalog/mods__signalAnd.png",
+      "bytes": 305,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalBuffer.png",
+      "file": "catalog/mods__signalBuffer.png",
+      "bytes": 171,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalButton.png",
+      "file": "catalog/mods__signalButton.png",
+      "bytes": 266,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalCounter4.png",
+      "file": "catalog/mods__signalCounter4.png",
+      "bytes": 288,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalGate.png",
+      "file": "catalog/mods__signalGate.png",
+      "bytes": 381,
+      "size": {
+        "width": 54,
+        "height": 18
+      }
+    },
+    {
+      "source": "dist/mods/signalLamp.png",
+      "file": "catalog/mods__signalLamp.png",
+      "bytes": 257,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalNand.png",
+      "file": "catalog/mods__signalNand.png",
+      "bytes": 310,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalNor.png",
+      "file": "catalog/mods__signalNor.png",
+      "bytes": 311,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalNot.png",
+      "file": "catalog/mods__signalNot.png",
+      "bytes": 286,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalOr.png",
+      "file": "catalog/mods__signalOr.png",
+      "bytes": 317,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalPresenceSensor.png",
+      "file": "catalog/mods__signalPresenceSensor.png",
+      "bytes": 396,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalPulseSensor.png",
+      "file": "catalog/mods__signalPulseSensor.png",
+      "bytes": 385,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalRepeater.png",
+      "file": "catalog/mods__signalRepeater.png",
+      "bytes": 301,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalSensor.png",
+      "file": "catalog/mods__signalSensor.png",
+      "bytes": 380,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalSwitch.png",
+      "file": "catalog/mods__signalSwitch.png",
+      "bytes": 324,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalToggle.png",
+      "file": "catalog/mods__signalToggle.png",
+      "bytes": 283,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalXnor.png",
+      "file": "catalog/mods__signalXnor.png",
+      "bytes": 327,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/signalXor.png",
+      "file": "catalog/mods__signalXor.png",
+      "bytes": 323,
+      "size": {
+        "width": 32,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/smelter.png",
+      "file": "catalog/mods__smelter.png",
+      "bytes": 290,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/snowmaker.png",
+      "file": "catalog/mods__snowmaker.png",
+      "bytes": 275,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/spiral_swarm_icon.png",
+      "file": "catalog/mods__spiral_swarm_icon.png",
+      "bytes": 424,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/sprint_boost_icon.png",
+      "file": "catalog/mods__sprint_boost_icon.png",
+      "bytes": 198,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/steamTurbine_alt.png",
+      "file": "catalog/mods__steamTurbine_alt.png",
+      "bytes": 345,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/steamTurbine.png",
+      "file": "catalog/mods__steamTurbine.png",
+      "bytes": 291,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/swarm_console.png",
+      "file": "catalog/mods__swarm_console.png",
+      "bytes": 496,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/swarm_strikers_icon.png",
+      "file": "catalog/mods__swarm_strikers_icon.png",
+      "bytes": 428,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/swarm_zoning_icon.png",
+      "file": "catalog/mods__swarm_zoning_icon.png",
+      "bytes": 369,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/sweeper_drone_icon.png",
+      "file": "catalog/mods__sweeper_drone_icon.png",
+      "bytes": 225,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/sweeper.png",
+      "file": "catalog/mods__sweeper.png",
+      "bytes": 211,
+      "size": {
+        "width": 11,
+        "height": 11
+      }
+    },
+    {
+      "source": "dist/mods/sweeperLauncher.png",
+      "file": "catalog/mods__sweeperLauncher.png",
+      "bytes": 281,
+      "size": {
+        "width": 20,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/synthesizer_icon.png",
+      "file": "catalog/mods__synthesizer_icon.png",
+      "bytes": 176,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/thermal_icon.png",
+      "file": "catalog/mods__thermal_icon.png",
+      "bytes": 252,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/thermal_relay.png",
+      "file": "catalog/mods__thermal_relay.png",
+      "bytes": 256,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/thermodryer_active.png",
+      "file": "catalog/mods__thermodryer_active.png",
+      "bytes": 354,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/thermodryer.png",
+      "file": "catalog/mods__thermodryer.png",
+      "bytes": 183,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/thermofroster_cold.png",
+      "file": "catalog/mods__thermofroster_cold.png",
+      "bytes": 428,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/thermofroster.png",
+      "file": "catalog/mods__thermofroster.png",
+      "bytes": 415,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/trowel.png",
+      "file": "catalog/mods__trowel.png",
+      "bytes": 460,
+      "size": {
+        "width": 30,
+        "height": 14
+      }
+    },
+    {
+      "source": "dist/mods/void_gun_icon.png",
+      "file": "catalog/mods__void_gun_icon.png",
+      "bytes": 373,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/void_projectile.png",
+      "file": "catalog/mods__void_projectile.png",
+      "bytes": 139,
+      "size": {
+        "width": 17,
+        "height": 17
+      }
+    },
+    {
+      "source": "dist/mods/voidbloom_icon.png",
+      "file": "catalog/mods__voidbloom_icon.png",
+      "bytes": 184,
+      "size": {
+        "width": 9,
+        "height": 9
+      }
+    },
+    {
+      "source": "dist/mods/voidgrazer.png",
+      "file": "catalog/mods__voidgrazer.png",
+      "bytes": 302,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/voidjuice_icon.png",
+      "file": "catalog/mods__voidjuice_icon.png",
+      "bytes": 159,
+      "size": {
+        "width": 9,
+        "height": 9
+      }
+    },
+    {
+      "source": "dist/mods/voidRift.png",
+      "file": "catalog/mods__voidRift.png",
+      "bytes": 1298,
+      "size": {
+        "width": 64,
+        "height": 64
+      }
+    },
+    {
+      "source": "dist/mods/voidwarp.png",
+      "file": "catalog/mods__voidwarp.png",
+      "bytes": 943,
+      "size": {
+        "width": 48,
+        "height": 64
+      }
+    },
+    {
+      "source": "dist/mods/volcanizer_icon.png",
+      "file": "catalog/mods__volcanizer_icon.png",
+      "bytes": 198,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
+    },
+    {
+      "source": "dist/mods/volcanizer.png",
+      "file": "catalog/mods__volcanizer.png",
+      "bytes": 337,
+      "size": {
+        "width": 22,
+        "height": 24
       }
     }
   ]

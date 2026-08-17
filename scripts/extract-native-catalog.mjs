@@ -50,9 +50,13 @@ const variantAssetFrames = new Map([
   ["conveyorRightMk2", { width: 16, height: 16 }],
   ["filterLeftMk2", { width: 18, height: 18 }],
   ["filterRightMk2", { width: 18, height: 18 }],
-  ["launcherLeftMk2", { width: 18, height: 18 }],
-  ["launcherRightMk2", { width: 18, height: 18 }],
+  ["launcherLeftMk2", { width: 18, height: 26 }],
+  ["launcherRightMk2", { width: 18, height: 26 }],
   ["launcherUpMk2", { width: 18, height: 18 }],
+  ["heatCannonRight", { width: 16, height: 16 }],
+  ["heatCannonUp", { width: 16, height: 16 }],
+  ["heatCannonLeft", { width: 16, height: 16 }],
+  ["heatCannonDown", { width: 16, height: 16 }],
 ]);
 
 const variantAssetRotations = new Map([
@@ -60,6 +64,17 @@ const variantAssetRotations = new Map([
   [13, 0],
   [14, 180],
   [15, 90],
+  ["heatCannonRight", 0],
+  ["heatCannonUp", 270],
+  ["heatCannonLeft", 180],
+  ["heatCannonDown", 90],
+]);
+
+const assetClipOverrides = new Map([
+  ["heatCannonRight", false],
+  ["heatCannonUp", false],
+  ["heatCannonLeft", false],
+  ["heatCannonDown", false],
 ]);
 
 const bottomAnchoredTypes = new Set([20]);
@@ -139,7 +154,9 @@ const files = flattenFiles(header);
 const blueprintCatalog = JSON.parse(fs.readFileSync(f8Path, "utf8"));
 const menuAssets = capturedMenuAssets();
 const requested = [...files.keys()].filter(
-  (value) => value.startsWith("dist/img/") && /\.(png|webp|jpg|jpeg)$/i.test(value),
+  (value) =>
+    (value.startsWith("dist/img/") || value.startsWith("dist/mods/")) &&
+    /\.(png|webp|jpg|jpeg)$/i.test(value),
 );
 const assets = [];
 fs.mkdirSync(assetRoot, { recursive: true });
@@ -172,9 +189,7 @@ const catalogWithAssets = {
     const variantAsset = variantSource ? assetBySource.get(variantSource) : undefined;
     const assetPath = renderAsset ?? menuAsset ?? variantAsset;
     const asset = assetPath ? assets.find((candidate) => candidate.file === assetPath) : undefined;
-    const assetFrame =
-      menuCapture?.frame ??
-      variantAssetFrames.get(entry.type);
+    const assetFrame = variantAssetFrames.get(entry.type) ?? menuCapture?.frame;
     return assetPath
       ? {
           ...entry,
@@ -182,7 +197,10 @@ const catalogWithAssets = {
           ...(bottomAnchoredTypes.has(entry.type) ? { positionAnchor: "bottom" } : {}),
           ...(cellScaledTypes.has(entry.type) ? { assetScale: "cell" } : {}),
           ...(asset?.size ? { assetSize: asset.size } : {}),
-          ...(assetFrame && !renderAsset ? { assetFrame } : {}),
+          ...(assetFrame ? { assetFrame } : {}),
+          ...(assetClipOverrides.has(entry.type)
+            ? { assetClip: assetClipOverrides.get(entry.type) }
+            : {}),
           ...(variantAssetRotations.has(entry.type)
             ? { assetRotation: variantAssetRotations.get(entry.type) }
             : {}),

@@ -1453,7 +1453,16 @@
         "name": "Synthesizer",
         "description": "Converts matters by transmuting one resource into another. This allows transformations such as Florinol into Aurixite.\n\nConsumes {amount} Energy per conversion."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__aurixite_crystallizer.png",
+      "assetSize": {
+        "width": 24,
+        "height": 24
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "burnerBeltLeft",
@@ -1504,7 +1513,12 @@
           "z": 0.5
         }
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__burner_belt_left.png",
+      "assetSize": {
+        "width": 64,
+        "height": 16
+      }
     },
     {
       "type": "burnerBeltRight",
@@ -1570,7 +1584,16 @@
         "name": "Burner Belt",
         "description": "Moves elements at regular belt speed. Ignites flammable materials above when fueled by an adjacent Thermal Buffer. Without heat, acts as a normal belt."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__burner_belt_right.png",
+      "assetSize": {
+        "width": 64,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "clearingFrameLeft",
@@ -1615,7 +1638,12 @@
           "ambienceGroup": "clearingFrames"
         }
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__clearing_frame_left.png",
+      "assetSize": {
+        "width": 64,
+        "height": 20
+      }
     },
     {
       "type": "clearingFrameRight",
@@ -1682,7 +1710,16 @@
         "name": "Clearing Frame",
         "description": "Moves elements inside."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__clearing_frame_right.png",
+      "assetSize": {
+        "width": 64,
+        "height": 20
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "conveyorLeftMk2",
@@ -1733,7 +1770,7 @@
         }
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__conveyor_left.png",
+      "assetPath": "catalog/mods__conveyor_left_mk2.png",
       "assetSize": {
         "width": 64,
         "height": 16
@@ -1808,7 +1845,7 @@
         "description": "Moves elements faster."
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__conveyor_right.png",
+      "assetPath": "catalog/mods__conveyor_right_mk2.png",
       "assetSize": {
         "width": 64,
         "height": 16
@@ -1881,7 +1918,16 @@
         "name": "Copper Mold",
         "description": "A mold that only accepts Liquid Copper. When filled, it transforms into a solid Power Brick that can be used to store Energy.\n\nThe Power Brick can be charged by transferring Energy from a Florinol Battery using an Energy Siphon, or by connecting it to a Steam Turbine."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__copperMold.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "critterFence",
@@ -1957,7 +2003,16 @@
         "name": "Critter Fence",
         "description": "A barrier that lets every element pass through but keeps critters from crossing."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__critter_fence.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "earthStratacore",
@@ -2023,7 +2078,12 @@
         "name": "Earth Stratacore",
         "description": "Slowly generates and reinforces Earth Strataform. Only one can be placed at a time."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__earth_stratacore.png",
+      "assetSize": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": "electricityConnector",
@@ -2108,7 +2168,16 @@
         "name": "Energy Connector",
         "description": "A passive conductor that bridges power structures so Energy can flow between them. For example, connecting a Steam Turbine to a Power Brick network.\n\nStores no Energy itself."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__electricity_connector.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "filterLeftMk2",
@@ -2172,7 +2241,7 @@
         "description": "Filters multiple element types at once, including liquids and gases."
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__filter_left.png",
+      "assetPath": "catalog/mods__filter_left_mk2.png",
       "assetSize": {
         "width": 72,
         "height": 18
@@ -2262,7 +2331,7 @@
         "description": "Filters multiple element types at once, including liquids and gases."
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__filter_right.png",
+      "assetPath": "catalog/mods__filter_right_mk2.png",
       "assetSize": {
         "width": 72,
         "height": 18
@@ -2336,7 +2405,12 @@
         "name": "Filter Wall",
         "description": "Filters elements based on filter settings without acting as a conveyor."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__filter_wall.png",
+      "assetSize": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": "filterWallMk2",
@@ -2402,7 +2476,12 @@
         "name": "Advanced Filter Wall",
         "description": "Filters multiple element types at once, including liquids and gases, without acting as a conveyor."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__filter_wall_mk2.png",
+      "assetSize": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": "glassFoundation",
@@ -2569,7 +2648,16 @@
         "name": "Florinol Battery",
         "description": "Putting Florinol in a battery generates and stores Energy.\n\nWhen used up, it hardens and can be destroyed or burned to recycle back into Energy."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__goldBattery.png",
+      "assetSize": {
+        "width": 64,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "heatCannonDown",
@@ -2675,7 +2763,18 @@
         "name": "Pyro Dispenser",
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__heat_cannon.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      },
+      "assetClip": false,
+      "assetRotation": 90
     },
     {
       "type": "heatCannonLeft",
@@ -2750,7 +2849,18 @@
         "name": "Pyro Dispenser",
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__heat_cannon.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      },
+      "assetClip": false,
+      "assetRotation": 180
     },
     {
       "type": "heatCannonRight",
@@ -2825,7 +2935,18 @@
         "name": "Pyro Dispenser",
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__heat_cannon.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      },
+      "assetClip": false,
+      "assetRotation": 0
     },
     {
       "type": "heatCannonUp",
@@ -2900,7 +3021,18 @@
         "name": "Pyro Dispenser",
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__heat_cannon.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      },
+      "assetClip": false,
+      "assetRotation": 270
     },
     {
       "type": "kineticFieldEmitter",
@@ -3033,7 +3165,12 @@
         "name": "Aerokinetic Fan",
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetSize": {
+        "width": 23,
+        "height": 16
+      }
     },
     {
       "type": "kineticFieldEmitterDown",
@@ -3670,14 +3807,14 @@
         }
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__launcher_left.png",
+      "assetPath": "catalog/mods__launcher_left_mk2.png",
       "assetSize": {
         "width": 18,
         "height": 26
       },
       "assetFrame": {
         "width": 18,
-        "height": 18
+        "height": 26
       }
     },
     {
@@ -3735,14 +3872,14 @@
         }
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__launcher_right.png",
+      "assetPath": "catalog/mods__launcher_right_mk2.png",
       "assetSize": {
         "width": 18,
         "height": 26
       },
       "assetFrame": {
         "width": 18,
-        "height": 18
+        "height": 26
       }
     },
     {
@@ -3857,7 +3994,7 @@
         "description": "Launches elements faster."
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__launcher.png",
+      "assetPath": "catalog/mods__launcher_mk2.png",
       "assetSize": {
         "width": 18,
         "height": 18
@@ -3923,7 +4060,16 @@
         "name": "Prismaline Well",
         "description": "Drains the Prismaline buffer and emits Prismaline above at a fixed rate. Must be built just outside the disk of the Aura Extractor.\n\nIts purpose remains unknown... for now."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__prismite_well.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "prismiteWell",
@@ -3981,7 +4127,16 @@
         "name": "Prismite Well",
         "description": "Drains the Prismite buffer and emits Prismite below at a fixed rate. Must be built just outside the disk of the Aura Extractor.\n\nIts purpose remains unknown... for now."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__prismite_well.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "quantumPortal",
@@ -4050,7 +4205,16 @@
         "name": "Conveyor Portal",
         "description": "A linked pair of short-range portals used to move elements across gaps or over other conveyor belt lines."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__quantumPortal.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": "quantumPortalExit",
@@ -4087,7 +4251,12 @@
           }
         }
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__quantumPortalExit.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "retroConsole",
@@ -4145,7 +4314,16 @@
         "name": "Retro Console",
         "description": "A playable gaming console. Place it and use Game Controller to play by hovering the console and pressing the arrow keys."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__powerBrick.png",
+      "assetSize": {
+        "width": 64,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "sandustryTestBlocksSource",
@@ -4380,7 +4558,16 @@
         "name": "AND Gate",
         "description": "Outputs On only if all inputs are On."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalAnd.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalBuffer",
@@ -4446,7 +4633,16 @@
         "name": "Buffer",
         "description": "Forwards its input unchanged."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalBuffer.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalButton",
@@ -4512,7 +4708,16 @@
         "name": "Signal Button",
         "description": "Press to pulse a linked signal."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalButton.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalGate",
@@ -4600,7 +4805,16 @@
         "name": "Door",
         "description": "Door that can be toggled by pressing or via sensor signals."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalGate.png",
+      "assetSize": {
+        "width": 54,
+        "height": 18
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": "signalLamp",
@@ -4665,7 +4879,16 @@
         "name": "Signal Lamp",
         "description": "Indicator that lights up when its linked signal is On."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalLamp.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalNand",
@@ -4742,7 +4965,16 @@
         "name": "NAND Gate",
         "description": "Outputs On unless all inputs are On."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalNand.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalNor",
@@ -4819,7 +5051,16 @@
         "name": "NOR Gate",
         "description": "Outputs On only if all inputs are Off."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalNor.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalNot",
@@ -4896,7 +5137,16 @@
         "name": "NOT Gate",
         "description": "Outputs the inverse of a single input (requires exactly 1 input)."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalNot.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalOr",
@@ -4973,7 +5223,16 @@
         "name": "OR Gate",
         "description": "Outputs On if any input is On."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalOr.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalPresenceSensor",
@@ -5039,7 +5298,16 @@
         "name": "Presence Sensor",
         "description": "Emits a signal while at least one element is inside its 4x4 area."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalPresenceSensor.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalPulseSensor",
@@ -5105,7 +5373,16 @@
         "name": "Pulse Sensor",
         "description": "Emits a short On pulse when its 4x4 area becomes full."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalPulseSensor.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalRepeater",
@@ -5170,7 +5447,16 @@
         "name": "Repeater",
         "description": "Delays signal by one tick."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalRepeater.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalSensor",
@@ -5236,7 +5522,16 @@
         "name": "Signal Sensor",
         "description": "Emits a signal when its 4x4 area is full of elements."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalSensor.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalSwitch",
@@ -5302,7 +5597,16 @@
         "name": "Signal Switch",
         "description": "Press to toggle a linked signal."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalSwitch.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalToggle",
@@ -5380,7 +5684,16 @@
         "name": "Toggle (T-FlipFlop)",
         "description": "Memory bit. Toggles On/Off on each input pulse (rising edge)."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalToggle.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalXnor",
@@ -5457,7 +5770,16 @@
         "name": "XNOR Gate",
         "description": "Outputs On if an even number of inputs are On."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalXnor.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "signalXor",
@@ -5534,7 +5856,16 @@
         "name": "XOR Gate",
         "description": "Outputs On if an odd number of inputs are On."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__signalXor.png",
+      "assetSize": {
+        "width": 32,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "smelter",
@@ -5620,7 +5951,16 @@
         "name": "Smelter",
         "description": "Periodically smelts resources placed on top into liquid form. Uses heat from an adjacent Thermal Buffer or Lava."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__smelter.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "snowmaker",
@@ -5723,7 +6063,16 @@
         "name": "Snowmaker",
         "description": "Consumes Water above and {amount} Energy to spawn Snow below."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__snowmaker.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "steamTurbine",
@@ -5792,7 +6141,16 @@
         "name": "Steam Turbine",
         "description": "Generates energy when Steam passes through the turbine.\n\nConnect it directly to a Power Brick (a Copper Mold filled with Liquid Copper) to store the Energy."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__steamTurbine.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "swarmConsole",
@@ -5850,7 +6208,16 @@
         "name": "Aura Extractor",
         "description": "Creates the Aura Extractor. Press the placed structure to command the swarm."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__swarm_console.png",
+      "assetSize": {
+        "width": 64,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "thermalRelay",
@@ -5965,7 +6332,16 @@
         "description": "Stores and exchanges heat. Charge it with the Flamethrower, or let it consume adjacent Lava / Snow. Connected buffers equalize temperature.\n\nHover with the Grabber to see temperature.",
         "skipCopyData": true
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__thermal_relay.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "thermodryer",
@@ -6051,7 +6427,16 @@
         "name": "Steam Dryer",
         "description": "Converts Amethelis into Dry Amethelis when put on top, using Steam below as fuel."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__thermodryer.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "thermofroster",
@@ -6137,7 +6522,16 @@
         "name": "Condenser",
         "description": "Condenses adjacent gases into their liquid forms (e.g. Florin into Florinol). Uses cold from an adjacent Thermal Buffer or Snow above."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/mods__thermofroster.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "voidRift",
@@ -6230,10 +6624,10 @@
         "description": "Opens a mysterious rift that produces Void Seed from the depths of space."
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__orb.png",
+      "assetPath": "catalog/mods__voidRift.png",
       "assetSize": {
-        "width": 16,
-        "height": 16
+        "width": 64,
+        "height": 64
       },
       "assetFrame": {
         "width": 16,

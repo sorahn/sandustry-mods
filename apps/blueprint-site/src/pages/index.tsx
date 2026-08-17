@@ -301,6 +301,10 @@ function structureVisualTopY(structure: Blueprint["data"][number]) {
   );
 }
 
+function renderPixelScale(cell: number) {
+  return cell / 4;
+}
+
 function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showDebugCells, setShowDebugCells] = useState(() =>
@@ -559,25 +563,42 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                   ? (() => {
                       const frame = entry.assetFrame;
                       const source = entry.assetSize;
-                      const imageWidth = tileWidth;
-                      const imageHeight = tileHeight;
                       const sourceWidth = source?.width ?? frame?.width ?? 1;
                       const sourceHeight = source?.height ?? frame?.height ?? 1;
-                      const visualWidth =
-                        entry.assetScale === "cell"
+                      const runtimeRender = catalogRender(entry);
+                      const runtimeSize = runtimeRender
+                        ? catalogRenderSize(runtimeRender)
+                        : undefined;
+                      const frameWidth = frame?.width ?? runtimeSize?.width ?? sourceWidth;
+                      const frameHeight = frame?.height ?? runtimeSize?.height ?? sourceHeight;
+                      const needsFrameClip = entry.assetClip ?? sourceWidth > frameWidth;
+                      const pixelScale = renderPixelScale(cell);
+                      const visualWidth = runtimeSize
+                        ? frameWidth * pixelScale
+                        : entry.assetScale === "cell"
                           ? cell * (structure.type === 20 ? KINETIC_PRESS_SCALE : 1)
-                          : imageWidth;
-                      const visualHeight = frame
-                        ? visualWidth * (sourceHeight / frame.width)
-                        : imageHeight;
-                      const imageX = left;
+                          : tileWidth;
+                      const visualHeight = runtimeSize
+                        ? frameHeight * pixelScale
+                        : frame
+                          ? visualWidth * (sourceHeight / frameWidth)
+                          : tileHeight;
+                      const renderOffset = runtimeRender?.offset;
+                      const offset =
+                        renderOffset && typeof renderOffset === "object"
+                          ? (renderOffset as { x?: unknown; y?: unknown })
+                          : undefined;
+                      const offsetX = typeof offset?.x === "number" ? offset.x * pixelScale : 0;
+                      const offsetY = typeof offset?.y === "number" ? offset.y * pixelScale : 0;
+                      const imageX = left + offsetX;
                       const imageY =
                         entry.positionAnchor === "bottom"
                           ? top +
                             tileHeight -
                             visualHeight +
-                            (structure.type === 20 ? KINETIC_PRESS_ANCHOR_OFFSET_CELLS * cell : 0)
-                          : top;
+                            (structure.type === 20 ? KINETIC_PRESS_ANCHOR_OFFSET_CELLS * cell : 0) +
+                            offsetY
+                          : top + offsetY;
                       return (
                         <>
                           <clipPath id={`asset-clip-${index}`}>
@@ -587,10 +608,10 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                             href={`${import.meta.env.BASE_URL}${entry.assetPath}`}
                             x={imageX}
                             y={imageY}
-                            width={frame ? visualWidth * (sourceWidth / frame.width) : visualWidth}
+                            width={visualWidth * (sourceWidth / frameWidth)}
                             height={visualHeight}
-                            preserveAspectRatio={frame ? "none" : "xMidYMid meet"}
-                            clipPath={`url(#asset-clip-${index})`}
+                            preserveAspectRatio="none"
+                            clipPath={needsFrameClip ? `url(#asset-clip-${index})` : undefined}
                             transform={
                               entry.assetRotation
                                 ? `rotate(${entry.assetRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
@@ -764,6 +785,11 @@ export function BlueprintInspectorPage() {
       setMessage(error instanceof Error ? error.message : "Unable to inspect blueprint.");
     }
   };
+  useEffect(() => {
+    if (remember && encoded.trim()) inspect();
+    // The initial remembered value should be inspected once after the page mounts.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const rememberHeader = debugComponent(Checkbox, {
     boxed: true,
     checked: remember,
