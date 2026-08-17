@@ -13,6 +13,19 @@ body {
   margin: 0;
   min-width: 320px;
 }
+.site-shell {
+  max-width: 80rem;
+}
+@media (min-width: 100rem) {
+  .site-shell {
+    max-width: 96rem;
+  }
+}
+@media (min-width: 140rem) {
+  .site-shell {
+    max-width: 120rem;
+  }
+}
 button,
 a {
   -webkit-tap-highlight-color: transparent;
@@ -32,6 +45,10 @@ a {
 }
 .blueprint-map__canvas text {
   user-select: none;
+}
+.blueprint-map__structure:focus,
+.blueprint-map__structure:focus-visible {
+  outline: none;
 }
 
 .blueprint-visual-test {

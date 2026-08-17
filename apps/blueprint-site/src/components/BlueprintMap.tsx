@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
 import { type Blueprint } from "../utils/blueprint";
 import {
   catalogEntry,
@@ -118,8 +118,25 @@ const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
 const MAP_ZOOM_LEVELS = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
 const NATIVE_PIXELS_PER_CELL = 4;
 const DISPLAY_PIXELS_PER_BLOCK_AT_100 = 32;
+const BLOCK_COORDINATE_SIZE = NATIVE_PIXELS_PER_CELL;
 const MAP_VIEWPORT_BORDER_SIZE = 2;
 const PAN_COMMIT_DEBOUNCE_MS = 80;
+const MAP_LAYER_ORDER = [
+  "background",
+  "grid",
+  "debugCells",
+  "sprites",
+  "foundationOutlines",
+  "signalLinks",
+  "selectedHighlight",
+  "hoverHighlight",
+] as const;
+
+type MapLayer = (typeof MAP_LAYER_ORDER)[number];
+
+function mapLayerStyle(layer: MapLayer) {
+  return { zIndex: MAP_LAYER_ORDER.indexOf(layer) };
+}
 
 function snapMapZoom(value: number) {
   return MAP_ZOOM_LEVELS.reduce((nearest, level) =>
@@ -478,6 +495,8 @@ export function BlueprintMap({
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
   const viewportRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+  const hoverMarkerRef = useRef<SVGRectElement>(null);
+  const hoverBlockRef = useRef<{ x: number; y: number } | null>(null);
   const initialViewportHeightRef = useRef<number | null>(null);
   const dragRef = useRef<{
     pointerId: number;
@@ -557,6 +576,29 @@ export function BlueprintMap({
       panCommitTimerRef.current = null;
       setPan(livePanRef.current);
     }, PAN_COMMIT_DEBOUNCE_MS);
+  };
+  const updateHoverBlock = (event: PointerEvent<SVGSVGElement>) => {
+    const svg = event.currentTarget;
+    const transform = svg.getScreenCTM();
+    if (!transform) return;
+    const pointer = svg.createSVGPoint();
+    pointer.x = event.clientX;
+    pointer.y = event.clientY;
+    const local = pointer.matrixTransform(transform.inverse());
+    const blueprintX = local.x / cell + minX - padding - 0.5;
+    const blueprintY = local.y / cell + minY - padding - 0.5;
+    const nextBlock = {
+      x: Math.floor(blueprintX / BLOCK_COORDINATE_SIZE) * BLOCK_COORDINATE_SIZE,
+      y: Math.floor(blueprintY / BLOCK_COORDINATE_SIZE) * BLOCK_COORDINATE_SIZE,
+    };
+    const previousBlock = hoverBlockRef.current;
+    if (previousBlock?.x === nextBlock.x && previousBlock.y === nextBlock.y) return;
+    hoverBlockRef.current = nextBlock;
+    const marker = hoverMarkerRef.current;
+    if (!marker) return;
+    marker.setAttribute("x", String((nextBlock.x - minX + padding) * cell));
+    marker.setAttribute("y", String((nextBlock.y - minY + padding) * cell));
+    marker.setAttribute("visibility", "visible");
   };
   const gridOriginX = (padding - minX) * cell;
   const gridOriginY = (padding - minY) * cell;
@@ -882,6 +924,7 @@ export function BlueprintMap({
             event.currentTarget.style.cursor = "grabbing";
           }}
           onPointerMove={(event) => {
+            updateHoverBlock(event);
             const drag = dragRef.current;
             if (!drag || drag.pointerId !== event.pointerId) return;
             const dx = event.clientX - drag.lastX;
@@ -924,6 +967,10 @@ export function BlueprintMap({
             event.currentTarget.style.cursor = "grab";
             schedulePanCommit();
           }}
+          onPointerLeave={() => {
+            hoverBlockRef.current = null;
+            hoverMarkerRef.current?.setAttribute("visibility", "hidden");
+          }}
         >
           <defs>
             <pattern
@@ -957,15 +1004,15 @@ export function BlueprintMap({
               />
             </pattern>
           </defs>
-          <rect width={width} height={height} fill="#33a8ff" />
+          <rect width={width} height={height} fill="#33a8ff" style={mapLayerStyle("background")} />
           {showGrid ? (
-            <g opacity="0.25">
+            <g opacity="0.25" style={mapLayerStyle("grid")}>
               <rect width={width} height={height} fill="url(#blueprint-block-grid)" />
               <rect width={width} height={height} fill="url(#blueprint-cell-grid)" />
             </g>
           ) : null}
           {showDebugCells ? (
-            <g opacity="0.8" pointerEvents="none">
+            <g opacity="0.8" pointerEvents="none" style={mapLayerStyle("debugCells")}>
               {blueprint.data.flatMap((structure, structureIndex) => {
                 const footprint = structureFootprint(structure);
                 const shape =
@@ -1008,6 +1055,7 @@ export function BlueprintMap({
                 strokeDasharray={link.on ? undefined : "5 4"}
                 strokeWidth="3"
                 opacity=".8"
+                style={mapLayerStyle("signalLinks")}
               />
             );
           })}
@@ -1039,7 +1087,6 @@ export function BlueprintMap({
             );
             const labelY =
               top + tileHeight / 2 - ((labelLines.length - 1) * labelLineHeight) / 2 + 12;
-            const isSelected = selectedIndex === index;
             return (
               <g
                 key={`${index}-${structure.x}-${structure.y}`}
@@ -1056,8 +1103,9 @@ export function BlueprintMap({
                 onKeyDown={(event) => {
                   if (event.key === "Enter" || event.key === " ") setSelectedIndex(index);
                 }}
-                className="cursor-pointer"
+                className="blueprint-map__structure cursor-pointer"
                 data-render-image={entry ? catalogRender(entry)?.imageName : undefined}
+                style={mapLayerStyle("sprites")}
               >
                 <rect
                   x={left}
@@ -1072,14 +1120,8 @@ export function BlueprintMap({
                   }
                   // Sprites own their visible shape. A generic footprint border
                   // leaks through the transparent corners of triangle foundations.
-                  stroke={
-                    isSelected
-                      ? "#ffe700"
-                      : hideSprites || isCustomShape || entry?.renderAsset
-                        ? "none"
-                        : "#8491a3"
-                  }
-                  strokeWidth={isSelected ? "4" : "1.5"}
+                  stroke={hideSprites || isCustomShape || entry?.renderAsset ? "none" : "#8491a3"}
+                  strokeWidth="1.5"
                 />
                 {isCustomShape && showCustomShapes
                   ? shape.map((row, rowIndex) =>
@@ -1093,8 +1135,8 @@ export function BlueprintMap({
                             height={cell}
                             rx="2"
                             fill="#a47a45"
-                            stroke={isSelected ? "#ffe700" : "none"}
-                            strokeWidth={isSelected ? "2" : "1"}
+                            stroke="none"
+                            strokeWidth="1"
                             pointerEvents="none"
                           />
                         ),
@@ -1297,8 +1339,36 @@ export function BlueprintMap({
               stroke="#000000"
               strokeWidth={renderPixelScale(cell) / 2}
               pointerEvents="none"
+              style={mapLayerStyle("foundationOutlines")}
             />
           ) : null}
+          {selected ? (
+            <rect
+              x={(selected.x - minX + padding) * cell}
+              y={(selected.y - minY + padding) * cell}
+              width={BLOCK_COORDINATE_SIZE * cell}
+              height={BLOCK_COORDINATE_SIZE * cell}
+              fill="none"
+              stroke="#4ade80"
+              strokeWidth={renderPixelScale(cell)}
+              pointerEvents="none"
+              style={mapLayerStyle("selectedHighlight")}
+            />
+          ) : null}
+          <rect
+            ref={hoverMarkerRef}
+            x="0"
+            y="0"
+            width={BLOCK_COORDINATE_SIZE * cell}
+            height={BLOCK_COORDINATE_SIZE * cell}
+            fill="#ffe700"
+            fillOpacity="0.08"
+            stroke="#ffe700"
+            strokeWidth={renderPixelScale(cell) / 2}
+            visibility="hidden"
+            pointerEvents="none"
+            style={mapLayerStyle("hoverHighlight")}
+          />
         </svg>
       </div>
       {showSidebar ? (

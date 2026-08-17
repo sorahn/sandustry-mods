@@ -22,7 +22,7 @@ export function AppLayout() {
   return (
     <div className="min-h-screen bg-sd-950 text-slate-100">
       <header className="border-b border-slate-800/80 bg-black/50">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <div className="site-shell mx-auto flex w-full items-center justify-between px-6 py-4">
           <Link to="/" className="font-mono text-sm font-bold tracking-[0.2em] text-yellow-300">
             SANDUSTRY / BLUEPRINT TOOLS
           </Link>
@@ -41,7 +41,7 @@ export function AppLayout() {
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-7xl px-6 py-10">
+      <main className="site-shell mx-auto w-full px-6 py-10">
         <Outlet />
       </main>
     </div>
@@ -324,10 +324,10 @@ function BlueprintInspectorEditorPage() {
         <Link to="/" className="font-mono text-xs text-slate-500 hover:text-yellow-300">
           ← Home
         </Link>
-        <h1 className="mt-4 text-3xl font-bold text-white">Blueprint inspector</h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
-          Inspect the decoded v2 records with a catalog-independent map. Unknown IDs remain visible
-          instead of being discarded, and can be selected for their raw details.
+        <h1 className="mt-4 text-3xl font-bold text-white">Blueprint Inspector</h1>
+        <p className="mt-3 text-sm leading-7 text-slate-400">
+          Inspect the your sandustry blueprints here. <br />
+          Unknown IDs remain in place, and can be selected for their raw details.
         </p>
       </div>
       <Panel title="Blueprint string" header={rememberHeader}>
