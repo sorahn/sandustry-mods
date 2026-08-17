@@ -47,9 +47,7 @@ export function HomePage() {
         <p className="mb-3 font-mono text-xs uppercase tracking-[0.25em] text-yellow-300/80">
           Sandustry blueprint tools
         </p>
-        <h1 className="font-mono text-3xl font-bold text-white">
-          Read and convert your blueprints.
-        </h1>
+        <h1 className="text-3xl font-bold text-white">Read and convert your blueprints.</h1>
         <p className="mt-4 max-w-xl text-sm leading-7 text-slate-400">
           Paste a Sandustry blueprint string to inspect its contents, or turn readable JSON back
           into a string. Everything runs locally in your browser.
@@ -114,7 +112,7 @@ export function BlueprintCodecPage() {
         <Link to="/" className="font-mono text-xs text-slate-500 hover:text-yellow-300">
           ← Home
         </Link>
-        <h1 className="mt-4 font-mono text-3xl font-bold text-white">Blueprint encode / decode</h1>
+        <h1 className="mt-4 text-3xl font-bold text-white">Blueprint encode / decode</h1>
         <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
           Convert locally in your browser. Nothing is uploaded. The normalized JSON preserves
           structure IDs, filters, arbitrary structure data, and v4 signal links.
@@ -641,7 +639,7 @@ export function BlueprintInspectorPage() {
         <Link to="/" className="font-mono text-xs text-slate-500 hover:text-yellow-300">
           ← Home
         </Link>
-        <h1 className="mt-4 font-mono text-3xl font-bold text-white">Blueprint inspector</h1>
+        <h1 className="mt-4 text-3xl font-bold text-white">Blueprint inspector</h1>
         <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
           Inspect the decoded v2 records with a catalog-independent map. Unknown IDs remain visible
           instead of being discarded, and can be selected for their raw details.
@@ -666,9 +664,7 @@ export function BlueprintInspectorPage() {
             spellCheck={false}
             className="min-h-48 placeholder:text-slate-600"
           />
-          <Button accent onClick={inspect}>
-            Inspect blueprint
-          </Button>
+          <Button onClick={inspect}>Inspect blueprint</Button>
         </div>
       </Panel>
       <p

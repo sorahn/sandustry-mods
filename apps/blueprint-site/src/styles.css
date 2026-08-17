@@ -5,11 +5,36 @@
   --color-sd-950: #090b0f;
 }
 
-:root { color-scheme: dark; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background: #090b0f; }
-body { margin: 0; min-width: 320px; }
-button, a { -webkit-tap-highlight-color: transparent; }
-a { text-decoration: none; }
-*:focus-visible { outline: 2px solid #ffe700; outline-offset: 3px; }
-.blueprint-map__viewport { height: min(70vh, 40rem); max-height: min(70vh, 40rem); display: flex; flex-direction: column; }
-.blueprint-map__canvas { flex: 1 1 0; height: 0; min-height: 0; }
-.blueprint-map__canvas text { user-select: none; }
+:root {
+  color-scheme: dark;
+  background: #090b0f;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+a {
+  text-decoration: none;
+}
+*:focus-visible {
+  outline: 2px solid #ffe700;
+  outline-offset: 3px;
+}
+.blueprint-map__viewport {
+  height: min(70vh, 40rem);
+  max-height: min(70vh, 40rem);
+  display: flex;
+  flex-direction: column;
+}
+.blueprint-map__canvas {
+  flex: 1 1 0;
+  height: 0;
+  min-height: 0;
+}
+.blueprint-map__canvas text {
+  user-select: none;
+}
