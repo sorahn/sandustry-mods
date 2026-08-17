@@ -119,6 +119,7 @@ const MAP_ZOOM_LEVELS = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
 const NATIVE_PIXELS_PER_CELL = 4;
 const DISPLAY_PIXELS_PER_BLOCK_AT_100 = 32;
 const MAP_VIEWPORT_BORDER_SIZE = 2;
+const PAN_COMMIT_DEBOUNCE_MS = 80;
 
 function snapMapZoom(value: number) {
   return MAP_ZOOM_LEVELS.reduce((nearest, level) =>
@@ -481,6 +482,8 @@ export function BlueprintMap({
     moved: boolean;
   } | null>(null);
   const suppressClickRef = useRef(false);
+  const panCommitTimerRef = useRef<number | null>(null);
+  const livePanRef = useRef(pan);
   const padding = 6;
   // Blueprint coordinates are cell-sized units. Four native sprite pixels
   // make one cell, and four cells make one blueprint block. At 100% four
@@ -524,6 +527,27 @@ export function BlueprintMap({
       : Math.abs(centeredViewY);
   const viewX = zoom <= 1 ? 0 : centeredViewX + pan.x;
   const viewY = zoom <= 1 ? 0 : centeredViewY + pan.y;
+  const applyLivePan = (nextPan: { x: number; y: number }) => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    if (zoom <= 1) {
+      svg.style.transform = `translate(-50%, -50%) translate(${-nextPan.x * zoom}px, ${-nextPan.y * zoom}px)`;
+    } else {
+      svg.setAttribute(
+        "viewBox",
+        `${centeredViewX + nextPan.x} ${centeredViewY + nextPan.y} ${viewWidth} ${viewHeight}`,
+      );
+    }
+  };
+  const schedulePanCommit = () => {
+    if (panCommitTimerRef.current !== null) {
+      window.clearTimeout(panCommitTimerRef.current);
+    }
+    panCommitTimerRef.current = window.setTimeout(() => {
+      panCommitTimerRef.current = null;
+      setPan(livePanRef.current);
+    }, PAN_COMMIT_DEBOUNCE_MS);
+  };
   const gridOriginX = (padding - minX) * cell;
   const gridOriginY = (padding - minY) * cell;
   const point = (x: number, y: number) => ({
@@ -616,6 +640,14 @@ export function BlueprintMap({
       JSON.stringify({ blueprint: blueprintKey, viewportWidth: viewportSize.width, zoom, pan }),
     );
   }, [blueprintKey, mapSizeReady, pan, remember, viewportSize.width, zoom]);
+  useEffect(() => {
+    livePanRef.current = pan;
+    return () => {
+      if (panCommitTimerRef.current !== null) {
+        window.clearTimeout(panCommitTimerRef.current);
+      }
+    };
+  }, [pan]);
   const setMapZoom = (nextZoom: number) => {
     const snappedZoom = snapMapZoom(nextZoom);
     const nextViewWidth = width / snappedZoom;
@@ -805,12 +837,20 @@ export function BlueprintMap({
           }}
           onPointerDown={(event) => {
             if (event.pointerType === "mouse" && event.button !== 0) return;
+            if (panCommitTimerRef.current !== null) {
+              window.clearTimeout(panCommitTimerRef.current);
+              panCommitTimerRef.current = null;
+              setPan(livePanRef.current);
+            } else {
+              livePanRef.current = pan;
+            }
             dragRef.current = {
               pointerId: event.pointerId,
               lastX: event.clientX,
               lastY: event.clientY,
               moved: false,
             };
+            event.currentTarget.style.cursor = "grabbing";
           }}
           onPointerMove={(event) => {
             const drag = dragRef.current;
@@ -824,10 +864,19 @@ export function BlueprintMap({
               }
             }
             const rect = event.currentTarget.getBoundingClientRect();
-            setPan((current) => ({
-              x: Math.max(-maxPanX, Math.min(maxPanX, current.x - (dx / rect.width) * viewWidth)),
-              y: Math.max(-maxPanY, Math.min(maxPanY, current.y - (dy / rect.height) * viewHeight)),
-            }));
+            const nextPan = {
+              x: Math.max(
+                -maxPanX,
+                Math.min(maxPanX, livePanRef.current.x - (dx / rect.width) * viewWidth),
+              ),
+              y: Math.max(
+                -maxPanY,
+                Math.min(maxPanY, livePanRef.current.y - (dy / rect.height) * viewHeight),
+              ),
+            };
+            livePanRef.current = nextPan;
+            applyLivePan(nextPan);
+            schedulePanCommit();
             drag.lastX = event.clientX;
             drag.lastY = event.clientY;
           }}
@@ -836,10 +885,14 @@ export function BlueprintMap({
             if (!drag || drag.pointerId !== event.pointerId) return;
             suppressClickRef.current = drag.moved;
             dragRef.current = null;
+            event.currentTarget.style.cursor = "grab";
+            if (drag.moved) schedulePanCommit();
             event.currentTarget.releasePointerCapture(event.pointerId);
           }}
-          onPointerCancel={() => {
+          onPointerCancel={(event) => {
             dragRef.current = null;
+            event.currentTarget.style.cursor = "grab";
+            schedulePanCommit();
           }}
         >
           <defs>
