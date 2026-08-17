@@ -750,17 +750,24 @@ function BlueprintMap({
       ),
     });
   };
-  const exportSvg = async () => {
+  const exportPng = async () => {
     const source = svgRef.current;
     if (!source) return;
     const svg = source.cloneNode(true) as SVGSVGElement;
     svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+    svg.setAttribute("xmlns:dc", "http://purl.org/dc/elements/1.1/");
     svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-    svg.setAttribute("width", String(width));
-    svg.setAttribute("height", String(height));
+    const exportScale = 1 / renderPixelScale(cell);
+    svg.setAttribute("width", String(width * exportScale));
+    svg.setAttribute("height", String(height * exportScale));
     svg.removeAttribute("class");
     svg.removeAttribute("style");
+    const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+    title.textContent = blueprint.name || "Sandustry blueprint";
+    const description = document.createElementNS("http://www.w3.org/2000/svg", "desc");
+    description.textContent = "Rendered Sandustry blueprint map";
+    svg.prepend(description, title);
     svg.querySelectorAll('rect[fill="#33a8ff"]').forEach((background) => background.remove());
     await Promise.all(
       Array.from(svg.querySelectorAll("image")).map(async (image) => {
@@ -784,13 +791,30 @@ function BlueprintMap({
       }),
     );
     const serialized = new XMLSerializer().serializeToString(svg);
-    const blob = new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${serialized}`], {
+    const svgBlob = new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${serialized}`], {
       type: "image/svg+xml;charset=utf-8",
     });
+    const svgUrl = URL.createObjectURL(svgBlob);
+    const image = new Image();
+    await new Promise<void>((resolve, reject) => {
+      image.onload = () => resolve();
+      image.onerror = () => reject(new Error("Unable to render blueprint SVG"));
+      image.src = svgUrl;
+    });
+    URL.revokeObjectURL(svgUrl);
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(width * exportScale));
+    canvas.height = Math.max(1, Math.round(height * exportScale));
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
+    if (!blob) return;
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${blueprint.name.trim().replace(/[^a-z0-9._-]+/gi, "-") || "blueprint"}.svg`;
+    link.download = `${blueprint.name.trim().replace(/[^a-z0-9._-]+/gi, "-") || "blueprint"}.png`;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -818,9 +842,9 @@ function BlueprintMap({
           <button
             type="button"
             className="sd-button sd-button--compact sd-button--no-shift"
-            onClick={exportSvg}
+            onClick={exportPng}
           >
-            Export SVG
+            Export PNG
           </button>
           <span className="mr-1">{Math.round(zoom * 100)}%</span>
           <button
