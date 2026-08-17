@@ -49,11 +49,62 @@ export function validateCatalog(catalog, { assetRoot } = {}) {
       if (renderAsset.clip !== undefined && typeof renderAsset.clip !== "boolean") {
         errors.push(`${label} renderAsset.clip must be boolean`);
       }
-      if (renderAsset.scale !== undefined && typeof renderAsset.scale !== "string") {
-        errors.push(`${label} renderAsset.scale must be a string`);
+      const validScale =
+        renderAsset.scale === undefined ||
+        typeof renderAsset.scale === "string" ||
+        (typeof renderAsset.scale === "object" &&
+          typeof renderAsset.scale.mode === "string" &&
+          (renderAsset.scale.factor === undefined || Number.isFinite(renderAsset.scale.factor)));
+      if (!validScale) {
+        errors.push(`${label} renderAsset.scale must be a mode or mode/factor object`);
       }
-      if (renderAsset.anchor !== undefined && typeof renderAsset.anchor !== "string") {
-        errors.push(`${label} renderAsset.anchor must be a string`);
+      const validAnchor =
+        renderAsset.anchor === undefined ||
+        typeof renderAsset.anchor === "string" ||
+        (typeof renderAsset.anchor === "object" &&
+          typeof renderAsset.anchor.edge === "string" &&
+          (renderAsset.anchor.offsetCells === undefined ||
+            Number.isFinite(renderAsset.anchor.offsetCells)));
+      if (!validAnchor) {
+        errors.push(`${label} renderAsset.anchor must be an edge or edge/offset object`);
+      }
+      if (renderAsset.lightColor !== undefined && typeof renderAsset.lightColor !== "string") {
+        errors.push(`${label} renderAsset.lightColor must be a string`);
+      }
+      if (renderAsset.debug !== undefined) {
+        if (
+          typeof renderAsset.debug !== "object" ||
+          (renderAsset.debug.height !== undefined &&
+            (!Number.isFinite(renderAsset.debug.height) || renderAsset.debug.height <= 0))
+        ) {
+          errors.push(`${label} renderAsset.debug must contain a positive height`);
+        }
+      }
+      if (renderAsset.animation !== undefined) {
+        if (
+          typeof renderAsset.animation !== "object" ||
+          (renderAsset.animation.topology !== undefined &&
+            typeof renderAsset.animation.topology !== "string")
+        ) {
+          errors.push(`${label} renderAsset.animation has invalid topology metadata`);
+        } else {
+          for (const key of ["cornerFrame", "edgeFrame", "interiorFrame"]) {
+            const value = renderAsset.animation[key];
+            if (value !== undefined && (!isFiniteInteger(value) || value < 0)) {
+              errors.push(`${label} renderAsset.animation.${key} must be non-negative`);
+            }
+          }
+          const sideRotation = renderAsset.animation.sideRotation;
+          if (
+            sideRotation !== undefined &&
+            (!isFiniteInteger(sideRotation) ||
+              sideRotation < 0 ||
+              sideRotation >= 360 ||
+              sideRotation % 45 !== 0)
+          ) {
+            errors.push(`${label} renderAsset.animation.sideRotation must be normalized`);
+          }
+        }
       }
     }
     if (renderAsset?.rotation !== undefined) {
@@ -121,6 +172,20 @@ export function validateCatalog(catalog, { assetRoot } = {}) {
           }
           if (renderAsset?.frame)
             checkSize(errors, `${label} renderAsset.frame`, renderAsset.frame);
+          if (renderAsset?.sourceCrop) {
+            const crop = renderAsset.sourceCrop;
+            if (
+              ![crop.x, crop.y].every(isFiniteInteger) ||
+              !isPositiveInteger(crop.width) ||
+              !isPositiveInteger(crop.height) ||
+              crop.x < 0 ||
+              crop.y < 0 ||
+              crop.x + crop.width > actualSize.width ||
+              crop.y + crop.height > actualSize.height
+            ) {
+              errors.push(`${label} renderAsset.sourceCrop exceeds ${renderAsset.path}`);
+            }
+          }
           if (renderAsset?.frame && actualSize) {
             const frameIndex = renderAsset.frameIndex ?? 0;
             const requiredWidth = (frameIndex + 1) * renderAsset.frame.width;

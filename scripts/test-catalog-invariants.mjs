@@ -28,6 +28,17 @@ const expected = [
   ["heatCannonDown", { clip: false, frame: { width: 23, height: 16 } }],
   ["heatCannonLeft", { clip: false, frame: { width: 23, height: 16 } }],
   ["heatCannonUp", { clip: false, frame: { width: 23, height: 16 } }],
+  [
+    20,
+    {
+      sourceCrop: { x: 0, y: 0, width: 18, height: 417 },
+      frame: { width: 18, height: 417 },
+      offset: { x: -1 },
+      scale: { mode: "cell", factor: 4 },
+      anchor: { edge: "bottom", offsetCells: 3 },
+      debug: { height: 468 },
+    },
+  ],
 ];
 for (const [type, assertions] of expected) {
   const entry = entries.get(type);

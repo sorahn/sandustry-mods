@@ -235,6 +235,29 @@ const assetPresentationOverrides = new Map([
   ["kineticFieldEmitterDownLeft", { clip: false, offset: { x: -8, y: 8 } }],
   ["kineticFieldEmitterUpLeft", { clip: false, offset: { x: -8, y: 8 } }],
   ["kineticFieldEmitterUpRight", { clip: false, offset: { x: -8, y: 8 } }],
+  [
+    16,
+    {
+      animation: {
+        topology: "collector",
+        cornerFrame: 0,
+        edgeFrame: 3,
+        interiorFrame: 2,
+        sideRotation: 90,
+      },
+    },
+  ],
+  [
+    20,
+    {
+      sourceCrop: { x: 0, y: 0, width: 18, height: 417 },
+      frame: { width: 18, height: 417 },
+      offset: { x: -1 },
+      scale: { mode: "cell", factor: 4 },
+      anchor: { edge: "bottom", offsetCells: 3 },
+      debug: { height: 468 },
+    },
+  ],
 ]);
 
 const bottomAnchoredTypes = new Set([20]);
@@ -382,8 +405,8 @@ const catalogWithAssets = {
           ? { clip: defaultAssetClip }
           : {}),
       ...(derivedRotation !== undefined ? { rotation: derivedRotation } : {}),
-      ...(bottomAnchoredTypes.has(entry.type) ? { anchor: "bottom" } : {}),
-      ...(cellScaledTypes.has(entry.type) ? { scale: "cell" } : {}),
+      ...(bottomAnchoredTypes.has(entry.type) ? { anchor: { edge: "bottom" } } : {}),
+      ...(cellScaledTypes.has(entry.type) ? { scale: { mode: "cell" } } : {}),
       ...presentationOverride,
     };
     return { ...entry, renderAsset };

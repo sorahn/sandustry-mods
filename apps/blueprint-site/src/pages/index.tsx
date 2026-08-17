@@ -7,7 +7,12 @@ import {
   encodeBlueprint,
   type Blueprint,
 } from "../utils/blueprint";
-import { catalogEntry, catalogRender, catalogRenderSize } from "../utils/catalog";
+import {
+  catalogEntry,
+  catalogRender,
+  catalogRenderSize,
+  type CatalogEntry,
+} from "../utils/catalog";
 import { debugComponent } from "../components/DebugComponentWrapper";
 import { catalogVisualFixture } from "../visual-fixtures/catalog";
 
@@ -327,9 +332,6 @@ const SHOW_PNG_BACKGROUND_KEY = "sandustry.blueprintInspector.showPngBackground"
 const MAP_ZOOM_LEVELS = [0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
 const NATIVE_PIXELS_PER_CELL = 4;
 const DISPLAY_PIXELS_PER_BLOCK_AT_100 = 32;
-const KINETIC_PRESS_SCALE = 4;
-const KINETIC_PRESS_EXPECTED_HEIGHT = 468;
-const KINETIC_PRESS_ANCHOR_OFFSET_CELLS = 3;
 
 function snapMapZoom(value: number) {
   return MAP_ZOOM_LEVELS.reduce((nearest, level) =>
@@ -405,7 +407,25 @@ function readStoredMapView(blueprintKey: string): MapView | null {
 function structureTopY(structure: Blueprint["data"][number]) {
   const entry = catalogEntry(structure.type);
   const height = structureFootprint(structure).height;
-  return entry?.renderAsset?.anchor === "bottom" ? structure.y - height + 1 : structure.y;
+  const anchor = entry?.renderAsset?.anchor;
+  const edge = typeof anchor === "string" ? anchor : anchor?.edge;
+  return edge === "bottom" ? structure.y - height + 1 : structure.y;
+}
+
+function renderScaleMode(scale: NonNullable<CatalogEntry["renderAsset"]>["scale"]) {
+  return typeof scale === "object" && scale !== null ? scale.mode : scale;
+}
+
+function renderScaleFactor(scale: NonNullable<CatalogEntry["renderAsset"]>["scale"]) {
+  return typeof scale === "object" && scale !== null ? (scale.factor ?? 1) : 1;
+}
+
+function renderAnchorEdge(anchor: NonNullable<CatalogEntry["renderAsset"]>["anchor"]) {
+  return typeof anchor === "object" && anchor !== null ? anchor.edge : anchor;
+}
+
+function renderAnchorOffsetCells(anchor: NonNullable<CatalogEntry["renderAsset"]>["anchor"]) {
+  return typeof anchor === "object" && anchor !== null ? (anchor.offsetCells ?? 0) : 0;
 }
 
 type StructureShape = number[][];
@@ -457,17 +477,21 @@ function structureVisualTopY(structure: Blueprint["data"][number]) {
   const topY = structureTopY(structure);
   const renderAsset = entry?.renderAsset;
   const assetOffsetY = (renderAsset?.offset?.y ?? 0) / 4;
-  if (renderAsset?.scale !== "cell" || renderAsset.anchor !== "bottom") {
+  if (
+    renderScaleMode(renderAsset?.scale) !== "cell" ||
+    renderAnchorEdge(renderAsset?.anchor) !== "bottom"
+  ) {
     return topY + assetOffsetY;
   }
   const frameHeight = renderAsset.frame?.width ?? 1;
-  const sourceHeight = renderAsset.sourceSize?.height ?? frameHeight;
-  const scale = structure.type === 20 ? KINETIC_PRESS_SCALE : 1;
+  const sourceHeight =
+    renderAsset.sourceCrop?.height ?? renderAsset.sourceSize?.height ?? frameHeight;
+  const scale = renderScaleFactor(renderAsset.scale);
   return (
     structure.y +
     1 -
     (sourceHeight / frameHeight) * scale +
-    (structure.type === 20 ? KINETIC_PRESS_ANCHOR_OFFSET_CELLS : 0) +
+    renderAnchorOffsetCells(renderAsset.anchor) +
     assetOffsetY
   );
 }
@@ -572,7 +596,10 @@ function collectorSprites(
   structures: Blueprint["data"],
   entries: Array<{ structure: Blueprint["data"][number]; index: number }>,
 ) {
-  const collectors = entries.filter(({ structure }) => structure.type === 16);
+  const collectors = entries.filter(
+    ({ structure }) =>
+      catalogEntry(structure.type)?.renderAsset?.animation?.topology === "collector",
+  );
   const byPosition = new Map(
     collectors.map(({ structure, index }) => [`${structure.x},${structure.y}`, index]),
   );
@@ -621,15 +648,16 @@ function collectorSprites(
       const atRight = structure.x === bounds.maxX;
       const atTop = structure.y === bounds.minY;
       const atBottom = structure.y === bounds.maxY;
-      let frameIndex = 2;
+      const animation = catalogEntry(structure.type)?.renderAsset?.animation;
+      let frameIndex = animation?.interiorFrame ?? 2;
       let rotation = 0;
       if ((atTop || atBottom) && (atLeft || atRight)) {
-        frameIndex = 0;
+        frameIndex = animation?.cornerFrame ?? 0;
       } else if (atTop || atBottom) {
-        frameIndex = 3;
+        frameIndex = animation?.edgeFrame ?? 3;
       } else if (atLeft || atRight) {
-        frameIndex = 3;
-        rotation = 90;
+        frameIndex = animation?.edgeFrame ?? 3;
+        rotation = animation?.sideRotation ?? 90;
       }
       result.set(index, { frameIndex, rotation });
     }
@@ -1159,6 +1187,7 @@ function BlueprintMap({
                       const renderAsset = assetEntry.renderAsset!;
                       const frame = renderAsset.frame;
                       const source = renderAsset.sourceSize;
+                      const sourceCrop = renderAsset.sourceCrop;
                       const sourceWidth = source?.width ?? frame?.width ?? 1;
                       const sourceHeight = source?.height ?? frame?.height ?? 1;
                       const runtimeRender = catalogRender(assetEntry);
@@ -1171,11 +1200,10 @@ function BlueprintMap({
                       const frameIndex = collectorSprite?.frameIndex ?? renderAsset.frameIndex ?? 0;
                       const spriteRotation = collectorSprite?.rotation ?? renderAsset.rotation;
                       const customLightColor =
-                        structure.type === 26
-                          ? (lightColor(structure) ??
-                            lightColor(structure.data) ??
-                            lightColor(structure.filter))
-                          : undefined;
+                        renderAsset.lightColor ??
+                        lightColor(structure) ??
+                        lightColor(structure.data) ??
+                        lightColor(structure.filter);
                       const useNativeAssetSize =
                         runtimeSize !== undefined ||
                         (frame !== undefined && renderAsset.scale !== "cell");
@@ -1183,14 +1211,16 @@ function BlueprintMap({
                       const pixelScale = renderPixelScale(cell);
                       const visualWidth = useNativeAssetSize
                         ? frameWidth * pixelScale
-                        : renderAsset.scale === "cell"
-                          ? cell * (structure.type === 20 ? KINETIC_PRESS_SCALE : 1)
+                        : renderScaleMode(renderAsset.scale) === "cell"
+                          ? cell * renderScaleFactor(renderAsset.scale)
                           : tileWidth;
                       const visualHeight = useNativeAssetSize
                         ? frameHeight * pixelScale
                         : frame
-                          ? visualWidth * (sourceHeight / frameWidth)
+                          ? visualWidth * ((sourceCrop?.height ?? sourceHeight) / frameWidth)
                           : tileHeight;
+                      const sourceScale = visualWidth / frameWidth;
+                      const imageHeight = visualWidth * (sourceHeight / frameWidth);
                       const renderOffset = runtimeRender?.offset;
                       const offset =
                         renderOffset && typeof renderOffset === "object"
@@ -1205,13 +1235,15 @@ function BlueprintMap({
                       const imageX = left + offsetX * pixelScale;
                       const sourceImageX = imageX - frameIndex * visualWidth;
                       const imageY =
-                        renderAsset.anchor === "bottom"
+                        renderAnchorEdge(renderAsset.anchor) === "bottom"
                           ? top +
                             tileHeight -
                             visualHeight +
-                            (structure.type === 20 ? KINETIC_PRESS_ANCHOR_OFFSET_CELLS * cell : 0) +
+                            renderAnchorOffsetCells(renderAsset.anchor) * cell +
                             offsetY * pixelScale
                           : top + offsetY * pixelScale;
+                      const imageFrameY = imageY;
+                      const sourceImageY = imageFrameY - (sourceCrop?.y ?? 0) * sourceScale;
                       return (
                         <>
                           {isCustomShape ? (
@@ -1249,14 +1281,19 @@ function BlueprintMap({
                             </defs>
                           ) : null}
                           <clipPath id={`asset-clip-${index}`}>
-                            <rect x={imageX} y="0" width={visualWidth} height={height} />
+                            <rect
+                              x={imageX}
+                              y={sourceCrop ? imageFrameY : 0}
+                              width={visualWidth}
+                              height={sourceCrop ? visualHeight : height}
+                            />
                           </clipPath>
                           <image
                             href={`${import.meta.env.BASE_URL}${renderAsset.path}`}
                             x={sourceImageX}
-                            y={imageY}
+                            y={sourceImageY}
                             width={visualWidth * (sourceWidth / frameWidth)}
-                            height={visualHeight}
+                            height={imageHeight}
                             preserveAspectRatio="none"
                             clipPath={needsFrameClip ? `url(#asset-clip-${index})` : undefined}
                             mask={
@@ -1289,18 +1326,18 @@ function BlueprintMap({
                                 />
                               ))
                             : null}
-                          {showDebugCells && structure.type === 20 ? (
+                          {showDebugCells && renderAsset.debug?.height !== undefined ? (
                             <rect
                               x={imageX}
                               y={
                                 top +
                                 tileHeight +
-                                KINETIC_PRESS_ANCHOR_OFFSET_CELLS * cell -
-                                visualWidth * (KINETIC_PRESS_EXPECTED_HEIGHT / (frame?.width ?? 1))
+                                renderAnchorOffsetCells(renderAsset.anchor) * cell -
+                                visualWidth * (renderAsset.debug.height / (frame?.width ?? 1))
                               }
                               width={visualWidth}
                               height={
-                                visualWidth * (KINETIC_PRESS_EXPECTED_HEIGHT / (frame?.width ?? 1))
+                                visualWidth * (renderAsset.debug.height / (frame?.width ?? 1))
                               }
                               fill="none"
                               stroke="#00ff66"

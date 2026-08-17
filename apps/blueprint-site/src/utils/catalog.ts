@@ -11,13 +11,24 @@ export type RenderMetadata = {
 export type RenderAsset = {
   path: string;
   sourceSize?: { width: number; height: number };
+  sourceCrop?: { x: number; y: number; width: number; height: number };
   frame?: { width: number; height: number };
   frameIndex?: number;
-  scale?: string;
+  scale?: string | { mode: string; factor?: number };
   clip?: boolean;
   offset?: { x?: number; y?: number };
   rotation?: number;
-  anchor?: string;
+  anchor?: string | { edge: string; offsetCells?: number };
+  animation?: {
+    topology?: string;
+    cornerFrame?: number;
+    edgeFrame?: number;
+    interiorFrame?: number;
+    sideRotation?: number;
+  };
+  debug?: { height?: number };
+  /** Optional extracted indicator/light color; absent until native metadata exposes it. */
+  lightColor?: string;
 };
 
 export type CatalogEntry = {

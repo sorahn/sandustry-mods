@@ -815,7 +815,14 @@
           "width": 16,
           "height": 16
         },
-        "clip": true
+        "clip": true,
+        "animation": {
+          "topology": "collector",
+          "cornerFrame": 0,
+          "edgeFrame": 3,
+          "interiorFrame": 2,
+          "sideRotation": 90
+        }
       }
     },
     {
@@ -1071,11 +1078,29 @@
         },
         "frame": {
           "width": 18,
-          "height": 18
+          "height": 417
         },
         "clip": true,
-        "anchor": "bottom",
-        "scale": "cell"
+        "anchor": {
+          "edge": "bottom",
+          "offsetCells": 3
+        },
+        "scale": {
+          "mode": "cell",
+          "factor": 4
+        },
+        "sourceCrop": {
+          "x": 0,
+          "y": 0,
+          "width": 18,
+          "height": 417
+        },
+        "offset": {
+          "x": -1
+        },
+        "debug": {
+          "height": 468
+        }
       }
     },
     {
