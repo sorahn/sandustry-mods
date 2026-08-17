@@ -76,23 +76,6 @@ const MANUAL_CATALOG: CatalogEntry[] = [
   },
 ];
 
-// A few mod sprites need explicit frame metadata because the runtime catalog
-// does not describe their exported animation strips consistently. Keep these
-// corrections here so regenerated catalog snapshots do not reintroduce
-// cropping or stretching in the blueprint map.
-const CATALOG_OVERRIDES: Partial<Record<BlueprintType, Partial<CatalogEntry>>> = {
-  clearingFrameLeft: {
-    assetFrame: { width: 16, height: 20 },
-    assetClip: true,
-    assetOffset: { y: -4 },
-  },
-  clearingFrameRight: {
-    assetFrame: { width: 16, height: 20 },
-    assetClip: true,
-    assetOffset: { y: -4 },
-  },
-};
-
 const runtimeCatalog: CatalogEntry[] = generatedCatalog.entries.map((entry) => ({
   ...entry,
   name:
@@ -107,14 +90,6 @@ for (const entry of MANUAL_CATALOG) {
   const generated = mergedCatalog.get(entry.type);
   if (!generated || !generated.name) mergedCatalog.set(entry.type, { ...generated, ...entry });
 }
-for (const [type, override] of Object.entries(CATALOG_OVERRIDES) as [
-  BlueprintType,
-  Partial<CatalogEntry>,
-][]) {
-  const entry = mergedCatalog.get(type);
-  if (entry) mergedCatalog.set(type, { ...entry, ...override });
-}
-
 export const CATALOG = [...mergedCatalog.values()];
 const byType = new Map(CATALOG.map((entry) => [entry.type, entry]));
 

@@ -126,6 +126,10 @@
       "assetFrame": {
         "width": 18,
         "height": 18
+      },
+      "assetOffset": {
+        "x": -1,
+        "y": -1
       }
     },
     {
@@ -185,6 +189,10 @@
       "assetFrame": {
         "width": 18,
         "height": 18
+      },
+      "assetOffset": {
+        "x": -1,
+        "y": -1
       }
     },
     {
@@ -266,6 +274,10 @@
         "width": 18,
         "height": 18
       },
+      "assetOffset": {
+        "x": -1,
+        "y": -1
+      },
       "assetRotation": 270
     },
     {
@@ -285,7 +297,11 @@
       },
       "assetFrame": {
         "width": 18,
-        "height": 18
+        "height": 26
+      },
+      "assetOffset": {
+        "x": -1,
+        "y": -1
       }
     },
     {
@@ -305,7 +321,11 @@
       },
       "assetFrame": {
         "width": 18,
-        "height": 18
+        "height": 26
+      },
+      "assetOffset": {
+        "x": -1,
+        "y": -1
       }
     },
     {
@@ -785,6 +805,10 @@
       "assetFrame": {
         "width": 18,
         "height": 18
+      },
+      "assetOffset": {
+        "x": -1,
+        "y": -1
       }
     },
     {
@@ -867,6 +891,10 @@
       "assetFrame": {
         "width": 18,
         "height": 18
+      },
+      "assetOffset": {
+        "x": -1,
+        "y": -1
       }
     },
     {
@@ -1487,9 +1515,10 @@
         "height": 24
       },
       "assetFrame": {
-        "width": 16,
-        "height": 16
-      }
+        "width": 24,
+        "height": 24
+      },
+      "assetClip": false
     },
     {
       "type": "burnerBeltLeft",
@@ -1670,6 +1699,14 @@
       "assetSize": {
         "width": 64,
         "height": 20
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 20
+      },
+      "assetClip": true,
+      "assetOffset": {
+        "y": -4
       }
     },
     {
@@ -1745,7 +1782,11 @@
       },
       "assetFrame": {
         "width": 16,
-        "height": 16
+        "height": 20
+      },
+      "assetClip": true,
+      "assetOffset": {
+        "y": -4
       }
     },
     {
@@ -2276,6 +2317,10 @@
       "assetFrame": {
         "width": 18,
         "height": 18
+      },
+      "assetOffset": {
+        "x": -1,
+        "y": -1
       }
     },
     {
@@ -2366,6 +2411,10 @@
       "assetFrame": {
         "width": 18,
         "height": 18
+      },
+      "assetOffset": {
+        "x": -1,
+        "y": -1
       }
     },
     {

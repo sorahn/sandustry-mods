@@ -54,8 +54,8 @@ const variantAssetFrames = new Map([
   [3, { width: 18, height: 18 }],
   [4, { width: 18, height: 18 }],
   [5, { width: 18, height: 18 }],
-  [6, { width: 18, height: 18 }],
-  [7, { width: 18, height: 18 }],
+  [6, { width: 18, height: 26 }],
+  [7, { width: 18, height: 26 }],
   [12, { width: 16, height: 16 }],
   [13, { width: 16, height: 16 }],
   [14, { width: 16, height: 16 }],
@@ -185,6 +185,30 @@ const assetClipOverrides = new Map([
 // export. It must remain unclipped and use the same native placement offset as
 // the game renderer; clipping it to assetFrame removes most of the fan.
 const assetPresentationOverrides = new Map([
+  [3, { assetOffset: { x: -1, y: -1 } }],
+  [4, { assetOffset: { x: -1, y: -1 } }],
+  [5, { assetOffset: { x: -1, y: -1 } }],
+  [6, { assetOffset: { x: -1, y: -1 } }],
+  [7, { assetOffset: { x: -1, y: -1 } }],
+  [17, { assetOffset: { x: -1, y: -1 } }],
+  [18, { assetOffset: { x: -1, y: -1 } }],
+  ["filterLeftMk2", { assetOffset: { x: -1, y: -1 } }],
+  ["filterRightMk2", { assetOffset: { x: -1, y: -1 } }],
+  [
+    "aurixiteCrystallizer",
+    {
+      assetFrame: { width: 24, height: 24 },
+      assetClip: false,
+    },
+  ],
+  [
+    "clearingFrameLeft",
+    { assetFrame: { width: 16, height: 20 }, assetClip: true, assetOffset: { y: -4 } },
+  ],
+  [
+    "clearingFrameRight",
+    { assetFrame: { width: 16, height: 20 }, assetClip: true, assetOffset: { y: -4 } },
+  ],
   ["kineticFieldEmitter", { assetOffset: { x: -16 } }],
   ["kineticFieldEmitterDown", { assetClip: false, assetOffset: { x: -16 } }],
   ["kineticFieldEmitterLeft", { assetClip: false, assetOffset: { x: -16 } }],
