@@ -2,7 +2,7 @@
 
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
-import { copyFile, mkdir, readdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir, rename, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
@@ -63,7 +63,7 @@ async function visualJobs() {
   const jobs = [
     {
       name: "catalog",
-      url: `${siteUrl}?visualFixture=catalog`,
+      url: `${siteUrl}?visualFixture=catalog&visualCapture=1`,
       baseline: path.join(root, "tests/visual/catalog-baseline.png"),
     },
   ];
@@ -74,7 +74,7 @@ async function visualJobs() {
     if (!input) throw new Error(`Visual blueprint is empty: ${file}`);
     jobs.push({
       name,
-      url: `${siteUrl}?visualBlueprint=${encodeURIComponent(input)}`,
+      url: `${siteUrl}?visualBlueprint=${encodeURIComponent(input)}&visualCapture=1`,
       baseline: path.join(baselineRoot, `${name}.png`),
     });
   }
@@ -108,6 +108,17 @@ async function capture(chrome, job, currentPath) {
       code === 0 ? resolve() : reject(new Error(`Chrome exited with status ${code}`)),
     );
   });
+  const trimmedPath = `${currentPath}.trim.png`;
+  await new Promise((resolve, reject) => {
+    const child = spawn("magick", [currentPath, "-trim", "+repage", trimmedPath], {
+      stdio: "inherit",
+    });
+    child.on("error", reject);
+    child.on("exit", (code) =>
+      code === 0 ? resolve() : reject(new Error(`ImageMagick exited with status ${code}`)),
+    );
+  });
+  await rename(trimmedPath, currentPath);
 }
 
 async function compare(baselinePath, currentPath, diffPath) {

@@ -49,6 +49,22 @@ a {
   min-height: 0;
 }
 
+.blueprint-visual-test--capture {
+  min-height: 0;
+  padding: 0;
+  background: #090b0f;
+}
+
+.blueprint-visual-test--capture .blueprint-map__viewport {
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.blueprint-visual-test--capture .blueprint-map__viewport > div:first-child {
+  display: none;
+}
+
 .blueprint-visual-test-error {
   position: fixed;
   inset: 1rem;

@@ -14,27 +14,27 @@ assertCatalogInvariants(catalog, { assetRoot });
 
 const entries = new Map(catalog.entries.map((entry) => [entry.type, entry]));
 const expected = [
-  [13, { assetRotation: 180 }],
-  [14, { assetRotation: 0 }],
-  [21, { assetClip: false, assetOffset: { x: -1 } }],
-  ["filterLeftMk2", { assetOffset: { x: -1, y: -1 } }],
-  ["filterRightMk2", { assetOffset: { x: -1, y: -1 } }],
-  [3, { assetFrame: { width: 18, height: 22 }, assetOffset: { x: -1, y: -1 } }],
-  [4, { assetFrame: { width: 18, height: 22 }, assetOffset: { x: -1, y: -1 } }],
-  ["aurixiteCrystallizer", { assetClip: false }],
-  ["burnerBeltLeft", { assetClip: true, assetFrame: { width: 16, height: 16 } }],
-  ["burnerBeltRight", { assetClip: true, assetFrame: { width: 16, height: 16 } }],
-  ["heatCannonRight", { assetClip: false, assetFrame: { width: 23, height: 16 } }],
-  ["heatCannonDown", { assetClip: false, assetFrame: { width: 23, height: 16 } }],
-  ["heatCannonLeft", { assetClip: false, assetFrame: { width: 23, height: 16 } }],
-  ["heatCannonUp", { assetClip: false, assetFrame: { width: 23, height: 16 } }],
+  [13, { rotation: 180 }],
+  [14, { rotation: 0 }],
+  [21, { clip: false, offset: { x: -1 } }],
+  ["filterLeftMk2", { offset: { x: -1, y: -1 } }],
+  ["filterRightMk2", { offset: { x: -1, y: -1 } }],
+  [3, { frame: { width: 18, height: 22 }, offset: { x: -1, y: -1 } }],
+  [4, { frame: { width: 18, height: 22 }, offset: { x: -1, y: -1 } }],
+  ["aurixiteCrystallizer", { clip: false }],
+  ["burnerBeltLeft", { clip: true, frame: { width: 16, height: 16 } }],
+  ["burnerBeltRight", { clip: true, frame: { width: 16, height: 16 } }],
+  ["heatCannonRight", { clip: false, frame: { width: 23, height: 16 } }],
+  ["heatCannonDown", { clip: false, frame: { width: 23, height: 16 } }],
+  ["heatCannonLeft", { clip: false, frame: { width: 23, height: 16 } }],
+  ["heatCannonUp", { clip: false, frame: { width: 23, height: 16 } }],
 ];
 for (const [type, assertions] of expected) {
   const entry = entries.get(type);
   if (!entry) throw new Error(`catalog invariant regression entry is missing: ${String(type)}`);
   for (const [key, value] of Object.entries(assertions)) {
-    if (JSON.stringify(entry[key]) !== JSON.stringify(value)) {
-      throw new Error(`catalog invariant regression for ${String(type)}.${key}`);
+    if (JSON.stringify(entry.renderAsset?.[key]) !== JSON.stringify(value)) {
+      throw new Error(`catalog invariant regression for ${String(type)}.renderAsset.${key}`);
     }
   }
 }

@@ -405,7 +405,7 @@ function readStoredMapView(blueprintKey: string): MapView | null {
 function structureTopY(structure: Blueprint["data"][number]) {
   const entry = catalogEntry(structure.type);
   const height = structureFootprint(structure).height;
-  return entry?.positionAnchor === "bottom" ? structure.y - height + 1 : structure.y;
+  return entry?.renderAsset?.anchor === "bottom" ? structure.y - height + 1 : structure.y;
 }
 
 type StructureShape = number[][];
@@ -455,12 +455,13 @@ function structureFootprint(structure: Blueprint["data"][number]) {
 function structureVisualTopY(structure: Blueprint["data"][number]) {
   const entry = catalogEntry(structure.type);
   const topY = structureTopY(structure);
-  const assetOffsetY = (entry?.assetOffset?.y ?? 0) / 4;
-  if (entry?.assetScale !== "cell" || entry.positionAnchor !== "bottom") {
+  const renderAsset = entry?.renderAsset;
+  const assetOffsetY = (renderAsset?.offset?.y ?? 0) / 4;
+  if (renderAsset?.scale !== "cell" || renderAsset.anchor !== "bottom") {
     return topY + assetOffsetY;
   }
-  const frameHeight = entry.assetFrame?.width ?? 1;
-  const sourceHeight = entry.assetSize?.height ?? frameHeight;
+  const frameHeight = renderAsset.frame?.width ?? 1;
+  const sourceHeight = renderAsset.sourceSize?.height ?? frameHeight;
   const scale = structure.type === 20 ? KINETIC_PRESS_SCALE : 1;
   return (
     structure.y +
@@ -643,6 +644,7 @@ function BlueprintMap({
   showSidebar,
   showGrid,
   showPngBackground,
+  captureOnly,
 }: {
   blueprint: Blueprint;
   remember: boolean;
@@ -650,6 +652,7 @@ function BlueprintMap({
   showSidebar: boolean;
   showGrid: boolean;
   showPngBackground: boolean;
+  captureOnly?: boolean;
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showDebugCells, setShowDebugCells] = useState(() =>
@@ -677,7 +680,7 @@ function BlueprintMap({
     ? blueprint.data.flatMap((structure) => {
         const entry = catalogEntry(structure.type);
         const width = structureFootprint(structure).width;
-        const assetOffsetX = (entry?.assetOffset?.x ?? 0) / 4;
+        const assetOffsetX = (entry?.renderAsset?.offset?.x ?? 0) / 4;
         return [structure.x + assetOffsetX, structure.x + width - 1 + assetOffsetX];
       })
     : [0];
@@ -891,7 +894,9 @@ function BlueprintMap({
         translate="no"
         style={
           mapSizeReady
-            ? { height: `${Math.max(512, Math.ceil(height * Math.min(1, zoom)))}px` }
+            ? captureOnly
+              ? { width: `${Math.ceil(width)}px`, height: `${Math.ceil(height)}px` }
+              : { height: `${Math.max(512, Math.ceil(height * Math.min(1, zoom)))}px` }
             : undefined
         }
       >
@@ -1071,7 +1076,7 @@ function BlueprintMap({
             // Prefabulator blueprints carry their shape in data even for known
             // structures. Preserve a known catalog sprite and use the generic
             // block asset only for genuinely unknown custom structures.
-            const assetEntry = isCustomShape && !entry?.assetPath ? catalogEntry(11) : entry;
+            const assetEntry = isCustomShape && !entry?.renderAsset ? catalogEntry(11) : entry;
             const labelX = left + tileWidth / 2;
             const label = String(
               entry?.name ??
@@ -1112,14 +1117,18 @@ function BlueprintMap({
                   height={tileHeight}
                   rx="5"
                   fill={
-                    isCustomShape || (entry?.assetPath && !showDebugCells)
+                    isCustomShape || (entry?.renderAsset && !showDebugCells)
                       ? "transparent"
                       : tileColor(structure.type)
                   }
                   // Sprites own their visible shape. A generic footprint border
                   // leaks through the transparent corners of triangle foundations.
                   stroke={
-                    isSelected ? "#ffe700" : isCustomShape || entry?.assetPath ? "none" : "#8491a3"
+                    isSelected
+                      ? "#ffe700"
+                      : isCustomShape || entry?.renderAsset
+                        ? "none"
+                        : "#8491a3"
                   }
                   strokeWidth={isSelected ? "4" : "1.5"}
                 />
@@ -1143,12 +1152,13 @@ function BlueprintMap({
                       ),
                     )
                   : null}
-                {assetEntry?.assetPath
+                {assetEntry?.renderAsset
                   ? (() => {
                       const assetEntry =
-                        isCustomShape && !entry?.assetPath ? catalogEntry(11)! : entry!;
-                      const frame = assetEntry.assetFrame;
-                      const source = assetEntry.assetSize;
+                        isCustomShape && !entry?.renderAsset ? catalogEntry(11)! : entry!;
+                      const renderAsset = assetEntry.renderAsset!;
+                      const frame = renderAsset.frame;
+                      const source = renderAsset.sourceSize;
                       const sourceWidth = source?.width ?? frame?.width ?? 1;
                       const sourceHeight = source?.height ?? frame?.height ?? 1;
                       const runtimeRender = catalogRender(assetEntry);
@@ -1157,11 +1167,9 @@ function BlueprintMap({
                         : undefined;
                       const frameWidth = frame?.width ?? runtimeSize?.width ?? sourceWidth;
                       const frameHeight = frame?.height ?? runtimeSize?.height ?? sourceHeight;
-                      const assetScaleFactor = assetEntry.assetScaleFactor ?? 1;
                       const collectorSprite = collectorSpriteMap.get(index);
-                      const frameIndex =
-                        collectorSprite?.frameIndex ?? assetEntry.assetFrameIndex ?? 0;
-                      const spriteRotation = collectorSprite?.rotation ?? assetEntry.assetRotation;
+                      const frameIndex = collectorSprite?.frameIndex ?? renderAsset.frameIndex ?? 0;
+                      const spriteRotation = collectorSprite?.rotation ?? renderAsset.rotation;
                       const customLightColor =
                         structure.type === 26
                           ? (lightColor(structure) ??
@@ -1170,17 +1178,16 @@ function BlueprintMap({
                           : undefined;
                       const useNativeAssetSize =
                         runtimeSize !== undefined ||
-                        assetEntry.assetScaleFactor !== undefined ||
-                        (frame !== undefined && assetEntry.assetScale !== "cell");
-                      const needsFrameClip = assetEntry.assetClip ?? sourceWidth > frameWidth;
+                        (frame !== undefined && renderAsset.scale !== "cell");
+                      const needsFrameClip = renderAsset.clip ?? sourceWidth > frameWidth;
                       const pixelScale = renderPixelScale(cell);
                       const visualWidth = useNativeAssetSize
-                        ? frameWidth * pixelScale * assetScaleFactor
-                        : assetEntry.assetScale === "cell"
+                        ? frameWidth * pixelScale
+                        : renderAsset.scale === "cell"
                           ? cell * (structure.type === 20 ? KINETIC_PRESS_SCALE : 1)
                           : tileWidth;
                       const visualHeight = useNativeAssetSize
-                        ? frameHeight * pixelScale * assetScaleFactor
+                        ? frameHeight * pixelScale
                         : frame
                           ? visualWidth * (sourceHeight / frameWidth)
                           : tileHeight;
@@ -1191,14 +1198,14 @@ function BlueprintMap({
                           : undefined;
                       const offsetX =
                         (typeof offset?.x === "number" ? offset.x : 0) +
-                        (assetEntry.assetOffset?.x ?? 0);
+                        (renderAsset.offset?.x ?? 0);
                       const offsetY =
                         (typeof offset?.y === "number" ? offset.y : 0) +
-                        (assetEntry.assetOffset?.y ?? 0);
+                        (renderAsset.offset?.y ?? 0);
                       const imageX = left + offsetX * pixelScale;
                       const sourceImageX = imageX - frameIndex * visualWidth;
                       const imageY =
-                        assetEntry.positionAnchor === "bottom"
+                        renderAsset.anchor === "bottom"
                           ? top +
                             tileHeight -
                             visualHeight +
@@ -1245,7 +1252,7 @@ function BlueprintMap({
                             <rect x={imageX} y="0" width={visualWidth} height={height} />
                           </clipPath>
                           <image
-                            href={`${import.meta.env.BASE_URL}${assetEntry.assetPath}`}
+                            href={`${import.meta.env.BASE_URL}${renderAsset.path}`}
                             x={sourceImageX}
                             y={imageY}
                             width={visualWidth * (sourceWidth / frameWidth)}
@@ -1253,7 +1260,7 @@ function BlueprintMap({
                             preserveAspectRatio="none"
                             clipPath={needsFrameClip ? `url(#asset-clip-${index})` : undefined}
                             mask={
-                              isCustomShape && !entry?.assetPath
+                              isCustomShape && !entry?.renderAsset
                                 ? `url(#custom-shape-mask-${index})`
                                 : undefined
                             }
@@ -1687,6 +1694,7 @@ export function BlueprintInspectorPage() {
     typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
   const visualFixture = visualParams?.get("visualFixture");
   const visualBlueprintInput = visualParams?.get("visualBlueprint");
+  const visualCapture = visualParams?.get("visualCapture") === "1";
   let visualBlueprint = visualFixture === "catalog" ? catalogVisualFixture : null;
   if (visualBlueprintInput) {
     try {
@@ -1701,7 +1709,9 @@ export function BlueprintInspectorPage() {
   }
   if (visualBlueprint) {
     return (
-      <div className="blueprint-visual-test">
+      <div
+        className={`blueprint-visual-test${visualCapture ? " blueprint-visual-test--capture" : ""}`}
+      >
         <BlueprintMap
           blueprint={visualBlueprint}
           remember={false}
@@ -1709,6 +1719,7 @@ export function BlueprintInspectorPage() {
           showSidebar={false}
           showGrid={true}
           showPngBackground={true}
+          captureOnly={visualCapture}
         />
       </div>
     );

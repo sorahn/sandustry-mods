@@ -37,33 +37,46 @@ export function validateCatalog(catalog, { assetRoot } = {}) {
     types.add(entry.type);
 
     checkSize(errors, `${label} footprint`, entry.footprint);
-    if (entry.assetScaleFactor !== undefined) {
-      errors.push(`${label} still has retired assetScaleFactor metadata`);
+    const renderAsset = entry.renderAsset;
+    if (renderAsset !== undefined && typeof renderAsset !== "object") {
+      errors.push(`${label} renderAsset must be an object`);
+      continue;
     }
-    if (entry.assetClip !== undefined && typeof entry.assetClip !== "boolean") {
-      errors.push(`${label} assetClip must be boolean`);
-    }
-    if (entry.assetRotation !== undefined) {
-      if (
-        !isFiniteInteger(entry.assetRotation) ||
-        entry.assetRotation < 0 ||
-        entry.assetRotation >= 360 ||
-        entry.assetRotation % 45 !== 0
-      ) {
-        errors.push(`${label} assetRotation must be a normalized multiple of 45`);
+    if (renderAsset) {
+      if (typeof renderAsset.path !== "string" || renderAsset.path.length === 0) {
+        errors.push(`${label} renderAsset.path must be a non-empty string`);
+      }
+      if (renderAsset.clip !== undefined && typeof renderAsset.clip !== "boolean") {
+        errors.push(`${label} renderAsset.clip must be boolean`);
+      }
+      if (renderAsset.scale !== undefined && typeof renderAsset.scale !== "string") {
+        errors.push(`${label} renderAsset.scale must be a string`);
+      }
+      if (renderAsset.anchor !== undefined && typeof renderAsset.anchor !== "string") {
+        errors.push(`${label} renderAsset.anchor must be a string`);
       }
     }
-    if (entry.assetOffset !== undefined) {
+    if (renderAsset?.rotation !== undefined) {
+      if (
+        !isFiniteInteger(renderAsset.rotation) ||
+        renderAsset.rotation < 0 ||
+        renderAsset.rotation >= 360 ||
+        renderAsset.rotation % 45 !== 0
+      ) {
+        errors.push(`${label} renderAsset.rotation must be a normalized multiple of 45`);
+      }
+    }
+    if (renderAsset?.offset !== undefined) {
       for (const axis of ["x", "y"]) {
-        if (entry.assetOffset[axis] !== undefined && !isFiniteInteger(entry.assetOffset[axis])) {
-          errors.push(`${label} assetOffset.${axis} must be a finite integer`);
+        if (renderAsset.offset[axis] !== undefined && !isFiniteInteger(renderAsset.offset[axis])) {
+          errors.push(`${label} renderAsset.offset.${axis} must be a finite integer`);
         }
       }
     }
-    if (entry.assetFrameIndex !== undefined && !isFiniteInteger(entry.assetFrameIndex)) {
-      errors.push(`${label} assetFrameIndex must be a non-negative integer`);
-    } else if (entry.assetFrameIndex !== undefined && entry.assetFrameIndex < 0) {
-      errors.push(`${label} assetFrameIndex must be non-negative`);
+    if (renderAsset?.frameIndex !== undefined && !isFiniteInteger(renderAsset.frameIndex)) {
+      errors.push(`${label} renderAsset.frameIndex must be a non-negative integer`);
+    } else if (renderAsset?.frameIndex !== undefined && renderAsset.frameIndex < 0) {
+      errors.push(`${label} renderAsset.frameIndex must be non-negative`);
     }
 
     if (Array.isArray(entry.variants)) {
@@ -82,48 +95,49 @@ export function validateCatalog(catalog, { assetRoot } = {}) {
       }
     }
 
-    if (entry.assetPath) {
+    if (renderAsset?.path) {
       if (!assetRoot) {
-        errors.push(`${label} cannot validate assetPath without assetRoot`);
+        errors.push(`${label} cannot validate renderAsset.path without assetRoot`);
       } else {
-        const relative = entry.assetPath.replace(/^catalog\//, "");
+        const relative = renderAsset.path.replace(/^catalog\//, "");
         const assetFile = path.resolve(assetRoot, relative);
         if (
           !assetFile.startsWith(`${path.resolve(assetRoot)}${path.sep}`) ||
           !fs.existsSync(assetFile)
         ) {
-          errors.push(`${label} assetPath does not resolve: ${entry.assetPath}`);
+          errors.push(`${label} renderAsset.path does not resolve: ${renderAsset.path}`);
         } else {
           const actualSize = pngSize(fs.readFileSync(assetFile));
-          if (!actualSize) errors.push(`${label} asset is not a readable PNG: ${entry.assetPath}`);
-          if (entry.assetSize) {
-            checkSize(errors, `${label} assetSize`, entry.assetSize);
+          if (!actualSize) errors.push(`${label} asset is not a readable PNG: ${renderAsset.path}`);
+          if (renderAsset.sourceSize) {
+            checkSize(errors, `${label} renderAsset.sourceSize`, renderAsset.sourceSize);
             if (
               actualSize &&
-              (actualSize.width !== entry.assetSize.width ||
-                actualSize.height !== entry.assetSize.height)
+              (actualSize.width !== renderAsset.sourceSize.width ||
+                actualSize.height !== renderAsset.sourceSize.height)
             ) {
-              errors.push(`${label} assetSize does not match ${entry.assetPath}`);
+              errors.push(`${label} renderAsset.sourceSize does not match ${renderAsset.path}`);
             }
           }
-          if (entry.assetFrame) checkSize(errors, `${label} assetFrame`, entry.assetFrame);
-          if (entry.assetFrame && actualSize) {
-            const frameIndex = entry.assetFrameIndex ?? 0;
-            const requiredWidth = (frameIndex + 1) * entry.assetFrame.width;
-            const requiredHeight = entry.assetFrame.height;
+          if (renderAsset?.frame)
+            checkSize(errors, `${label} renderAsset.frame`, renderAsset.frame);
+          if (renderAsset?.frame && actualSize) {
+            const frameIndex = renderAsset.frameIndex ?? 0;
+            const requiredWidth = (frameIndex + 1) * renderAsset.frame.width;
+            const requiredHeight = renderAsset.frame.height;
             if (requiredWidth > actualSize.width || requiredHeight > actualSize.height) {
-              errors.push(`${label} assetFrameIndex/frame exceeds ${entry.assetPath}`);
+              errors.push(`${label} renderAsset.frameIndex/frame exceeds ${renderAsset.path}`);
             }
             const isWide =
-              actualSize.width > entry.assetFrame.width ||
-              actualSize.height > entry.assetFrame.height;
-            if (isWide && entry.assetClip === undefined) {
-              errors.push(`${label} wide asset needs explicit assetClip metadata`);
+              actualSize.width > renderAsset.frame.width ||
+              actualSize.height > renderAsset.frame.height;
+            if (isWide && renderAsset.clip === undefined) {
+              errors.push(`${label} wide asset needs explicit renderAsset.clip metadata`);
             }
           }
         }
       }
-    } else if (entry.assetFrame || entry.assetClip || entry.assetOffset) {
+    } else if (entry.renderAsset) {
       errors.push(`${label} has render-asset metadata without assetPath`);
     }
   }

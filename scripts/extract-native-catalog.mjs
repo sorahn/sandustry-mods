@@ -179,7 +179,7 @@ function findImageName(entry, allEntries) {
   return undefined;
 }
 
-const assetClipOverrides = new Map([
+const clipOverrides = new Map([
   ["heatCannonRight", false],
   ["heatCannonUp", false],
   ["heatCannonLeft", false],
@@ -190,57 +190,51 @@ const assetClipOverrides = new Map([
 // export. It must remain unclipped and use the same native placement offset as
 // the game renderer; clipping it to assetFrame removes most of the fan.
 const assetPresentationOverrides = new Map([
-  [3, { assetOffset: { x: -1, y: -1 } }],
-  [4, { assetOffset: { x: -1, y: -1 } }],
-  [5, { assetOffset: { x: -1, y: -1 } }],
-  [6, { assetOffset: { x: -1, y: -1 } }],
-  [7, { assetOffset: { x: -1, y: -1 } }],
-  [17, { assetOffset: { x: -1, y: -1 } }],
-  [18, { assetOffset: { x: -1, y: -1 } }],
-  [13, { assetRotation: 180 }],
-  [14, { assetRotation: 0 }],
-  [21, { assetClip: false, assetOffset: { x: -1 } }],
-  ["filterLeftMk2", { assetOffset: { x: -1, y: -1 } }],
-  ["filterRightMk2", { assetOffset: { x: -1, y: -1 } }],
+  [3, { offset: { x: -1, y: -1 } }],
+  [4, { offset: { x: -1, y: -1 } }],
+  [5, { offset: { x: -1, y: -1 } }],
+  [6, { offset: { x: -1, y: -1 } }],
+  [7, { offset: { x: -1, y: -1 } }],
+  [17, { offset: { x: -1, y: -1 } }],
+  [18, { offset: { x: -1, y: -1 } }],
+  [13, { rotation: 180 }],
+  [14, { rotation: 0 }],
+  [21, { clip: false, offset: { x: -1 } }],
+  ["filterLeftMk2", { offset: { x: -1, y: -1 } }],
+  ["filterRightMk2", { offset: { x: -1, y: -1 } }],
   [
     "aurixiteCrystallizer",
     {
-      assetFrame: { width: 24, height: 24 },
-      assetClip: false,
+      frame: { width: 24, height: 24 },
+      clip: false,
     },
   ],
   // The menu capture reports an 18x18 presentation box, but the native
   // conveyor-portal export is a single 16x16 frame.
-  ["quantumPortal", { assetFrame: { width: 16, height: 16 } }],
-  [
-    "clearingFrameLeft",
-    { assetFrame: { width: 16, height: 20 }, assetClip: true, assetOffset: { y: -4 } },
-  ],
-  [
-    "clearingFrameRight",
-    { assetFrame: { width: 16, height: 20 }, assetClip: true, assetOffset: { y: -4 } },
-  ],
+  ["quantumPortal", { frame: { width: 16, height: 16 } }],
+  ["clearingFrameLeft", { frame: { width: 16, height: 20 }, clip: true, offset: { y: -4 } }],
+  ["clearingFrameRight", { frame: { width: 16, height: 20 }, clip: true, offset: { y: -4 } }],
   // These native exports are complete sprites even though their presentation
   // metadata uses a normal 16x16 frame. Keep the extractor from treating them
   // as missing/cropped assets when the source dimensions are inspected.
-  ["snowmaker", { assetFrame: { width: 16, height: 16 }, assetClip: false }],
-  ["thermofroster", { assetFrame: { width: 16, height: 16 }, assetClip: false }],
+  ["snowmaker", { frame: { width: 16, height: 16 }, clip: false }],
+  ["thermofroster", { frame: { width: 16, height: 16 }, clip: false }],
   // These exports are four 16x16 animation frames in a single horizontal
   // strip. The blueprint catalog displays the first frame only.
-  ["burnerBeltLeft", { assetFrame: { width: 16, height: 16 }, assetClip: true }],
-  ["burnerBeltRight", { assetFrame: { width: 16, height: 16 }, assetClip: true }],
-  ["heatCannonRight", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
-  ["heatCannonUp", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
-  ["heatCannonLeft", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
-  ["heatCannonDown", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
-  ["kineticFieldEmitter", { assetOffset: { x: -16 } }],
-  ["kineticFieldEmitterDown", { assetClip: false, assetOffset: { x: -16 } }],
-  ["kineticFieldEmitterLeft", { assetClip: false, assetOffset: { x: -16 } }],
-  ["kineticFieldEmitterUp", { assetClip: false, assetOffset: { x: -16 } }],
-  ["kineticFieldEmitterDownRight", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
-  ["kineticFieldEmitterDownLeft", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
-  ["kineticFieldEmitterUpLeft", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
-  ["kineticFieldEmitterUpRight", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
+  ["burnerBeltLeft", { frame: { width: 16, height: 16 }, clip: true }],
+  ["burnerBeltRight", { frame: { width: 16, height: 16 }, clip: true }],
+  ["heatCannonRight", { frame: { width: 23, height: 16 }, clip: false }],
+  ["heatCannonUp", { frame: { width: 23, height: 16 }, clip: false }],
+  ["heatCannonLeft", { frame: { width: 23, height: 16 }, clip: false }],
+  ["heatCannonDown", { frame: { width: 23, height: 16 }, clip: false }],
+  ["kineticFieldEmitter", { offset: { x: -16 } }],
+  ["kineticFieldEmitterDown", { clip: false, offset: { x: -16 } }],
+  ["kineticFieldEmitterLeft", { clip: false, offset: { x: -16 } }],
+  ["kineticFieldEmitterUp", { clip: false, offset: { x: -16 } }],
+  ["kineticFieldEmitterDownRight", { clip: false, offset: { x: -8, y: 8 } }],
+  ["kineticFieldEmitterDownLeft", { clip: false, offset: { x: -8, y: 8 } }],
+  ["kineticFieldEmitterUpLeft", { clip: false, offset: { x: -8, y: 8 } }],
+  ["kineticFieldEmitterUpRight", { clip: false, offset: { x: -8, y: 8 } }],
 ]);
 
 const bottomAnchoredTypes = new Set([20]);
@@ -357,7 +351,7 @@ const catalogWithAssets = {
   ...blueprintCatalog,
   entries: blueprintCatalog.entries.map((entry) => {
     const imageName = findImageName(entry, blueprintCatalog.entries);
-    const renderAsset =
+    const renderImageAsset =
       typeof imageName === "string" ? assetByStem.get(assetStem(imageName)) : undefined;
     const menuCapture = typeof entry.name === "string" ? menuAssets.get(entry.name) : undefined;
     const menuAsset = menuCapture ? assetBySource.get(menuCapture.source) : undefined;
@@ -366,7 +360,7 @@ const catalogWithAssets = {
     // Explicit variant exports must win over the parent render image. This is
     // important for the diagonal fan variants, whose render metadata points
     // at the cardinal fan while their dedicated PNG is 15x15.
-    const assetPath = variantAsset ?? renderAsset ?? menuAsset;
+    const assetPath = variantAsset ?? renderImageAsset ?? menuAsset;
     const asset = assetPath ? assets.find((candidate) => candidate.file === assetPath) : undefined;
     const assetFrame = variantAssetFrames.get(entry.type) ?? menuCapture?.frame;
     const derivedRotation = deriveAssetRotation(entry.type, blueprintCatalog.entries);
@@ -376,23 +370,23 @@ const catalogWithAssets = {
       (asset.size.width > assetFrame.width || asset.size.height > assetFrame.height)
         ? true
         : undefined;
-    return assetPath
-      ? {
-          ...entry,
-          assetPath,
-          ...(bottomAnchoredTypes.has(entry.type) ? { positionAnchor: "bottom" } : {}),
-          ...(cellScaledTypes.has(entry.type) ? { assetScale: "cell" } : {}),
-          ...(asset?.size ? { assetSize: asset.size } : {}),
-          ...(assetFrame ? { assetFrame } : {}),
-          ...(assetClipOverrides.has(entry.type)
-            ? { assetClip: assetClipOverrides.get(entry.type) }
-            : defaultAssetClip !== undefined
-              ? { assetClip: defaultAssetClip }
-              : {}),
-          ...(derivedRotation !== undefined ? { assetRotation: derivedRotation } : {}),
-          ...assetPresentationOverrides.get(entry.type),
-        }
-      : entry;
+    if (!assetPath) return entry;
+    const presentationOverride = assetPresentationOverrides.get(entry.type) ?? {};
+    const renderAsset = {
+      path: assetPath,
+      ...(asset?.size ? { sourceSize: asset.size } : {}),
+      ...(assetFrame ? { frame: assetFrame } : {}),
+      ...(clipOverrides.has(entry.type)
+        ? { clip: clipOverrides.get(entry.type) }
+        : defaultAssetClip !== undefined
+          ? { clip: defaultAssetClip }
+          : {}),
+      ...(derivedRotation !== undefined ? { rotation: derivedRotation } : {}),
+      ...(bottomAnchoredTypes.has(entry.type) ? { anchor: "bottom" } : {}),
+      ...(cellScaledTypes.has(entry.type) ? { scale: "cell" } : {}),
+      ...presentationOverride,
+    };
+    return { ...entry, renderAsset };
   }),
 };
 

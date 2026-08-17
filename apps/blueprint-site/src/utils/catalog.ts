@@ -8,6 +8,18 @@ export type RenderMetadata = {
   [key: string]: unknown;
 };
 
+export type RenderAsset = {
+  path: string;
+  sourceSize?: { width: number; height: number };
+  frame?: { width: number; height: number };
+  frameIndex?: number;
+  scale?: string;
+  clip?: boolean;
+  offset?: { x?: number; y?: number };
+  rotation?: number;
+  anchor?: string;
+};
+
 export type CatalogEntry = {
   type: BlueprintType;
   name?: string;
@@ -20,18 +32,7 @@ export type CatalogEntry = {
   variants?: unknown;
   definition?: unknown;
   render?: RenderMetadata | string;
-  assetPath?: string;
-  assetFrame?: { width: number; height: number };
-  assetFrameIndex?: number;
-  assetSize?: { width: number; height: number };
-  assetClip?: boolean;
-  assetRotation?: number;
-  /** Manual render offset in native sprite pixels. */
-  assetOffset?: { x?: number; y?: number };
-  /** Fine adjustment for sprites with a one-pixel inset on each side. */
-  assetScaleFactor?: number;
-  positionAnchor?: string;
-  assetScale?: "tile" | "cell" | string;
+  renderAsset?: RenderAsset;
   source: string;
 };
 
