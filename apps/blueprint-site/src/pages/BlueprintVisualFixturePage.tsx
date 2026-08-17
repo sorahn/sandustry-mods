@@ -1,19 +1,32 @@
 import { BlueprintMap } from "../components/BlueprintMap";
+import { decodeBlueprint } from "../utils/blueprint";
 import { catalogVisualFixture } from "../visual-fixtures/catalog";
 
 export function BlueprintVisualFixturePage() {
-  const visualCapture =
-    typeof window !== "undefined" &&
-    new URLSearchParams(window.location.search).get("visualCapture") === "1";
+  const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const visualCapture = params?.get("visualCapture") === "1";
+  let blueprint = catalogVisualFixture;
+  const visualBlueprint = params?.get("visualBlueprint");
+  if (visualBlueprint) {
+    try {
+      blueprint = decodeBlueprint(visualBlueprint);
+    } catch (error) {
+      return (
+        <pre className="blueprint-visual-test-error">
+          {error instanceof Error ? error.message : "Unable to decode visual blueprint."}
+        </pre>
+      );
+    }
+  }
 
   return (
     <div
       className={`blueprint-visual-test${visualCapture ? " blueprint-visual-test--capture" : ""}`}
     >
       <BlueprintMap
-        blueprint={catalogVisualFixture}
+        blueprint={blueprint}
         remember={false}
-        blueprintKey="visual-catalog-fixture"
+        blueprintKey={`visual-${blueprint.name}`}
         showSidebar={false}
         showGrid={true}
         showPngBackground={true}

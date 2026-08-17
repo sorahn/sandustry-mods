@@ -12,7 +12,7 @@ const outputRoot = path.join(root, "artifacts/visual");
 const blueprintRoot = path.join(root, "tests/visual/blueprints");
 const baselineRoot = path.join(root, "tests/visual/baselines");
 const port = 4179;
-const siteUrl = `http://127.0.0.1:${port}/inspect`;
+const siteUrl = `http://127.0.0.1:${port}/inspect/fixture`;
 const update = process.argv.includes("--update");
 const diff = process.argv.includes("--diff");
 const onlyArgument = process.argv.find((argument) => argument.startsWith("--only="));
@@ -63,7 +63,7 @@ async function visualJobs() {
   const jobs = [
     {
       name: "catalog",
-      url: `${siteUrl}?visualFixture=catalog&visualCapture=1`,
+      url: `${siteUrl}?visualCapture=1`,
       baseline: path.join(root, "tests/visual/catalog-baseline.png"),
     },
   ];
