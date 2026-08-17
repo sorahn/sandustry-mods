@@ -34,7 +34,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": 2,
@@ -106,7 +107,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": 3,
@@ -125,8 +127,9 @@
       },
       "assetFrame": {
         "width": 18,
-        "height": 18
+        "height": 22
       },
+      "assetClip": true,
       "assetOffset": {
         "x": -1,
         "y": -1
@@ -188,8 +191,9 @@
       },
       "assetFrame": {
         "width": 18,
-        "height": 18
+        "height": 22
       },
+      "assetClip": true,
       "assetOffset": {
         "x": -1,
         "y": -1
@@ -779,7 +783,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": 17,
@@ -807,6 +812,7 @@
         "width": 18,
         "height": 18
       },
+      "assetClip": true,
       "assetOffset": {
         "x": -1,
         "y": -1
@@ -893,6 +899,7 @@
         "width": 18,
         "height": 18
       },
+      "assetClip": true,
       "assetOffset": {
         "x": -1,
         "y": -1
@@ -961,7 +968,8 @@
       "assetFrame": {
         "width": 18,
         "height": 18
-      }
+      },
+      "assetClip": true
     },
     {
       "type": 20,
@@ -1027,7 +1035,8 @@
       "assetFrame": {
         "width": 18,
         "height": 18
-      }
+      },
+      "assetClip": true
     },
     {
       "type": 21,
@@ -1581,10 +1590,10 @@
         "height": 16
       },
       "assetFrame": {
-        "width": 64,
+        "width": 16,
         "height": 16
       },
-      "assetClip": false
+      "assetClip": true
     },
     {
       "type": "burnerBeltRight",
@@ -1657,10 +1666,10 @@
         "height": 16
       },
       "assetFrame": {
-        "width": 64,
+        "width": 16,
         "height": 16
       },
-      "assetClip": false
+      "assetClip": true
     },
     {
       "type": "clearingFrameLeft",
@@ -1857,7 +1866,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "conveyorRightMk2",
@@ -1932,7 +1942,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "copperMold",
@@ -2329,6 +2340,7 @@
         "width": 18,
         "height": 18
       },
+      "assetClip": true,
       "assetOffset": {
         "x": -1,
         "y": -1
@@ -2423,6 +2435,7 @@
         "width": 18,
         "height": 18
       },
+      "assetClip": true,
       "assetOffset": {
         "x": -1,
         "y": -1
@@ -2753,7 +2766,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "heatCannonDown",
@@ -4412,8 +4426,8 @@
         "height": 16
       },
       "assetFrame": {
-        "width": 18,
-        "height": 18
+        "width": 16,
+        "height": 16
       }
     },
     {
@@ -4523,7 +4537,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "sandustryTestBlocksSource",
@@ -4767,7 +4782,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalBuffer",
@@ -4842,7 +4858,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalButton",
@@ -4917,7 +4934,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalGate",
@@ -5014,7 +5032,8 @@
       "assetFrame": {
         "width": 18,
         "height": 18
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalLamp",
@@ -5088,7 +5107,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalNand",
@@ -5174,7 +5194,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalNor",
@@ -5260,7 +5281,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalNot",
@@ -5346,7 +5368,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalOr",
@@ -5432,7 +5455,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalPresenceSensor",
@@ -5507,7 +5531,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalPulseSensor",
@@ -5582,7 +5607,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalRepeater",
@@ -5656,7 +5682,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalSensor",
@@ -5731,7 +5758,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalSwitch",
@@ -5806,7 +5834,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalToggle",
@@ -5893,7 +5922,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalXnor",
@@ -5979,7 +6009,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "signalXor",
@@ -6065,7 +6096,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "smelter",
@@ -6418,7 +6450,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     },
     {
       "type": "thermalRelay",
@@ -6834,7 +6867,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetClip": true
     }
   ]
 }

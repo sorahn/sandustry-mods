@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
+import { assertCatalogInvariants } from "./catalog-invariants.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const asarPath =
@@ -55,8 +56,8 @@ const variantAssetFrames = new Map([
   [0, { width: 16, height: 16 }],
   [1, { width: 16, height: 16 }],
   [2, { width: 16, height: 16 }],
-  [3, { width: 18, height: 18 }],
-  [4, { width: 18, height: 18 }],
+  [3, { width: 18, height: 22 }],
+  [4, { width: 18, height: 22 }],
   [5, { width: 18, height: 18 }],
   [6, { width: 18, height: 26 }],
   [7, { width: 18, height: 26 }],
@@ -208,6 +209,9 @@ const assetPresentationOverrides = new Map([
       assetClip: false,
     },
   ],
+  // The menu capture reports an 18x18 presentation box, but the native
+  // conveyor-portal export is a single 16x16 frame.
+  ["quantumPortal", { assetFrame: { width: 16, height: 16 } }],
   [
     "clearingFrameLeft",
     { assetFrame: { width: 16, height: 20 }, assetClip: true, assetOffset: { y: -4 } },
@@ -221,8 +225,10 @@ const assetPresentationOverrides = new Map([
   // as missing/cropped assets when the source dimensions are inspected.
   ["snowmaker", { assetFrame: { width: 16, height: 16 }, assetClip: false }],
   ["thermofroster", { assetFrame: { width: 16, height: 16 }, assetClip: false }],
-  ["burnerBeltLeft", { assetFrame: { width: 64, height: 16 }, assetClip: false }],
-  ["burnerBeltRight", { assetFrame: { width: 64, height: 16 }, assetClip: false }],
+  // These exports are four 16x16 animation frames in a single horizontal
+  // strip. The blueprint catalog displays the first frame only.
+  ["burnerBeltLeft", { assetFrame: { width: 16, height: 16 }, assetClip: true }],
+  ["burnerBeltRight", { assetFrame: { width: 16, height: 16 }, assetClip: true }],
   ["heatCannonRight", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
   ["heatCannonUp", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
   ["heatCannonLeft", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
@@ -364,6 +370,12 @@ const catalogWithAssets = {
     const asset = assetPath ? assets.find((candidate) => candidate.file === assetPath) : undefined;
     const assetFrame = variantAssetFrames.get(entry.type) ?? menuCapture?.frame;
     const derivedRotation = deriveAssetRotation(entry.type, blueprintCatalog.entries);
+    const defaultAssetClip =
+      asset?.size &&
+      assetFrame &&
+      (asset.size.width > assetFrame.width || asset.size.height > assetFrame.height)
+        ? true
+        : undefined;
     return assetPath
       ? {
           ...entry,
@@ -374,13 +386,17 @@ const catalogWithAssets = {
           ...(assetFrame ? { assetFrame } : {}),
           ...(assetClipOverrides.has(entry.type)
             ? { assetClip: assetClipOverrides.get(entry.type) }
-            : {}),
+            : defaultAssetClip !== undefined
+              ? { assetClip: defaultAssetClip }
+              : {}),
           ...(derivedRotation !== undefined ? { assetRotation: derivedRotation } : {}),
-          ...(assetPresentationOverrides.get(entry.type) ?? {}),
+          ...assetPresentationOverrides.get(entry.type),
         }
       : entry;
   }),
 };
+
+assertCatalogInvariants(catalogWithAssets, { assetRoot });
 
 fs.writeFileSync(catalogPath, `${JSON.stringify(catalogWithAssets, null, 2)}\n`);
 fs.writeFileSync(
