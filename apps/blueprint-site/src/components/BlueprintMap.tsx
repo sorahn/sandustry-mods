@@ -7,7 +7,7 @@ import {
   type CatalogEntry,
 } from "../utils/catalog";
 import { debugComponent } from "./DebugComponentWrapper";
-import { PersistentCheckbox } from "./PersistentCheckbox";
+import { MapDebugOptions } from "./MapDebugOptions";
 
 function structureLabel(type: Blueprint["data"][number]["type"]) {
   return typeof type === "number" ? `native ${type}` : type;
@@ -115,8 +115,6 @@ function lightColor(data: unknown): string | undefined {
 }
 
 const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
-const SHOW_DEBUG_CELLS_KEY = "sandustry.blueprintInspector.showDebugCells";
-const SHOW_NAMES_KEY = "sandustry.blueprintInspector.showNames";
 const MAP_ZOOM_LEVELS = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
 const NATIVE_PIXELS_PER_CELL = 4;
 const DISPLAY_PIXELS_PER_BLOCK_AT_100 = 32;
@@ -134,12 +132,6 @@ function readLocalValue(key: string) {
   } catch {
     return null;
   }
-}
-
-function readStoredBoolean(key: string, fallback: boolean) {
-  if (typeof window === "undefined") return fallback;
-  const stored = readLocalValue(key);
-  return stored === null ? fallback : stored !== "false";
 }
 
 function writeLocalValue(key: string, value: string) {
@@ -465,10 +457,11 @@ export function BlueprintMap({
   captureOnly?: boolean;
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [showDebugCells, setShowDebugCells] = useState(() =>
-    readStoredBoolean(SHOW_DEBUG_CELLS_KEY, false),
-  );
-  const [showNames, setShowNames] = useState(() => readStoredBoolean(SHOW_NAMES_KEY, false));
+  const [showDebugCells, setShowDebugCells] = useState(false);
+  const [showNames, setShowNames] = useState(false);
+  const [hideSprites, setHideSprites] = useState(false);
+  const [showCustomShapes, setShowCustomShapes] = useState(false);
+  const [hideFoundationOutlines, setHideFoundationOutlines] = useState(false);
   const [zoom, setZoom] = useState(() => snapMapZoom(readStoredMapView(blueprintKey)?.zoom ?? 1));
   const [pan, setPan] = useState(() => readStoredMapView(blueprintKey)?.pan ?? { x: 0, y: 0 });
   const [mapSizeReady, setMapSizeReady] = useState(() => readStoredMapView(blueprintKey) !== null);
@@ -547,21 +540,17 @@ export function BlueprintMap({
         left.index - right.index,
     );
   const collectorSpriteMap = collectorSprites(blueprint.data, renderStructures);
-  const debugCellsToggle = debugComponent(PersistentCheckbox, {
-    boxed: true,
-    defaultChecked: showDebugCells,
-    storageKey: SHOW_DEBUG_CELLS_KEY,
-    label: "debug cells",
-    size: "small",
-    onCheckedChange: setShowDebugCells,
-  });
-  const debugNamesToggle = debugComponent(PersistentCheckbox, {
-    boxed: true,
-    defaultChecked: showNames,
-    storageKey: SHOW_NAMES_KEY,
-    label: "show names",
-    size: "small",
-    onCheckedChange: setShowNames,
+  const debugOptions = debugComponent(MapDebugOptions, {
+    showDebugCells,
+    onShowDebugCellsChange: setShowDebugCells,
+    showNames,
+    onShowNamesChange: setShowNames,
+    hideSprites,
+    onHideSpritesChange: setHideSprites,
+    showCustomShapes,
+    onShowCustomShapesChange: setShowCustomShapes,
+    hideFoundationOutlines,
+    onHideFoundationOutlinesChange: setHideFoundationOutlines,
   });
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -955,7 +944,7 @@ export function BlueprintMap({
                   height={tileHeight}
                   rx="5"
                   fill={
-                    isCustomShape || (entry?.renderAsset && !showDebugCells)
+                    isCustomShape || (entry?.renderAsset && !showDebugCells && !hideSprites)
                       ? "transparent"
                       : tileColor(structure.type)
                   }
@@ -964,13 +953,13 @@ export function BlueprintMap({
                   stroke={
                     isSelected
                       ? "#ffe700"
-                      : isCustomShape || entry?.renderAsset
+                      : isCustomShape || (entry?.renderAsset && !hideSprites)
                         ? "none"
                         : "#8491a3"
                   }
                   strokeWidth={isSelected ? "4" : "1.5"}
                 />
-                {isCustomShape
+                {isCustomShape && showCustomShapes
                   ? shape.map((row, rowIndex) =>
                       row.map((value, columnIndex) =>
                         value === 0 ? null : (
@@ -990,7 +979,7 @@ export function BlueprintMap({
                       ),
                     )
                   : null}
-                {assetEntry?.renderAsset
+                {!hideSprites && assetEntry?.renderAsset
                   ? (() => {
                       const assetEntry =
                         isCustomShape && !entry?.renderAsset ? catalogEntry(11)! : entry!;
@@ -1184,7 +1173,8 @@ export function BlueprintMap({
               </g>
             );
           })}
-          {foundationOutlinePath(
+          {!hideFoundationOutlines &&
+          foundationOutlinePath(
             blueprint.data,
             minX,
             minY,
@@ -1211,14 +1201,9 @@ export function BlueprintMap({
       </div>
       {showSidebar ? (
         <aside className="flex flex-col border-l border-slate-800 pl-4 text-xs text-slate-400">
-          {debugCellsToggle || debugNamesToggle ? (
-            <div className="flex flex-row gap-2">
-              {debugNamesToggle}
-              {debugCellsToggle}
-            </div>
-          ) : null}
+          {debugOptions}
           <p
-            className={`${debugCellsToggle || debugNamesToggle ? "pt-4" : null} font-mono uppercase tracking-[0.18em] text-slate-500`}
+            className={`${debugOptions ? "pt-4" : null} font-mono uppercase tracking-[0.18em] text-slate-500`}
           >
             Selected record
           </p>

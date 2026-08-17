@@ -1,4 +1,4 @@
-import { type ChangeEvent, type ComponentProps, useState } from "react";
+import { type ChangeEvent, type ComponentProps, useEffect, useState } from "react";
 import { Checkbox } from "@sandustry/ui/react";
 
 function readStoredBoolean(key: string, fallback: boolean) {
@@ -23,15 +23,21 @@ type PersistentCheckboxProps = Omit<ComponentProps<typeof Checkbox>, "checked" |
   storageKey: string;
   defaultChecked: boolean;
   onCheckedChange?: (checked: boolean) => void;
+  onInitialCheckedChange?: (checked: boolean) => void;
 };
 
 export function PersistentCheckbox({
   storageKey,
   defaultChecked,
   onCheckedChange,
+  onInitialCheckedChange,
   ...props
 }: PersistentCheckboxProps) {
   const [checked, setChecked] = useState(() => readStoredBoolean(storageKey, defaultChecked));
+
+  useEffect(() => {
+    onInitialCheckedChange?.(checked);
+  }, []);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const nextChecked = event.target.checked;
