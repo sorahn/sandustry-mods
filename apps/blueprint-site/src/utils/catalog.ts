@@ -14,6 +14,7 @@ export type CatalogEntry = {
   nameKey?: string;
   category?: string;
   footprint: { width: number; height: number };
+  shape?: number[][] | string;
   rotations?: number[];
   buildModes?: unknown;
   variants?: unknown;

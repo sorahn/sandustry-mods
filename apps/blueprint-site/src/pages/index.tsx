@@ -429,6 +429,97 @@ function renderPixelScale(cell: number) {
   return cell / NATIVE_PIXELS_PER_BLOCK;
 }
 
+function foundationOutlinePath(
+  structures: Blueprint["data"],
+  minX: number,
+  minY: number,
+  padding: number,
+  cell: number,
+  cornerRadius: number,
+) {
+  const occupied = new Set<string>();
+  for (const structure of structures) {
+    if (typeof structure.type !== "number" || structure.type < 11 || structure.type > 15) {
+      continue;
+    }
+    const catalogShape = catalogEntry(structure.type)?.shape;
+    const shape: number[][] = Array.isArray(catalogShape)
+      ? catalogShape
+      : [
+          [1, 1, 1, 1],
+          [1, 1, 1, 1],
+          [1, 1, 1, 1],
+          [1, 1, 1, 1],
+        ];
+    const topY = structureTopY(structure);
+    shape.forEach((row, rowIndex) => {
+      row.forEach((value, columnIndex) => {
+        if (value !== 0) occupied.add(`${structure.x + columnIndex},${topY + rowIndex}`);
+      });
+    });
+  }
+
+  const edges: Array<{ from: [number, number]; to: [number, number] }> = [];
+  const edge = (x: number, y: number, nextX: number, nextY: number) => {
+    edges.push({ from: [x, y], to: [nextX, nextY] });
+  };
+  for (const key of occupied) {
+    const [x, y] = key.split(",").map(Number);
+    if (!occupied.has(`${x - 1},${y}`)) edge(x, y, x, y + 1);
+    if (!occupied.has(`${x + 1},${y}`)) edge(x + 1, y + 1, x + 1, y);
+    if (!occupied.has(`${x},${y - 1}`)) edge(x + 1, y, x, y);
+    if (!occupied.has(`${x},${y + 1}`)) edge(x, y + 1, x + 1, y + 1);
+  }
+  const outgoing = new Map<string, number[]>();
+  edges.forEach((currentEdge, index) => {
+    const key = currentEdge.from.join(",");
+    outgoing.set(key, [...(outgoing.get(key) ?? []), index]);
+  });
+  const visited = new Set<number>();
+  const contours: string[] = [];
+  edges.forEach((startEdge, startIndex) => {
+    if (visited.has(startIndex)) return;
+    const start = startEdge.from;
+    let currentIndex = startIndex;
+    const points: Array<[number, number]> = [start];
+    while (!visited.has(currentIndex)) {
+      visited.add(currentIndex);
+      const currentEdge = edges[currentIndex];
+      points.push(currentEdge.to);
+      if (currentEdge.to[0] === start[0] && currentEdge.to[1] === start[1]) break;
+      const next = outgoing.get(currentEdge.to.join(","))?.find((index) => !visited.has(index));
+      if (next === undefined) break;
+      currentIndex = next;
+    }
+    if (points.length > 1) points.pop();
+    const transformed = points.map(([x, y]) => [
+      (x - minX + padding) * cell,
+      (y - minY + padding) * cell,
+    ]);
+    const rounded: string[] = [];
+    transformed.forEach((current, index) => {
+      const previous = transformed[(index + transformed.length - 1) % transformed.length];
+      const next = transformed[(index + 1) % transformed.length];
+      const previousLength = Math.hypot(current[0] - previous[0], current[1] - previous[1]);
+      const nextLength = Math.hypot(next[0] - current[0], next[1] - current[1]);
+      const radius = Math.min(cornerRadius, previousLength / 2, nextLength / 2);
+      const entry = [
+        current[0] + ((previous[0] - current[0]) / previousLength) * radius,
+        current[1] + ((previous[1] - current[1]) / previousLength) * radius,
+      ];
+      const exit = [
+        current[0] + ((next[0] - current[0]) / nextLength) * radius,
+        current[1] + ((next[1] - current[1]) / nextLength) * radius,
+      ];
+      rounded.push(
+        `${index === 0 ? `M ${entry[0]} ${entry[1]}` : `L ${entry[0]} ${entry[1]}`} Q ${current[0]} ${current[1]} ${exit[0]} ${exit[1]}`,
+      );
+    });
+    contours.push(`${rounded.join(" ")} Z`);
+  });
+  return contours.join(" ");
+}
+
 type CollectorSprite = { frameIndex: number; rotation: number };
 
 function collectorSprites(
@@ -1057,6 +1148,29 @@ function BlueprintMap({
               </g>
             );
           })}
+          {foundationOutlinePath(
+            blueprint.data,
+            minX,
+            minY,
+            padding,
+            cell,
+            renderPixelScale(cell) / 2,
+          ) ? (
+            <path
+              d={foundationOutlinePath(
+                blueprint.data,
+                minX,
+                minY,
+                padding,
+                cell,
+                renderPixelScale(cell) / 2,
+              )}
+              fill="none"
+              stroke="#000000"
+              strokeWidth={renderPixelScale(cell) / 2}
+              pointerEvents="none"
+            />
+          ) : null}
         </svg>
       </div>
       {showSidebar ? (
