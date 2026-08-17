@@ -872,6 +872,36 @@ export function BlueprintMap({
               <rect width={width} height={height} fill="url(#blueprint-cell-grid)" />
             </g>
           ) : null}
+          {showDebugCells ? (
+            <g opacity="0.8" pointerEvents="none">
+              {blueprint.data.flatMap((structure, structureIndex) => {
+                const footprint = structureFootprint(structure);
+                const shape =
+                  structureShape(structure) ??
+                  Array.from({ length: footprint.height }, () =>
+                    Array.from({ length: footprint.width }, () => 1),
+                  );
+                const topY = structureTopY(structure);
+                const left = (structure.x - minX + padding) * cell;
+                const top = (topY - minY + padding) * cell;
+                return shape.flatMap((row, rowIndex) =>
+                  row.map((value, columnIndex) =>
+                    value === 0 ? null : (
+                      <rect
+                        key={`debug-cell-${structureIndex}-${rowIndex}-${columnIndex}`}
+                        x={left + columnIndex * cell}
+                        y={top + rowIndex * cell}
+                        width={cell}
+                        height={cell}
+                        rx="2"
+                        fill={tileColor(structure.type)}
+                      />
+                    ),
+                  ),
+                );
+              })}
+            </g>
+          ) : null}
           {(blueprint.signalLinks ?? []).map((link, index) => {
             const from = point(link.from.x, link.from.y);
             const to = point(link.to.x, link.to.y);
@@ -944,7 +974,7 @@ export function BlueprintMap({
                   height={tileHeight}
                   rx="5"
                   fill={
-                    isCustomShape || (entry?.renderAsset && !showDebugCells && !hideSprites)
+                    hideSprites || isCustomShape || entry?.renderAsset
                       ? "transparent"
                       : tileColor(structure.type)
                   }
@@ -953,7 +983,7 @@ export function BlueprintMap({
                   stroke={
                     isSelected
                       ? "#ffe700"
-                      : isCustomShape || (entry?.renderAsset && !hideSprites)
+                      : hideSprites || isCustomShape || entry?.renderAsset
                         ? "none"
                         : "#8491a3"
                   }
@@ -971,7 +1001,7 @@ export function BlueprintMap({
                             height={cell}
                             rx="2"
                             fill="#a47a45"
-                            stroke={showDebugCells ? (isSelected ? "#ffe700" : "#6e4c2c") : "none"}
+                            stroke={isSelected ? "#ffe700" : "none"}
                             strokeWidth={isSelected ? "2" : "1"}
                             pointerEvents="none"
                           />
@@ -1125,26 +1155,6 @@ export function BlueprintMap({
                                 />
                               ))
                             : null}
-                          {showDebugCells && renderAsset.debug?.height !== undefined ? (
-                            <rect
-                              x={imageX}
-                              y={
-                                top +
-                                tileHeight +
-                                renderAnchorOffsetCells(renderAsset.anchor) * cell -
-                                visualWidth * (renderAsset.debug.height / (frame?.width ?? 1))
-                              }
-                              width={visualWidth}
-                              height={
-                                visualWidth * (renderAsset.debug.height / (frame?.width ?? 1))
-                              }
-                              fill="none"
-                              stroke="#00ff66"
-                              strokeWidth="0.5"
-                              vectorEffect="non-scaling-stroke"
-                              pointerEvents="none"
-                            />
-                          ) : null}
                         </>
                       );
                     })()
