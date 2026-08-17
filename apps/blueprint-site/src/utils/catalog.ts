@@ -12,6 +12,18 @@ export type CatalogEntry = {
 
 export const NATIVE_CATALOG_VERSION = generatedCatalog.generatedAt;
 
+const DIRECTIONAL_NAME_ALIASES: Record<string, string> = {
+  burnerBeltLeft: "Burner Belt",
+  burnerBeltRight: "Burner Belt",
+  clearingFrameLeft: "Clearing Frame",
+  clearingFrameRight: "Clearing Frame",
+  conveyorLeftMk2: "Conveyor Belt Mk.2",
+  conveyorRightMk2: "Conveyor Belt Mk.2",
+  launcherLeftMk2: "Launcher Mk.2",
+  launcherRightMk2: "Launcher Mk.2",
+  launcherUpMk2: "Launcher Mk.2",
+};
+
 // The runtime debug probes do not expose a complete catalog. Missing entries
 // intentionally continue through the renderer's unknown-content fallback.
 const MANUAL_CATALOG: CatalogEntry[] = [
@@ -65,7 +77,9 @@ const MANUAL_CATALOG: CatalogEntry[] = [
 
 const runtimeCatalog: CatalogEntry[] = generatedCatalog.entries.map((entry) => ({
   ...entry,
-  name: entry.name && !/^\[NO (KEY|NAME)\]$/.test(entry.name) ? entry.name : undefined,
+  name:
+    (typeof entry.type === "string" ? DIRECTIONAL_NAME_ALIASES[entry.type] : undefined) ??
+    (entry.name && !/^\[NO (KEY|NAME)\]$/.test(entry.name) ? entry.name : undefined),
   footprint: entry.shape ? entry.footprint : { width: 4, height: 4 },
 }));
 
