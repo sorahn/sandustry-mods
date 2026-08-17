@@ -88,7 +88,8 @@
         "categoryKey": "logistics",
         "order": 10
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__conveyor_right.png"
     },
     {
       "type": 3,
@@ -149,7 +150,8 @@
         "descriptionKey": "structures|shaker|description",
         "categoryKey": "production"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__shaker_right.png"
     },
     {
       "type": 5,
@@ -220,7 +222,8 @@
         "categoryKey": "logistics",
         "order": 20
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__launcher.png"
     },
     {
       "type": 6,
@@ -466,7 +469,8 @@
         "descriptionKey": "structures|foundation|description",
         "categoryKey": "blocks"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__block.png"
     },
     {
       "type": 12,
@@ -622,7 +626,8 @@
         "descriptionKey": "structures|collector|description",
         "categoryKey": "economy"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__sell.png"
     },
     {
       "type": 17,
@@ -713,7 +718,8 @@
           "type": "filter"
         }
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__filter_right.png"
     },
     {
       "type": 19,
@@ -824,7 +830,8 @@
         "descriptionKey": "structures|velocitySoaker|description",
         "categoryKey": "production"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__velocity.png"
     },
     {
       "type": 21,
@@ -866,7 +873,8 @@
         "descriptionKey": "structures|grower|description",
         "categoryKey": "production"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__farm.png"
     },
     {
       "type": 22,
@@ -946,7 +954,8 @@
         "descriptionKey": "structures|pipe|description",
         "categoryKey": "fluids"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__pipes_icon.png"
     },
     {
       "type": 24,
@@ -1000,7 +1009,8 @@
         "descriptionKey": "structures|pump|description",
         "categoryKey": "fluids"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__pump.png"
     },
     {
       "type": 25,
@@ -1054,7 +1064,8 @@
         "descriptionKey": "structures|liquidVent|description",
         "categoryKey": "fluids"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__liquid_vent.png"
     },
     {
       "type": 26,
@@ -1094,7 +1105,8 @@
         "descriptionKey": "structures|light|description",
         "categoryKey": "lighting"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__light.png"
     },
     {
       "type": 27,
@@ -1135,7 +1147,8 @@
         "order": 15,
         "categoryKey": "special"
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__gloom_emitter.png"
     },
     {
       "type": "aurixiteCrystallizer",
@@ -5956,7 +5969,8 @@
         "name": "Void Rift",
         "description": "Opens a mysterious rift that produces Void Seed from the depths of space."
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__orb.png"
     }
   ]
 }

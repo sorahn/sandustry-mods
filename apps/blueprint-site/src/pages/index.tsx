@@ -486,25 +486,38 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                   stroke={isSelected ? "#ffe700" : "#8491a3"}
                   strokeWidth={isSelected ? "4" : "1.5"}
                 />
-                <text
-                  x={labelX}
-                  y={labelY}
-                  textAnchor="middle"
-                  fill="#f8fafc"
-                  fontSize={labelFontSize}
-                  fontWeight="700"
-                  fontFamily="ui-monospace, monospace"
-                >
-                  {labelLines.map((line, lineIndex) => (
-                    <tspan
-                      key={`${line}-${lineIndex}`}
-                      x={labelX}
-                      y={labelY + lineIndex * labelLineHeight}
-                    >
-                      {line}
-                    </tspan>
-                  ))}
-                </text>
+                {entry?.assetPath ? (
+                  <image
+                    href={`${import.meta.env.BASE_URL}${entry.assetPath}`}
+                    x={left + 6}
+                    y={top + 6}
+                    width={Math.max(1, tileWidth - 12)}
+                    height={Math.max(1, tileHeight - 12)}
+                    preserveAspectRatio="xMidYMid meet"
+                    style={{ imageRendering: "pixelated", pointerEvents: "none" }}
+                  />
+                ) : null}
+                {!entry?.assetPath ? (
+                  <text
+                    x={labelX}
+                    y={labelY}
+                    textAnchor="middle"
+                    fill="#f8fafc"
+                    fontSize={labelFontSize}
+                    fontWeight="700"
+                    fontFamily="ui-monospace, monospace"
+                  >
+                    {labelLines.map((line, lineIndex) => (
+                      <tspan
+                        key={`${line}-${lineIndex}`}
+                        x={labelX}
+                        y={labelY + lineIndex * labelLineHeight}
+                      >
+                        {line}
+                      </tspan>
+                    ))}
+                  </text>
+                ) : null}
               </g>
             );
           })}

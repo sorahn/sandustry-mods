@@ -19,6 +19,7 @@ export type CatalogEntry = {
   variants?: unknown;
   definition?: unknown;
   render?: RenderMetadata | string;
+  assetPath?: string;
   source: string;
 };
 
