@@ -29,7 +29,15 @@ export function AppLayout() {
       </main>
       <footer className="border-t border-slate-800/80 bg-black/30">
         <div className="site-shell mx-auto w-full px-6 py-4 text-center font-mono text-[11px] tracking-[0.12em] text-slate-600">
-          SANDUSTRY / BLUEPRINT TOOLS
+          SANDUSTRY / BLUEPRINT TOOLS ·{" "}
+          <a
+            href={`https://github.com/sorahn/sandustry-tools/commit/${__GIT_COMMIT__}`}
+            target="_blank"
+            rel="noreferrer"
+            className="text-slate-400 hover:text-yellow-300"
+          >
+            {__GIT_COMMIT__}
+          </a>
         </div>
       </footer>
     </div>
