@@ -565,7 +565,11 @@ export function BlueprintMap({
     if (blueprintFits) {
       // Keep the whole blueprint visible while using the zoom to trim the
       // generous renderer padding around small blueprints.
-      const maxZoom = Math.min(MAP_FIT_ZOOM_MAX, width / blueprintWidth, height / blueprintHeight);
+      const maxZoom = Math.min(
+        MAP_FIT_ZOOM_MAX,
+        availableWidth / blueprintWidth,
+        availableHeight / blueprintHeight,
+      );
       return (
         MAP_ZOOM_LEVELS.filter(
           (level) => level >= MAP_FIT_ZOOM_MIN && level <= maxZoom,
