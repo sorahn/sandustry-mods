@@ -120,6 +120,8 @@ const NATIVE_PIXELS_PER_CELL = 4;
 const DISPLAY_PIXELS_PER_BLOCK_AT_100 = 32;
 const BLOCK_COORDINATE_SIZE = NATIVE_PIXELS_PER_CELL;
 const MAP_VIEWPORT_BORDER_SIZE = 2;
+const MAP_VIEWPORT_ASPECT_WIDTH = 16;
+const MAP_VIEWPORT_ASPECT_HEIGHT = 10;
 const PAN_COMMIT_DEBOUNCE_MS = 80;
 const MAP_LAYER_ORDER = [
   "background",
@@ -141,6 +143,12 @@ function mapLayerStyle(layer: MapLayer) {
 function snapMapZoom(value: number) {
   return MAP_ZOOM_LEVELS.reduce((nearest, level) =>
     Math.abs(level - value) < Math.abs(nearest - value) ? level : nearest,
+  );
+}
+
+function viewportHeightForWidth(width: number) {
+  return (
+    width * (MAP_VIEWPORT_ASPECT_HEIGHT / MAP_VIEWPORT_ASPECT_WIDTH) + MAP_VIEWPORT_BORDER_SIZE
   );
 }
 
@@ -497,7 +505,6 @@ export function BlueprintMap({
   const svgRef = useRef<SVGSVGElement>(null);
   const hoverMarkerRef = useRef<SVGRectElement>(null);
   const hoverBlockRef = useRef<{ x: number; y: number } | null>(null);
-  const initialViewportHeightRef = useRef<number | null>(null);
   const dragRef = useRef<{
     pointerId: number;
     lastX: number;
@@ -535,38 +542,40 @@ export function BlueprintMap({
   const maxY = Math.max(...ys);
   const width = (maxX - minX + padding * 2 + 1) * cell;
   const height = (maxY - minY + padding * 2 + 1) * cell;
-  const aspectRatioViewportHeight =
-    initialViewportHeightRef.current ??
+  const blueprintWidth = (maxX - minX + 1) * cell;
+  const blueprintHeight = (maxY - minY + 1) * cell;
+  const defaultViewportHeight = viewportHeightForWidth(viewportSize.width || width);
+  const blueprintAspectViewportHeight =
     (viewportSize.width || width) * (height / width) + MAP_VIEWPORT_BORDER_SIZE;
+  const aspectRatioViewportHeight = Math.max(defaultViewportHeight, blueprintAspectViewportHeight);
   const viewWidth = zoom <= 1 ? width : width / zoom;
   const viewHeight = zoom <= 1 ? height : height / zoom;
   const centeredViewX = (width - viewWidth) / 2;
   const centeredViewY = (height - viewHeight) / 2;
-  const maxPanX =
-    zoom <= 1
-      ? Math.max(0, (width * zoom - (viewportSize.width || width)) / (2 * zoom))
-      : Math.abs(centeredViewX);
-  const maxPanY =
-    zoom <= 1
-      ? Math.max(0, (height * zoom - (viewportSize.height || height)) / (2 * zoom))
-      : Math.abs(centeredViewY);
-  const viewX = zoom <= 1 ? 0 : centeredViewX + pan.x;
-  const viewY = zoom <= 1 ? 0 : centeredViewY + pan.y;
-  const measuredFitZoom =
-    MAP_ZOOM_LEVELS.filter((level) => level <= 1)
-      .reverse()
-      .find((level) => width * level <= (viewportSize.width || width)) ?? MAP_ZOOM_LEVELS[0];
+  const maxPanX = Math.max(0, (width * zoom - (viewportSize.width || width)) / (2 * zoom));
+  const maxPanY = Math.max(0, (height * zoom - (viewportSize.height || height)) / (2 * zoom));
+  const fitZoomForViewport = (availableWidth: number, availableHeight: number) => {
+    const blueprintFits = blueprintWidth <= availableWidth && blueprintHeight <= availableHeight;
+    if (blueprintFits) {
+      // Keep the whole blueprint visible while using the zoom to trim the
+      // generous renderer padding around small blueprints.
+      const maxZoom = Math.min(4, width / blueprintWidth, height / blueprintHeight);
+      return MAP_ZOOM_LEVELS.filter((level) => level <= maxZoom).reverse()[0] ?? MAP_ZOOM_LEVELS[0];
+    }
+    return (
+      MAP_ZOOM_LEVELS.filter((level) => level <= 1)
+        .reverse()
+        .find((level) => width * level <= availableWidth) ?? MAP_ZOOM_LEVELS[0]
+    );
+  };
+  const measuredFitZoom = fitZoomForViewport(
+    viewportSize.width || width,
+    viewportSize.height || Math.max(512, viewportHeightForWidth(width)),
+  );
   const applyLivePan = (nextPan: { x: number; y: number }) => {
     const svg = svgRef.current;
     if (!svg) return;
-    if (zoom <= 1) {
-      svg.style.transform = `translate(-50%, -50%) translate(${-nextPan.x * zoom}px, ${-nextPan.y * zoom}px)`;
-    } else {
-      svg.setAttribute(
-        "viewBox",
-        `${centeredViewX + nextPan.x} ${centeredViewY + nextPan.y} ${viewWidth} ${viewHeight}`,
-      );
-    }
+    svg.style.transform = `translate(-50%, -50%) translate(${-nextPan.x * zoom}px, ${-nextPan.y * zoom}px)`;
   };
   const schedulePanCommit = () => {
     if (panCommitTimerRef.current !== null) {
@@ -638,10 +647,6 @@ export function BlueprintMap({
     const viewport = viewportRef.current;
     if (!viewport) return;
     const updateSize = () => {
-      if (initialViewportHeightRef.current === null && viewport.clientWidth > 0) {
-        initialViewportHeightRef.current =
-          viewport.clientWidth * (height / width) + MAP_VIEWPORT_BORDER_SIZE;
-      }
       setViewportSize({ width: viewport.clientWidth, height: viewport.clientHeight });
     };
     updateSize();
@@ -653,17 +658,14 @@ export function BlueprintMap({
     const stored = remember ? readStoredMapView(blueprintKey) : null;
     fitModeRef.current = stored?.fit ?? true;
     const restoredZoom = snapMapZoom(stored?.zoom ?? 1);
-    const restoredMaxPanX =
-      restoredZoom <= 1
-        ? Math.max(0, (width * restoredZoom - (viewportSize.width || width)) / (2 * restoredZoom))
-        : Math.abs((width - width / restoredZoom) / 2);
-    const restoredMaxPanY =
-      restoredZoom <= 1
-        ? Math.max(
-            0,
-            (height * restoredZoom - (viewportSize.height || height)) / (2 * restoredZoom),
-          )
-        : Math.abs((height - height / restoredZoom) / 2);
+    const restoredMaxPanX = Math.max(
+      0,
+      (width * restoredZoom - (viewportSize.width || width)) / (2 * restoredZoom),
+    );
+    const restoredMaxPanY = Math.max(
+      0,
+      (height * restoredZoom - (viewportSize.height || height)) / (2 * restoredZoom),
+    );
     setZoom(restoredZoom);
     setPan({
       x: Math.max(-restoredMaxPanX, Math.min(restoredMaxPanX, stored?.pan.x ?? 0)),
@@ -675,14 +677,13 @@ export function BlueprintMap({
   const fitToViewport = () => {
     fitModeRef.current = true;
     const availableWidth = viewportRef.current?.clientWidth || viewportSize.width;
-    if (availableWidth > 0) {
-      initialViewportHeightRef.current =
-        availableWidth * (height / width) + MAP_VIEWPORT_BORDER_SIZE;
-    }
-    const fitZoom = MAP_ZOOM_LEVELS.filter((level) => level <= 1)
-      .reverse()
-      .find((level) => width * level <= availableWidth);
-    setZoom(fitZoom ?? MAP_ZOOM_LEVELS[0]);
+    const availableHeight = viewportRef.current?.clientHeight || viewportSize.height;
+    setZoom(
+      fitZoomForViewport(
+        availableWidth || width,
+        availableHeight || Math.max(512, viewportHeightForWidth(width)),
+      ),
+    );
     setPan({ x: 0, y: 0 });
   };
   useLayoutEffect(() => {
@@ -725,16 +726,16 @@ export function BlueprintMap({
     const nextViewHeight = height / snappedZoom;
     const nextCenteredViewX = (width - nextViewWidth) / 2;
     const nextCenteredViewY = (height - nextViewHeight) / 2;
-    const nextMaxPanX =
-      snappedZoom <= 1
-        ? Math.max(0, (width * snappedZoom - (viewportSize.width || width)) / (2 * snappedZoom))
-        : Math.abs(nextCenteredViewX);
-    const nextMaxPanY =
-      snappedZoom <= 1
-        ? Math.max(0, (height * snappedZoom - (viewportSize.height || height)) / (2 * snappedZoom))
-        : Math.abs(nextCenteredViewY);
-    const centerX = zoom <= 1 ? width / 2 + pan.x : viewX + viewWidth / 2;
-    const centerY = zoom <= 1 ? height / 2 + pan.y : viewY + viewHeight / 2;
+    const nextMaxPanX = Math.max(
+      0,
+      (width * snappedZoom - (viewportSize.width || width)) / (2 * snappedZoom),
+    );
+    const nextMaxPanY = Math.max(
+      0,
+      (height * snappedZoom - (viewportSize.height || height)) / (2 * snappedZoom),
+    );
+    const centerX = width / 2 + pan.x;
+    const centerY = height / 2 + pan.y;
     setZoom(snappedZoom);
     setPan({
       x: Math.max(
@@ -883,25 +884,17 @@ export function BlueprintMap({
         </div>
         <svg
           ref={svgRef}
-          viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
+          viewBox={`0 0 ${width} ${height}`}
           role="img"
           aria-label={`${blueprint.name} structure map`}
           preserveAspectRatio="xMidYMid meet"
-          className={
-            zoom <= 1
-              ? "blueprint-map__canvas absolute max-w-none"
-              : "blueprint-map__canvas absolute inset-0 h-full w-full"
-          }
+          className="blueprint-map__canvas absolute max-w-none"
           style={{
-            ...(zoom <= 1
-              ? {
-                  width: `${width * zoom}px`,
-                  height: `${height * zoom}px`,
-                  left: "50%",
-                  top: "50%",
-                  transform: `translate(-50%, -50%) translate(${-pan.x * zoom}px, ${-pan.y * zoom}px)`,
-                }
-              : {}),
+            width: `${width * zoom}px`,
+            height: `${height * zoom}px`,
+            left: "50%",
+            top: "50%",
+            transform: `translate(-50%, -50%) translate(${-pan.x * zoom}px, ${-pan.y * zoom}px)`,
             cursor: dragRef.current ? "grabbing" : "grab",
             touchAction: "none",
             userSelect: "none",
@@ -940,11 +933,11 @@ export function BlueprintMap({
             const nextPan = {
               x: Math.max(
                 -maxPanX,
-                Math.min(maxPanX, livePanRef.current.x - (dx / rect.width) * viewWidth),
+                Math.min(maxPanX, livePanRef.current.x - (dx / rect.width) * width),
               ),
               y: Math.max(
                 -maxPanY,
-                Math.min(maxPanY, livePanRef.current.y - (dy / rect.height) * viewHeight),
+                Math.min(maxPanY, livePanRef.current.y - (dy / rect.height) * height),
               ),
             };
             livePanRef.current = nextPan;
