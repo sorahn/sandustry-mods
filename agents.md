@@ -1,5 +1,18 @@
 # Agent Notes
 
+## Blueprint renderer terminology
+
+Use these native-unit terms precisely when discussing the blueprint renderer
+and its sprite overrides:
+
+- **Pixel**: one native sprite unit.
+- **Block**: four native pixels in one dimension (a 4×4 native-pixel unit).
+- **Cell**: sixteen native pixels in one dimension (a 16×16 native-pixel unit,
+  or four blocks).
+
+Keep these native units separate from CSS/display pixels. A screen zoom or
+render scale may map one native cell to a different number of display pixels.
+
 ## Monorepo workflow
 
 Active mods live under `mods/<name>`. Each mod owns `src/`, `modinfo.json`, and

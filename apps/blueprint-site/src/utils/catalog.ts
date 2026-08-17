@@ -140,6 +140,13 @@ const CATALOG_OVERRIDES: Partial<Record<BlueprintType, Partial<CatalogEntry>>> =
     assetScaleFactor: 14 / 16,
     assetOffset: { x: 1, y: 1 },
   },
+  filterWall: {
+    // The exported wall sprite is 18×18 native pixels, but its structure
+    // footprint is 16×16. Scale it to the footprint and cancel the runtime
+    // render offset that centered the unscaled sprite.
+    assetScaleFactor: 16 / 18,
+    assetOffset: { x: 1, y: 1 },
+  },
   kineticFieldEmitter: {
     assetPath: "catalog/mods__kinetic_field_emitter.png",
     assetSize: { width: 23, height: 16 },

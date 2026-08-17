@@ -320,8 +320,11 @@ const SAVED_BLUEPRINT_KEY = "sandustry.blueprintInspector.string";
 const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
 const SHOW_DEBUG_CELLS_KEY = "sandustry.blueprintInspector.showDebugCells";
 const SHOW_NAMES_KEY = "sandustry.blueprintInspector.showNames";
+const SHOW_GRID_KEY = "sandustry.blueprintInspector.showGrid";
 const SHOW_MAP_SIDEBAR_KEY = "sandustry.blueprintInspector.showMapSidebar";
-const MAP_ZOOM_LEVELS = [0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
+const MAP_ZOOM_LEVELS = [0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
+const NATIVE_PIXELS_PER_BLOCK = 4;
+const DISPLAY_PIXELS_PER_CELL_AT_100 = 32;
 const KINETIC_PRESS_SCALE = 4;
 const KINETIC_PRESS_EXPECTED_HEIGHT = 468;
 const KINETIC_PRESS_ANCHOR_OFFSET_CELLS = 3;
@@ -423,7 +426,7 @@ function structureVisualTopY(structure: Blueprint["data"][number]) {
 }
 
 function renderPixelScale(cell: number) {
-  return cell / 4;
+  return cell / NATIVE_PIXELS_PER_BLOCK;
 }
 
 type CollectorSprite = { frameIndex: number; rotation: number };
@@ -502,11 +505,13 @@ function BlueprintMap({
   remember,
   blueprintKey,
   showSidebar,
+  showGrid,
 }: {
   blueprint: Blueprint;
   remember: boolean;
   blueprintKey: string;
   showSidebar: boolean;
+  showGrid: boolean;
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showDebugCells, setShowDebugCells] = useState(() =>
@@ -515,6 +520,8 @@ function BlueprintMap({
   const [showNames, setShowNames] = useState(() => readStoredBoolean(SHOW_NAMES_KEY, false));
   const [zoom, setZoom] = useState(() => snapMapZoom(readStoredMapView(blueprintKey)?.zoom ?? 1));
   const [pan, setPan] = useState(() => readStoredMapView(blueprintKey)?.pan ?? { x: 0, y: 0 });
+  const [mapSizeReady, setMapSizeReady] = useState(() => readStoredMapView(blueprintKey) !== null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<{
     pointerId: number;
     lastX: number;
@@ -523,7 +530,10 @@ function BlueprintMap({
   } | null>(null);
   const suppressClickRef = useRef(false);
   const padding = 6;
-  const cell = 56;
+  // Blueprint coordinates are block-sized units. Four native sprite pixels
+  // make one block, and four blocks make one native cell. At 100% four
+  // blueprint coordinates therefore render at 32 display pixels.
+  const cell = DISPLAY_PIXELS_PER_CELL_AT_100 / NATIVE_PIXELS_PER_BLOCK;
   const xs = blueprint.data.length
     ? blueprint.data.flatMap((structure) => {
         const entry = catalogEntry(structure.type);
@@ -546,8 +556,8 @@ function BlueprintMap({
   const maxY = Math.max(...ys);
   const width = (maxX - minX + padding * 2 + 1) * cell;
   const height = (maxY - minY + padding * 2 + 1) * cell;
-  const viewWidth = width / zoom;
-  const viewHeight = height / zoom;
+  const viewWidth = zoom <= 1 ? width : width / zoom;
+  const viewHeight = zoom <= 1 ? height : height / zoom;
   const centeredViewX = (width - viewWidth) / 2;
   const centeredViewY = (height - viewHeight) / 2;
   const maxPanX = zoom <= 1 ? 0 : Math.abs(centeredViewX);
@@ -601,7 +611,27 @@ function BlueprintMap({
       y: Math.max(-restoredMaxPanY, Math.min(restoredMaxPanY, stored?.pan.y ?? 0)),
     });
     setSelectedIndex(null);
+    setMapSizeReady(stored !== null);
   }, [blueprint, blueprintKey, height, remember, width]);
+  useEffect(() => {
+    const stored = remember ? readStoredMapView(blueprintKey) : null;
+    if (stored) return;
+    setMapSizeReady(false);
+    const fitToViewport = () => {
+      const viewport = viewportRef.current;
+      if (!viewport) return;
+      const availableWidth = viewport.clientWidth;
+      const availableHeight = viewport.clientHeight;
+      const fitZoom = [...MAP_ZOOM_LEVELS]
+        .reverse()
+        .find((level) => width * level <= availableWidth && height * level <= availableHeight);
+      setZoom(fitZoom ?? MAP_ZOOM_LEVELS[0]);
+      setPan({ x: 0, y: 0 });
+      setMapSizeReady(true);
+    };
+    const frame = requestAnimationFrame(fitToViewport);
+    return () => cancelAnimationFrame(frame);
+  }, [blueprintKey, height, remember, width]);
   useEffect(() => {
     if (!remember || !blueprintKey) return;
     writeLocalValue(SAVED_MAP_VIEW_KEY, JSON.stringify({ blueprint: blueprintKey, zoom, pan }));
@@ -637,8 +667,14 @@ function BlueprintMap({
       }
     >
       <div
+        ref={viewportRef}
         className="blueprint-map__viewport relative min-h-[32rem] overflow-hidden rounded border border-slate-800 bg-[#33a8ff]"
         translate="no"
+        style={
+          mapSizeReady
+            ? { height: `${Math.max(512, Math.ceil(height * Math.min(1, zoom)))}px` }
+            : undefined
+        }
       >
         <div className="absolute right-3 top-3 z-10 flex items-center gap-2 rounded border border-slate-700/80 bg-slate-950/60 p-2 font-mono text-xs text-slate-300 shadow-lg backdrop-blur-sm">
           <span className="mr-1">{Math.round(zoom * 100)}%</span>
@@ -680,8 +716,21 @@ function BlueprintMap({
           role="img"
           aria-label={`${blueprint.name} structure map`}
           preserveAspectRatio="xMidYMid meet"
-          className="blueprint-map__canvas absolute inset-0 h-full w-full"
+          className={
+            zoom <= 1
+              ? "blueprint-map__canvas absolute max-w-none"
+              : "blueprint-map__canvas absolute inset-0 h-full w-full"
+          }
           style={{
+            ...(zoom <= 1
+              ? {
+                  width: `${width * zoom}px`,
+                  height: `${height * zoom}px`,
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                }
+              : {}),
             cursor: dragRef.current ? "grabbing" : "grab",
             touchAction: "none",
             userSelect: "none",
@@ -728,7 +777,7 @@ function BlueprintMap({
           <defs>
             <pattern id="blueprint-grid" width={cell} height={cell} patternUnits="userSpaceOnUse">
               <path
-                d={`M ${cell} 0 L 0 0 0 ${cell}`}
+                d={`M ${cell} 0 L 0 0 0 ${cell} M ${cell} 0 L ${cell} ${cell} M 0 ${cell} L ${cell} ${cell}`}
                 fill="none"
                 stroke="#17202c"
                 strokeWidth="1"
@@ -736,7 +785,7 @@ function BlueprintMap({
             </pattern>
           </defs>
           <rect width={width} height={height} fill="#33a8ff" />
-          <rect width={width} height={height} fill="url(#blueprint-grid)" />
+          {showGrid ? <rect width={width} height={height} fill="url(#blueprint-grid)" /> : null}
           {(blueprint.signalLinks ?? []).map((link, index) => {
             const from = point(link.from.x, link.from.y);
             const to = point(link.to.x, link.to.y);
@@ -805,7 +854,9 @@ function BlueprintMap({
                   fill={
                     entry?.assetPath && !showDebugCells ? "transparent" : tileColor(structure.type)
                   }
-                  stroke={isSelected ? "#ffe700" : "#8491a3"}
+                  // Sprites own their visible shape. A generic footprint border
+                  // leaks through the transparent corners of triangle foundations.
+                  stroke={isSelected ? "#ffe700" : entry?.assetPath ? "none" : "#8491a3"}
                   strokeWidth={isSelected ? "4" : "1.5"}
                 />
                 {entry?.assetPath
@@ -1053,6 +1104,7 @@ export function BlueprintInspectorPage() {
   const [showMapSidebar, setShowMapSidebar] = useState(() =>
     readStoredBoolean(SHOW_MAP_SIDEBAR_KEY, false),
   );
+  const [showGrid, setShowGrid] = useState(() => readStoredBoolean(SHOW_GRID_KEY, true));
   const [inspectedBlueprintKey, setInspectedBlueprintKey] = useState("");
   const [summary, setSummary] = useState<BlueprintSummary | null>(null);
   const [message, setMessage] = useState("Paste a v2 blueprint string to inspect it.");
@@ -1170,20 +1222,36 @@ export function BlueprintInspectorPage() {
           <Panel
             title="Blueprint map"
             header={
-              <button
-                type="button"
-                className="sd-button sd-button--compact"
-                onClick={() => {
-                  setShowMapSidebar((visible) => {
-                    const nextValue = !visible;
-                    writeLocalValue(SHOW_MAP_SIDEBAR_KEY, String(nextValue));
-                    return nextValue;
-                  });
-                }}
-                aria-expanded={showMapSidebar}
-              >
-                {showMapSidebar ? "Hide sidebar" : "Show sidebar"}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  className="sd-button sd-button--compact sd-button--no-shift"
+                  onClick={() =>
+                    setShowGrid((visible) => {
+                      const nextValue = !visible;
+                      writeLocalValue(SHOW_GRID_KEY, String(nextValue));
+                      return nextValue;
+                    })
+                  }
+                  aria-pressed={showGrid}
+                >
+                  {showGrid ? "Hide grid" : "Show grid"}
+                </button>
+                <button
+                  type="button"
+                  className="sd-button sd-button--compact sd-button--no-shift"
+                  onClick={() => {
+                    setShowMapSidebar((visible) => {
+                      const nextValue = !visible;
+                      writeLocalValue(SHOW_MAP_SIDEBAR_KEY, String(nextValue));
+                      return nextValue;
+                    });
+                  }}
+                  aria-expanded={showMapSidebar}
+                >
+                  {showMapSidebar ? "Hide sidebar" : "Show sidebar"}
+                </button>
+              </div>
             }
           >
             <div className="p-4">
@@ -1192,6 +1260,7 @@ export function BlueprintInspectorPage() {
                 remember={remember}
                 blueprintKey={inspectedBlueprintKey}
                 showSidebar={showMapSidebar}
+                showGrid={showGrid}
               />
               <p className="mt-4 text-xs text-slate-500">
                 The captured native runtime catalog supplies names and footprints. Other content

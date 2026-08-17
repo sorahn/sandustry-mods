@@ -26,7 +26,6 @@ a {
 }
 .blueprint-map__viewport {
   height: min(70vh, 40rem);
-  max-height: min(70vh, 40rem);
 }
 .blueprint-map__canvas {
   display: block;
