@@ -714,7 +714,7 @@ function BlueprintMap({
       if (!viewport) return;
       const availableWidth = viewport.clientWidth;
       const availableHeight = viewport.clientHeight;
-      const fitZoom = [...MAP_ZOOM_LEVELS]
+      const fitZoom = MAP_ZOOM_LEVELS.filter((level) => level <= 1)
         .reverse()
         .find((level) => width * level <= availableWidth && height * level <= availableHeight);
       setZoom(fitZoom ?? MAP_ZOOM_LEVELS[0]);
