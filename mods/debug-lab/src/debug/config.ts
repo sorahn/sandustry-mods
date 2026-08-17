@@ -2,7 +2,7 @@ export const ENABLED_PROBES = {
   runtimeSurface: false,
   enums: false,
   hotbar: false,
-  clipboardCursor: false,
+  clipboardCursor: true,
   clipboardCursorWatch: false,
   blueprints: false,
   blueprintReads: false,

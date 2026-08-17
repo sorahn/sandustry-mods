@@ -244,6 +244,77 @@ function tileColor(type: Blueprint["data"][number]["type"]) {
   return ["#4b3c62", "#315a5e", "#66522f", "#563d46"][Math.abs(hash) % 4];
 }
 
+function colorValue(value: unknown): string | undefined {
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= 0xffffff) {
+    return `#${value.toString(16).padStart(6, "0")}`;
+  }
+  if (
+    Array.isArray(value) &&
+    value.length >= 3 &&
+    value.slice(0, 3).every((part) => typeof part === "number" && part >= 0 && part <= 255)
+  ) {
+    const [red, green, blue] = value as number[];
+    const normalized = [red, green, blue].every((part) => part >= 0 && part <= 1);
+    const channels = normalized
+      ? [red, green, blue].map((part) => Math.round(part * 255))
+      : [red, green, blue];
+    return `rgb(${channels[0]}, ${channels[1]}, ${channels[2]})`;
+  }
+  if (Array.isArray(value)) {
+    for (const nestedValue of value) {
+      const nested = colorValue(nestedValue);
+      if (nested) return nested;
+    }
+  }
+  if (typeof value === "object" && value !== null) {
+    const record = value as Record<string, unknown>;
+    if (
+      [record.r, record.g, record.b].every(
+        (part) => typeof part === "number" && part >= 0 && part <= 255,
+      )
+    ) {
+      return colorValue([record.r, record.g, record.b]);
+    }
+    for (const key of ["color", "colour", "lightColor", "colorHex", "hex", "value"]) {
+      const nested = colorValue(record[key]);
+      if (nested) return nested;
+    }
+  }
+  if (typeof value !== "string") return undefined;
+  try {
+    if (value.trim().startsWith("{")) return colorValue(JSON.parse(value));
+  } catch {
+    // Continue with CSS color parsing below.
+  }
+  return /^#[0-9a-f]{3,8}$/i.test(value) ||
+    /^rgba?\([^)]*\)$/i.test(value) ||
+    /^hsla?\([^)]*\)$/i.test(value)
+    ? value
+    : undefined;
+}
+
+function lightColor(data: unknown): string | undefined {
+  if (typeof data === "string" || Array.isArray(data)) return colorValue(data);
+  if (typeof data !== "object" || data === null) return undefined;
+
+  const record = data as Record<string, unknown>;
+  for (const key of ["color", "colour", "lightColor", "colorHex", "hex"]) {
+    const direct = colorValue(record[key]);
+    if (direct) return direct;
+  }
+  for (const [key, value] of Object.entries(record)) {
+    if (key.toLowerCase().includes("color")) {
+      const direct = colorValue(value);
+      if (direct) return direct;
+    }
+  }
+  for (const key of ["data", "customData", "state", "properties", "config", "value"]) {
+    const nested = lightColor(record[key]);
+    if (nested) return nested;
+  }
+  return undefined;
+}
+
 const REMEMBER_BLUEPRINT_KEY = "sandustry.blueprintInspector.remember";
 const SAVED_BLUEPRINT_KEY = "sandustry.blueprintInspector.string";
 const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
@@ -347,6 +418,77 @@ function renderPixelScale(cell: number) {
   return cell / 4;
 }
 
+type CollectorSprite = { frameIndex: number; rotation: number };
+
+function collectorSprites(
+  structures: Blueprint["data"],
+  entries: Array<{ structure: Blueprint["data"][number]; index: number }>,
+) {
+  const collectors = entries.filter(({ structure }) => structure.type === 16);
+  const byPosition = new Map(
+    collectors.map(({ structure, index }) => [`${structure.x},${structure.y}`, index]),
+  );
+  const result = new Map<number, CollectorSprite>();
+  const visited = new Set<number>();
+
+  for (const { structure: start, index: startIndex } of collectors) {
+    if (visited.has(startIndex)) continue;
+    const component: number[] = [];
+    const queue = [startIndex];
+    visited.add(startIndex);
+    while (queue.length) {
+      const index = queue.shift()!;
+      component.push(index);
+      const structure = structures[index];
+      for (const [dx, dy] of [
+        [4, 0],
+        [-4, 0],
+        [0, 4],
+        [0, -4],
+      ]) {
+        const neighbor = byPosition.get(`${structure.x + dx},${structure.y + dy}`);
+        if (neighbor !== undefined && !visited.has(neighbor)) {
+          visited.add(neighbor);
+          queue.push(neighbor);
+        }
+      }
+    }
+
+    const bounds = component.reduce(
+      (value, index) => {
+        const structure = structures[index];
+        return {
+          minX: Math.min(value.minX, structure.x),
+          maxX: Math.max(value.maxX, structure.x),
+          minY: Math.min(value.minY, structure.y),
+          maxY: Math.max(value.maxY, structure.y),
+        };
+      },
+      { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity },
+    );
+
+    for (const index of component) {
+      const structure = structures[index];
+      const atLeft = structure.x === bounds.minX;
+      const atRight = structure.x === bounds.maxX;
+      const atTop = structure.y === bounds.minY;
+      const atBottom = structure.y === bounds.maxY;
+      let frameIndex = 2;
+      let rotation = 0;
+      if ((atTop || atBottom) && (atLeft || atRight)) {
+        frameIndex = 0;
+      } else if (atTop || atBottom) {
+        frameIndex = 3;
+      } else if (atLeft || atRight) {
+        frameIndex = 3;
+        rotation = 90;
+      }
+      result.set(index, { frameIndex, rotation });
+    }
+  }
+  return result;
+}
+
 function BlueprintMap({
   blueprint,
   remember,
@@ -413,6 +555,7 @@ function BlueprintMap({
         left.structure.x - right.structure.x ||
         left.index - right.index,
     );
+  const collectorSpriteMap = collectorSprites(blueprint.data, renderStructures);
   const debugCellsToggle = debugComponent(Checkbox, {
     boxed: true,
     checked: showDebugCells,
@@ -645,6 +788,15 @@ function BlueprintMap({
                       const frameWidth = frame?.width ?? runtimeSize?.width ?? sourceWidth;
                       const frameHeight = frame?.height ?? runtimeSize?.height ?? sourceHeight;
                       const assetScaleFactor = entry.assetScaleFactor ?? 1;
+                      const collectorSprite = collectorSpriteMap.get(index);
+                      const frameIndex = collectorSprite?.frameIndex ?? entry.assetFrameIndex ?? 0;
+                      const spriteRotation = collectorSprite?.rotation ?? entry.assetRotation;
+                      const customLightColor =
+                        structure.type === 26
+                          ? (lightColor(structure) ??
+                            lightColor(structure.data) ??
+                            lightColor(structure.filter))
+                          : undefined;
                       const useNativeAssetSize =
                         runtimeSize !== undefined || entry.assetScaleFactor !== undefined;
                       const needsFrameClip = entry.assetClip ?? sourceWidth > frameWidth;
@@ -671,6 +823,7 @@ function BlueprintMap({
                         (typeof offset?.y === "number" ? offset.y : 0) +
                         (entry.assetOffset?.y ?? 0);
                       const imageX = left + offsetX * pixelScale;
+                      const sourceImageX = imageX - frameIndex * visualWidth;
                       const imageY =
                         entry.positionAnchor === "bottom"
                           ? top +
@@ -686,19 +839,37 @@ function BlueprintMap({
                           </clipPath>
                           <image
                             href={`${import.meta.env.BASE_URL}${entry.assetPath}`}
-                            x={imageX}
+                            x={sourceImageX}
                             y={imageY}
                             width={visualWidth * (sourceWidth / frameWidth)}
                             height={visualHeight}
                             preserveAspectRatio="none"
                             clipPath={needsFrameClip ? `url(#asset-clip-${index})` : undefined}
                             transform={
-                              entry.assetRotation
-                                ? `rotate(${entry.assetRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
+                              spriteRotation
+                                ? `rotate(${spriteRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
                                 : undefined
                             }
                             style={{ imageRendering: "pixelated", pointerEvents: "none" }}
                           />
+                          {customLightColor
+                            ? [4, 7, 10].map((bar) => (
+                                <rect
+                                  key={`light-color-${index}-${bar}`}
+                                  x={imageX + visualWidth * (bar / 16)}
+                                  y={imageY + visualHeight * 0.25}
+                                  width={visualWidth * (2 / 16)}
+                                  height={visualHeight * 0.5}
+                                  fill={customLightColor}
+                                  pointerEvents="none"
+                                  transform={
+                                    spriteRotation
+                                      ? `rotate(${spriteRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
+                                      : undefined
+                                  }
+                                />
+                              ))
+                            : null}
                           {showDebugCells && structure.type === 20 ? (
                             <rect
                               x={imageX}

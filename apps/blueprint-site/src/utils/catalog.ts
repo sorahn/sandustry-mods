@@ -21,6 +21,7 @@ export type CatalogEntry = {
   render?: RenderMetadata | string;
   assetPath?: string;
   assetFrame?: { width: number; height: number };
+  assetFrameIndex?: number;
   assetSize?: { width: number; height: number };
   assetClip?: boolean;
   assetRotation?: number;
