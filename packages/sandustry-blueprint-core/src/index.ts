@@ -106,7 +106,9 @@ function encodeBytes(blueprint: Blueprint) {
       indexes.set(structure.type, types.length);
       types.push(structure.type);
     }
-  if (types.length > 64) throw new Error("A blueprint cannot contain more than 64 structure types");
+  if (types.length > 64) {
+    throw new Error("v2 blueprint encoding cannot represent more than 64 structure types");
+  }
   writeVarInt(types.length, output);
   for (const type of types) {
     if (typeof type === "string") {
@@ -164,7 +166,6 @@ function decodeBytes(bytes: Uint8Array): Blueprint {
     throw new Error(`Unsupported blueprint binary version: ${version}`);
   const name = readString(bytes, cursor);
   const typeCount = readVarInt(bytes, cursor);
-  if (typeCount > 64) throw new Error("A blueprint cannot contain more than 64 structure types");
   const types: BlueprintType[] = [];
   for (let index = 0; index < typeCount; index++) {
     const kind = bytes[cursor.value++];

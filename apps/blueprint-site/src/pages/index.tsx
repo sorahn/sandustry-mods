@@ -322,6 +322,7 @@ const SHOW_DEBUG_CELLS_KEY = "sandustry.blueprintInspector.showDebugCells";
 const SHOW_NAMES_KEY = "sandustry.blueprintInspector.showNames";
 const SHOW_GRID_KEY = "sandustry.blueprintInspector.showGrid";
 const SHOW_MAP_SIDEBAR_KEY = "sandustry.blueprintInspector.showMapSidebar";
+const SHOW_PNG_BACKGROUND_KEY = "sandustry.blueprintInspector.showPngBackground";
 const MAP_ZOOM_LEVELS = [0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
 const NATIVE_PIXELS_PER_CELL = 4;
 const DISPLAY_PIXELS_PER_BLOCK_AT_100 = 32;
@@ -409,9 +410,6 @@ function structureTopY(structure: Blueprint["data"][number]) {
 type StructureShape = number[][];
 
 function customStructureShape(structure: Blueprint["data"][number]): StructureShape | undefined {
-  if (typeof structure.type !== "string" || !structure.type.startsWith("prefabTerrain_")) {
-    return undefined;
-  }
   if (typeof structure.data !== "object" || structure.data === null) return undefined;
   const data = structure.data as Record<string, unknown>;
   const blueprint = data.__prefabulatorBlueprint;
@@ -643,12 +641,14 @@ function BlueprintMap({
   blueprintKey,
   showSidebar,
   showGrid,
+  showPngBackground,
 }: {
   blueprint: Blueprint;
   remember: boolean;
   blueprintKey: string;
   showSidebar: boolean;
   showGrid: boolean;
+  showPngBackground: boolean;
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showDebugCells, setShowDebugCells] = useState(() =>
@@ -816,7 +816,9 @@ function BlueprintMap({
     const description = document.createElementNS("http://www.w3.org/2000/svg", "desc");
     description.textContent = "Rendered Sandustry blueprint map";
     svg.prepend(description, title);
-    svg.querySelectorAll('rect[fill="#33a8ff"]').forEach((background) => background.remove());
+    if (!showPngBackground) {
+      svg.querySelectorAll('rect[fill="#33a8ff"]').forEach((background) => background.remove());
+    }
     await Promise.all(
       Array.from(svg.querySelectorAll("image")).map(async (image) => {
         const href = image.getAttribute("href") ?? image.getAttribute("xlink:href");
@@ -1026,10 +1028,10 @@ function BlueprintMap({
           </defs>
           <rect width={width} height={height} fill="#33a8ff" />
           {showGrid ? (
-            <>
+            <g opacity="0.25">
               <rect width={width} height={height} fill="url(#blueprint-block-grid)" />
               <rect width={width} height={height} fill="url(#blueprint-cell-grid)" />
-            </>
+            </g>
           ) : null}
           {(blueprint.signalLinks ?? []).map((link, index) => {
             const from = point(link.from.x, link.from.y);
@@ -1437,6 +1439,9 @@ export function BlueprintInspectorPage() {
     readStoredBoolean(SHOW_MAP_SIDEBAR_KEY, false),
   );
   const [showGrid, setShowGrid] = useState(() => readStoredBoolean(SHOW_GRID_KEY, true));
+  const [showPngBackground, setShowPngBackground] = useState(() =>
+    readStoredBoolean(SHOW_PNG_BACKGROUND_KEY, false),
+  );
   const [inspectedBlueprintKey, setInspectedBlueprintKey] = useState("");
   const [summary, setSummary] = useState<BlueprintSummary | null>(null);
   const [message, setMessage] = useState("Paste a v2 blueprint string to inspect it.");
@@ -1572,6 +1577,20 @@ export function BlueprintInspectorPage() {
                 <button
                   type="button"
                   className="sd-button sd-button--compact sd-button--no-shift"
+                  onClick={() =>
+                    setShowPngBackground((visible) => {
+                      const nextValue = !visible;
+                      writeLocalValue(SHOW_PNG_BACKGROUND_KEY, String(nextValue));
+                      return nextValue;
+                    })
+                  }
+                  aria-pressed={showPngBackground}
+                >
+                  {showPngBackground ? "PNG: blue" : "PNG: transparent"}
+                </button>
+                <button
+                  type="button"
+                  className="sd-button sd-button--compact sd-button--no-shift"
                   onClick={() => {
                     setShowMapSidebar((visible) => {
                       const nextValue = !visible;
@@ -1593,6 +1612,7 @@ export function BlueprintInspectorPage() {
                 blueprintKey={inspectedBlueprintKey}
                 showSidebar={showMapSidebar}
                 showGrid={showGrid}
+                showPngBackground={showPngBackground}
               />
               <p className="mt-4 text-xs text-slate-500">
                 The captured native runtime catalog supplies names and footprints. Other content

@@ -13,13 +13,19 @@ structure records; versions 2 and 3 do not have that section.
 The binary payload contains, in order:
 
 1. Blueprint name.
-2. A dictionary of up to 64 numeric native IDs or string mod IDs.
+2. A dictionary of numeric native IDs or string mod IDs. Record bytes can
+   address only the first 64 entries; the game currently exports larger
+   dictionaries for some prefab-heavy blueprints but collapses records beyond
+   that range to type index 0.
 3. Structure records containing dictionary index, coordinates, optional filter,
    and optional arbitrary JSON data.
 4. For version 4, signal links containing source and target coordinates and an
    enabled flag.
 
-Unknown numeric and string IDs are valid and must survive decode/re-encode.
+Unknown numeric and string IDs are valid and must survive decode/re-encode when
+their dictionary index is representable. Oversized game-export dictionaries
+cannot preserve the original identity of records that the game collapsed to
+index 0, but their structure data remains available.
 The normalized model is:
 
 ```ts
