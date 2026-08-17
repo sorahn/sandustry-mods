@@ -40,6 +40,10 @@ const variantAssetSources = new Map([
   [23, "dist/img/pipes_icon.png"],
   [24, "dist/img/pump.png"],
   [27, "dist/img/gloom_emitter.png"],
+  ["heatCannonRight", "dist/mods/heat_cannon.png"],
+  ["heatCannonDown", "dist/mods/heat_cannon.png"],
+  ["heatCannonLeft", "dist/mods/heat_cannon.png"],
+  ["heatCannonUp", "dist/mods/heat_cannon.png"],
   ["glassFoundation", "dist/img/block.png"],
   ["kineticFieldEmitterDownRight", "dist/mods/kinetic_field_emitter_diagonal.png"],
   ["kineticFieldEmitterDownLeft", "dist/mods/kinetic_field_emitter_diagonal.png"],
@@ -215,27 +219,12 @@ const assetPresentationOverrides = new Map([
   // as missing/cropped assets when the source dimensions are inspected.
   ["snowmaker", { assetFrame: { width: 16, height: 16 }, assetClip: false }],
   ["thermofroster", { assetFrame: { width: 16, height: 16 }, assetClip: false }],
-  [
-    "burnerBeltLeft",
-    { assetFrame: { width: 64, height: 16 }, assetClip: false },
-  ],
-  [
-    "burnerBeltRight",
-    { assetFrame: { width: 64, height: 16 }, assetClip: false },
-  ],
-  [
-    "heatCannonRight",
-    { assetFrame: { width: 23, height: 16 }, assetClip: false },
-  ],
+  ["burnerBeltLeft", { assetFrame: { width: 64, height: 16 }, assetClip: false }],
+  ["burnerBeltRight", { assetFrame: { width: 64, height: 16 }, assetClip: false }],
+  ["heatCannonRight", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
   ["heatCannonUp", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
-  [
-    "heatCannonLeft",
-    { assetFrame: { width: 23, height: 16 }, assetClip: false },
-  ],
-  [
-    "heatCannonDown",
-    { assetFrame: { width: 23, height: 16 }, assetClip: false },
-  ],
+  ["heatCannonLeft", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
+  ["heatCannonDown", { assetFrame: { width: 23, height: 16 }, assetClip: false }],
   ["kineticFieldEmitter", { assetOffset: { x: -16 } }],
   ["kineticFieldEmitterDown", { assetClip: false, assetOffset: { x: -16 } }],
   ["kineticFieldEmitterLeft", { assetClip: false, assetOffset: { x: -16 } }],

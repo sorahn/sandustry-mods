@@ -1068,6 +1068,10 @@ function BlueprintMap({
             const top = (topY - minY + padding) * cell;
             const tileWidth = footprint.width * cell;
             const tileHeight = footprint.height * cell;
+            // Prefabulator blueprints carry their shape in data even for known
+            // structures. Preserve a known catalog sprite and use the generic
+            // block asset only for genuinely unknown custom structures.
+            const assetEntry = isCustomShape && !entry?.assetPath ? catalogEntry(11) : entry;
             const labelX = left + tileWidth / 2;
             const label = String(
               entry?.name ??
@@ -1139,9 +1143,10 @@ function BlueprintMap({
                       ),
                     )
                   : null}
-                {(isCustomShape ? catalogEntry(11) : entry)?.assetPath
+                {assetEntry?.assetPath
                   ? (() => {
-                      const assetEntry = isCustomShape ? catalogEntry(11)! : entry!;
+                      const assetEntry =
+                        isCustomShape && !entry?.assetPath ? catalogEntry(11)! : entry!;
                       const frame = assetEntry.assetFrame;
                       const source = assetEntry.assetSize;
                       const sourceWidth = source?.width ?? frame?.width ?? 1;
@@ -1247,7 +1252,11 @@ function BlueprintMap({
                             height={visualHeight}
                             preserveAspectRatio="none"
                             clipPath={needsFrameClip ? `url(#asset-clip-${index})` : undefined}
-                            mask={isCustomShape ? `url(#custom-shape-mask-${index})` : undefined}
+                            mask={
+                              isCustomShape && !entry?.assetPath
+                                ? `url(#custom-shape-mask-${index})`
+                                : undefined
+                            }
                             transform={
                               spriteRotation
                                 ? `rotate(${spriteRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
