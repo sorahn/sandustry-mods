@@ -98,20 +98,20 @@ sd-button {
   transform: translateX(48px) rotate(6deg);
   transition: transform 700ms ease;
 }
-.sd-button:hover,
-.sd-button:focus-visible {
+.sd-button:not(:disabled):hover,
+.sd-button:not(:disabled):focus-visible {
   left: 4px;
   border-color: transparent;
   color: #fff;
   outline: 0;
   transition-duration: 0s;
 }
-.sd-button:hover::first-letter,
-.sd-button:focus-visible::first-letter {
+.sd-button:not(:disabled):hover::first-letter,
+.sd-button:not(:disabled):focus-visible::first-letter {
   color: var(--sd-yellow);
 }
-.sd-button:hover::before,
-.sd-button:focus-visible::before {
+.sd-button:not(:disabled):hover::before,
+.sd-button:not(:disabled):focus-visible::before {
   transform: translateX(-208px) rotate(6deg);
 }
 .sd-button--accent {
@@ -124,8 +124,8 @@ sd-button {
   padding: calc(var(--sd-space) * 0.75) calc(var(--sd-space) * 1.5);
   font-size: 10px;
 }
-.sd-button--no-shift:hover,
-.sd-button--no-shift:focus-visible {
+.sd-button--no-shift:not(:disabled):hover,
+.sd-button--no-shift:not(:disabled):focus-visible {
   left: 0;
 }
 .sd-button:disabled {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { type Blueprint } from "../utils/blueprint";
 import {
   catalogEntry,
@@ -147,6 +147,7 @@ type MapView = {
   zoom: number;
   pan: { x: number; y: number };
   viewportWidth?: number;
+  fit?: boolean;
 };
 
 function readStoredMapView(blueprintKey: string): MapView | null {
@@ -159,6 +160,7 @@ function readStoredMapView(blueprintKey: string): MapView | null {
       zoom?: unknown;
       pan?: { x?: unknown; y?: unknown };
       viewportWidth?: unknown;
+      fit?: unknown;
     };
     if (
       value.blueprint !== blueprintKey ||
@@ -178,6 +180,7 @@ function readStoredMapView(blueprintKey: string): MapView | null {
         typeof value.viewportWidth === "number" && Number.isFinite(value.viewportWidth)
           ? value.viewportWidth
           : undefined,
+      fit: typeof value.fit === "boolean" ? value.fit : undefined,
     };
   } catch {
     return null;
@@ -475,6 +478,7 @@ export function BlueprintMap({
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
   const viewportRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
+  const initialViewportHeightRef = useRef<number | null>(null);
   const dragRef = useRef<{
     pointerId: number;
     lastX: number;
@@ -484,6 +488,7 @@ export function BlueprintMap({
   const suppressClickRef = useRef(false);
   const panCommitTimerRef = useRef<number | null>(null);
   const livePanRef = useRef(pan);
+  const fitModeRef = useRef(readStoredMapView(blueprintKey)?.fit ?? true);
   const padding = 6;
   // Blueprint coordinates are cell-sized units. Four native sprite pixels
   // make one cell, and four cells make one blueprint block. At 100% four
@@ -512,6 +517,7 @@ export function BlueprintMap({
   const width = (maxX - minX + padding * 2 + 1) * cell;
   const height = (maxY - minY + padding * 2 + 1) * cell;
   const aspectRatioViewportHeight =
+    initialViewportHeightRef.current ??
     (viewportSize.width || width) * (height / width) + MAP_VIEWPORT_BORDER_SIZE;
   const viewWidth = zoom <= 1 ? width : width / zoom;
   const viewHeight = zoom <= 1 ? height : height / zoom;
@@ -527,6 +533,10 @@ export function BlueprintMap({
       : Math.abs(centeredViewY);
   const viewX = zoom <= 1 ? 0 : centeredViewX + pan.x;
   const viewY = zoom <= 1 ? 0 : centeredViewY + pan.y;
+  const measuredFitZoom =
+    MAP_ZOOM_LEVELS.filter((level) => level <= 1)
+      .reverse()
+      .find((level) => width * level <= (viewportSize.width || width)) ?? MAP_ZOOM_LEVELS[0];
   const applyLivePan = (nextPan: { x: number; y: number }) => {
     const svg = svgRef.current;
     if (!svg) return;
@@ -585,8 +595,13 @@ export function BlueprintMap({
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
-    const updateSize = () =>
+    const updateSize = () => {
+      if (initialViewportHeightRef.current === null && viewport.clientWidth > 0) {
+        initialViewportHeightRef.current =
+          viewport.clientWidth * (height / width) + MAP_VIEWPORT_BORDER_SIZE;
+      }
       setViewportSize({ width: viewport.clientWidth, height: viewport.clientHeight });
+    };
     updateSize();
     const observer = new ResizeObserver(updateSize);
     observer.observe(viewport);
@@ -594,6 +609,7 @@ export function BlueprintMap({
   }, []);
   useEffect(() => {
     const stored = remember ? readStoredMapView(blueprintKey) : null;
+    fitModeRef.current = stored?.fit ?? true;
     const restoredZoom = snapMapZoom(stored?.zoom ?? 1);
     const restoredMaxPanX =
       restoredZoom <= 1
@@ -613,31 +629,43 @@ export function BlueprintMap({
     });
     setSelectedIndex(null);
     setMapSizeReady(stored?.viewportWidth === viewportSize.width && viewportSize.width > 0);
-  }, [blueprint, blueprintKey, height, remember, width]);
-  useEffect(() => {
+  }, [blueprint, blueprintKey, remember]);
+  const fitToViewport = () => {
+    fitModeRef.current = true;
+    const availableWidth = viewportRef.current?.clientWidth || viewportSize.width;
+    if (availableWidth > 0) {
+      initialViewportHeightRef.current =
+        availableWidth * (height / width) + MAP_VIEWPORT_BORDER_SIZE;
+    }
+    const fitZoom = MAP_ZOOM_LEVELS.filter((level) => level <= 1)
+      .reverse()
+      .find((level) => width * level <= availableWidth);
+    setZoom(fitZoom ?? MAP_ZOOM_LEVELS[0]);
+    setPan({ x: 0, y: 0 });
+  };
+  useLayoutEffect(() => {
     const stored = remember ? readStoredMapView(blueprintKey) : null;
     if (stored?.viewportWidth === viewportSize.width) return;
     if (!viewportSize.width || !viewportSize.height) return;
-    setMapSizeReady(false);
-    const fitToViewport = () => {
-      const viewport = viewportRef.current;
-      if (!viewport) return;
-      const availableWidth = viewport.clientWidth;
-      const fitZoom = MAP_ZOOM_LEVELS.filter((level) => level <= 1)
-        .reverse()
-        .find((level) => width * level <= availableWidth);
-      setZoom(fitZoom ?? MAP_ZOOM_LEVELS[0]);
-      setPan({ x: 0, y: 0 });
+    if (!viewportRef.current) return;
+    if (!fitModeRef.current) {
       setMapSizeReady(true);
-    };
-    const frame = requestAnimationFrame(fitToViewport);
-    return () => cancelAnimationFrame(frame);
-  }, [blueprintKey, height, remember, viewportSize.width, width]);
+      return;
+    }
+    fitToViewport();
+    setMapSizeReady(true);
+  }, [blueprintKey, remember, viewportSize.height, viewportSize.width, width]);
   useEffect(() => {
     if (!remember || !blueprintKey || !mapSizeReady) return;
     writeLocalValue(
       SAVED_MAP_VIEW_KEY,
-      JSON.stringify({ blueprint: blueprintKey, viewportWidth: viewportSize.width, zoom, pan }),
+      JSON.stringify({
+        blueprint: blueprintKey,
+        viewportWidth: viewportSize.width,
+        fit: fitModeRef.current,
+        zoom,
+        pan,
+      }),
     );
   }, [blueprintKey, mapSizeReady, pan, remember, viewportSize.width, zoom]);
   useEffect(() => {
@@ -649,6 +677,7 @@ export function BlueprintMap({
     };
   }, [pan]);
   const setMapZoom = (nextZoom: number) => {
+    fitModeRef.current = false;
     const snappedZoom = snapMapZoom(nextZoom);
     const nextViewWidth = width / snappedZoom;
     const nextViewHeight = height / snappedZoom;
@@ -792,8 +821,8 @@ export function BlueprintMap({
           <button
             type="button"
             className="sd-button sd-button--compact sd-button--no-shift"
-            onClick={() => setMapZoom(1)}
-            disabled={zoom === 1}
+            onClick={fitToViewport}
+            disabled={fitModeRef.current && zoom === measuredFitZoom && pan.x === 0 && pan.y === 0}
           >
             Fit
           </button>
@@ -859,6 +888,7 @@ export function BlueprintMap({
             const dy = event.clientY - drag.lastY;
             if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
               drag.moved = true;
+              fitModeRef.current = false;
               if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
                 event.currentTarget.setPointerCapture(event.pointerId);
               }
