@@ -6,12 +6,13 @@ Use these native-unit terms precisely when discussing the blueprint renderer
 and its sprite overrides:
 
 - **Pixel**: one native sprite unit.
-- **Block**: four native pixels in one dimension (a 4×4 native-pixel unit).
-- **Cell**: sixteen native pixels in one dimension (a 16×16 native-pixel unit,
-  or four blocks).
+- **Cell**: four native pixels in one dimension (a 4×4 native-pixel unit).
+- **Blueprint Block**: sixteen native pixels in one dimension (a 16×16
+  native-pixel unit, or four cells).
 
 Keep these native units separate from CSS/display pixels. A screen zoom or
-render scale may map one native cell to a different number of display pixels.
+render scale may map one native blueprint block to a different number of
+display pixels.
 
 ## Monorepo workflow
 

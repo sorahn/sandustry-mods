@@ -323,8 +323,8 @@ const SHOW_NAMES_KEY = "sandustry.blueprintInspector.showNames";
 const SHOW_GRID_KEY = "sandustry.blueprintInspector.showGrid";
 const SHOW_MAP_SIDEBAR_KEY = "sandustry.blueprintInspector.showMapSidebar";
 const MAP_ZOOM_LEVELS = [0.125, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
-const NATIVE_PIXELS_PER_BLOCK = 4;
-const DISPLAY_PIXELS_PER_CELL_AT_100 = 32;
+const NATIVE_PIXELS_PER_CELL = 4;
+const DISPLAY_PIXELS_PER_BLOCK_AT_100 = 32;
 const KINETIC_PRESS_SCALE = 4;
 const KINETIC_PRESS_EXPECTED_HEIGHT = 468;
 const KINETIC_PRESS_ANCHOR_OFFSET_CELLS = 3;
@@ -402,8 +402,55 @@ function readStoredMapView(blueprintKey: string): MapView | null {
 
 function structureTopY(structure: Blueprint["data"][number]) {
   const entry = catalogEntry(structure.type);
-  const height = entry?.footprint.height ?? 1;
+  const height = structureFootprint(structure).height;
   return entry?.positionAnchor === "bottom" ? structure.y - height + 1 : structure.y;
+}
+
+type StructureShape = number[][];
+
+function customStructureShape(structure: Blueprint["data"][number]): StructureShape | undefined {
+  if (typeof structure.type !== "string" || !structure.type.startsWith("prefabTerrain_")) {
+    return undefined;
+  }
+  if (typeof structure.data !== "object" || structure.data === null) return undefined;
+  const data = structure.data as Record<string, unknown>;
+  const blueprint = data.__prefabulatorBlueprint;
+  if (typeof blueprint !== "object" || blueprint === null) return undefined;
+  const definition = (blueprint as Record<string, unknown>).definition;
+  if (typeof definition !== "object" || definition === null) return undefined;
+  const shape = (definition as Record<string, unknown>).shape;
+  if (
+    !Array.isArray(shape) ||
+    shape.length === 0 ||
+    !shape.every(
+      (row) =>
+        Array.isArray(row) &&
+        row.length > 0 &&
+        row.every((value) => typeof value === "number" && Number.isFinite(value)),
+    )
+  ) {
+    return undefined;
+  }
+  const width = shape[0].length;
+  return shape.every((row) => row.length === width) ? (shape as StructureShape) : undefined;
+}
+
+function structureShape(structure: Blueprint["data"][number]): StructureShape | undefined {
+  return (
+    customStructureShape(structure) ??
+    (() => {
+      const shape = catalogEntry(structure.type)?.shape;
+      return Array.isArray(shape) ? shape : undefined;
+    })()
+  );
+}
+
+function structureFootprint(structure: Blueprint["data"][number]) {
+  const entry = catalogEntry(structure.type);
+  const shape = customStructureShape(structure);
+  return shape
+    ? { width: shape[0].length, height: shape.length }
+    : (entry?.footprint ?? { width: 1, height: 1 });
 }
 
 function structureVisualTopY(structure: Blueprint["data"][number]) {
@@ -426,7 +473,7 @@ function structureVisualTopY(structure: Blueprint["data"][number]) {
 }
 
 function renderPixelScale(cell: number) {
-  return cell / NATIVE_PIXELS_PER_BLOCK;
+  return cell / NATIVE_PIXELS_PER_CELL;
 }
 
 function foundationOutlinePath(
@@ -439,18 +486,17 @@ function foundationOutlinePath(
 ) {
   const occupied = new Set<string>();
   for (const structure of structures) {
-    if (typeof structure.type !== "number" || structure.type < 11 || structure.type > 15) {
+    const isNativeFoundation =
+      typeof structure.type === "number" && structure.type >= 11 && structure.type <= 15;
+    if (!isNativeFoundation && customStructureShape(structure) === undefined) {
       continue;
     }
-    const catalogShape = catalogEntry(structure.type)?.shape;
-    const shape: number[][] = Array.isArray(catalogShape)
-      ? catalogShape
-      : [
-          [1, 1, 1, 1],
-          [1, 1, 1, 1],
-          [1, 1, 1, 1],
-          [1, 1, 1, 1],
-        ];
+    const shape = structureShape(structure) ?? [
+      [1, 1, 1, 1],
+      [1, 1, 1, 1],
+      [1, 1, 1, 1],
+      [1, 1, 1, 1],
+    ];
     const topY = structureTopY(structure);
     shape.forEach((row, rowIndex) => {
       row.forEach((value, columnIndex) => {
@@ -622,14 +668,14 @@ function BlueprintMap({
   } | null>(null);
   const suppressClickRef = useRef(false);
   const padding = 6;
-  // Blueprint coordinates are block-sized units. Four native sprite pixels
-  // make one block, and four blocks make one native cell. At 100% four
+  // Blueprint coordinates are cell-sized units. Four native sprite pixels
+  // make one cell, and four cells make one blueprint block. At 100% four
   // blueprint coordinates therefore render at 32 display pixels.
-  const cell = DISPLAY_PIXELS_PER_CELL_AT_100 / NATIVE_PIXELS_PER_BLOCK;
+  const cell = DISPLAY_PIXELS_PER_BLOCK_AT_100 / NATIVE_PIXELS_PER_CELL;
   const xs = blueprint.data.length
     ? blueprint.data.flatMap((structure) => {
         const entry = catalogEntry(structure.type);
-        const width = entry?.footprint.width ?? 1;
+        const width = structureFootprint(structure).width;
         const assetOffsetX = (entry?.assetOffset?.x ?? 0) / 4;
         return [structure.x + assetOffsetX, structure.x + width - 1 + assetOffsetX];
       })
@@ -638,7 +684,7 @@ function BlueprintMap({
     ? blueprint.data.flatMap((structure) => {
         const topY = structureTopY(structure);
         const visualTopY = structureVisualTopY(structure);
-        const height = catalogEntry(structure.type)?.footprint.height ?? 1;
+        const height = structureFootprint(structure).height;
         return [visualTopY, topY + height - 1];
       })
     : [0];
@@ -966,12 +1012,12 @@ function BlueprintMap({
               id="blueprint-cell-grid"
               x={gridOriginX}
               y={gridOriginY}
-              width={cell * NATIVE_PIXELS_PER_BLOCK}
-              height={cell * NATIVE_PIXELS_PER_BLOCK}
+              width={cell * NATIVE_PIXELS_PER_CELL}
+              height={cell * NATIVE_PIXELS_PER_CELL}
               patternUnits="userSpaceOnUse"
             >
               <path
-                d={`M ${cell * NATIVE_PIXELS_PER_BLOCK} 0 L 0 0 0 ${cell * NATIVE_PIXELS_PER_BLOCK} M ${cell * NATIVE_PIXELS_PER_BLOCK} 0 L ${cell * NATIVE_PIXELS_PER_BLOCK} ${cell * NATIVE_PIXELS_PER_BLOCK} M 0 ${cell * NATIVE_PIXELS_PER_BLOCK} L ${cell * NATIVE_PIXELS_PER_BLOCK} ${cell * NATIVE_PIXELS_PER_BLOCK}`}
+                d={`M ${cell * NATIVE_PIXELS_PER_CELL} 0 L 0 0 0 ${cell * NATIVE_PIXELS_PER_CELL} M ${cell * NATIVE_PIXELS_PER_CELL} 0 L ${cell * NATIVE_PIXELS_PER_CELL} ${cell * NATIVE_PIXELS_PER_CELL} M 0 ${cell * NATIVE_PIXELS_PER_CELL} L ${cell * NATIVE_PIXELS_PER_CELL} ${cell * NATIVE_PIXELS_PER_CELL}`}
                 fill="none"
                 stroke="#17202c"
                 strokeWidth="1.25"
@@ -1004,7 +1050,9 @@ function BlueprintMap({
           })}
           {renderStructures.map(({ structure, index }) => {
             const entry = catalogEntry(structure.type);
-            const footprint = entry?.footprint ?? { width: 1, height: 1 };
+            const footprint = structureFootprint(structure);
+            const shape = structureShape(structure);
+            const isCustomShape = shape !== undefined;
             const position = point(structure.x, structure.y);
             const topY = structureTopY(structure);
             const left = (structure.x - minX + padding) * cell;
@@ -1051,13 +1099,35 @@ function BlueprintMap({
                   height={tileHeight}
                   rx="5"
                   fill={
-                    entry?.assetPath && !showDebugCells ? "transparent" : tileColor(structure.type)
+                    isCustomShape || (entry?.assetPath && !showDebugCells)
+                      ? "transparent"
+                      : tileColor(structure.type)
                   }
                   // Sprites own their visible shape. A generic footprint border
                   // leaks through the transparent corners of triangle foundations.
                   stroke={isSelected ? "#ffe700" : entry?.assetPath ? "none" : "#8491a3"}
                   strokeWidth={isSelected ? "4" : "1.5"}
                 />
+                {isCustomShape
+                  ? shape.map((row, rowIndex) =>
+                      row.map((value, columnIndex) =>
+                        value === 0 ? null : (
+                          <rect
+                            key={`custom-cell-${rowIndex}-${columnIndex}`}
+                            x={left + columnIndex * cell}
+                            y={top + rowIndex * cell}
+                            width={cell}
+                            height={cell}
+                            rx="2"
+                            fill="#a47a45"
+                            stroke={isSelected ? "#ffe700" : "#6e4c2c"}
+                            strokeWidth={isSelected ? "2" : "1"}
+                            pointerEvents="none"
+                          />
+                        ),
+                      ),
+                    )
+                  : null}
                 {entry?.assetPath
                   ? (() => {
                       const frame = entry.assetFrame;
@@ -1245,7 +1315,8 @@ function BlueprintMap({
                         <p>
                           Catalog footprint{" "}
                           <strong className="text-white">
-                            {entry.footprint.width}×{entry.footprint.height}
+                            {structureFootprint(selected).width}×
+                            {structureFootprint(selected).height}
                           </strong>
                         </p>
                         {entry.category ? (
