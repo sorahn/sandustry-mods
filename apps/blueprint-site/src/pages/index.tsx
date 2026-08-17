@@ -656,6 +656,8 @@ function BlueprintMap({
   const maxPanY = zoom <= 1 ? 0 : Math.abs(centeredViewY);
   const viewX = centeredViewX + pan.x;
   const viewY = centeredViewY + pan.y;
+  const gridOriginX = (padding - minX) * cell;
+  const gridOriginY = (padding - minY) * cell;
   const point = (x: number, y: number) => ({
     x: (x - minX + padding + 0.5) * cell,
     y: (y - minY + padding + 0.5) * cell,
@@ -945,17 +947,44 @@ function BlueprintMap({
           }}
         >
           <defs>
-            <pattern id="blueprint-grid" width={cell} height={cell} patternUnits="userSpaceOnUse">
+            <pattern
+              id="blueprint-block-grid"
+              x={gridOriginX}
+              y={gridOriginY}
+              width={cell}
+              height={cell}
+              patternUnits="userSpaceOnUse"
+            >
               <path
                 d={`M ${cell} 0 L 0 0 0 ${cell} M ${cell} 0 L ${cell} ${cell} M 0 ${cell} L ${cell} ${cell}`}
                 fill="none"
-                stroke="#17202c"
+                stroke="#718096"
                 strokeWidth="1"
+              />
+            </pattern>
+            <pattern
+              id="blueprint-cell-grid"
+              x={gridOriginX}
+              y={gridOriginY}
+              width={cell * NATIVE_PIXELS_PER_BLOCK}
+              height={cell * NATIVE_PIXELS_PER_BLOCK}
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d={`M ${cell * NATIVE_PIXELS_PER_BLOCK} 0 L 0 0 0 ${cell * NATIVE_PIXELS_PER_BLOCK} M ${cell * NATIVE_PIXELS_PER_BLOCK} 0 L ${cell * NATIVE_PIXELS_PER_BLOCK} ${cell * NATIVE_PIXELS_PER_BLOCK} M 0 ${cell * NATIVE_PIXELS_PER_BLOCK} L ${cell * NATIVE_PIXELS_PER_BLOCK} ${cell * NATIVE_PIXELS_PER_BLOCK}`}
+                fill="none"
+                stroke="#17202c"
+                strokeWidth="1.25"
               />
             </pattern>
           </defs>
           <rect width={width} height={height} fill="#33a8ff" />
-          {showGrid ? <rect width={width} height={height} fill="url(#blueprint-grid)" /> : null}
+          {showGrid ? (
+            <>
+              <rect width={width} height={height} fill="url(#blueprint-block-grid)" />
+              <rect width={width} height={height} fill="url(#blueprint-cell-grid)" />
+            </>
+          ) : null}
           {(blueprint.signalLinks ?? []).map((link, index) => {
             const from = point(link.from.x, link.from.y);
             const to = point(link.to.x, link.to.y);
