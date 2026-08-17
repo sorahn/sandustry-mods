@@ -274,11 +274,11 @@
         "width": 18,
         "height": 18
       },
+      "assetRotation": 270,
       "assetOffset": {
         "x": -1,
         "y": -1
-      },
-      "assetRotation": 270
+      }
     },
     {
       "type": 6,
@@ -641,7 +641,8 @@
       "assetFrame": {
         "width": 16,
         "height": 16
-      }
+      },
+      "assetRotation": 180
     },
     {
       "type": 14,
@@ -675,7 +676,7 @@
         "width": 16,
         "height": 16
       },
-      "assetRotation": 180
+      "assetRotation": 0
     },
     {
       "type": 15,
@@ -3358,11 +3359,11 @@
         "width": 23,
         "height": 16
       },
+      "assetRotation": 90,
       "assetClip": false,
       "assetOffset": {
         "x": -16
-      },
-      "assetRotation": 90
+      }
     },
     {
       "type": "kineticFieldEmitterDownLeft",
@@ -3453,12 +3454,12 @@
         "width": 15,
         "height": 15
       },
+      "assetRotation": 180,
       "assetClip": false,
       "assetOffset": {
         "x": -8,
         "y": 8
-      },
-      "assetRotation": 180
+      }
     },
     {
       "type": "kineticFieldEmitterDownRight",
@@ -3549,12 +3550,12 @@
         "width": 15,
         "height": 15
       },
+      "assetRotation": 90,
       "assetClip": false,
       "assetOffset": {
         "x": -8,
         "y": 8
-      },
-      "assetRotation": 90
+      }
     },
     {
       "type": "kineticFieldEmitterLeft",
@@ -3645,11 +3646,11 @@
         "width": 23,
         "height": 16
       },
+      "assetRotation": 180,
       "assetClip": false,
       "assetOffset": {
         "x": -16
-      },
-      "assetRotation": 180
+      }
     },
     {
       "type": "kineticFieldEmitterUp",
@@ -3740,11 +3741,11 @@
         "width": 23,
         "height": 16
       },
+      "assetRotation": 270,
       "assetClip": false,
       "assetOffset": {
         "x": -16
-      },
-      "assetRotation": 270
+      }
     },
     {
       "type": "kineticFieldEmitterUpLeft",
@@ -3835,12 +3836,12 @@
         "width": 15,
         "height": 15
       },
+      "assetRotation": 270,
       "assetClip": false,
       "assetOffset": {
         "x": -8,
         "y": 8
-      },
-      "assetRotation": 270
+      }
     },
     {
       "type": "kineticFieldEmitterUpRight",

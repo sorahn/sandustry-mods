@@ -196,6 +196,8 @@ const assetPresentationOverrides = new Map([
   [7, { assetOffset: { x: -1, y: -1 } }],
   [17, { assetOffset: { x: -1, y: -1 } }],
   [18, { assetOffset: { x: -1, y: -1 } }],
+  [13, { assetRotation: 180 }],
+  [14, { assetRotation: 0 }],
   [21, { assetClip: false, assetOffset: { x: -1 } }],
   ["filterLeftMk2", { assetOffset: { x: -1, y: -1 } }],
   ["filterRightMk2", { assetOffset: { x: -1, y: -1 } }],
@@ -373,8 +375,8 @@ const catalogWithAssets = {
           ...(assetClipOverrides.has(entry.type)
             ? { assetClip: assetClipOverrides.get(entry.type) }
             : {}),
-          ...(assetPresentationOverrides.get(entry.type) ?? {}),
           ...(derivedRotation !== undefined ? { assetRotation: derivedRotation } : {}),
+          ...(assetPresentationOverrides.get(entry.type) ?? {}),
         }
       : entry;
   }),
