@@ -1130,22 +1130,24 @@ function BlueprintMap({
                       ),
                     )
                   : null}
-                {entry?.assetPath
+                {(isCustomShape ? catalogEntry(11) : entry)?.assetPath
                   ? (() => {
-                      const frame = entry.assetFrame;
-                      const source = entry.assetSize;
+                      const assetEntry = isCustomShape ? catalogEntry(11)! : entry!;
+                      const frame = assetEntry.assetFrame;
+                      const source = assetEntry.assetSize;
                       const sourceWidth = source?.width ?? frame?.width ?? 1;
                       const sourceHeight = source?.height ?? frame?.height ?? 1;
-                      const runtimeRender = catalogRender(entry);
+                      const runtimeRender = catalogRender(assetEntry);
                       const runtimeSize = runtimeRender
                         ? catalogRenderSize(runtimeRender)
                         : undefined;
                       const frameWidth = frame?.width ?? runtimeSize?.width ?? sourceWidth;
                       const frameHeight = frame?.height ?? runtimeSize?.height ?? sourceHeight;
-                      const assetScaleFactor = entry.assetScaleFactor ?? 1;
+                      const assetScaleFactor = assetEntry.assetScaleFactor ?? 1;
                       const collectorSprite = collectorSpriteMap.get(index);
-                      const frameIndex = collectorSprite?.frameIndex ?? entry.assetFrameIndex ?? 0;
-                      const spriteRotation = collectorSprite?.rotation ?? entry.assetRotation;
+                      const frameIndex =
+                        collectorSprite?.frameIndex ?? assetEntry.assetFrameIndex ?? 0;
+                      const spriteRotation = collectorSprite?.rotation ?? assetEntry.assetRotation;
                       const customLightColor =
                         structure.type === 26
                           ? (lightColor(structure) ??
@@ -1153,12 +1155,12 @@ function BlueprintMap({
                             lightColor(structure.filter))
                           : undefined;
                       const useNativeAssetSize =
-                        runtimeSize !== undefined || entry.assetScaleFactor !== undefined;
-                      const needsFrameClip = entry.assetClip ?? sourceWidth > frameWidth;
+                        runtimeSize !== undefined || assetEntry.assetScaleFactor !== undefined;
+                      const needsFrameClip = assetEntry.assetClip ?? sourceWidth > frameWidth;
                       const pixelScale = renderPixelScale(cell);
                       const visualWidth = useNativeAssetSize
                         ? frameWidth * pixelScale * assetScaleFactor
-                        : entry.assetScale === "cell"
+                        : assetEntry.assetScale === "cell"
                           ? cell * (structure.type === 20 ? KINETIC_PRESS_SCALE : 1)
                           : tileWidth;
                       const visualHeight = useNativeAssetSize
@@ -1173,14 +1175,14 @@ function BlueprintMap({
                           : undefined;
                       const offsetX =
                         (typeof offset?.x === "number" ? offset.x : 0) +
-                        (entry.assetOffset?.x ?? 0);
+                        (assetEntry.assetOffset?.x ?? 0);
                       const offsetY =
                         (typeof offset?.y === "number" ? offset.y : 0) +
-                        (entry.assetOffset?.y ?? 0);
+                        (assetEntry.assetOffset?.y ?? 0);
                       const imageX = left + offsetX * pixelScale;
                       const sourceImageX = imageX - frameIndex * visualWidth;
                       const imageY =
-                        entry.positionAnchor === "bottom"
+                        assetEntry.positionAnchor === "bottom"
                           ? top +
                             tileHeight -
                             visualHeight +
@@ -1189,17 +1191,52 @@ function BlueprintMap({
                           : top + offsetY * pixelScale;
                       return (
                         <>
+                          {isCustomShape ? (
+                            <defs>
+                              <mask
+                                id={`custom-shape-mask-${index}`}
+                                maskUnits="userSpaceOnUse"
+                                x={left}
+                                y={top}
+                                width={tileWidth}
+                                height={tileHeight}
+                              >
+                                <rect
+                                  x={left}
+                                  y={top}
+                                  width={tileWidth}
+                                  height={tileHeight}
+                                  fill="black"
+                                />
+                                {shape.map((row, rowIndex) =>
+                                  row.map((value, columnIndex) =>
+                                    value === 0 ? null : (
+                                      <rect
+                                        key={`custom-mask-cell-${rowIndex}-${columnIndex}`}
+                                        x={left + columnIndex * cell}
+                                        y={top + rowIndex * cell}
+                                        width={cell}
+                                        height={cell}
+                                        fill="white"
+                                      />
+                                    ),
+                                  ),
+                                )}
+                              </mask>
+                            </defs>
+                          ) : null}
                           <clipPath id={`asset-clip-${index}`}>
                             <rect x={imageX} y="0" width={visualWidth} height={height} />
                           </clipPath>
                           <image
-                            href={`${import.meta.env.BASE_URL}${entry.assetPath}`}
+                            href={`${import.meta.env.BASE_URL}${assetEntry.assetPath}`}
                             x={sourceImageX}
                             y={imageY}
                             width={visualWidth * (sourceWidth / frameWidth)}
                             height={visualHeight}
                             preserveAspectRatio="none"
                             clipPath={needsFrameClip ? `url(#asset-clip-${index})` : undefined}
+                            mask={isCustomShape ? `url(#custom-shape-mask-${index})` : undefined}
                             transform={
                               spriteRotation
                                 ? `rotate(${spriteRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
