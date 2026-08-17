@@ -7,5 +7,6 @@ node_modules/
 .DS_Store
 *.tsbuildinfo
 .openai/
-resources/
+resources/*
+!resources/sandkit-surface-map/
 *-PLAN.md
