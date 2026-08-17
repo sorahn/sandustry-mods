@@ -1163,7 +1163,9 @@ function BlueprintMap({
                             lightColor(structure.filter))
                           : undefined;
                       const useNativeAssetSize =
-                        runtimeSize !== undefined || assetEntry.assetScaleFactor !== undefined;
+                        runtimeSize !== undefined ||
+                        assetEntry.assetScaleFactor !== undefined ||
+                        (frame !== undefined && assetEntry.assetScale !== "cell");
                       const needsFrameClip = assetEntry.assetClip ?? sourceWidth > frameWidth;
                       const pixelScale = renderPixelScale(cell);
                       const visualWidth = useNativeAssetSize

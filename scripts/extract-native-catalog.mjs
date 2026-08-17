@@ -100,6 +100,7 @@ function deriveAssetRotation(targetType, allEntries) {
     "launcherRightMk2",
     "filterWall",
     "filterWallMk2",
+    4,
     1,
     3,
     6,
@@ -156,6 +157,16 @@ const assetClipOverrides = new Map([
   ["heatCannonUp", false],
   ["heatCannonLeft", false],
   ["heatCannonDown", false],
+]);
+
+// The diagonal fan PNG contains the 15x15 sprite inside a wider composite
+// export. It must remain unclipped and use the same native placement offset as
+// the game renderer; clipping it to assetFrame removes most of the fan.
+const assetPresentationOverrides = new Map([
+  ["kineticFieldEmitterDownRight", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
+  ["kineticFieldEmitterDownLeft", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
+  ["kineticFieldEmitterUpLeft", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
+  ["kineticFieldEmitterUpRight", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
 ]);
 
 const bottomAnchoredTypes = new Set([20]);
@@ -283,6 +294,7 @@ const catalogWithAssets = {
           ...(assetClipOverrides.has(entry.type)
             ? { assetClip: assetClipOverrides.get(entry.type) }
             : {}),
+          ...(assetPresentationOverrides.get(entry.type) ?? {}),
           ...(derivedRotation !== undefined ? { assetRotation: derivedRotation } : {}),
         }
       : entry;

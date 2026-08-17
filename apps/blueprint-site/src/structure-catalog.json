@@ -185,8 +185,7 @@
       "assetFrame": {
         "width": 18,
         "height": 18
-      },
-      "assetRotation": 45
+      }
     },
     {
       "type": 5,
@@ -3384,6 +3383,11 @@
         "width": 15,
         "height": 15
       },
+      "assetClip": false,
+      "assetOffset": {
+        "x": -8,
+        "y": 8
+      },
       "assetRotation": 135
     },
     {
@@ -3474,6 +3478,11 @@
       "assetFrame": {
         "width": 15,
         "height": 15
+      },
+      "assetClip": false,
+      "assetOffset": {
+        "x": -8,
+        "y": 8
       },
       "assetRotation": 45
     },
@@ -3740,6 +3749,11 @@
         "width": 15,
         "height": 15
       },
+      "assetClip": false,
+      "assetOffset": {
+        "x": -8,
+        "y": 8
+      },
       "assetRotation": 225
     },
     {
@@ -3830,6 +3844,11 @@
       "assetFrame": {
         "width": 15,
         "height": 15
+      },
+      "assetClip": false,
+      "assetOffset": {
+        "x": -8,
+        "y": 8
       },
       "assetRotation": 315
     },
