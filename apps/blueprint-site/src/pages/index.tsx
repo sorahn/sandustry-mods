@@ -246,6 +246,9 @@ function tileColor(type: Blueprint["data"][number]["type"]) {
 
 const REMEMBER_BLUEPRINT_KEY = "sandustry.blueprintInspector.remember";
 const SAVED_BLUEPRINT_KEY = "sandustry.blueprintInspector.string";
+const KINETIC_PRESS_SCALE = 4;
+const KINETIC_PRESS_EXPECTED_HEIGHT = 468;
+const KINETIC_PRESS_ANCHOR_OFFSET_CELLS = 3;
 
 function readLocalValue(key: string) {
   try {
@@ -277,18 +280,25 @@ function structureTopY(structure: Blueprint["data"][number]) {
   return entry?.positionAnchor === "bottom" ? structure.y - height + 1 : structure.y;
 }
 
-function structureVisualTopY(structure: Blueprint["data"][number], kineticTopY?: number) {
+function structureVisualTopY(structure: Blueprint["data"][number]) {
   const entry = catalogEntry(structure.type);
   const topY = structureTopY(structure);
   if (entry?.assetScale !== "cell" || entry.positionAnchor !== "bottom") return topY;
-  if (structure.type === 20 && kineticTopY !== undefined) return kineticTopY;
   const frameHeight = entry.assetFrame?.width ?? 1;
   const sourceHeight = entry.assetSize?.height ?? frameHeight;
-  return structure.y + 1 - sourceHeight / frameHeight;
+  const scale = structure.type === 20 ? KINETIC_PRESS_SCALE : 1;
+  return (
+    structure.y +
+    1 -
+    (sourceHeight / frameHeight) * scale +
+    (structure.type === 20 ? KINETIC_PRESS_ANCHOR_OFFSET_CELLS : 0)
+  );
 }
 
 function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [showDebugCells, setShowDebugCells] = useState(true);
+  const [showNames, setShowNames] = useState(true);
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const dragRef = useRef<{
@@ -300,12 +310,6 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const suppressClickRef = useRef(false);
   const padding = 2;
   const cell = 56;
-  const kineticTopY = blueprint.data
-    .filter((structure) => structure.type === 1 || structure.type === 2)
-    .reduce<number | undefined>(
-      (top, structure) => Math.min(top ?? structure.y, structure.y),
-      undefined,
-    );
   const xs = blueprint.data.length
     ? blueprint.data.flatMap((structure) => {
         const width = catalogEntry(structure.type)?.footprint.width ?? 1;
@@ -315,7 +319,7 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const ys = blueprint.data.length
     ? blueprint.data.flatMap((structure) => {
         const topY = structureTopY(structure);
-        const visualTopY = structureVisualTopY(structure, kineticTopY);
+        const visualTopY = structureVisualTopY(structure);
         const height = catalogEntry(structure.type)?.footprint.height ?? 1;
         return [visualTopY, topY + height - 1];
       })
@@ -345,6 +349,21 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
         left.structure.x - right.structure.x ||
         left.index - right.index,
     );
+  const debugCellsToggle = debugComponent(Checkbox, {
+    boxed: true,
+    checked: showDebugCells,
+    label: "debug cells",
+    size: "small",
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
+      setShowDebugCells(event.target.checked),
+  });
+  const debugNamesToggle = debugComponent(Checkbox, {
+    boxed: true,
+    checked: showNames,
+    label: "show names",
+    size: "small",
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => setShowNames(event.target.checked),
+  });
   useEffect(() => {
     setPan({ x: 0, y: 0 });
     setSelectedIndex(null);
@@ -515,7 +534,9 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                   width={tileWidth}
                   height={tileHeight}
                   rx="5"
-                  fill={entry?.assetPath ? "transparent" : tileColor(structure.type)}
+                  fill={
+                    entry?.assetPath && !showDebugCells ? "transparent" : tileColor(structure.type)
+                  }
                   stroke={isSelected ? "#ffe700" : "#8491a3"}
                   strokeWidth={isSelected ? "4" : "1.5"}
                 />
@@ -527,26 +548,20 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                       const imageHeight = tileHeight;
                       const sourceWidth = source?.width ?? frame?.width ?? 1;
                       const sourceHeight = source?.height ?? frame?.height ?? 1;
-                      const isKineticPress = structure.type === 20 && kineticTopY !== undefined;
-                      const visualWidth = isKineticPress
-                        ? ((structure.y + 1 - kineticTopY) * cell * sourceWidth) / sourceHeight
-                        : entry.assetScale === "cell"
-                          ? cell
+                      const visualWidth =
+                        entry.assetScale === "cell"
+                          ? cell * (structure.type === 20 ? KINETIC_PRESS_SCALE : 1)
                           : imageWidth;
-                      const visualHeight = isKineticPress
-                        ? (structure.y + 1 - kineticTopY) * cell
-                        : frame
-                          ? visualWidth * (sourceHeight / frame.width)
-                          : imageHeight;
-                      const imageX = isKineticPress
-                        ? left + tileWidth / 2 - visualWidth / 2
-                        : entry.assetScale === "cell"
-                          ? left
-                          : left;
-                      const imageY = isKineticPress
-                        ? (kineticTopY - minY + padding) * cell
-                        : entry.positionAnchor === "bottom"
-                          ? top + tileHeight - visualHeight
+                      const visualHeight = frame
+                        ? visualWidth * (sourceHeight / frame.width)
+                        : imageHeight;
+                      const imageX = left;
+                      const imageY =
+                        entry.positionAnchor === "bottom"
+                          ? top +
+                            tileHeight -
+                            visualHeight +
+                            (structure.type === 20 ? KINETIC_PRESS_ANCHOR_OFFSET_CELLS * cell : 0)
                           : top;
                       return (
                         <>
@@ -568,11 +583,31 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                             }
                             style={{ imageRendering: "pixelated", pointerEvents: "none" }}
                           />
+                          {showDebugCells && structure.type === 20 ? (
+                            <rect
+                              x={imageX}
+                              y={
+                                top +
+                                tileHeight +
+                                KINETIC_PRESS_ANCHOR_OFFSET_CELLS * cell -
+                                visualWidth * (KINETIC_PRESS_EXPECTED_HEIGHT / (frame?.width ?? 1))
+                              }
+                              width={visualWidth}
+                              height={
+                                visualWidth * (KINETIC_PRESS_EXPECTED_HEIGHT / (frame?.width ?? 1))
+                              }
+                              fill="none"
+                              stroke="#00ff66"
+                              strokeWidth="0.5"
+                              vectorEffect="non-scaling-stroke"
+                              pointerEvents="none"
+                            />
+                          ) : null}
                         </>
                       );
                     })()
                   : null}
-                {!entry?.assetPath ? (
+                {showNames ? (
                   <text
                     x={labelX}
                     y={labelY}
@@ -598,7 +633,7 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
           })}
         </svg>
       </div>
-      <aside className="border-l border-slate-800 pl-4 text-xs text-slate-400">
+      <aside className="flex flex-col border-l border-slate-800 pl-4 text-xs text-slate-400">
         <p className="font-mono uppercase tracking-[0.18em] text-slate-500">Selected record</p>
         {selected ? (
           <div className="mt-3 space-y-3">
@@ -669,6 +704,12 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
         ) : (
           <p className="mt-3 leading-6">Choose a tile to inspect its raw blueprint record.</p>
         )}
+        {debugCellsToggle || debugNamesToggle ? (
+          <div className="mt-auto flex flex-col items-end gap-2 pt-4">
+            {debugNamesToggle}
+            {debugCellsToggle}
+          </div>
+        ) : null}
       </aside>
     </div>
   );

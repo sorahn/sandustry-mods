@@ -169,6 +169,7 @@ sd-button {
   font-size: 10px;
 }
 .sd-checkbox--boxed {
+  gap: calc(var(--sd-space) * 2.5);
   border: 1px solid rgb(203 213 225 / 0.25);
   border-radius: var(--sd-radius) 0 var(--sd-radius) 0;
   background: #000;
