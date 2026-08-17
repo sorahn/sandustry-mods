@@ -1,12 +1,16 @@
 {
   "format": 1,
-  "generatedAt": "2026-08-16T22:40:08.906Z",
+  "generatedAt": "2026-08-17T00:41:51.929Z",
   "locale": "en",
   "entries": [
     {
       "type": 1,
       "name": "[NO KEY]",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [19, 19, 19, 19],
         [15, 15, 15, 15],
@@ -29,17 +33,32 @@
       "nameKey": "structures|conveyor|name",
       "descriptionKey": "structures|conveyor|description",
       "category": "logistics",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [20, 20, 20, 20],
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15]
       ],
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
       "variants": [
-        { "id": 1, "angles": [-180, 180] },
-        { "id": 2, "angles": [0] }
+        {
+          "id": 1,
+          "angles": [-180, 180]
+        },
+        {
+          "id": 2,
+          "angles": [0]
+        }
       ],
       "definition": {
         "shape": [
@@ -48,10 +67,21 @@
           [15, 15, 15, 15],
           [15, 15, 15, 15]
         ],
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
         "variants": [
-          { "id": 1, "angles": [-180, 180] },
-          { "id": 2, "angles": [0] }
+          {
+            "id": 1,
+            "angles": [-180, 180]
+          },
+          {
+            "id": 2,
+            "angles": [0]
+          }
         ],
         "nameKey": "structures|conveyor|name",
         "descriptionKey": "structures|conveyor|description",
@@ -63,7 +93,11 @@
     {
       "type": 3,
       "name": "[NO KEY]",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "definition": {},
       "source": "runtime structure definition"
     },
@@ -73,17 +107,43 @@
       "nameKey": "structures|shaker|name",
       "descriptionKey": "structures|shaker|description",
       "category": "production",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "line", "directions": ["diagonal"] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["diagonal"]
+        }
+      ],
       "variants": [
-        { "id": 3, "angles": [-45, 135] },
-        { "id": 4, "angles": [45, -135] }
+        {
+          "id": 3,
+          "angles": [-45, 135]
+        },
+        {
+          "id": 4,
+          "angles": [45, -135]
+        }
       ],
       "definition": {
-        "buildModes": [{ "type": "line", "directions": ["diagonal"] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["diagonal"]
+          }
+        ],
         "variants": [
-          { "id": 3, "angles": [-45, 135] },
-          { "id": 4, "angles": [45, -135] }
+          {
+            "id": 3,
+            "angles": [-45, 135]
+          },
+          {
+            "id": 4,
+            "angles": [45, -135]
+          }
         ],
         "nameKey": "structures|shaker|name",
         "descriptionKey": "structures|shaker|description",
@@ -97,27 +157,63 @@
       "nameKey": "structures|launcher|name",
       "descriptionKey": "structures|launcher|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["vertical", "diagonal"] },
-        { "type": "launcherRectUp" },
-        { "type": "launcherRectSide" }
+        {
+          "type": "line",
+          "directions": ["vertical", "diagonal"]
+        },
+        {
+          "type": "launcherRectUp"
+        },
+        {
+          "type": "launcherRectSide"
+        }
       ],
       "variants": [
-        { "id": 6, "angles": [-135, 45] },
-        { "id": 5, "angles": [-90, 90] },
-        { "id": 7, "angles": [-45, 135] }
+        {
+          "id": 6,
+          "angles": [-135, 45]
+        },
+        {
+          "id": 5,
+          "angles": [-90, 90]
+        },
+        {
+          "id": 7,
+          "angles": [-45, 135]
+        }
       ],
       "definition": {
         "buildModes": [
-          { "type": "line", "directions": ["vertical", "diagonal"] },
-          { "type": "launcherRectUp" },
-          { "type": "launcherRectSide" }
+          {
+            "type": "line",
+            "directions": ["vertical", "diagonal"]
+          },
+          {
+            "type": "launcherRectUp"
+          },
+          {
+            "type": "launcherRectSide"
+          }
         ],
         "variants": [
-          { "id": 6, "angles": [-135, 45] },
-          { "id": 5, "angles": [-90, 90] },
-          { "id": 7, "angles": [-45, 135] }
+          {
+            "id": 6,
+            "angles": [-135, 45]
+          },
+          {
+            "id": 5,
+            "angles": [-90, 90]
+          },
+          {
+            "id": 7,
+            "angles": [-45, 135]
+          }
         ],
         "nameKey": "structures|launcher|name",
         "descriptionKey": "structures|launcher|description",
@@ -129,14 +225,22 @@
     {
       "type": 6,
       "name": "[NO KEY]",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "definition": {},
       "source": "runtime structure definition"
     },
     {
       "type": 7,
       "name": "[NO KEY]",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "definition": {},
       "source": "runtime structure definition"
     },
@@ -144,17 +248,32 @@
       "type": 8,
       "name": "[NO KEY]",
       "category": "logistics",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [0, 0, 16, 0],
         [0, 0, 0, 16],
         [0, 0, 0, 15],
         [0, 0, 0, 15]
       ],
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
       "variants": [
-        { "id": 8, "angles": [180] },
-        { "id": 9, "angles": [0] }
+        {
+          "id": 8,
+          "angles": [180]
+        },
+        {
+          "id": 9,
+          "angles": [0]
+        }
       ],
       "definition": {
         "shape": [
@@ -163,10 +282,21 @@
           [0, 0, 0, 15],
           [0, 0, 0, 15]
         ],
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
         "variants": [
-          { "id": 8, "angles": [180] },
-          { "id": 9, "angles": [0] }
+          {
+            "id": 8,
+            "angles": [180]
+          },
+          {
+            "id": 9,
+            "angles": [0]
+          }
         ],
         "categoryKey": "logistics",
         "order": 30
@@ -176,7 +306,11 @@
     {
       "type": 9,
       "name": "[NO KEY]",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [0, 16, 0, 0],
         [16, 0, 0, 0],
@@ -197,15 +331,28 @@
       "type": 10,
       "name": "[NO KEY]",
       "category": "logistics",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [16, 0, 0, 16],
         [16, 0, 16, 15],
         [16, 0, 15, 15],
         [0, 16, 15, 15]
       ],
-      "buildModes": [{ "type": "single" }],
-      "variants": [{ "id": 10, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+      "buildModes": [
+        {
+          "type": "single"
+        }
+      ],
+      "variants": [
+        {
+          "id": 10,
+          "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135]
+        }
+      ],
       "definition": {
         "shape": [
           [16, 0, 0, 16],
@@ -213,8 +360,17 @@
           [16, 0, 15, 15],
           [0, 16, 15, 15]
         ],
-        "buildModes": [{ "type": "single" }],
-        "variants": [{ "id": 10, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+        "buildModes": [
+          {
+            "type": "single"
+          }
+        ],
+        "variants": [
+          {
+            "id": 10,
+            "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135]
+          }
+        ],
         "categoryKey": "logistics",
         "order": 40
       },
@@ -226,7 +382,11 @@
       "nameKey": "structures|foundation|name",
       "descriptionKey": "structures|foundation|description",
       "category": "blocks",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -234,15 +394,35 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical", "diagonal"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
       "variants": [
-        { "id": 12, "angles": [135] },
-        { "id": 15, "angles": [-45] },
-        { "id": 14, "angles": [45] },
-        { "id": 13, "angles": [-135] },
-        { "id": 11, "angles": [-180, -90, 0, 90, 180] }
+        {
+          "id": 12,
+          "angles": [135]
+        },
+        {
+          "id": 15,
+          "angles": [-45]
+        },
+        {
+          "id": 14,
+          "angles": [45]
+        },
+        {
+          "id": 13,
+          "angles": [-135]
+        },
+        {
+          "id": 11,
+          "angles": [-180, -90, 0, 90, 180]
+        }
       ],
       "definition": {
         "shape": [
@@ -252,15 +432,35 @@
           [15, 15, 15, 15]
         ],
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical", "diagonal"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
         "variants": [
-          { "id": 12, "angles": [135] },
-          { "id": 15, "angles": [-45] },
-          { "id": 14, "angles": [45] },
-          { "id": 13, "angles": [-135] },
-          { "id": 11, "angles": [-180, -90, 0, 90, 180] }
+          {
+            "id": 12,
+            "angles": [135]
+          },
+          {
+            "id": 15,
+            "angles": [-45]
+          },
+          {
+            "id": 14,
+            "angles": [45]
+          },
+          {
+            "id": 13,
+            "angles": [-135]
+          },
+          {
+            "id": 11,
+            "angles": [-180, -90, 0, 90, 180]
+          }
         ],
         "nameKey": "structures|foundation|name",
         "descriptionKey": "structures|foundation|description",
@@ -271,7 +471,11 @@
     {
       "type": 12,
       "name": "[NO KEY]",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [0, 0, 0, 17],
         [0, 0, 17, 15],
@@ -291,7 +495,11 @@
     {
       "type": 13,
       "name": "[NO KEY]",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [0, 15, 15, 15],
@@ -311,7 +519,11 @@
     {
       "type": 14,
       "name": "[NO KEY]",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [18, 0, 0, 0],
         [15, 18, 0, 0],
@@ -331,14 +543,23 @@
     {
       "type": 15,
       "name": "[NO KEY]",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 0],
         [15, 15, 0, 0],
         [15, 0, 0, 0]
       ],
-      "variants": [{ "id": 15, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+      "variants": [
+        {
+          "id": 15,
+          "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135]
+        }
+      ],
       "definition": {
         "shape": [
           [15, 15, 15, 15],
@@ -346,7 +567,12 @@
           [15, 15, 0, 0],
           [15, 0, 0, 0]
         ],
-        "variants": [{ "id": 15, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }]
+        "variants": [
+          {
+            "id": 15,
+            "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135]
+          }
+        ]
       },
       "source": "runtime structure definition"
     },
@@ -356,18 +582,42 @@
       "nameKey": "structures|collector|name",
       "descriptionKey": "structures|collector|description",
       "category": "economy",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "rectangle" },
-        { "type": "line", "directions": ["horizontal", "vertical"] }
+        {
+          "type": "rectangle"
+        },
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        }
       ],
-      "variants": [{ "id": 16, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+      "variants": [
+        {
+          "id": 16,
+          "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135]
+        }
+      ],
       "definition": {
         "buildModes": [
-          { "type": "rectangle" },
-          { "type": "line", "directions": ["horizontal", "vertical"] }
+          {
+            "type": "rectangle"
+          },
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          }
         ],
-        "variants": [{ "id": 16, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+        "variants": [
+          {
+            "id": 16,
+            "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135]
+          }
+        ],
         "nameKey": "structures|collector|name",
         "descriptionKey": "structures|collector|description",
         "categoryKey": "economy"
@@ -377,9 +627,19 @@
     {
       "type": 17,
       "name": "[NO KEY]",
-      "footprint": { "width": 1, "height": 1 },
-      "tooltipHover": { "type": "filter" },
-      "definition": { "tooltipHover": { "type": "filter" } },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "tooltipHover": {
+        "type": "filter"
+      },
+      "definition": {
+        "tooltipHover": {
+          "type": "filter"
+        }
+      },
       "source": "runtime structure definition"
     },
     {
@@ -388,32 +648,70 @@
       "nameKey": "structures|filter|name",
       "descriptionKey": "structures|filter|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal"] },
-        { "type": "line", "directions": ["vertical"] }
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        },
+        {
+          "type": "line",
+          "directions": ["vertical"]
+        }
       ],
       "variants": [
-        { "id": 17, "angles": [-180, 180] },
-        { "id": 18, "angles": [0] },
-        { "id": "filterWall", "angles": [-90, 90] }
+        {
+          "id": 17,
+          "angles": [-180, 180]
+        },
+        {
+          "id": 18,
+          "angles": [0]
+        },
+        {
+          "id": "filterWall",
+          "angles": [-90, 90]
+        }
       ],
-      "tooltipHover": { "type": "filter" },
+      "tooltipHover": {
+        "type": "filter"
+      },
       "definition": {
         "buildModes": [
-          { "type": "line", "directions": ["horizontal"] },
-          { "type": "line", "directions": ["vertical"] }
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          },
+          {
+            "type": "line",
+            "directions": ["vertical"]
+          }
         ],
         "variants": [
-          { "id": 17, "angles": [-180, 180] },
-          { "id": 18, "angles": [0] },
-          { "id": "filterWall", "angles": [-90, 90] }
+          {
+            "id": 17,
+            "angles": [-180, 180]
+          },
+          {
+            "id": 18,
+            "angles": [0]
+          },
+          {
+            "id": "filterWall",
+            "angles": [-90, 90]
+          }
         ],
         "nameKey": "structures|filter|name",
         "descriptionKey": "structures|filter|description",
         "categoryKey": "logistics",
         "order": 50,
-        "tooltipHover": { "type": "filter" }
+        "tooltipHover": {
+          "type": "filter"
+        }
       },
       "source": "runtime structure definition"
     },
@@ -421,7 +719,11 @@
       "type": 19,
       "name": "[NO KEY]",
       "category": "blocks",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [16, 16, 16, 16],
         [16, 16, 16, 16],
@@ -429,10 +731,20 @@
         [16, 16, 16, 16]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical", "diagonal"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": 19, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+      "variants": [
+        {
+          "id": 19,
+          "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135]
+        }
+      ],
       "definition": {
         "shape": [
           [16, 16, 16, 16],
@@ -441,10 +753,20 @@
           [16, 16, 16, 16]
         ],
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical", "diagonal"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": 19, "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135] }],
+        "variants": [
+          {
+            "id": 19,
+            "angles": [-180, -90, 0, 90, 180, -135, -45, 45, 135]
+          }
+        ],
         "categoryKey": "blocks"
       },
       "source": "runtime structure definition"
@@ -455,15 +777,29 @@
       "nameKey": "structures|velocitySoaker|name",
       "descriptionKey": "structures|velocitySoaker|description",
       "category": "production",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [24, 24, 24, 24],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0]
       ],
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-      "variants": [{ "id": 20, "angles": [-180, 0, 180] }],
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
+      "variants": [
+        {
+          "id": 20,
+          "angles": [-180, 0, 180]
+        }
+      ],
       "definition": {
         "shape": [
           [24, 24, 24, 24],
@@ -472,8 +808,18 @@
           [0, 0, 0, 0]
         ],
         "altOriginOffsetY": 100,
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [{ "id": 20, "angles": [-180, 0, 180] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
+        "variants": [
+          {
+            "id": 20,
+            "angles": [-180, 0, 180]
+          }
+        ],
         "nameKey": "structures|velocitySoaker|name",
         "descriptionKey": "structures|velocitySoaker|description",
         "categoryKey": "production"
@@ -486,12 +832,36 @@
       "nameKey": "structures|grower|name",
       "descriptionKey": "structures|grower|description",
       "category": "production",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-      "variants": [{ "id": 21, "angles": [-180, 0, 180] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
+      "variants": [
+        {
+          "id": 21,
+          "angles": [-180, 0, 180]
+        }
+      ],
       "definition": {
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [{ "id": 21, "angles": [-180, 0, 180] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
+        "variants": [
+          {
+            "id": 21,
+            "angles": [-180, 0, 180]
+          }
+        ],
         "nameKey": "structures|grower|name",
         "descriptionKey": "structures|grower|description",
         "categoryKey": "production"
@@ -502,12 +872,36 @@
       "type": 22,
       "name": "[NO KEY]",
       "category": "logic",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-      "variants": [{ "id": 22, "angles": [-180, 0, 180] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
+      "variants": [
+        {
+          "id": 22,
+          "angles": [-180, 0, 180]
+        }
+      ],
       "definition": {
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [{ "id": 22, "angles": [-180, 0, 180] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
+        "variants": [
+          {
+            "id": 22,
+            "angles": [-180, 0, 180]
+          }
+        ],
         "categoryKey": "logic"
       },
       "source": "runtime structure definition"
@@ -518,12 +912,36 @@
       "nameKey": "structures|pipe|name",
       "descriptionKey": "structures|pipe|description",
       "category": "fluids",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "line", "directions": ["horizontal", "vertical"] }],
-      "variants": [{ "id": 23, "angles": [-180, -90, 0, 90, 180] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        }
+      ],
+      "variants": [
+        {
+          "id": 23,
+          "angles": [-180, -90, 0, 90, 180]
+        }
+      ],
       "definition": {
-        "buildModes": [{ "type": "line", "directions": ["horizontal", "vertical"] }],
-        "variants": [{ "id": 23, "angles": [-180, -90, 0, 90, 180] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          }
+        ],
+        "variants": [
+          {
+            "id": 23,
+            "angles": [-180, -90, 0, 90, 180]
+          }
+        ],
         "nameKey": "structures|pipe|name",
         "descriptionKey": "structures|pipe|description",
         "categoryKey": "fluids"
@@ -536,20 +954,48 @@
       "nameKey": "structures|pump|name",
       "descriptionKey": "structures|pump|description",
       "category": "fluids",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "single" },
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "single"
+        },
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": 24, "angles": [-180, -90, 0, 90, 180] }],
+      "variants": [
+        {
+          "id": 24,
+          "angles": [-180, -90, 0, 90, 180]
+        }
+      ],
       "definition": {
         "buildModes": [
-          { "type": "single" },
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "single"
+          },
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": 24, "angles": [-180, -90, 0, 90, 180] }],
+        "variants": [
+          {
+            "id": 24,
+            "angles": [-180, -90, 0, 90, 180]
+          }
+        ],
         "nameKey": "structures|pump|name",
         "descriptionKey": "structures|pump|description",
         "categoryKey": "fluids"
@@ -562,20 +1008,48 @@
       "nameKey": "structures|liquidVent|name",
       "descriptionKey": "structures|liquidVent|description",
       "category": "fluids",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "single" },
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "single"
+        },
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": 25, "angles": [-180, -90, 0, 90, 180] }],
+      "variants": [
+        {
+          "id": 25,
+          "angles": [-180, -90, 0, 90, 180]
+        }
+      ],
       "definition": {
         "buildModes": [
-          { "type": "single" },
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "single"
+          },
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": 25, "angles": [-180, -90, 0, 90, 180] }],
+        "variants": [
+          {
+            "id": 25,
+            "angles": [-180, -90, 0, 90, 180]
+          }
+        ],
         "nameKey": "structures|liquidVent|name",
         "descriptionKey": "structures|liquidVent|description",
         "categoryKey": "fluids"
@@ -588,12 +1062,34 @@
       "nameKey": "structures|light|name",
       "descriptionKey": "structures|light|description",
       "category": "lighting",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "single" }],
-      "variants": [{ "id": 26, "angles": [0] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "single"
+        }
+      ],
+      "variants": [
+        {
+          "id": 26,
+          "angles": [0]
+        }
+      ],
       "definition": {
-        "buildModes": [{ "type": "single" }],
-        "variants": [{ "id": 26, "angles": [0] }],
+        "buildModes": [
+          {
+            "type": "single"
+          }
+        ],
+        "variants": [
+          {
+            "id": 26,
+            "angles": [0]
+          }
+        ],
         "nameKey": "structures|light|name",
         "descriptionKey": "structures|light|description",
         "categoryKey": "lighting"
@@ -606,12 +1102,34 @@
       "nameKey": "structures|gloomEmitter|name",
       "descriptionKey": "structures|gloomEmitter|description",
       "category": "special",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "single" }],
-      "variants": [{ "id": 27, "angles": [0] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "single"
+        }
+      ],
+      "variants": [
+        {
+          "id": 27,
+          "angles": [0]
+        }
+      ],
       "definition": {
-        "buildModes": [{ "type": "single" }],
-        "variants": [{ "id": 27, "angles": [0] }],
+        "buildModes": [
+          {
+            "type": "single"
+          }
+        ],
+        "variants": [
+          {
+            "id": 27,
+            "angles": [0]
+          }
+        ],
         "nameKey": "structures|gloomEmitter|name",
         "descriptionKey": "structures|gloomEmitter|description",
         "order": 15,
@@ -625,48 +1143,102 @@
       "nameKey": "structures|aurixiteCrystallizer|name",
       "descriptionKey": "structures|aurixiteCrystallizer|description",
       "category": "production",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-      "variants": [{ "id": "aurixiteCrystallizer", "angles": [-180, 0, 180] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "aurixiteCrystallizer",
+          "angles": [-180, 0, 180]
+        }
+      ],
       "render": {
         "imageName": "aurixiteCrystallizer",
-        "size": { "width": 24, "height": 24 },
-        "offset": { "x": -4, "y": -1 },
+        "size": {
+          "width": 24,
+          "height": 24
+        },
+        "offset": {
+          "x": -4,
+          "y": -1
+        },
         "z": 0.8,
         "ui": {
           "imageName": "synthesizer_icon",
-          "offset": { "x": 0, "y": 0 },
-          "size": { "width": 16, "height": 16 }
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "size": {
+            "width": 16,
+            "height": 16
+          }
         }
       },
       "tooltipHover": {
         "type": "custom",
         "messageKey": "mods|power|consumption",
-        "messageParams": { "amount": 800 }
+        "messageParams": {
+          "amount": 800
+        }
       },
       "definition": {
         "id": "aurixiteCrystallizer",
         "nameKey": "structures|aurixiteCrystallizer|name",
         "descriptionKey": "structures|aurixiteCrystallizer|description",
-        "descriptionParams": { "amount": 800 },
+        "descriptionParams": {
+          "amount": 800
+        },
         "categoryKey": "production",
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [{ "id": "aurixiteCrystallizer", "angles": [-180, 0, 180] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
+        "variants": [
+          {
+            "id": "aurixiteCrystallizer",
+            "angles": [-180, 0, 180]
+          }
+        ],
         "render": {
           "imageName": "aurixiteCrystallizer",
-          "size": { "width": 24, "height": 24 },
-          "offset": { "x": -4, "y": -1 },
+          "size": {
+            "width": 24,
+            "height": 24
+          },
+          "offset": {
+            "x": -4,
+            "y": -1
+          },
           "z": 0.8,
           "ui": {
             "imageName": "synthesizer_icon",
-            "offset": { "x": 0, "y": 0 },
-            "size": { "width": 16, "height": 16 }
+            "offset": {
+              "x": 0,
+              "y": 0
+            },
+            "size": {
+              "width": 16,
+              "height": 16
+            }
           }
         },
         "tooltipHover": {
           "type": "custom",
           "messageKey": "mods|power|consumption",
-          "messageParams": { "amount": 800 }
+          "messageParams": {
+            "amount": 800
+          }
         },
         "name": "Synthesizer",
         "description": "Converts matters by transmuting one resource into another. This allows transformations such as Florinol into Aurixite.\n\nConsumes {amount} Energy per conversion."
@@ -677,13 +1249,26 @@
       "type": "burnerBeltLeft",
       "name": "[NO KEY]",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": "[Circular]",
       "variants": [
-        { "id": "burnerBeltLeft", "angles": [-180, 180] },
-        { "id": "burnerBeltRight", "angles": [0] }
+        {
+          "id": "burnerBeltLeft",
+          "angles": [-180, 180]
+        },
+        {
+          "id": "burnerBeltRight",
+          "angles": [0]
+        }
       ],
-      "render": { "imageName": "burner_belt_left", "z": 0.5 },
+      "render": {
+        "imageName": "burner_belt_left",
+        "z": 0.5
+      },
       "definition": {
         "id": "burnerBeltLeft",
         "shape": [
@@ -695,10 +1280,19 @@
         "categoryKey": "thermal",
         "order": 60,
         "variants": [
-          { "id": "burnerBeltLeft", "angles": [-180, 180] },
-          { "id": "burnerBeltRight", "angles": [0] }
+          {
+            "id": "burnerBeltLeft",
+            "angles": [-180, 180]
+          },
+          {
+            "id": "burnerBeltRight",
+            "angles": [0]
+          }
         ],
-        "render": { "imageName": "burner_belt_left", "z": 0.5 }
+        "render": {
+          "imageName": "burner_belt_left",
+          "z": 0.5
+        }
       },
       "source": "runtime structure definition"
     },
@@ -708,11 +1302,26 @@
       "nameKey": "structures|burnerBeltRight|name",
       "descriptionKey": "structures|burnerBeltRight|description",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": "[Circular]",
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
       "variants": "[Circular]",
-      "render": { "imageName": "burner_belt_right", "z": 0.5, "ui": { "outline": true } },
+      "render": {
+        "imageName": "burner_belt_right",
+        "z": 0.5,
+        "ui": {
+          "outline": true
+        }
+      },
       "definition": {
         "id": "burnerBeltRight",
         "shape": [
@@ -725,12 +1334,29 @@
         "descriptionKey": "structures|burnerBeltRight|description",
         "categoryKey": "thermal",
         "order": 60,
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [
-          { "id": "burnerBeltLeft", "angles": [-180, 180] },
-          { "id": "burnerBeltRight", "angles": [0] }
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
         ],
-        "render": { "imageName": "burner_belt_right", "z": 0.5, "ui": { "outline": true } },
+        "variants": [
+          {
+            "id": "burnerBeltLeft",
+            "angles": [-180, 180]
+          },
+          {
+            "id": "burnerBeltRight",
+            "angles": [0]
+          }
+        ],
+        "render": {
+          "imageName": "burner_belt_right",
+          "z": 0.5,
+          "ui": {
+            "outline": true
+          }
+        },
         "name": "Burner Belt",
         "description": "Moves elements at regular belt speed. Ignites flammable materials above when fueled by an adjacent Thermal Buffer. Without heat, acts as a normal belt."
       },
@@ -740,18 +1366,38 @@
       "type": "clearingFrameLeft",
       "name": "[NO KEY]",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "variants": [
-        { "id": "clearingFrameLeft", "angles": [-180, 180] },
-        { "id": "clearingFrameRight", "angles": [0] }
+        {
+          "id": "clearingFrameLeft",
+          "angles": [-180, 180]
+        },
+        {
+          "id": "clearingFrameRight",
+          "angles": [0]
+        }
       ],
-      "render": { "imageName": "clearing_frame_left", "z": 0.5, "ambienceGroup": "clearingFrames" },
+      "render": {
+        "imageName": "clearing_frame_left",
+        "z": 0.5,
+        "ambienceGroup": "clearingFrames"
+      },
       "definition": {
         "id": "clearingFrameLeft",
         "categoryKey": "logistics",
         "variants": [
-          { "id": "clearingFrameLeft", "angles": [-180, 180] },
-          { "id": "clearingFrameRight", "angles": [0] }
+          {
+            "id": "clearingFrameLeft",
+            "angles": [-180, 180]
+          },
+          {
+            "id": "clearingFrameRight",
+            "angles": [0]
+          }
         ],
         "render": {
           "imageName": "clearing_frame_left",
@@ -767,17 +1413,28 @@
       "nameKey": "structures|clearingFrameRight|name",
       "descriptionKey": "structures|clearingFrameRight|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal"] },
-        { "type": "rectangleDirectional" }
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        },
+        {
+          "type": "rectangleDirectional"
+        }
       ],
       "variants": "[Circular]",
       "render": {
         "imageName": "clearing_frame_right",
         "z": 0.5,
         "ambienceGroup": "clearingFrames",
-        "ui": { "outline": true }
+        "ui": {
+          "outline": true
+        }
       },
       "definition": {
         "id": "clearingFrameRight",
@@ -786,18 +1443,31 @@
         "categoryKey": "logistics",
         "order": 70,
         "buildModes": [
-          { "type": "line", "directions": ["horizontal"] },
-          { "type": "rectangleDirectional" }
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          },
+          {
+            "type": "rectangleDirectional"
+          }
         ],
         "variants": [
-          { "id": "clearingFrameLeft", "angles": [-180, 180] },
-          { "id": "clearingFrameRight", "angles": [0] }
+          {
+            "id": "clearingFrameLeft",
+            "angles": [-180, 180]
+          },
+          {
+            "id": "clearingFrameRight",
+            "angles": [0]
+          }
         ],
         "render": {
           "imageName": "clearing_frame_right",
           "z": 0.5,
           "ambienceGroup": "clearingFrames",
-          "ui": { "outline": true }
+          "ui": {
+            "outline": true
+          }
         },
         "name": "Clearing Frame",
         "description": "Moves elements inside."
@@ -808,13 +1478,26 @@
       "type": "conveyorLeftMk2",
       "name": "[NO KEY]",
       "category": "logistics",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": "[Circular]",
       "variants": [
-        { "id": "conveyorLeftMk2", "angles": [-180, 180] },
-        { "id": "conveyorRightMk2", "angles": [0] }
+        {
+          "id": "conveyorLeftMk2",
+          "angles": [-180, 180]
+        },
+        {
+          "id": "conveyorRightMk2",
+          "angles": [0]
+        }
       ],
-      "render": { "imageName": "conveyor_left_mk2", "z": 0.5 },
+      "render": {
+        "imageName": "conveyor_left_mk2",
+        "z": 0.5
+      },
       "definition": {
         "id": "conveyorLeftMk2",
         "shape": [
@@ -825,10 +1508,19 @@
         ],
         "categoryKey": "logistics",
         "variants": [
-          { "id": "conveyorLeftMk2", "angles": [-180, 180] },
-          { "id": "conveyorRightMk2", "angles": [0] }
+          {
+            "id": "conveyorLeftMk2",
+            "angles": [-180, 180]
+          },
+          {
+            "id": "conveyorRightMk2",
+            "angles": [0]
+          }
         ],
-        "render": { "imageName": "conveyor_left_mk2", "z": 0.5 }
+        "render": {
+          "imageName": "conveyor_left_mk2",
+          "z": 0.5
+        }
       },
       "source": "runtime structure definition"
     },
@@ -838,11 +1530,26 @@
       "nameKey": "structures|conveyorRightMk2|name",
       "descriptionKey": "structures|conveyorRightMk2|description",
       "category": "logistics",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": "[Circular]",
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
       "variants": "[Circular]",
-      "render": { "imageName": "conveyor_right_mk2", "z": 0.5, "ui": { "outline": true } },
+      "render": {
+        "imageName": "conveyor_right_mk2",
+        "z": 0.5,
+        "ui": {
+          "outline": true
+        }
+      },
       "definition": {
         "id": "conveyorRightMk2",
         "shape": [
@@ -855,12 +1562,29 @@
         "descriptionKey": "structures|conveyorRightMk2|description",
         "categoryKey": "logistics",
         "order": 11,
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [
-          { "id": "conveyorLeftMk2", "angles": [-180, 180] },
-          { "id": "conveyorRightMk2", "angles": [0] }
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
         ],
-        "render": { "imageName": "conveyor_right_mk2", "z": 0.5, "ui": { "outline": true } },
+        "variants": [
+          {
+            "id": "conveyorLeftMk2",
+            "angles": [-180, 180]
+          },
+          {
+            "id": "conveyorRightMk2",
+            "angles": [0]
+          }
+        ],
+        "render": {
+          "imageName": "conveyor_right_mk2",
+          "z": 0.5,
+          "ui": {
+            "outline": true
+          }
+        },
         "name": "Conveyor Belt Mk.2",
         "description": "Moves elements faster."
       },
@@ -872,24 +1596,60 @@
       "nameKey": "structures|copperMold|name",
       "descriptionKey": "structures|copperMold|description",
       "category": "energy",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "rectangle" },
-        { "type": "line", "directions": ["horizontal", "vertical"] }
+        {
+          "type": "rectangle"
+        },
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        }
       ],
-      "variants": [{ "id": "copperMold", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "copperMold", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "copperMold",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "copperMold",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "copperMold",
         "nameKey": "structures|copperMold|name",
         "descriptionKey": "structures|copperMold|description",
         "categoryKey": "energy",
         "buildModes": [
-          { "type": "rectangle" },
-          { "type": "line", "directions": ["horizontal", "vertical"] }
+          {
+            "type": "rectangle"
+          },
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          }
         ],
-        "variants": [{ "id": "copperMold", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "copperMold", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "copperMold",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "copperMold",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Copper Mold",
         "description": "A mold that only accepts Liquid Copper. When filled, it transforms into a solid Power Brick that can be used to store Energy.\n\nThe Power Brick can be charged by transferring Energy from a Florinol Battery using an Energy Siphon, or by connecting it to a Steam Turbine."
       },
@@ -901,29 +1661,69 @@
       "nameKey": "structures|critterFence|name",
       "descriptionKey": "structures|critterFence|description",
       "category": "blocks",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical", "diagonal"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "critterFence", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "critter_fence", "size": { "width": 16, "height": 16 }, "z": 0.85 },
-      "tooltipHover": { "type": "filter" },
+      "variants": [
+        {
+          "id": "critterFence",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "critter_fence",
+        "size": {
+          "width": 16,
+          "height": 16
+        },
+        "z": 0.85
+      },
+      "tooltipHover": {
+        "type": "filter"
+      },
       "definition": {
         "id": "critterFence",
         "nameKey": "structures|critterFence|name",
         "descriptionKey": "structures|critterFence|description",
         "categoryKey": "blocks",
-        "tooltipHover": { "type": "filter" },
-        "defaultData": { "filterPassThrough": true },
+        "tooltipHover": {
+          "type": "filter"
+        },
+        "defaultData": {
+          "filterPassThrough": true
+        },
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical", "diagonal"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "critterFence", "angles": [0, 90, 180, 270] }],
+        "variants": [
+          {
+            "id": "critterFence",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
         "render": {
           "imageName": "critter_fence",
-          "size": { "width": 16, "height": 16 },
+          "size": {
+            "width": 16,
+            "height": 16
+          },
           "z": 0.85
         },
         "name": "Critter Fence",
@@ -937,25 +1737,59 @@
       "nameKey": "structures|earthStratacore|name",
       "descriptionKey": "structures|earthStratacore|description",
       "category": "production",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "single" }],
-      "variants": [{ "id": "earthStratacore", "angles": [0] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "single"
+        }
+      ],
+      "variants": [
+        {
+          "id": "earthStratacore",
+          "angles": [0]
+        }
+      ],
       "render": {
         "imageName": "earthStratacore",
-        "size": { "width": 18, "height": 18 },
-        "offset": { "x": -1, "y": -1 }
+        "size": {
+          "width": 18,
+          "height": 18
+        },
+        "offset": {
+          "x": -1,
+          "y": -1
+        }
       },
       "definition": {
         "id": "earthStratacore",
         "nameKey": "structures|earthStratacore|name",
         "descriptionKey": "structures|earthStratacore|description",
         "categoryKey": "production",
-        "buildModes": [{ "type": "single" }],
-        "variants": [{ "id": "earthStratacore", "angles": [0] }],
+        "buildModes": [
+          {
+            "type": "single"
+          }
+        ],
+        "variants": [
+          {
+            "id": "earthStratacore",
+            "angles": [0]
+          }
+        ],
         "render": {
           "imageName": "earthStratacore",
-          "size": { "width": 18, "height": 18 },
-          "offset": { "x": -1, "y": -1 }
+          "size": {
+            "width": 18,
+            "height": 18
+          },
+          "offset": {
+            "x": -1,
+            "y": -1
+          }
         },
         "hideFromBuildMenu": true,
         "name": "Earth Stratacore",
@@ -969,33 +1803,73 @@
       "nameKey": "structures|electricityConnector|name",
       "descriptionKey": "structures|electricityConnector|description",
       "category": "energy",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15]
       ],
-      "buildModes": [{ "type": "line", "directions": ["horizontal", "vertical"] }],
-      "variants": [{ "id": "electricityConnector", "angles": [0, 90, 180, 270] }],
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "electricityConnector",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
       "render": {
         "imageName": "electricity_connector",
-        "size": { "width": 16, "height": 16 },
-        "offset": { "x": 0, "y": 0 },
-        "ui": { "outline": true }
+        "size": {
+          "width": 16,
+          "height": 16
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "ui": {
+          "outline": true
+        }
       },
       "definition": {
         "id": "electricityConnector",
         "nameKey": "structures|electricityConnector|name",
         "descriptionKey": "structures|electricityConnector|description",
         "categoryKey": "energy",
-        "buildModes": [{ "type": "line", "directions": ["horizontal", "vertical"] }],
-        "variants": [{ "id": "electricityConnector", "angles": [0, 90, 180, 270] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          }
+        ],
+        "variants": [
+          {
+            "id": "electricityConnector",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
         "render": {
           "imageName": "electricity_connector",
-          "size": { "width": 16, "height": 16 },
-          "offset": { "x": 0, "y": 0 },
-          "ui": { "outline": true }
+          "size": {
+            "width": 16,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "ui": {
+            "outline": true
+          }
         },
         "shape": [
           [15, 15, 15, 15],
@@ -1014,26 +1888,58 @@
       "nameKey": "structures|filterMk2|name",
       "descriptionKey": "structures|filterMk2|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "variants": [
-        { "id": "filterLeftMk2", "angles": [-180, 180] },
-        { "id": "filterRightMk2", "angles": [0] },
-        { "id": "filterWallMk2", "angles": [-90, 90] }
+        {
+          "id": "filterLeftMk2",
+          "angles": [-180, 180]
+        },
+        {
+          "id": "filterRightMk2",
+          "angles": [0]
+        },
+        {
+          "id": "filterWallMk2",
+          "angles": [-90, 90]
+        }
       ],
-      "render": { "imageName": "filter_left_mk2", "z": 0.85 },
-      "tooltipHover": { "type": "filter" },
+      "render": {
+        "imageName": "filter_left_mk2",
+        "z": 0.85
+      },
+      "tooltipHover": {
+        "type": "filter"
+      },
       "definition": {
         "id": "filterLeftMk2",
         "nameKey": "structures|filterMk2|name",
         "descriptionKey": "structures|filterMk2|description",
         "categoryKey": "logistics",
-        "tooltipHover": { "type": "filter" },
+        "tooltipHover": {
+          "type": "filter"
+        },
         "variants": [
-          { "id": "filterLeftMk2", "angles": [-180, 180] },
-          { "id": "filterRightMk2", "angles": [0] },
-          { "id": "filterWallMk2", "angles": [-90, 90] }
+          {
+            "id": "filterLeftMk2",
+            "angles": [-180, 180]
+          },
+          {
+            "id": "filterRightMk2",
+            "angles": [0]
+          },
+          {
+            "id": "filterWallMk2",
+            "angles": [-90, 90]
+          }
         ],
-        "render": { "imageName": "filter_left_mk2", "z": 0.85 },
+        "render": {
+          "imageName": "filter_left_mk2",
+          "z": 0.85
+        },
         "name": "Advanced Filter",
         "description": "Filters multiple element types at once, including liquids and gases."
       },
@@ -1045,38 +1951,75 @@
       "nameKey": "structures|filterMk2|name",
       "descriptionKey": "structures|filterMk2|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal"] },
-        { "type": "line", "directions": ["vertical"] }
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        },
+        {
+          "type": "line",
+          "directions": ["vertical"]
+        }
       ],
       "variants": "[Circular]",
       "render": {
         "imageName": "filter_right_mk2",
         "z": 0.85,
-        "ui": { "outline": true, "width": "18px", "height": "18px" }
+        "ui": {
+          "outline": true,
+          "width": "18px",
+          "height": "18px"
+        }
       },
-      "tooltipHover": { "type": "filter" },
+      "tooltipHover": {
+        "type": "filter"
+      },
       "definition": {
         "id": "filterRightMk2",
         "nameKey": "structures|filterMk2|name",
         "descriptionKey": "structures|filterMk2|description",
         "categoryKey": "logistics",
         "order": 51,
-        "tooltipHover": { "type": "filter" },
+        "tooltipHover": {
+          "type": "filter"
+        },
         "buildModes": [
-          { "type": "line", "directions": ["horizontal"] },
-          { "type": "line", "directions": ["vertical"] }
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          },
+          {
+            "type": "line",
+            "directions": ["vertical"]
+          }
         ],
         "variants": [
-          { "id": "filterLeftMk2", "angles": [-180, 180] },
-          { "id": "filterRightMk2", "angles": [0] },
-          { "id": "filterWallMk2", "angles": [-90, 90] }
+          {
+            "id": "filterLeftMk2",
+            "angles": [-180, 180]
+          },
+          {
+            "id": "filterRightMk2",
+            "angles": [0]
+          },
+          {
+            "id": "filterWallMk2",
+            "angles": [-90, 90]
+          }
         ],
         "render": {
           "imageName": "filter_right_mk2",
           "z": 0.85,
-          "ui": { "outline": true, "width": "18px", "height": "18px" }
+          "ui": {
+            "outline": true,
+            "width": "18px",
+            "height": "18px"
+          }
         },
         "name": "Advanced Filter",
         "description": "Filters multiple element types at once, including liquids and gases."
@@ -1089,27 +2032,59 @@
       "nameKey": "structures|filterWall|name",
       "descriptionKey": "structures|filterWall|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
-      "variants": [{ "id": "filterWall", "angles": [-90, 90] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "variants": [
+        {
+          "id": "filterWall",
+          "angles": [-90, 90]
+        }
+      ],
       "render": {
         "imageName": "filter_wall",
-        "size": { "width": 18, "height": 18 },
-        "offset": { "x": -1, "y": -1 },
+        "size": {
+          "width": 18,
+          "height": 18
+        },
+        "offset": {
+          "x": -1,
+          "y": -1
+        },
         "z": 0.85
       },
-      "tooltipHover": { "type": "filter" },
+      "tooltipHover": {
+        "type": "filter"
+      },
       "definition": {
         "id": "filterWall",
         "nameKey": "structures|filterWall|name",
         "descriptionKey": "structures|filterWall|description",
         "categoryKey": "logistics",
-        "tooltipHover": { "type": "filter" },
-        "defaultData": { "filterPassThrough": true },
-        "variants": [{ "id": "filterWall", "angles": [-90, 90] }],
+        "tooltipHover": {
+          "type": "filter"
+        },
+        "defaultData": {
+          "filterPassThrough": true
+        },
+        "variants": [
+          {
+            "id": "filterWall",
+            "angles": [-90, 90]
+          }
+        ],
         "render": {
           "imageName": "filter_wall",
-          "size": { "width": 18, "height": 18 },
-          "offset": { "x": -1, "y": -1 },
+          "size": {
+            "width": 18,
+            "height": 18
+          },
+          "offset": {
+            "x": -1,
+            "y": -1
+          },
           "z": 0.85
         },
         "name": "Filter Wall",
@@ -1123,27 +2098,59 @@
       "nameKey": "structures|filterWallMk2|name",
       "descriptionKey": "structures|filterWallMk2|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
-      "variants": [{ "id": "filterWallMk2", "angles": [-90, 90] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "variants": [
+        {
+          "id": "filterWallMk2",
+          "angles": [-90, 90]
+        }
+      ],
       "render": {
         "imageName": "filter_wall_mk2",
-        "size": { "width": 18, "height": 18 },
-        "offset": { "x": -1, "y": -1 },
+        "size": {
+          "width": 18,
+          "height": 18
+        },
+        "offset": {
+          "x": -1,
+          "y": -1
+        },
         "z": 0.85
       },
-      "tooltipHover": { "type": "filter" },
+      "tooltipHover": {
+        "type": "filter"
+      },
       "definition": {
         "id": "filterWallMk2",
         "nameKey": "structures|filterWallMk2|name",
         "descriptionKey": "structures|filterWallMk2|description",
         "categoryKey": "logistics",
-        "tooltipHover": { "type": "filter" },
-        "defaultData": { "filterPassThrough": true },
-        "variants": [{ "id": "filterWallMk2", "angles": [-90, 90] }],
+        "tooltipHover": {
+          "type": "filter"
+        },
+        "defaultData": {
+          "filterPassThrough": true
+        },
+        "variants": [
+          {
+            "id": "filterWallMk2",
+            "angles": [-90, 90]
+          }
+        ],
         "render": {
           "imageName": "filter_wall_mk2",
-          "size": { "width": 18, "height": 18 },
-          "offset": { "x": -1, "y": -1 },
+          "size": {
+            "width": 18,
+            "height": 18
+          },
+          "offset": {
+            "x": -1,
+            "y": -1
+          },
           "z": 0.85
         },
         "name": "Advanced Filter Wall",
@@ -1157,7 +2164,11 @@
       "nameKey": "structures|glassFoundation|name",
       "descriptionKey": "structures|glassFoundation|description",
       "category": "blocks",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [45, 45, 45, 45],
         [45, 45, 45, 45],
@@ -1165,20 +2176,40 @@
         [45, 45, 45, 45]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical", "diagonal"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "glassFoundation", "angles": [-180, -90, 0, 90, 180] }],
+      "variants": [
+        {
+          "id": "glassFoundation",
+          "angles": [-180, -90, 0, 90, 180]
+        }
+      ],
       "definition": {
         "id": "glassFoundation",
         "nameKey": "structures|glassFoundation|name",
         "descriptionKey": "structures|glassFoundation|description",
         "categoryKey": "blocks",
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical", "diagonal"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical", "diagonal"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "glassFoundation", "angles": [-180, -90, 0, 90, 180] }],
+        "variants": [
+          {
+            "id": "glassFoundation",
+            "angles": [-180, -90, 0, 90, 180]
+          }
+        ],
         "shape": [
           [45, 45, 45, 45],
           [45, 45, 45, 45],
@@ -1196,20 +2227,49 @@
       "nameKey": "structures|goldBattery|name",
       "descriptionKey": "structures|goldBattery|description",
       "category": "energy",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "rectangle" },
-        { "type": "line", "directions": ["horizontal", "vertical"] }
+        {
+          "type": "rectangle"
+        },
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        }
       ],
-      "variants": [{ "id": "goldBattery", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "goldBattery", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "goldBattery",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "goldBattery",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "tooltipHover": {
         "type": "custom",
         "dataFieldMessage": {
           "messageKey": "mods|energyStorage|tooltip",
           "fields": [
-            { "param": "current", "field": "storedEnergy", "round": true, "fallback": 0 },
-            { "param": "max", "field": "maxEnergy", "fallback": 16 }
+            {
+              "param": "current",
+              "field": "storedEnergy",
+              "round": true,
+              "fallback": 0
+            },
+            {
+              "param": "max",
+              "field": "maxEnergy",
+              "fallback": 16
+            }
           ]
         }
       },
@@ -1219,19 +2279,44 @@
         "descriptionKey": "structures|goldBattery|description",
         "categoryKey": "energy",
         "buildModes": [
-          { "type": "rectangle" },
-          { "type": "line", "directions": ["horizontal", "vertical"] }
+          {
+            "type": "rectangle"
+          },
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          }
         ],
         "skipCopyData": true,
-        "variants": [{ "id": "goldBattery", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "goldBattery", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "goldBattery",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "goldBattery",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "tooltipHover": {
           "type": "custom",
           "dataFieldMessage": {
             "messageKey": "mods|energyStorage|tooltip",
             "fields": [
-              { "param": "current", "field": "storedEnergy", "round": true, "fallback": 0 },
-              { "param": "max", "field": "maxEnergy", "fallback": 16 }
+              {
+                "param": "current",
+                "field": "storedEnergy",
+                "round": true,
+                "fallback": 0
+              },
+              {
+                "param": "max",
+                "field": "maxEnergy",
+                "fallback": 16
+              }
             ]
           }
         },
@@ -1246,39 +2331,83 @@
       "nameKey": "structures|heatCannon|name",
       "descriptionKey": "structures|heatCannon|description",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15]
       ],
-      "buildModes": [{ "type": "singleDirectional" }],
+      "buildModes": [
+        {
+          "type": "singleDirectional"
+        }
+      ],
       "variants": [
-        { "id": "heatCannonRight", "angles": [0] },
-        { "id": "heatCannonDown", "angles": [90] },
-        { "id": "heatCannonLeft", "angles": [180, -180] },
-        { "id": "heatCannonUp", "angles": [-90] }
+        {
+          "id": "heatCannonRight",
+          "angles": [0]
+        },
+        {
+          "id": "heatCannonDown",
+          "angles": [90]
+        },
+        {
+          "id": "heatCannonLeft",
+          "angles": [180, -180]
+        },
+        {
+          "id": "heatCannonUp",
+          "angles": [-90]
+        }
       ],
       "render": {
         "imageName": "heatCannon",
-        "size": { "width": 23, "height": 16 },
-        "offset": { "x": 0, "y": 0 }
+        "size": {
+          "width": 23,
+          "height": 16
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        }
       },
       "definition": {
         "id": "heatCannonDown",
         "nameKey": "structures|heatCannon|name",
         "descriptionKey": "structures|heatCannon|description",
-        "descriptionParams": { "seconds": 3 },
+        "descriptionParams": {
+          "seconds": 3
+        },
         "categoryKey": "thermal",
         "order": 70,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "heatCannonRight", "angles": [0] },
-          { "id": "heatCannonDown", "angles": [90] },
-          { "id": "heatCannonLeft", "angles": [180, -180] },
-          { "id": "heatCannonUp", "angles": [-90] }
+          {
+            "id": "heatCannonRight",
+            "angles": [0]
+          },
+          {
+            "id": "heatCannonDown",
+            "angles": [90]
+          },
+          {
+            "id": "heatCannonLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "heatCannonUp",
+            "angles": [-90]
+          }
         ],
         "shape": [
           [15, 15, 15, 15],
@@ -1288,8 +2417,14 @@
         ],
         "render": {
           "imageName": "heatCannon",
-          "size": { "width": 23, "height": 16 },
-          "offset": { "x": 0, "y": 0 }
+          "size": {
+            "width": 23,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          }
         },
         "name": "Pyro Dispenser",
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
@@ -1302,7 +2437,11 @@
       "nameKey": "structures|heatCannon|name",
       "descriptionKey": "structures|heatCannon|description",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -1316,16 +2455,34 @@
         "id": "heatCannonLeft",
         "nameKey": "structures|heatCannon|name",
         "descriptionKey": "structures|heatCannon|description",
-        "descriptionParams": { "seconds": 3 },
+        "descriptionParams": {
+          "seconds": 3
+        },
         "categoryKey": "thermal",
         "order": 70,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "heatCannonRight", "angles": [0] },
-          { "id": "heatCannonDown", "angles": [90] },
-          { "id": "heatCannonLeft", "angles": [180, -180] },
-          { "id": "heatCannonUp", "angles": [-90] }
+          {
+            "id": "heatCannonRight",
+            "angles": [0]
+          },
+          {
+            "id": "heatCannonDown",
+            "angles": [90]
+          },
+          {
+            "id": "heatCannonLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "heatCannonUp",
+            "angles": [-90]
+          }
         ],
         "shape": [
           [15, 15, 15, 15],
@@ -1335,8 +2492,14 @@
         ],
         "render": {
           "imageName": "heatCannon",
-          "size": { "width": 23, "height": 16 },
-          "offset": { "x": 0, "y": 0 }
+          "size": {
+            "width": 23,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          }
         },
         "name": "Pyro Dispenser",
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
@@ -1349,7 +2512,11 @@
       "nameKey": "structures|heatCannon|name",
       "descriptionKey": "structures|heatCannon|description",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -1363,16 +2530,34 @@
         "id": "heatCannonRight",
         "nameKey": "structures|heatCannon|name",
         "descriptionKey": "structures|heatCannon|description",
-        "descriptionParams": { "seconds": 3 },
+        "descriptionParams": {
+          "seconds": 3
+        },
         "categoryKey": "thermal",
         "order": 70,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "heatCannonRight", "angles": [0] },
-          { "id": "heatCannonDown", "angles": [90] },
-          { "id": "heatCannonLeft", "angles": [180, -180] },
-          { "id": "heatCannonUp", "angles": [-90] }
+          {
+            "id": "heatCannonRight",
+            "angles": [0]
+          },
+          {
+            "id": "heatCannonDown",
+            "angles": [90]
+          },
+          {
+            "id": "heatCannonLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "heatCannonUp",
+            "angles": [-90]
+          }
         ],
         "shape": [
           [15, 15, 15, 15],
@@ -1382,8 +2567,14 @@
         ],
         "render": {
           "imageName": "heatCannon",
-          "size": { "width": 23, "height": 16 },
-          "offset": { "x": 0, "y": 0 }
+          "size": {
+            "width": 23,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          }
         },
         "name": "Pyro Dispenser",
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
@@ -1396,7 +2587,11 @@
       "nameKey": "structures|heatCannon|name",
       "descriptionKey": "structures|heatCannon|description",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -1410,16 +2605,34 @@
         "id": "heatCannonUp",
         "nameKey": "structures|heatCannon|name",
         "descriptionKey": "structures|heatCannon|description",
-        "descriptionParams": { "seconds": 3 },
+        "descriptionParams": {
+          "seconds": 3
+        },
         "categoryKey": "thermal",
         "order": 70,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "heatCannonRight", "angles": [0] },
-          { "id": "heatCannonDown", "angles": [90] },
-          { "id": "heatCannonLeft", "angles": [180, -180] },
-          { "id": "heatCannonUp", "angles": [-90] }
+          {
+            "id": "heatCannonRight",
+            "angles": [0]
+          },
+          {
+            "id": "heatCannonDown",
+            "angles": [90]
+          },
+          {
+            "id": "heatCannonLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "heatCannonUp",
+            "angles": [-90]
+          }
         ],
         "shape": [
           [15, 15, 15, 15],
@@ -1429,8 +2642,14 @@
         ],
         "render": {
           "imageName": "heatCannon",
-          "size": { "width": 23, "height": 16 },
-          "offset": { "x": 0, "y": 0 }
+          "size": {
+            "width": 23,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          }
         },
         "name": "Pyro Dispenser",
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
@@ -1443,23 +2662,61 @@
       "nameKey": "structures|kineticFieldEmitter|name",
       "descriptionKey": "structures|kineticFieldEmitter|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "singleDirectional" }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "singleDirectional"
+        }
+      ],
       "variants": [
-        { "id": "kineticFieldEmitter", "angles": [0] },
-        { "id": "kineticFieldEmitterDownRight", "angles": [45] },
-        { "id": "kineticFieldEmitterDown", "angles": [90] },
-        { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
-        { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
-        { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
-        { "id": "kineticFieldEmitterUp", "angles": [-90] },
-        { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+        {
+          "id": "kineticFieldEmitter",
+          "angles": [0]
+        },
+        {
+          "id": "kineticFieldEmitterDownRight",
+          "angles": [45]
+        },
+        {
+          "id": "kineticFieldEmitterDown",
+          "angles": [90]
+        },
+        {
+          "id": "kineticFieldEmitterDownLeft",
+          "angles": [135]
+        },
+        {
+          "id": "kineticFieldEmitterLeft",
+          "angles": [180, -180]
+        },
+        {
+          "id": "kineticFieldEmitterUpLeft",
+          "angles": [-135]
+        },
+        {
+          "id": "kineticFieldEmitterUp",
+          "angles": [-90]
+        },
+        {
+          "id": "kineticFieldEmitterUpRight",
+          "angles": [-45]
+        }
       ],
       "render": {
         "imageName": "kineticFieldEmitter",
-        "size": { "width": 23, "height": 16 },
+        "size": {
+          "width": 23,
+          "height": 16
+        },
         "ui": {
-          "size": { "width": 11, "height": 16 },
+          "size": {
+            "width": 11,
+            "height": 16
+          },
           "width": "11px",
           "height": "16px",
           "objectPosition": "top right"
@@ -1471,23 +2728,57 @@
         "descriptionKey": "structures|kineticFieldEmitter|description",
         "categoryKey": "logistics",
         "order": 80,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "kineticFieldEmitter", "angles": [0] },
-          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
-          { "id": "kineticFieldEmitterDown", "angles": [90] },
-          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
-          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
-          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
-          { "id": "kineticFieldEmitterUp", "angles": [-90] },
-          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+          {
+            "id": "kineticFieldEmitter",
+            "angles": [0]
+          },
+          {
+            "id": "kineticFieldEmitterDownRight",
+            "angles": [45]
+          },
+          {
+            "id": "kineticFieldEmitterDown",
+            "angles": [90]
+          },
+          {
+            "id": "kineticFieldEmitterDownLeft",
+            "angles": [135]
+          },
+          {
+            "id": "kineticFieldEmitterLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "kineticFieldEmitterUpLeft",
+            "angles": [-135]
+          },
+          {
+            "id": "kineticFieldEmitterUp",
+            "angles": [-90]
+          },
+          {
+            "id": "kineticFieldEmitterUpRight",
+            "angles": [-45]
+          }
         ],
         "render": {
           "imageName": "kineticFieldEmitter",
-          "size": { "width": 23, "height": 16 },
+          "size": {
+            "width": 23,
+            "height": 16
+          },
           "ui": {
-            "size": { "width": 11, "height": 16 },
+            "size": {
+              "width": 11,
+              "height": 16
+            },
             "width": "11px",
             "height": "16px",
             "objectPosition": "top right"
@@ -1504,7 +2795,11 @@
       "nameKey": "structures|kineticFieldEmitter|name",
       "descriptionKey": "structures|kineticFieldEmitter|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": "[Circular]",
       "variants": "[Circular]",
       "render": "[Circular]",
@@ -1514,23 +2809,57 @@
         "descriptionKey": "structures|kineticFieldEmitter|description",
         "categoryKey": "logistics",
         "order": 80,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "kineticFieldEmitter", "angles": [0] },
-          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
-          { "id": "kineticFieldEmitterDown", "angles": [90] },
-          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
-          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
-          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
-          { "id": "kineticFieldEmitterUp", "angles": [-90] },
-          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+          {
+            "id": "kineticFieldEmitter",
+            "angles": [0]
+          },
+          {
+            "id": "kineticFieldEmitterDownRight",
+            "angles": [45]
+          },
+          {
+            "id": "kineticFieldEmitterDown",
+            "angles": [90]
+          },
+          {
+            "id": "kineticFieldEmitterDownLeft",
+            "angles": [135]
+          },
+          {
+            "id": "kineticFieldEmitterLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "kineticFieldEmitterUpLeft",
+            "angles": [-135]
+          },
+          {
+            "id": "kineticFieldEmitterUp",
+            "angles": [-90]
+          },
+          {
+            "id": "kineticFieldEmitterUpRight",
+            "angles": [-45]
+          }
         ],
         "render": {
           "imageName": "kineticFieldEmitter",
-          "size": { "width": 23, "height": 16 },
+          "size": {
+            "width": 23,
+            "height": 16
+          },
           "ui": {
-            "size": { "width": 11, "height": 16 },
+            "size": {
+              "width": 11,
+              "height": 16
+            },
             "width": "11px",
             "height": "16px",
             "objectPosition": "top right"
@@ -1547,7 +2876,11 @@
       "nameKey": "structures|kineticFieldEmitter|name",
       "descriptionKey": "structures|kineticFieldEmitter|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": "[Circular]",
       "variants": "[Circular]",
       "render": "[Circular]",
@@ -1557,23 +2890,57 @@
         "descriptionKey": "structures|kineticFieldEmitter|description",
         "categoryKey": "logistics",
         "order": 80,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "kineticFieldEmitter", "angles": [0] },
-          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
-          { "id": "kineticFieldEmitterDown", "angles": [90] },
-          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
-          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
-          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
-          { "id": "kineticFieldEmitterUp", "angles": [-90] },
-          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+          {
+            "id": "kineticFieldEmitter",
+            "angles": [0]
+          },
+          {
+            "id": "kineticFieldEmitterDownRight",
+            "angles": [45]
+          },
+          {
+            "id": "kineticFieldEmitterDown",
+            "angles": [90]
+          },
+          {
+            "id": "kineticFieldEmitterDownLeft",
+            "angles": [135]
+          },
+          {
+            "id": "kineticFieldEmitterLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "kineticFieldEmitterUpLeft",
+            "angles": [-135]
+          },
+          {
+            "id": "kineticFieldEmitterUp",
+            "angles": [-90]
+          },
+          {
+            "id": "kineticFieldEmitterUpRight",
+            "angles": [-45]
+          }
         ],
         "render": {
           "imageName": "kineticFieldEmitter",
-          "size": { "width": 23, "height": 16 },
+          "size": {
+            "width": 23,
+            "height": 16
+          },
           "ui": {
-            "size": { "width": 11, "height": 16 },
+            "size": {
+              "width": 11,
+              "height": 16
+            },
             "width": "11px",
             "height": "16px",
             "objectPosition": "top right"
@@ -1590,7 +2957,11 @@
       "nameKey": "structures|kineticFieldEmitter|name",
       "descriptionKey": "structures|kineticFieldEmitter|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": "[Circular]",
       "variants": "[Circular]",
       "render": "[Circular]",
@@ -1600,23 +2971,57 @@
         "descriptionKey": "structures|kineticFieldEmitter|description",
         "categoryKey": "logistics",
         "order": 80,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "kineticFieldEmitter", "angles": [0] },
-          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
-          { "id": "kineticFieldEmitterDown", "angles": [90] },
-          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
-          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
-          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
-          { "id": "kineticFieldEmitterUp", "angles": [-90] },
-          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+          {
+            "id": "kineticFieldEmitter",
+            "angles": [0]
+          },
+          {
+            "id": "kineticFieldEmitterDownRight",
+            "angles": [45]
+          },
+          {
+            "id": "kineticFieldEmitterDown",
+            "angles": [90]
+          },
+          {
+            "id": "kineticFieldEmitterDownLeft",
+            "angles": [135]
+          },
+          {
+            "id": "kineticFieldEmitterLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "kineticFieldEmitterUpLeft",
+            "angles": [-135]
+          },
+          {
+            "id": "kineticFieldEmitterUp",
+            "angles": [-90]
+          },
+          {
+            "id": "kineticFieldEmitterUpRight",
+            "angles": [-45]
+          }
         ],
         "render": {
           "imageName": "kineticFieldEmitter",
-          "size": { "width": 23, "height": 16 },
+          "size": {
+            "width": 23,
+            "height": 16
+          },
           "ui": {
-            "size": { "width": 11, "height": 16 },
+            "size": {
+              "width": 11,
+              "height": 16
+            },
             "width": "11px",
             "height": "16px",
             "objectPosition": "top right"
@@ -1633,7 +3038,11 @@
       "nameKey": "structures|kineticFieldEmitter|name",
       "descriptionKey": "structures|kineticFieldEmitter|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": "[Circular]",
       "variants": "[Circular]",
       "render": "[Circular]",
@@ -1643,23 +3052,57 @@
         "descriptionKey": "structures|kineticFieldEmitter|description",
         "categoryKey": "logistics",
         "order": 80,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "kineticFieldEmitter", "angles": [0] },
-          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
-          { "id": "kineticFieldEmitterDown", "angles": [90] },
-          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
-          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
-          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
-          { "id": "kineticFieldEmitterUp", "angles": [-90] },
-          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+          {
+            "id": "kineticFieldEmitter",
+            "angles": [0]
+          },
+          {
+            "id": "kineticFieldEmitterDownRight",
+            "angles": [45]
+          },
+          {
+            "id": "kineticFieldEmitterDown",
+            "angles": [90]
+          },
+          {
+            "id": "kineticFieldEmitterDownLeft",
+            "angles": [135]
+          },
+          {
+            "id": "kineticFieldEmitterLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "kineticFieldEmitterUpLeft",
+            "angles": [-135]
+          },
+          {
+            "id": "kineticFieldEmitterUp",
+            "angles": [-90]
+          },
+          {
+            "id": "kineticFieldEmitterUpRight",
+            "angles": [-45]
+          }
         ],
         "render": {
           "imageName": "kineticFieldEmitter",
-          "size": { "width": 23, "height": 16 },
+          "size": {
+            "width": 23,
+            "height": 16
+          },
           "ui": {
-            "size": { "width": 11, "height": 16 },
+            "size": {
+              "width": 11,
+              "height": 16
+            },
             "width": "11px",
             "height": "16px",
             "objectPosition": "top right"
@@ -1676,7 +3119,11 @@
       "nameKey": "structures|kineticFieldEmitter|name",
       "descriptionKey": "structures|kineticFieldEmitter|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": "[Circular]",
       "variants": "[Circular]",
       "render": "[Circular]",
@@ -1686,23 +3133,57 @@
         "descriptionKey": "structures|kineticFieldEmitter|description",
         "categoryKey": "logistics",
         "order": 80,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "kineticFieldEmitter", "angles": [0] },
-          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
-          { "id": "kineticFieldEmitterDown", "angles": [90] },
-          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
-          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
-          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
-          { "id": "kineticFieldEmitterUp", "angles": [-90] },
-          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+          {
+            "id": "kineticFieldEmitter",
+            "angles": [0]
+          },
+          {
+            "id": "kineticFieldEmitterDownRight",
+            "angles": [45]
+          },
+          {
+            "id": "kineticFieldEmitterDown",
+            "angles": [90]
+          },
+          {
+            "id": "kineticFieldEmitterDownLeft",
+            "angles": [135]
+          },
+          {
+            "id": "kineticFieldEmitterLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "kineticFieldEmitterUpLeft",
+            "angles": [-135]
+          },
+          {
+            "id": "kineticFieldEmitterUp",
+            "angles": [-90]
+          },
+          {
+            "id": "kineticFieldEmitterUpRight",
+            "angles": [-45]
+          }
         ],
         "render": {
           "imageName": "kineticFieldEmitter",
-          "size": { "width": 23, "height": 16 },
+          "size": {
+            "width": 23,
+            "height": 16
+          },
           "ui": {
-            "size": { "width": 11, "height": 16 },
+            "size": {
+              "width": 11,
+              "height": 16
+            },
             "width": "11px",
             "height": "16px",
             "objectPosition": "top right"
@@ -1719,7 +3200,11 @@
       "nameKey": "structures|kineticFieldEmitter|name",
       "descriptionKey": "structures|kineticFieldEmitter|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": "[Circular]",
       "variants": "[Circular]",
       "render": "[Circular]",
@@ -1729,23 +3214,57 @@
         "descriptionKey": "structures|kineticFieldEmitter|description",
         "categoryKey": "logistics",
         "order": 80,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "kineticFieldEmitter", "angles": [0] },
-          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
-          { "id": "kineticFieldEmitterDown", "angles": [90] },
-          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
-          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
-          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
-          { "id": "kineticFieldEmitterUp", "angles": [-90] },
-          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+          {
+            "id": "kineticFieldEmitter",
+            "angles": [0]
+          },
+          {
+            "id": "kineticFieldEmitterDownRight",
+            "angles": [45]
+          },
+          {
+            "id": "kineticFieldEmitterDown",
+            "angles": [90]
+          },
+          {
+            "id": "kineticFieldEmitterDownLeft",
+            "angles": [135]
+          },
+          {
+            "id": "kineticFieldEmitterLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "kineticFieldEmitterUpLeft",
+            "angles": [-135]
+          },
+          {
+            "id": "kineticFieldEmitterUp",
+            "angles": [-90]
+          },
+          {
+            "id": "kineticFieldEmitterUpRight",
+            "angles": [-45]
+          }
         ],
         "render": {
           "imageName": "kineticFieldEmitter",
-          "size": { "width": 23, "height": 16 },
+          "size": {
+            "width": 23,
+            "height": 16
+          },
           "ui": {
-            "size": { "width": 11, "height": 16 },
+            "size": {
+              "width": 11,
+              "height": 16
+            },
             "width": "11px",
             "height": "16px",
             "objectPosition": "top right"
@@ -1762,7 +3281,11 @@
       "nameKey": "structures|kineticFieldEmitter|name",
       "descriptionKey": "structures|kineticFieldEmitter|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": "[Circular]",
       "variants": "[Circular]",
       "render": "[Circular]",
@@ -1772,23 +3295,57 @@
         "descriptionKey": "structures|kineticFieldEmitter|description",
         "categoryKey": "logistics",
         "order": 80,
-        "buildModes": [{ "type": "singleDirectional" }],
+        "buildModes": [
+          {
+            "type": "singleDirectional"
+          }
+        ],
         "ignoreAngleLock": true,
         "variants": [
-          { "id": "kineticFieldEmitter", "angles": [0] },
-          { "id": "kineticFieldEmitterDownRight", "angles": [45] },
-          { "id": "kineticFieldEmitterDown", "angles": [90] },
-          { "id": "kineticFieldEmitterDownLeft", "angles": [135] },
-          { "id": "kineticFieldEmitterLeft", "angles": [180, -180] },
-          { "id": "kineticFieldEmitterUpLeft", "angles": [-135] },
-          { "id": "kineticFieldEmitterUp", "angles": [-90] },
-          { "id": "kineticFieldEmitterUpRight", "angles": [-45] }
+          {
+            "id": "kineticFieldEmitter",
+            "angles": [0]
+          },
+          {
+            "id": "kineticFieldEmitterDownRight",
+            "angles": [45]
+          },
+          {
+            "id": "kineticFieldEmitterDown",
+            "angles": [90]
+          },
+          {
+            "id": "kineticFieldEmitterDownLeft",
+            "angles": [135]
+          },
+          {
+            "id": "kineticFieldEmitterLeft",
+            "angles": [180, -180]
+          },
+          {
+            "id": "kineticFieldEmitterUpLeft",
+            "angles": [-135]
+          },
+          {
+            "id": "kineticFieldEmitterUp",
+            "angles": [-90]
+          },
+          {
+            "id": "kineticFieldEmitterUpRight",
+            "angles": [-45]
+          }
         ],
         "render": {
           "imageName": "kineticFieldEmitter",
-          "size": { "width": 23, "height": 16 },
+          "size": {
+            "width": 23,
+            "height": 16
+          },
           "ui": {
-            "size": { "width": 11, "height": 16 },
+            "size": {
+              "width": 11,
+              "height": 16
+            },
             "width": "11px",
             "height": "16px",
             "objectPosition": "top right"
@@ -1803,16 +3360,35 @@
       "type": "launcherLeftMk2",
       "name": "[NO KEY]",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "variants": [
-        { "id": "launcherLeftMk2", "angles": [-135, 45] },
-        { "id": "launcherUpMk2", "angles": [-90, 90] },
-        { "id": "launcherRightMk2", "angles": [-45, 135] }
+        {
+          "id": "launcherLeftMk2",
+          "angles": [-135, 45]
+        },
+        {
+          "id": "launcherUpMk2",
+          "angles": [-90, 90]
+        },
+        {
+          "id": "launcherRightMk2",
+          "angles": [-45, 135]
+        }
       ],
       "render": {
         "imageName": "launcher_left_mk2",
-        "size": { "width": 18, "height": 26 },
-        "offset": { "x": -1, "y": -1 },
+        "size": {
+          "width": 18,
+          "height": 26
+        },
+        "offset": {
+          "x": -1,
+          "y": -1
+        },
         "z": 0.4,
         "ambienceGroup": "launchers"
       },
@@ -1820,14 +3396,29 @@
         "id": "launcherLeftMk2",
         "categoryKey": "logistics",
         "variants": [
-          { "id": "launcherLeftMk2", "angles": [-135, 45] },
-          { "id": "launcherUpMk2", "angles": [-90, 90] },
-          { "id": "launcherRightMk2", "angles": [-45, 135] }
+          {
+            "id": "launcherLeftMk2",
+            "angles": [-135, 45]
+          },
+          {
+            "id": "launcherUpMk2",
+            "angles": [-90, 90]
+          },
+          {
+            "id": "launcherRightMk2",
+            "angles": [-45, 135]
+          }
         ],
         "render": {
           "imageName": "launcher_left_mk2",
-          "size": { "width": 18, "height": 26 },
-          "offset": { "x": -1, "y": -1 },
+          "size": {
+            "width": 18,
+            "height": 26
+          },
+          "offset": {
+            "x": -1,
+            "y": -1
+          },
           "z": 0.4,
           "ambienceGroup": "launchers"
         }
@@ -1838,12 +3429,22 @@
       "type": "launcherRightMk2",
       "name": "[NO KEY]",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "variants": "[Circular]",
       "render": {
         "imageName": "launcher_right_mk2",
-        "size": { "width": 18, "height": 26 },
-        "offset": { "x": -1, "y": -1 },
+        "size": {
+          "width": 18,
+          "height": 26
+        },
+        "offset": {
+          "x": -1,
+          "y": -1
+        },
         "z": 0.4,
         "ambienceGroup": "launchers"
       },
@@ -1851,14 +3452,29 @@
         "id": "launcherRightMk2",
         "categoryKey": "logistics",
         "variants": [
-          { "id": "launcherLeftMk2", "angles": [-135, 45] },
-          { "id": "launcherUpMk2", "angles": [-90, 90] },
-          { "id": "launcherRightMk2", "angles": [-45, 135] }
+          {
+            "id": "launcherLeftMk2",
+            "angles": [-135, 45]
+          },
+          {
+            "id": "launcherUpMk2",
+            "angles": [-90, 90]
+          },
+          {
+            "id": "launcherRightMk2",
+            "angles": [-45, 135]
+          }
         ],
         "render": {
           "imageName": "launcher_right_mk2",
-          "size": { "width": 18, "height": 26 },
-          "offset": { "x": -1, "y": -1 },
+          "size": {
+            "width": 18,
+            "height": 26
+          },
+          "offset": {
+            "x": -1,
+            "y": -1
+          },
           "z": 0.4,
           "ambienceGroup": "launchers"
         }
@@ -1871,24 +3487,47 @@
       "nameKey": "structures|launcherUpMk2|name",
       "descriptionKey": "structures|launcherUpMk2|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["vertical", "diagonal"] },
-        { "type": "launcherRectUp" },
-        { "type": "launcherRectSide" }
+        {
+          "type": "line",
+          "directions": ["vertical", "diagonal"]
+        },
+        {
+          "type": "launcherRectUp"
+        },
+        {
+          "type": "launcherRectSide"
+        }
       ],
       "variants": "[Circular]",
       "render": {
         "imageName": "launcher_mk2",
-        "size": { "width": 18, "height": 18 },
-        "offset": { "x": -1, "y": -1 },
+        "size": {
+          "width": 18,
+          "height": 18
+        },
+        "offset": {
+          "x": -1,
+          "y": -1
+        },
         "z": 0.45,
         "ui": {
           "outline": true,
           "width": "auto",
           "height": "auto",
-          "size": { "width": 16, "height": 16 },
-          "offset": { "x": 0, "y": 0 }
+          "size": {
+            "width": 16,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          }
         },
         "ambienceGroup": "launchers"
       },
@@ -1899,26 +3538,54 @@
         "categoryKey": "logistics",
         "order": 21,
         "buildModes": [
-          { "type": "line", "directions": ["vertical", "diagonal"] },
-          { "type": "launcherRectUp" },
-          { "type": "launcherRectSide" }
+          {
+            "type": "line",
+            "directions": ["vertical", "diagonal"]
+          },
+          {
+            "type": "launcherRectUp"
+          },
+          {
+            "type": "launcherRectSide"
+          }
         ],
         "variants": [
-          { "id": "launcherLeftMk2", "angles": [-135, 45] },
-          { "id": "launcherUpMk2", "angles": [-90, 90] },
-          { "id": "launcherRightMk2", "angles": [-45, 135] }
+          {
+            "id": "launcherLeftMk2",
+            "angles": [-135, 45]
+          },
+          {
+            "id": "launcherUpMk2",
+            "angles": [-90, 90]
+          },
+          {
+            "id": "launcherRightMk2",
+            "angles": [-45, 135]
+          }
         ],
         "render": {
           "imageName": "launcher_mk2",
-          "size": { "width": 18, "height": 18 },
-          "offset": { "x": -1, "y": -1 },
+          "size": {
+            "width": 18,
+            "height": 18
+          },
+          "offset": {
+            "x": -1,
+            "y": -1
+          },
           "z": 0.45,
           "ui": {
             "outline": true,
             "width": "auto",
             "height": "auto",
-            "size": { "width": 16, "height": 16 },
-            "offset": { "x": 0, "y": 0 }
+            "size": {
+              "width": 16,
+              "height": 16
+            },
+            "offset": {
+              "x": 0,
+              "y": 0
+            }
           },
           "ambienceGroup": "launchers"
         },
@@ -1933,19 +3600,53 @@
       "nameKey": "structures|prismalineWell|name",
       "descriptionKey": "structures|prismalineWell|description",
       "category": "special",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "single" }],
-      "variants": [{ "id": "prismalineWell", "angles": [0] }],
-      "render": { "imageName": "prismalineWell", "size": { "width": 16, "height": 16 } },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "single"
+        }
+      ],
+      "variants": [
+        {
+          "id": "prismalineWell",
+          "angles": [0]
+        }
+      ],
+      "render": {
+        "imageName": "prismalineWell",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "prismalineWell",
         "nameKey": "structures|prismalineWell|name",
         "descriptionKey": "structures|prismalineWell|description",
         "categoryKey": "special",
         "order": 40,
-        "buildModes": [{ "type": "single" }],
-        "variants": [{ "id": "prismalineWell", "angles": [0] }],
-        "render": { "imageName": "prismalineWell", "size": { "width": 16, "height": 16 } },
+        "buildModes": [
+          {
+            "type": "single"
+          }
+        ],
+        "variants": [
+          {
+            "id": "prismalineWell",
+            "angles": [0]
+          }
+        ],
+        "render": {
+          "imageName": "prismalineWell",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Prismaline Well",
         "description": "Drains the Prismaline buffer and emits Prismaline above at a fixed rate. Must be built just outside the disk of the Aura Extractor.\n\nIts purpose remains unknown... for now."
       },
@@ -1957,19 +3658,53 @@
       "nameKey": "structures|prismiteWell|name",
       "descriptionKey": "structures|prismiteWell|description",
       "category": "special",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "single" }],
-      "variants": [{ "id": "prismiteWell", "angles": [0] }],
-      "render": { "imageName": "prismiteWell", "size": { "width": 16, "height": 16 } },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "single"
+        }
+      ],
+      "variants": [
+        {
+          "id": "prismiteWell",
+          "angles": [0]
+        }
+      ],
+      "render": {
+        "imageName": "prismiteWell",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "prismiteWell",
         "nameKey": "structures|prismiteWell|name",
         "descriptionKey": "structures|prismiteWell|description",
         "categoryKey": "special",
         "order": 30,
-        "buildModes": [{ "type": "single" }],
-        "variants": [{ "id": "prismiteWell", "angles": [0] }],
-        "render": { "imageName": "prismiteWell", "size": { "width": 16, "height": 16 } },
+        "buildModes": [
+          {
+            "type": "single"
+          }
+        ],
+        "variants": [
+          {
+            "id": "prismiteWell",
+            "angles": [0]
+          }
+        ],
+        "render": {
+          "imageName": "prismiteWell",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Prismite Well",
         "description": "Drains the Prismite buffer and emits Prismite below at a fixed rate. Must be built just outside the disk of the Aura Extractor.\n\nIts purpose remains unknown... for now."
       },
@@ -1981,13 +3716,33 @@
       "nameKey": "structures|quantumPortal|name",
       "descriptionKey": "structures|quantumPortal|description",
       "category": "logistics",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-      "variants": [{ "id": "quantumPortal", "angles": [-180, 0, 180] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "quantumPortal",
+          "angles": [-180, 0, 180]
+        }
+      ],
       "render": {
         "imageName": "quantumPortal",
-        "size": { "width": 18, "height": 18 },
-        "offset": { "x": -1, "y": -1 }
+        "size": {
+          "width": 18,
+          "height": 18
+        },
+        "offset": {
+          "x": -1,
+          "y": -1
+        }
       },
       "definition": {
         "id": "quantumPortal",
@@ -1996,12 +3751,28 @@
         "categoryKey": "logistics",
         "order": 60,
         "linkedClearance": "allOrNothing",
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [{ "id": "quantumPortal", "angles": [-180, 0, 180] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
+        "variants": [
+          {
+            "id": "quantumPortal",
+            "angles": [-180, 0, 180]
+          }
+        ],
         "render": {
           "imageName": "quantumPortal",
-          "size": { "width": 18, "height": 18 },
-          "offset": { "x": -1, "y": -1 }
+          "size": {
+            "width": 18,
+            "height": 18
+          },
+          "offset": {
+            "x": -1,
+            "y": -1
+          }
         },
         "name": "Conveyor Portal",
         "description": "A linked pair of short-range portals used to move elements across gaps or over other conveyor belt lines."
@@ -2011,11 +3782,21 @@
     {
       "type": "quantumPortalExit",
       "name": "[NO KEY]",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "render": {
         "imageName": "quantumPortalExit",
-        "size": { "width": 18, "height": 18 },
-        "offset": { "x": -1, "y": -1 }
+        "size": {
+          "width": 18,
+          "height": 18
+        },
+        "offset": {
+          "x": -1,
+          "y": -1
+        }
       },
       "definition": {
         "id": "quantumPortalExit",
@@ -2023,8 +3804,14 @@
         "unlockedBy": "quantumPortal",
         "render": {
           "imageName": "quantumPortalExit",
-          "size": { "width": 18, "height": 18 },
-          "offset": { "x": -1, "y": -1 }
+          "size": {
+            "width": 18,
+            "height": 18
+          },
+          "offset": {
+            "x": -1,
+            "y": -1
+          }
         }
       },
       "source": "runtime structure definition"
@@ -2035,19 +3822,53 @@
       "nameKey": "structures|retroConsole|name",
       "descriptionKey": "structures|retroConsole|description",
       "category": "misc",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "single" }],
-      "variants": [{ "id": "retroConsole", "angles": [0] }],
-      "render": { "imageName": "retroConsole", "size": { "width": 16, "height": 16 } },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "single"
+        }
+      ],
+      "variants": [
+        {
+          "id": "retroConsole",
+          "angles": [0]
+        }
+      ],
+      "render": {
+        "imageName": "retroConsole",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "retroConsole",
         "nameKey": "structures|retroConsole|name",
         "descriptionKey": "structures|retroConsole|description",
         "categoryKey": "misc",
         "type": "retroConsole",
-        "buildModes": [{ "type": "single" }],
-        "variants": [{ "id": "retroConsole", "angles": [0] }],
-        "render": { "imageName": "retroConsole", "size": { "width": 16, "height": 16 } },
+        "buildModes": [
+          {
+            "type": "single"
+          }
+        ],
+        "variants": [
+          {
+            "id": "retroConsole",
+            "angles": [0]
+          }
+        ],
+        "render": {
+          "imageName": "retroConsole",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Retro Console",
         "description": "A playable gaming console. Place it and use Game Controller to play by hovering the console and pressing the arrow keys."
       },
@@ -2059,7 +3880,11 @@
       "nameKey": "structures|source|name",
       "descriptionKey": "structures|source|description",
       "category": "misc",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -2067,20 +3892,41 @@
         [0, 0, 0, 0]
       ],
       "buildModes": [
-        { "type": "single" },
-        { "type": "line", "directions": ["horizontal", "vertical"] }
+        {
+          "type": "single"
+        },
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        }
       ],
-      "variants": [{ "id": "sandustryTestBlocksSource", "angles": [0, 90, 180, 270] }],
+      "variants": [
+        {
+          "id": "sandustryTestBlocksSource",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
       "render": {
-        "size": { "width": 16, "height": 16 },
-        "offset": { "x": 0, "y": 0 },
+        "size": {
+          "width": 16,
+          "height": 16
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
         "imageName": "sandustryTestBlocksSourceSprite"
       },
       "definition": {
         "categoryKey": "misc",
         "buildModes": [
-          { "type": "single" },
-          { "type": "line", "directions": ["horizontal", "vertical"] }
+          {
+            "type": "single"
+          },
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          }
         ],
         "shape": [
           [0, 0, 0, 0],
@@ -2089,15 +3935,26 @@
           [0, 0, 0, 0]
         ],
         "render": {
-          "size": { "width": 16, "height": 16 },
-          "offset": { "x": 0, "y": 0 },
+          "size": {
+            "width": 16,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
           "imageName": "sandustryTestBlocksSourceSprite"
         },
         "id": "sandustryTestBlocksSource",
         "nameKey": "structures|source|name",
         "descriptionKey": "structures|source|description",
         "order": 90,
-        "variants": [{ "id": "sandustryTestBlocksSource", "angles": [0, 90, 180, 270] }],
+        "variants": [
+          {
+            "id": "sandustryTestBlocksSource",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
         "name": "Infinite Source",
         "description": "Creates an endless stream of the configured element."
       },
@@ -2109,7 +3966,11 @@
       "nameKey": "structures|trash|name",
       "descriptionKey": "structures|trash|description",
       "category": "misc",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
@@ -2117,7 +3978,12 @@
         [0, 0, 0, 0]
       ],
       "buildModes": "[Circular]",
-      "variants": [{ "id": "sandustryTestBlocksTrash", "angles": [0, 90, 180, 270] }],
+      "variants": [
+        {
+          "id": "sandustryTestBlocksTrash",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
       "render": {
         "size": "[Circular]",
         "offset": "[Circular]",
@@ -2126,8 +3992,13 @@
       "definition": {
         "categoryKey": "misc",
         "buildModes": [
-          { "type": "single" },
-          { "type": "line", "directions": ["horizontal", "vertical"] }
+          {
+            "type": "single"
+          },
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          }
         ],
         "shape": [
           [0, 0, 0, 0],
@@ -2136,15 +4007,26 @@
           [0, 0, 0, 0]
         ],
         "render": {
-          "size": { "width": 16, "height": 16 },
-          "offset": { "x": 0, "y": 0 },
+          "size": {
+            "width": 16,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
           "imageName": "sandustryTestBlocksTrashSprite"
         },
         "id": "sandustryTestBlocksTrash",
         "nameKey": "structures|trash|name",
         "descriptionKey": "structures|trash|description",
         "order": 91,
-        "variants": [{ "id": "sandustryTestBlocksTrash", "angles": [0, 90, 180, 270] }],
+        "variants": [
+          {
+            "id": "sandustryTestBlocksTrash",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
         "name": " Trash",
         "description": "An infinitely deep void for particle trash."
       },
@@ -2156,7 +4038,11 @@
       "nameKey": "structures|signalAnd|name",
       "descriptionKey": "structures|signalAnd|description",
       "category": "logic",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -2164,22 +4050,54 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalAnd", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalAnd", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalAnd",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalAnd",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalAnd",
         "nameKey": "structures|signalAnd|name",
         "descriptionKey": "structures|signalAnd|description",
         "categoryKey": "logic",
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalAnd", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalAnd", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalAnd",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalAnd",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "shape": [
           [15, 15, 15, 15],
           [15, 15, 15, 15],
@@ -2197,13 +4115,33 @@
       "nameKey": "structures|signalBuffer|name",
       "descriptionKey": "structures|signalBuffer|description",
       "category": "logic",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalBuffer", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalBuffer", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalBuffer",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalBuffer",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalBuffer",
         "nameKey": "structures|signalBuffer|name",
@@ -2211,11 +4149,27 @@
         "categoryKey": "logic",
         "order": 70,
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalBuffer", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalBuffer", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalBuffer",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalBuffer",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Buffer",
         "description": "Forwards its input unchanged."
       },
@@ -2227,13 +4181,33 @@
       "nameKey": "structures|signalButton|name",
       "descriptionKey": "structures|signalButton|description",
       "category": "logic",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalButton", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalButton", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalButton",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalButton",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalButton",
         "nameKey": "structures|signalButton|name",
@@ -2241,11 +4215,27 @@
         "categoryKey": "logic",
         "order": 30,
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalButton", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalButton", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalButton",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalButton",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Signal Button",
         "description": "Press to pulse a linked signal."
       },
@@ -2257,7 +4247,11 @@
       "nameKey": "structures|signalGate|name",
       "descriptionKey": "structures|signalGate|description",
       "category": "blocks",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -2265,14 +4259,30 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalGate", "angles": [-180, -90, 0, 90, 180] }],
+      "variants": [
+        {
+          "id": "signalGate",
+          "angles": [-180, -90, 0, 90, 180]
+        }
+      ],
       "render": {
         "imageName": "signalGate",
-        "size": { "width": 18, "height": 18 },
-        "offset": { "x": -1, "y": -1 },
+        "size": {
+          "width": 18,
+          "height": 18
+        },
+        "offset": {
+          "x": -1,
+          "y": -1
+        },
         "z": 0.8
       },
       "definition": {
@@ -2282,14 +4292,30 @@
         "categoryKey": "blocks",
         "dynamicShape": true,
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalGate", "angles": [-180, -90, 0, 90, 180] }],
+        "variants": [
+          {
+            "id": "signalGate",
+            "angles": [-180, -90, 0, 90, 180]
+          }
+        ],
         "render": {
           "imageName": "signalGate",
-          "size": { "width": 18, "height": 18 },
-          "offset": { "x": -1, "y": -1 },
+          "size": {
+            "width": 18,
+            "height": 18
+          },
+          "offset": {
+            "x": -1,
+            "y": -1
+          },
           "z": 0.8
         },
         "shape": [
@@ -2309,24 +4335,60 @@
       "nameKey": "structures|signalLamp|name",
       "descriptionKey": "structures|signalLamp|description",
       "category": "logic",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalLamp", "angles": [-180, -90, 0, 90, 180] }],
-      "render": { "imageName": "signalLamp", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalLamp",
+          "angles": [-180, -90, 0, 90, 180]
+        }
+      ],
+      "render": {
+        "imageName": "signalLamp",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalLamp",
         "nameKey": "structures|signalLamp|name",
         "descriptionKey": "structures|signalLamp|description",
         "categoryKey": "logic",
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalLamp", "angles": [-180, -90, 0, 90, 180] }],
-        "render": { "imageName": "signalLamp", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalLamp",
+            "angles": [-180, -90, 0, 90, 180]
+          }
+        ],
+        "render": {
+          "imageName": "signalLamp",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Signal Lamp",
         "description": "Indicator that lights up when its linked signal is On."
       },
@@ -2338,7 +4400,11 @@
       "nameKey": "structures|signalNand|name",
       "descriptionKey": "structures|signalNand|description",
       "category": "logic",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -2346,22 +4412,54 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalNand", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalNand", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalNand",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalNand",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalNand",
         "nameKey": "structures|signalNand|name",
         "descriptionKey": "structures|signalNand|description",
         "categoryKey": "logic",
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalNand", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalNand", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalNand",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalNand",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "shape": [
           [15, 15, 15, 15],
           [15, 15, 15, 15],
@@ -2379,7 +4477,11 @@
       "nameKey": "structures|signalNor|name",
       "descriptionKey": "structures|signalNor|description",
       "category": "logic",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -2387,22 +4489,54 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalNor", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalNor", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalNor",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalNor",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalNor",
         "nameKey": "structures|signalNor|name",
         "descriptionKey": "structures|signalNor|description",
         "categoryKey": "logic",
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalNor", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalNor", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalNor",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalNor",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "shape": [
           [15, 15, 15, 15],
           [15, 15, 15, 15],
@@ -2420,7 +4554,11 @@
       "nameKey": "structures|signalNot|name",
       "descriptionKey": "structures|signalNot|description",
       "category": "logic",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -2428,22 +4566,54 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalNot", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalNot", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalNot",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalNot",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalNot",
         "nameKey": "structures|signalNot|name",
         "descriptionKey": "structures|signalNot|description",
         "categoryKey": "logic",
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalNot", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalNot", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalNot",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalNot",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "shape": [
           [15, 15, 15, 15],
           [15, 15, 15, 15],
@@ -2461,7 +4631,11 @@
       "nameKey": "structures|signalOr|name",
       "descriptionKey": "structures|signalOr|description",
       "category": "logic",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -2469,22 +4643,54 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalOr", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalOr", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalOr",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalOr",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalOr",
         "nameKey": "structures|signalOr|name",
         "descriptionKey": "structures|signalOr|description",
         "categoryKey": "logic",
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalOr", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalOr", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalOr",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalOr",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "shape": [
           [15, 15, 15, 15],
           [15, 15, 15, 15],
@@ -2502,13 +4708,33 @@
       "nameKey": "structures|signalPresenceSensor|name",
       "descriptionKey": "structures|signalPresenceSensor|description",
       "category": "logic",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalPresenceSensor", "angles": [-180, -90, 0, 90, 180] }],
-      "render": { "imageName": "signalPresenceSensor", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalPresenceSensor",
+          "angles": [-180, -90, 0, 90, 180]
+        }
+      ],
+      "render": {
+        "imageName": "signalPresenceSensor",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalPresenceSensor",
         "nameKey": "structures|signalPresenceSensor|name",
@@ -2516,11 +4742,27 @@
         "categoryKey": "logic",
         "order": 60,
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalPresenceSensor", "angles": [-180, -90, 0, 90, 180] }],
-        "render": { "imageName": "signalPresenceSensor", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalPresenceSensor",
+            "angles": [-180, -90, 0, 90, 180]
+          }
+        ],
+        "render": {
+          "imageName": "signalPresenceSensor",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Presence Sensor",
         "description": "Emits a signal while at least one element is inside its 4x4 area."
       },
@@ -2532,13 +4774,33 @@
       "nameKey": "structures|signalPulseSensor|name",
       "descriptionKey": "structures|signalPulseSensor|description",
       "category": "logic",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalPulseSensor", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalPulseSensor", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalPulseSensor",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalPulseSensor",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalPulseSensor",
         "nameKey": "structures|signalPulseSensor|name",
@@ -2546,11 +4808,27 @@
         "categoryKey": "logic",
         "order": 50,
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalPulseSensor", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalPulseSensor", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalPulseSensor",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalPulseSensor",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Pulse Sensor",
         "description": "Emits a short On pulse when its 4x4 area becomes full."
       },
@@ -2562,24 +4840,60 @@
       "nameKey": "structures|signalRepeater|name",
       "descriptionKey": "structures|signalRepeater|description",
       "category": "logic",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalRepeater", "angles": [-180, -90, 0, 90, 180] }],
-      "render": { "imageName": "signalRepeater", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalRepeater",
+          "angles": [-180, -90, 0, 90, 180]
+        }
+      ],
+      "render": {
+        "imageName": "signalRepeater",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalRepeater",
         "nameKey": "structures|signalRepeater|name",
         "descriptionKey": "structures|signalRepeater|description",
         "categoryKey": "logic",
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalRepeater", "angles": [-180, -90, 0, 90, 180] }],
-        "render": { "imageName": "signalRepeater", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalRepeater",
+            "angles": [-180, -90, 0, 90, 180]
+          }
+        ],
+        "render": {
+          "imageName": "signalRepeater",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Repeater",
         "description": "Delays signal by one tick."
       },
@@ -2591,13 +4905,33 @@
       "nameKey": "structures|signalSensor|name",
       "descriptionKey": "structures|signalSensor|description",
       "category": "logic",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalSensor", "angles": [-180, -90, 0, 90, 180] }],
-      "render": { "imageName": "signalSensor", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalSensor",
+          "angles": [-180, -90, 0, 90, 180]
+        }
+      ],
+      "render": {
+        "imageName": "signalSensor",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalSensor",
         "nameKey": "structures|signalSensor|name",
@@ -2605,11 +4939,27 @@
         "categoryKey": "logic",
         "order": 40,
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalSensor", "angles": [-180, -90, 0, 90, 180] }],
-        "render": { "imageName": "signalSensor", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalSensor",
+            "angles": [-180, -90, 0, 90, 180]
+          }
+        ],
+        "render": {
+          "imageName": "signalSensor",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Signal Sensor",
         "description": "Emits a signal when its 4x4 area is full of elements."
       },
@@ -2621,13 +4971,33 @@
       "nameKey": "structures|signalSwitch|name",
       "descriptionKey": "structures|signalSwitch|description",
       "category": "logic",
-      "footprint": { "width": 1, "height": 1 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalSwitch", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalSwitch", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalSwitch",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalSwitch",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalSwitch",
         "nameKey": "structures|signalSwitch|name",
@@ -2635,11 +5005,27 @@
         "categoryKey": "logic",
         "order": 20,
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalSwitch", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalSwitch", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalSwitch",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalSwitch",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Signal Switch",
         "description": "Press to toggle a linked signal."
       },
@@ -2651,7 +5037,11 @@
       "nameKey": "structures|signalToggle|name",
       "descriptionKey": "structures|signalToggle|description",
       "category": "logic",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -2659,11 +5049,27 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalToggle", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalToggle", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalToggle",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalToggle",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalToggle",
         "nameKey": "structures|signalToggle|name",
@@ -2671,11 +5077,27 @@
         "categoryKey": "logic",
         "order": 80,
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalToggle", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalToggle", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalToggle",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalToggle",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "shape": [
           [15, 15, 15, 15],
           [15, 15, 15, 15],
@@ -2693,7 +5115,11 @@
       "nameKey": "structures|signalXnor|name",
       "descriptionKey": "structures|signalXnor|description",
       "category": "logic",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -2701,22 +5127,54 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalXnor", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalXnor", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalXnor",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalXnor",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalXnor",
         "nameKey": "structures|signalXnor|name",
         "descriptionKey": "structures|signalXnor|description",
         "categoryKey": "logic",
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalXnor", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalXnor", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalXnor",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalXnor",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "shape": [
           [15, 15, 15, 15],
           [15, 15, 15, 15],
@@ -2734,7 +5192,11 @@
       "nameKey": "structures|signalXor|name",
       "descriptionKey": "structures|signalXor|description",
       "category": "logic",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -2742,22 +5204,54 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "signalXor", "angles": [0, 90, 180, 270] }],
-      "render": { "imageName": "signalXor", "size": { "width": 16, "height": 16 } },
+      "variants": [
+        {
+          "id": "signalXor",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
+      "render": {
+        "imageName": "signalXor",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "signalXor",
         "nameKey": "structures|signalXor|name",
         "descriptionKey": "structures|signalXor|description",
         "categoryKey": "logic",
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "signalXor", "angles": [0, 90, 180, 270] }],
-        "render": { "imageName": "signalXor", "size": { "width": 16, "height": 16 } },
+        "variants": [
+          {
+            "id": "signalXor",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
+        "render": {
+          "imageName": "signalXor",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "shape": [
           [15, 15, 15, 15],
           [15, 15, 15, 15],
@@ -2775,20 +5269,42 @@
       "nameKey": "structures|smelter|name",
       "descriptionKey": "structures|smelter|description",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15]
       ],
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-      "variants": [{ "id": "smelter", "angles": [0, 90, 180, 270] }],
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "smelter",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
       "render": {
         "imageName": "smelter",
-        "size": { "width": 16, "height": 16 },
-        "offset": { "x": 0, "y": 0 },
-        "ui": { "outline": true }
+        "size": {
+          "width": 16,
+          "height": 16
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "ui": {
+          "outline": true
+        }
       },
       "definition": {
         "id": "smelter",
@@ -2796,13 +5312,31 @@
         "descriptionKey": "structures|smelter|description",
         "categoryKey": "thermal",
         "order": 40,
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [{ "id": "smelter", "angles": [0, 90, 180, 270] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
+        "variants": [
+          {
+            "id": "smelter",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
         "render": {
           "imageName": "smelter",
-          "size": { "width": 16, "height": 16 },
-          "offset": { "x": 0, "y": 0 },
-          "ui": { "outline": true }
+          "size": {
+            "width": 16,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "ui": {
+            "outline": true
+          }
         },
         "shape": [
           [15, 15, 15, 15],
@@ -2821,40 +5355,84 @@
       "nameKey": "structures|snowmaker|name",
       "descriptionKey": "structures|snowmaker|description",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15]
       ],
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-      "variants": [{ "id": "snowmaker", "angles": [0, 90, 180, 270] }],
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "snowmaker",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
       "render": {
         "imageName": "snowmaker",
-        "size": { "width": 16, "height": 16 },
-        "offset": { "x": 0, "y": 0 },
-        "ui": { "outline": true }
+        "size": {
+          "width": 16,
+          "height": 16
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "ui": {
+          "outline": true
+        }
       },
       "tooltipHover": {
         "type": "custom",
         "messageKey": "mods|power|consumption",
-        "messageParams": { "amount": 1 }
+        "messageParams": {
+          "amount": 1
+        }
       },
       "definition": {
         "id": "snowmaker",
         "nameKey": "structures|snowmaker|name",
         "descriptionKey": "structures|snowmaker|description",
-        "descriptionParams": { "amount": 1 },
+        "descriptionParams": {
+          "amount": 1
+        },
         "categoryKey": "thermal",
         "order": 30,
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [{ "id": "snowmaker", "angles": [0, 90, 180, 270] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
+        "variants": [
+          {
+            "id": "snowmaker",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
         "render": {
           "imageName": "snowmaker",
-          "size": { "width": 16, "height": 16 },
-          "offset": { "x": 0, "y": 0 },
-          "ui": { "outline": true }
+          "size": {
+            "width": 16,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "ui": {
+            "outline": true
+          }
         },
         "shape": [
           [15, 15, 15, 15],
@@ -2865,7 +5443,9 @@
         "tooltipHover": {
           "type": "custom",
           "messageKey": "mods|power|consumption",
-          "messageParams": { "amount": 1 }
+          "messageParams": {
+            "amount": 1
+          }
         },
         "name": "Snowmaker",
         "description": "Consumes Water above and {amount} Energy to spawn Snow below."
@@ -2878,13 +5458,33 @@
       "nameKey": "structures|steamTurbine|name",
       "descriptionKey": "structures|steamTurbine|description",
       "category": "energy",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-      "variants": [{ "id": "steamTurbine", "angles": [0, 90, 180, 270] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "steamTurbine",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
       "render": {
         "imageName": "steamTurbine",
-        "size": { "width": 16, "height": 16 },
-        "offset": { "x": 0, "y": 0 },
+        "size": {
+          "width": 16,
+          "height": 16
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
         "ambienceGroup": "steamTurbines"
       },
       "definition": {
@@ -2892,12 +5492,28 @@
         "nameKey": "structures|steamTurbine|name",
         "descriptionKey": "structures|steamTurbine|description",
         "categoryKey": "energy",
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [{ "id": "steamTurbine", "angles": [0, 90, 180, 270] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
+        "variants": [
+          {
+            "id": "steamTurbine",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
         "render": {
           "imageName": "steamTurbine",
-          "size": { "width": 16, "height": 16 },
-          "offset": { "x": 0, "y": 0 },
+          "size": {
+            "width": 16,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
           "ambienceGroup": "steamTurbines"
         },
         "name": "Steam Turbine",
@@ -2911,19 +5527,53 @@
       "nameKey": "structures|swarmConsole|name",
       "descriptionKey": "structures|swarmConsole|description",
       "category": "special",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "single" }],
-      "variants": [{ "id": "swarmConsole", "angles": [0] }],
-      "render": { "imageName": "swarmConsole", "size": { "width": 16, "height": 16 } },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "single"
+        }
+      ],
+      "variants": [
+        {
+          "id": "swarmConsole",
+          "angles": [0]
+        }
+      ],
+      "render": {
+        "imageName": "swarmConsole",
+        "size": {
+          "width": 16,
+          "height": 16
+        }
+      },
       "definition": {
         "id": "swarmConsole",
         "nameKey": "structures|swarmConsole|name",
         "descriptionKey": "structures|swarmConsole|description",
         "categoryKey": "special",
         "order": 20,
-        "buildModes": [{ "type": "single" }],
-        "variants": [{ "id": "swarmConsole", "angles": [0] }],
-        "render": { "imageName": "swarmConsole", "size": { "width": 16, "height": 16 } },
+        "buildModes": [
+          {
+            "type": "single"
+          }
+        ],
+        "variants": [
+          {
+            "id": "swarmConsole",
+            "angles": [0]
+          }
+        ],
+        "render": {
+          "imageName": "swarmConsole",
+          "size": {
+            "width": 16,
+            "height": 16
+          }
+        },
         "name": "Aura Extractor",
         "description": "Creates the Aura Extractor. Press the placed structure to command the swarm."
       },
@@ -2935,7 +5585,11 @@
       "nameKey": "structures|thermalRelay|name",
       "descriptionKey": "structures|thermalRelay|description",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
@@ -2943,15 +5597,33 @@
         [15, 15, 15, 15]
       ],
       "buildModes": [
-        { "type": "line", "directions": ["horizontal", "vertical"] },
-        { "type": "rectangle" }
+        {
+          "type": "line",
+          "directions": ["horizontal", "vertical"]
+        },
+        {
+          "type": "rectangle"
+        }
       ],
-      "variants": [{ "id": "thermalRelay", "angles": [-180, -90, 0, 90, 180] }],
+      "variants": [
+        {
+          "id": "thermalRelay",
+          "angles": [-180, -90, 0, 90, 180]
+        }
+      ],
       "render": {
         "imageName": "thermal_relay",
-        "size": { "width": 16, "height": 16 },
-        "offset": { "x": 0, "y": 0 },
-        "ui": { "outline": true }
+        "size": {
+          "width": 16,
+          "height": 16
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "ui": {
+          "outline": true
+        }
       },
       "tooltipHover": {
         "type": "custom",
@@ -2969,18 +5641,38 @@
         "categoryKey": "thermal",
         "order": 50,
         "buildModes": [
-          { "type": "line", "directions": ["horizontal", "vertical"] },
-          { "type": "rectangle" }
+          {
+            "type": "line",
+            "directions": ["horizontal", "vertical"]
+          },
+          {
+            "type": "rectangle"
+          }
         ],
-        "variants": [{ "id": "thermalRelay", "angles": [-180, -90, 0, 90, 180] }],
+        "variants": [
+          {
+            "id": "thermalRelay",
+            "angles": [-180, -90, 0, 90, 180]
+          }
+        ],
         "copyData": false,
         "render": {
           "imageName": "thermal_relay",
-          "size": { "width": 16, "height": 16 },
-          "offset": { "x": 0, "y": 0 },
-          "ui": { "outline": true }
+          "size": {
+            "width": 16,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "ui": {
+            "outline": true
+          }
         },
-        "defaultData": { "temperature": 0 },
+        "defaultData": {
+          "temperature": 0
+        },
         "shape": [
           [15, 15, 15, 15],
           [15, 15, 15, 15],
@@ -3008,20 +5700,42 @@
       "nameKey": "structures|thermodryer|name",
       "descriptionKey": "structures|thermodryer|description",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15]
       ],
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-      "variants": [{ "id": "thermodryer", "angles": [0, 90, 180, 270] }],
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "thermodryer",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
       "render": {
         "imageName": "thermodryer",
-        "size": { "width": 16, "height": 16 },
-        "offset": { "x": 0, "y": 0 },
-        "ui": { "outline": true }
+        "size": {
+          "width": 16,
+          "height": 16
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "ui": {
+          "outline": true
+        }
       },
       "definition": {
         "id": "thermodryer",
@@ -3029,13 +5743,31 @@
         "descriptionKey": "structures|thermodryer|description",
         "categoryKey": "thermal",
         "order": 10,
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [{ "id": "thermodryer", "angles": [0, 90, 180, 270] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
+        "variants": [
+          {
+            "id": "thermodryer",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
         "render": {
           "imageName": "thermodryer",
-          "size": { "width": 16, "height": 16 },
-          "offset": { "x": 0, "y": 0 },
-          "ui": { "outline": true }
+          "size": {
+            "width": 16,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "ui": {
+            "outline": true
+          }
         },
         "shape": [
           [15, 15, 15, 15],
@@ -3054,20 +5786,42 @@
       "nameKey": "structures|thermofroster|name",
       "descriptionKey": "structures|thermofroster|description",
       "category": "thermal",
-      "footprint": { "width": 4, "height": 4 },
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "explicit shape",
       "shape": [
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15],
         [15, 15, 15, 15]
       ],
-      "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-      "variants": [{ "id": "thermofroster", "angles": [0, 90, 180, 270] }],
+      "buildModes": [
+        {
+          "type": "line",
+          "directions": ["horizontal"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "thermofroster",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
       "render": {
         "imageName": "thermofroster",
-        "size": { "width": 16, "height": 16 },
-        "offset": { "x": 0, "y": 0 },
-        "ui": { "outline": true }
+        "size": {
+          "width": 16,
+          "height": 16
+        },
+        "offset": {
+          "x": 0,
+          "y": 0
+        },
+        "ui": {
+          "outline": true
+        }
       },
       "definition": {
         "id": "thermofroster",
@@ -3075,13 +5829,31 @@
         "descriptionKey": "structures|thermofroster|description",
         "categoryKey": "thermal",
         "order": 20,
-        "buildModes": [{ "type": "line", "directions": ["horizontal"] }],
-        "variants": [{ "id": "thermofroster", "angles": [0, 90, 180, 270] }],
+        "buildModes": [
+          {
+            "type": "line",
+            "directions": ["horizontal"]
+          }
+        ],
+        "variants": [
+          {
+            "id": "thermofroster",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
         "render": {
           "imageName": "thermofroster",
-          "size": { "width": 16, "height": 16 },
-          "offset": { "x": 0, "y": 0 },
-          "ui": { "outline": true }
+          "size": {
+            "width": 16,
+            "height": 16
+          },
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "ui": {
+            "outline": true
+          }
         },
         "shape": [
           [15, 15, 15, 15],
@@ -3100,19 +5872,44 @@
       "nameKey": "structures|voidRift|name",
       "descriptionKey": "structures|voidRift|description",
       "category": "special",
-      "footprint": { "width": 1, "height": 1 },
-      "buildModes": [{ "type": "single" }],
-      "variants": [{ "id": "voidRift", "angles": [0, 90, 180, 270] }],
+      "footprint": {
+        "width": 4,
+        "height": 4
+      },
+      "footprintSource": "native default 4x4",
+      "buildModes": [
+        {
+          "type": "single"
+        }
+      ],
+      "variants": [
+        {
+          "id": "voidRift",
+          "angles": [0, 90, 180, 270]
+        }
+      ],
       "render": {
         "imageName": "voidRift",
-        "size": { "width": 64, "height": 64 },
-        "offset": { "x": -24, "y": -24 },
+        "size": {
+          "width": 64,
+          "height": 64
+        },
+        "offset": {
+          "x": -24,
+          "y": -24
+        },
         "ui": {
           "imageName": "voidRiftIcon",
           "width": "16px",
           "height": "16px",
-          "offset": { "x": 0, "y": 0 },
-          "size": { "width": 16, "height": 16 }
+          "offset": {
+            "x": 0,
+            "y": 0
+          },
+          "size": {
+            "width": 16,
+            "height": 16
+          }
         }
       },
       "definition": {
@@ -3121,18 +5918,39 @@
         "descriptionKey": "structures|voidRift|description",
         "categoryKey": "special",
         "order": 10,
-        "buildModes": [{ "type": "single" }],
-        "variants": [{ "id": "voidRift", "angles": [0, 90, 180, 270] }],
+        "buildModes": [
+          {
+            "type": "single"
+          }
+        ],
+        "variants": [
+          {
+            "id": "voidRift",
+            "angles": [0, 90, 180, 270]
+          }
+        ],
         "render": {
           "imageName": "voidRift",
-          "size": { "width": 64, "height": 64 },
-          "offset": { "x": -24, "y": -24 },
+          "size": {
+            "width": 64,
+            "height": 64
+          },
+          "offset": {
+            "x": -24,
+            "y": -24
+          },
           "ui": {
             "imageName": "voidRiftIcon",
             "width": "16px",
             "height": "16px",
-            "offset": { "x": 0, "y": 0 },
-            "size": { "width": 16, "height": 16 }
+            "offset": {
+              "x": 0,
+              "y": 0
+            },
+            "size": {
+              "width": 16,
+              "height": 16
+            }
           }
         },
         "name": "Void Rift",

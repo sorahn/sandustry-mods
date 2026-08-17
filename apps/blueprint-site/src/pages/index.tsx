@@ -216,6 +216,29 @@ function structureLabel(type: Blueprint["data"][number]["type"]) {
   return typeof type === "number" ? `native ${type}` : type;
 }
 
+function wrapLabel(label: string, maxCharacters: number) {
+  const words = label.split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
+  let line = "";
+  for (const word of words) {
+    if (word.length > maxCharacters && !line) {
+      for (let index = 0; index < word.length; index += maxCharacters) {
+        lines.push(word.slice(index, index + maxCharacters));
+      }
+      continue;
+    }
+    const candidate = line ? `${line} ${word}` : word;
+    if (line && candidate.length > maxCharacters) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = candidate;
+    }
+  }
+  if (line) lines.push(line);
+  return lines.length ? lines : [label];
+}
+
 function tileColor(type: Blueprint["data"][number]["type"]) {
   if (typeof type === "number") return "#314158";
   let hash = 0;
@@ -423,7 +446,18 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
             const tileWidth = footprint.width * cell - 6;
             const tileHeight = footprint.height * cell - 6;
             const labelX = left + tileWidth / 2;
-            const labelY = top + tileHeight / 2 + 4;
+            const label = String(
+              entry?.name ??
+                (typeof structure.type === "number" ? structure.type : structure.type.slice(0, 8)),
+            );
+            const labelFontSize = 36;
+            const labelLineHeight = 42;
+            const labelLines = wrapLabel(
+              label,
+              Math.max(3, Math.floor(tileWidth / (labelFontSize * 0.6))),
+            );
+            const labelY =
+              top + tileHeight / 2 - ((labelLines.length - 1) * labelLineHeight) / 2 + 12;
             const isSelected = selectedIndex === index;
             return (
               <g
@@ -458,13 +492,19 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                   y={labelY}
                   textAnchor="middle"
                   fill="#f8fafc"
-                  fontSize="11"
+                  fontSize={labelFontSize}
+                  fontWeight="700"
                   fontFamily="ui-monospace, monospace"
                 >
-                  {entry?.name ??
-                    (typeof structure.type === "number"
-                      ? structure.type
-                      : structure.type.slice(0, 8))}
+                  {labelLines.map((line, lineIndex) => (
+                    <tspan
+                      key={`${line}-${lineIndex}`}
+                      x={labelX}
+                      y={labelY + lineIndex * labelLineHeight}
+                    >
+                      {line}
+                    </tspan>
+                  ))}
                 </text>
               </g>
             );
@@ -631,8 +671,8 @@ export function BlueprintInspectorPage() {
             <div className="p-4">
               <BlueprintMap blueprint={blueprint} />
               <p className="mt-4 text-xs text-slate-500">
-                A small verified native/repository catalog supplies names and footprints. Other
-                content remains visible through the unknown-ID fallback.
+                The captured native runtime catalog supplies names and footprints. Other content
+                remains visible through the unknown-ID fallback.
               </p>
             </div>
           </Panel>
