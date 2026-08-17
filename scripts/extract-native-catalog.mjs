@@ -6,7 +6,8 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const asarPath = process.env.SANDUSTRY_ASAR ??
+const asarPath =
+  process.env.SANDUSTRY_ASAR ??
   "/Users/daryl/Library/Application Support/Steam/steamapps/common/Sandustry/Sandustry.app/Contents/Resources/app.asar";
 const f8Path = path.join(root, "resources/f8-results.json");
 const menuPath = path.join(root, "resources/building-menu.html");
@@ -86,6 +87,8 @@ const variantAssetFrames = new Map([
 ]);
 
 function deriveAssetRotation(targetType, allEntries) {
+  if (targetType === "kineticFieldEmitterDown") return 270;
+  if (targetType === "kineticFieldEmitterLeft") return 0;
   // Dedicated directional PNG assets are already drawn in their specific orientation.
   const dedicatedAssets = new Set([
     "conveyorLeftMk2",
@@ -114,6 +117,14 @@ function deriveAssetRotation(targetType, allEntries) {
     return undefined;
   }
 
+  const assetRotationOffset =
+    new Map([
+      ["kineticFieldEmitterDownRight", 45],
+      ["kineticFieldEmitterDownLeft", 45],
+      ["kineticFieldEmitterUpLeft", 45],
+      ["kineticFieldEmitterUpRight", 45],
+    ]).get(targetType) ?? 0;
+
   for (const entry of allEntries) {
     if (Array.isArray(entry.variants)) {
       const match = entry.variants.find(
@@ -128,7 +139,7 @@ function deriveAssetRotation(targetType, allEntries) {
         const angle = match.angles[0];
         const offset =
           typeof targetType === "number" && targetType >= 12 && targetType <= 15 ? 135 : 0;
-        const rotation = (angle + offset + 360) % 360;
+        const rotation = (angle + offset + assetRotationOffset + 360) % 360;
         return rotation !== 0 ? rotation : undefined;
       }
     }
@@ -137,13 +148,23 @@ function deriveAssetRotation(targetType, allEntries) {
 }
 
 function findImageName(entry, allEntries) {
-  if (entry.render && typeof entry.render === "object" && typeof entry.render.imageName === "string") {
+  if (
+    entry.render &&
+    typeof entry.render === "object" &&
+    typeof entry.render.imageName === "string"
+  ) {
     return entry.render.imageName;
   }
   for (const parent of allEntries) {
-    if (parent.render && typeof parent.render === "object" && typeof parent.render.imageName === "string") {
+    if (
+      parent.render &&
+      typeof parent.render === "object" &&
+      typeof parent.render.imageName === "string"
+    ) {
       if (Array.isArray(parent.variants)) {
-        if (parent.variants.some((v) => v.id === entry.type || String(v.id) === String(entry.type))) {
+        if (
+          parent.variants.some((v) => v.id === entry.type || String(v.id) === String(entry.type))
+        ) {
           return parent.render.imageName;
         }
       }
@@ -184,7 +205,10 @@ function readAsarHeader(buffer) {
     const headerSize = buffer.readUInt32LE(4);
     const alternateStart = 8;
     const alternateEnd = alternateStart + headerSize;
-    return { header: JSON.parse(buffer.subarray(alternateStart, alternateEnd).toString("utf8")), dataStart: alternateEnd };
+    return {
+      header: JSON.parse(buffer.subarray(alternateStart, alternateEnd).toString("utf8")),
+      dataStart: alternateEnd,
+    };
   }
 }
 
@@ -202,7 +226,11 @@ function safeAssetName(relative) {
 }
 
 function assetStem(relative) {
-  return path.basename(relative).replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  return path
+    .basename(relative)
+    .replace(/\.[^.]+$/, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
 }
 
 function imageSize(buffer) {
@@ -217,7 +245,9 @@ function capturedMenuAssets() {
   if (!fs.existsSync(menuPath)) return new Map();
   const html = fs.readFileSync(menuPath, "utf8");
   const names = new Map();
-  for (const match of html.matchAll(/src="file:\/\/\/([^"?]+)"[^>]*style="([^"]*)"[\s\S]{0,1400}?<p[^>]*>([^<]+)<\/p>/g)) {
+  for (const match of html.matchAll(
+    /src="file:\/\/\/([^"?]+)"[^>]*style="([^"]*)"[\s\S]{0,1400}?<p[^>]*>([^<]+)<\/p>/g,
+  )) {
     const decoded = decodeURIComponent(match[1]);
     const marker = "/dist/";
     const index = decoded.indexOf(marker);
@@ -274,12 +304,16 @@ const catalogWithAssets = {
   ...blueprintCatalog,
   entries: blueprintCatalog.entries.map((entry) => {
     const imageName = findImageName(entry, blueprintCatalog.entries);
-    const renderAsset = typeof imageName === "string" ? assetByStem.get(assetStem(imageName)) : undefined;
+    const renderAsset =
+      typeof imageName === "string" ? assetByStem.get(assetStem(imageName)) : undefined;
     const menuCapture = typeof entry.name === "string" ? menuAssets.get(entry.name) : undefined;
     const menuAsset = menuCapture ? assetBySource.get(menuCapture.source) : undefined;
     const variantSource = variantAssetSources.get(entry.type);
     const variantAsset = variantSource ? assetBySource.get(variantSource) : undefined;
-    const assetPath = renderAsset ?? menuAsset ?? variantAsset;
+    // Explicit variant exports must win over the parent render image. This is
+    // important for the diagonal fan variants, whose render metadata points
+    // at the cardinal fan while their dedicated PNG is 15x15.
+    const assetPath = variantAsset ?? renderAsset ?? menuAsset;
     const asset = assetPath ? assets.find((candidate) => candidate.file === assetPath) : undefined;
     const assetFrame = variantAssetFrames.get(entry.type) ?? menuCapture?.frame;
     const derivedRotation = deriveAssetRotation(entry.type, blueprintCatalog.entries);
@@ -302,10 +336,17 @@ const catalogWithAssets = {
 };
 
 fs.writeFileSync(catalogPath, `${JSON.stringify(catalogWithAssets, null, 2)}\n`);
-fs.writeFileSync(path.join(assetRoot, "manifest.json"), `${JSON.stringify({
-  generatedAt: new Date().toISOString(),
-  source: "local Sandustry app.asar + building-menu.html",
-  assets,
-}, null, 2)}\n`);
+fs.writeFileSync(
+  path.join(assetRoot, "manifest.json"),
+  `${JSON.stringify(
+    {
+      generatedAt: new Date().toISOString(),
+      source: "local Sandustry app.asar + building-menu.html",
+      assets,
+    },
+    null,
+    2,
+  )}\n`,
+);
 console.log(`wrote static catalog: ${catalogPath}`);
 console.log(`extracted ${assets.length} of ${requested.length} native image assets`);

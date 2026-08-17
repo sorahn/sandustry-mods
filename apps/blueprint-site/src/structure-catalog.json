@@ -3292,7 +3292,7 @@
         "width": 23,
         "height": 16
       },
-      "assetRotation": 90
+      "assetRotation": 270
     },
     {
       "type": "kineticFieldEmitterDownLeft",
@@ -3374,10 +3374,10 @@
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetPath": "catalog/mods__kinetic_field_emitter_diagonal.png",
       "assetSize": {
-        "width": 23,
-        "height": 16
+        "width": 15,
+        "height": 15
       },
       "assetFrame": {
         "width": 15,
@@ -3388,7 +3388,7 @@
         "x": -8,
         "y": 8
       },
-      "assetRotation": 135
+      "assetRotation": 180
     },
     {
       "type": "kineticFieldEmitterDownRight",
@@ -3470,10 +3470,10 @@
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetPath": "catalog/mods__kinetic_field_emitter_diagonal.png",
       "assetSize": {
-        "width": 23,
-        "height": 16
+        "width": 15,
+        "height": 15
       },
       "assetFrame": {
         "width": 15,
@@ -3484,7 +3484,7 @@
         "x": -8,
         "y": 8
       },
-      "assetRotation": 45
+      "assetRotation": 90
     },
     {
       "type": "kineticFieldEmitterLeft",
@@ -3571,7 +3571,7 @@
         "width": 23,
         "height": 16
       },
-      "assetRotation": 180
+      "assetRotation": 0
     },
     {
       "type": "kineticFieldEmitterUp",
@@ -3740,10 +3740,10 @@
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetPath": "catalog/mods__kinetic_field_emitter_diagonal.png",
       "assetSize": {
-        "width": 23,
-        "height": 16
+        "width": 15,
+        "height": 15
       },
       "assetFrame": {
         "width": 15,
@@ -3754,7 +3754,7 @@
         "x": -8,
         "y": 8
       },
-      "assetRotation": 225
+      "assetRotation": 270
     },
     {
       "type": "kineticFieldEmitterUpRight",
@@ -3836,10 +3836,10 @@
         "description": "Blows petals and powders through the air, such as Amethelis and Snow."
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/mods__kinetic_field_emitter.png",
+      "assetPath": "catalog/mods__kinetic_field_emitter_diagonal.png",
       "assetSize": {
-        "width": 23,
-        "height": 16
+        "width": 15,
+        "height": 15
       },
       "assetFrame": {
         "width": 15,
@@ -3849,8 +3849,7 @@
       "assetOffset": {
         "x": -8,
         "y": 8
-      },
-      "assetRotation": 315
+      }
     },
     {
       "type": "launcherLeftMk2",
