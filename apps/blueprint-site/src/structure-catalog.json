@@ -3205,6 +3205,9 @@
       "assetSize": {
         "width": 23,
         "height": 16
+      },
+      "assetOffset": {
+        "x": -16
       }
     },
     {
@@ -3292,7 +3295,15 @@
         "width": 23,
         "height": 16
       },
-      "assetRotation": 270
+      "assetFrame": {
+        "width": 23,
+        "height": 16
+      },
+      "assetClip": false,
+      "assetOffset": {
+        "x": -16
+      },
+      "assetRotation": 90
     },
     {
       "type": "kineticFieldEmitterDownLeft",
@@ -3571,7 +3582,15 @@
         "width": 23,
         "height": 16
       },
-      "assetRotation": 0
+      "assetFrame": {
+        "width": 23,
+        "height": 16
+      },
+      "assetClip": false,
+      "assetOffset": {
+        "x": -16
+      },
+      "assetRotation": 180
     },
     {
       "type": "kineticFieldEmitterUp",
@@ -3657,6 +3676,14 @@
       "assetSize": {
         "width": 23,
         "height": 16
+      },
+      "assetFrame": {
+        "width": 23,
+        "height": 16
+      },
+      "assetClip": false,
+      "assetOffset": {
+        "x": -16
       },
       "assetRotation": 270
     },

@@ -84,11 +84,12 @@ const variantAssetFrames = new Map([
   ["kineticFieldEmitterDownLeft", { width: 15, height: 15 }],
   ["kineticFieldEmitterUpLeft", { width: 15, height: 15 }],
   ["kineticFieldEmitterUpRight", { width: 15, height: 15 }],
+  ["kineticFieldEmitterDown", { width: 23, height: 16 }],
+  ["kineticFieldEmitterLeft", { width: 23, height: 16 }],
+  ["kineticFieldEmitterUp", { width: 23, height: 16 }],
 ]);
 
 function deriveAssetRotation(targetType, allEntries) {
-  if (targetType === "kineticFieldEmitterDown") return 270;
-  if (targetType === "kineticFieldEmitterLeft") return 0;
   // Dedicated directional PNG assets are already drawn in their specific orientation.
   const dedicatedAssets = new Set([
     "conveyorLeftMk2",
@@ -184,6 +185,10 @@ const assetClipOverrides = new Map([
 // export. It must remain unclipped and use the same native placement offset as
 // the game renderer; clipping it to assetFrame removes most of the fan.
 const assetPresentationOverrides = new Map([
+  ["kineticFieldEmitter", { assetOffset: { x: -16 } }],
+  ["kineticFieldEmitterDown", { assetClip: false, assetOffset: { x: -16 } }],
+  ["kineticFieldEmitterLeft", { assetClip: false, assetOffset: { x: -16 } }],
+  ["kineticFieldEmitterUp", { assetClip: false, assetOffset: { x: -16 } }],
   ["kineticFieldEmitterDownRight", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
   ["kineticFieldEmitterDownLeft", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
   ["kineticFieldEmitterUpLeft", { assetClip: false, assetOffset: { x: -8, y: 8 } }],
