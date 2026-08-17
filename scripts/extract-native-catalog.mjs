@@ -46,16 +46,32 @@ function assetStem(relative) {
   return path.basename(relative).replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
+function imageSize(buffer) {
+  const pngSignature = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  if (buffer.length >= 24 && buffer.subarray(0, 8).equals(pngSignature)) {
+    return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
+  }
+  return undefined;
+}
+
 function capturedMenuAssets() {
   if (!fs.existsSync(menuPath)) return new Map();
   const html = fs.readFileSync(menuPath, "utf8");
   const names = new Map();
-  for (const match of html.matchAll(/src="file:\/\/\/([^"?]+)"[\s\S]{0,1400}?<p[^>]*>([^<]+)<\/p>/g)) {
+  for (const match of html.matchAll(/src="file:\/\/\/([^"?]+)"[^>]*style="([^"]*)"[\s\S]{0,1400}?<p[^>]*>([^<]+)<\/p>/g)) {
     const decoded = decodeURIComponent(match[1]);
     const marker = "/dist/";
     const index = decoded.indexOf(marker);
-    const name = match[2].trim();
-    if (index >= 0 && name) names.set(name, decoded.slice(index + 1));
+    const name = match[3].trim();
+    const style = match[2];
+    const width = style.match(/\bwidth:\s*(\d+)px/i)?.[1];
+    const height = style.match(/\bheight:\s*(\d+)px/i)?.[1];
+    if (index >= 0 && name) {
+      names.set(name, {
+        source: decoded.slice(index + 1),
+        frame: width && height ? { width: Number(width), height: Number(height) } : undefined,
+      });
+    }
   }
   return names;
 }
@@ -81,8 +97,14 @@ for (const relative of requested) {
   if (!record || typeof record.offset !== "string" || typeof record.size !== "number") continue;
   const start = dataStart + Number(record.offset);
   const outputName = safeAssetName(relative);
-  fs.writeFileSync(path.join(assetRoot, outputName), archive.subarray(start, start + record.size));
-  assets.push({ source: relative, file: `catalog/${outputName}`, bytes: record.size });
+  const contents = archive.subarray(start, start + record.size);
+  fs.writeFileSync(path.join(assetRoot, outputName), contents);
+  assets.push({
+    source: relative,
+    file: `catalog/${outputName}`,
+    bytes: record.size,
+    size: imageSize(contents),
+  });
 }
 
 const assetByStem = new Map(assets.map((asset) => [assetStem(asset.source), asset.file]));
@@ -92,9 +114,18 @@ const catalogWithAssets = {
   entries: blueprintCatalog.entries.map((entry) => {
     const imageName = entry.render?.imageName;
     const renderAsset = typeof imageName === "string" ? assetByStem.get(assetStem(imageName)) : undefined;
-    const menuAsset = typeof entry.name === "string" ? assetBySource.get(menuAssets.get(entry.name)) : undefined;
+    const menuCapture = typeof entry.name === "string" ? menuAssets.get(entry.name) : undefined;
+    const menuAsset = menuCapture ? assetBySource.get(menuCapture.source) : undefined;
     const assetPath = renderAsset ?? menuAsset;
-    return assetPath ? { ...entry, assetPath } : entry;
+    const asset = assetPath ? assets.find((candidate) => candidate.file === assetPath) : undefined;
+    return assetPath
+      ? {
+          ...entry,
+          assetPath,
+          ...(asset?.size ? { assetSize: asset.size } : {}),
+          ...(menuCapture?.frame && !renderAsset ? { assetFrame: menuCapture.frame } : {}),
+        }
+      : entry;
   }),
 };
 

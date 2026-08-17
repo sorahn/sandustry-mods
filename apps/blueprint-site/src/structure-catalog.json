@@ -89,7 +89,15 @@
         "order": 10
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__conveyor_right.png"
+      "assetPath": "catalog/img__conveyor_right.png",
+      "assetSize": {
+        "width": 64,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": 3,
@@ -151,7 +159,15 @@
         "categoryKey": "production"
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__shaker_right.png"
+      "assetPath": "catalog/img__shaker_right.png",
+      "assetSize": {
+        "width": 36,
+        "height": 22
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": 5,
@@ -223,7 +239,11 @@
         "order": 20
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__launcher.png"
+      "assetPath": "catalog/img__launcher.png",
+      "assetSize": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": 6,
@@ -470,7 +490,15 @@
         "categoryKey": "blocks"
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__block.png"
+      "assetPath": "catalog/img__block.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": 12,
@@ -627,7 +655,15 @@
         "categoryKey": "economy"
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__sell.png"
+      "assetPath": "catalog/img__sell.png",
+      "assetSize": {
+        "width": 96,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": 17,
@@ -719,7 +755,15 @@
         }
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__filter_right.png"
+      "assetPath": "catalog/img__filter_right.png",
+      "assetSize": {
+        "width": 72,
+        "height": 18
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": 19,
@@ -831,7 +875,15 @@
         "categoryKey": "production"
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__velocity.png"
+      "assetPath": "catalog/img__velocity.png",
+      "assetSize": {
+        "width": 18,
+        "height": 417
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": 21,
@@ -874,7 +926,15 @@
         "categoryKey": "production"
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__farm.png"
+      "assetPath": "catalog/img__farm.png",
+      "assetSize": {
+        "width": 18,
+        "height": 18
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": 22,
@@ -955,7 +1015,15 @@
         "categoryKey": "fluids"
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__pipes_icon.png"
+      "assetPath": "catalog/img__pipes_icon.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": 24,
@@ -1010,7 +1078,15 @@
         "categoryKey": "fluids"
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__pump.png"
+      "assetPath": "catalog/img__pump.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": 25,
@@ -1065,7 +1141,15 @@
         "categoryKey": "fluids"
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__liquid_vent.png"
+      "assetPath": "catalog/img__liquid_vent.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": 26,
@@ -1106,7 +1190,15 @@
         "categoryKey": "lighting"
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__light.png"
+      "assetPath": "catalog/img__light.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": 27,
@@ -1148,7 +1240,15 @@
         "categoryKey": "special"
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__gloom_emitter.png"
+      "assetPath": "catalog/img__gloom_emitter.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": "aurixiteCrystallizer",
@@ -5970,7 +6070,15 @@
         "description": "Opens a mysterious rift that produces Void Seed from the depths of space."
       },
       "source": "runtime structure definition",
-      "assetPath": "catalog/img__orb.png"
+      "assetPath": "catalog/img__orb.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     }
   ]
 }

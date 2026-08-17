@@ -482,21 +482,41 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                   width={tileWidth}
                   height={tileHeight}
                   rx="5"
-                  fill={tileColor(structure.type)}
+                  fill={entry?.assetPath ? "transparent" : tileColor(structure.type)}
                   stroke={isSelected ? "#ffe700" : "#8491a3"}
                   strokeWidth={isSelected ? "4" : "1.5"}
                 />
-                {entry?.assetPath ? (
-                  <image
-                    href={`${import.meta.env.BASE_URL}${entry.assetPath}`}
-                    x={left + 6}
-                    y={top + 6}
-                    width={Math.max(1, tileWidth - 12)}
-                    height={Math.max(1, tileHeight - 12)}
-                    preserveAspectRatio="xMidYMid meet"
-                    style={{ imageRendering: "pixelated", pointerEvents: "none" }}
-                  />
-                ) : null}
+                {entry?.assetPath
+                  ? (() => {
+                      const inset = 6;
+                      const frame = entry.assetFrame;
+                      const source = entry.assetSize;
+                      const imageWidth = Math.max(1, tileWidth - inset * 2);
+                      const imageHeight = Math.max(1, tileHeight - inset * 2);
+                      const sourceWidth = source?.width ?? frame?.width ?? 1;
+                      const sourceHeight = source?.height ?? frame?.height ?? 1;
+                      const scaledImageHeight = frame
+                        ? imageWidth * (sourceHeight / frame.width)
+                        : imageHeight;
+                      return (
+                        <>
+                          <clipPath id={`asset-clip-${index}`}>
+                            <rect x={left + inset} y="0" width={imageWidth} height={height} />
+                          </clipPath>
+                          <image
+                            href={`${import.meta.env.BASE_URL}${entry.assetPath}`}
+                            x={left + inset}
+                            y={top + inset}
+                            width={frame ? imageWidth * (sourceWidth / frame.width) : imageWidth}
+                            height={frame ? scaledImageHeight : imageHeight}
+                            preserveAspectRatio={frame ? "none" : "xMidYMid meet"}
+                            clipPath={`url(#asset-clip-${index})`}
+                            style={{ imageRendering: "pixelated", pointerEvents: "none" }}
+                          />
+                        </>
+                      );
+                    })()
+                  : null}
                 {!entry?.assetPath ? (
                   <text
                     x={labelX}

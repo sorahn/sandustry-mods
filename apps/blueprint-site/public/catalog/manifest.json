@@ -1,1631 +1,2931 @@
 {
-  "generatedAt": "2026-08-17T02:24:16.227Z",
+  "generatedAt": "2026-08-17T02:34:45.604Z",
   "source": "local Sandustry app.asar + building-menu.html",
   "assets": [
     {
       "source": "dist/img/archon_corrupted.png",
       "file": "catalog/img__archon_corrupted.png",
-      "bytes": 346
+      "bytes": 346,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/archon.png",
       "file": "catalog/img__archon.png",
-      "bytes": 317
+      "bytes": 317,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/artifact_phase.png",
       "file": "catalog/img__artifact_phase.png",
-      "bytes": 232
+      "bytes": 232,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/artifact_pulse.png",
       "file": "catalog/img__artifact_pulse.png",
-      "bytes": 217
+      "bytes": 217,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/artifact_slot.png",
       "file": "catalog/img__artifact_slot.png",
-      "bytes": 166
+      "bytes": 166,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/artifact.png",
       "file": "catalog/img__artifact.png",
-      "bytes": 302
+      "bytes": 302,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/augment.png",
       "file": "catalog/img__augment.png",
-      "bytes": 273
+      "bytes": 273,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/backdrop_variant.png",
       "file": "catalog/img__backdrop_variant.png",
-      "bytes": 161
+      "bytes": 161,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/bg_L01.png",
       "file": "catalog/img__bg_L01.png",
-      "bytes": 111163
+      "bytes": 111163,
+      "size": {
+        "width": 5760,
+        "height": 1024
+      }
     },
     {
       "source": "dist/img/bg_L02.png",
       "file": "catalog/img__bg_L02.png",
-      "bytes": 44365
+      "bytes": 44365,
+      "size": {
+        "width": 7168,
+        "height": 1024
+      }
     },
     {
       "source": "dist/img/bg_L03.png",
       "file": "catalog/img__bg_L03.png",
-      "bytes": 106017
+      "bytes": 106017,
+      "size": {
+        "width": 12160,
+        "height": 1024
+      }
     },
     {
       "source": "dist/img/bg_L04.png",
       "file": "catalog/img__bg_L04.png",
-      "bytes": 89277
+      "bytes": 89277,
+      "size": {
+        "width": 12160,
+        "height": 1024
+      }
     },
     {
       "source": "dist/img/block_hollow.png",
       "file": "catalog/img__block_hollow.png",
-      "bytes": 188
+      "bytes": 188,
+      "size": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "source": "dist/img/block.png",
       "file": "catalog/img__block.png",
-      "bytes": 143
+      "bytes": 143,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/bouncer_ball.png",
       "file": "catalog/img__bouncer_ball.png",
-      "bytes": 310
+      "bytes": 310,
+      "size": {
+        "width": 17,
+        "height": 17
+      }
     },
     {
       "source": "dist/img/build_button.png",
       "file": "catalog/img__build_button.png",
-      "bytes": 1060
+      "bytes": 1060,
+      "size": {
+        "width": 64,
+        "height": 64
+      }
     },
     {
       "source": "dist/img/build_flash.png",
       "file": "catalog/img__build_flash.png",
-      "bytes": 356
+      "bytes": 356,
+      "size": {
+        "width": 256,
+        "height": 32
+      }
     },
     {
       "source": "dist/img/build_flash2.png",
       "file": "catalog/img__build_flash2.png",
-      "bytes": 395
+      "bytes": 395,
+      "size": {
+        "width": 256,
+        "height": 32
+      }
     },
     {
       "source": "dist/img/build_flash3.png",
       "file": "catalog/img__build_flash3.png",
-      "bytes": 298
+      "bytes": 298,
+      "size": {
+        "width": 256,
+        "height": 32
+      }
     },
     {
       "source": "dist/img/build_flash4.png",
       "file": "catalog/img__build_flash4.png",
-      "bytes": 353
+      "bytes": 353,
+      "size": {
+        "width": 256,
+        "height": 32
+      }
     },
     {
       "source": "dist/img/build_tool.png",
       "file": "catalog/img__build_tool.png",
-      "bytes": 302
+      "bytes": 302,
+      "size": {
+        "width": 22,
+        "height": 14
+      }
     },
     {
       "source": "dist/img/builder.png",
       "file": "catalog/img__builder.png",
-      "bytes": 225
+      "bytes": 225,
+      "size": {
+        "width": 22,
+        "height": 14
+      }
     },
     {
       "source": "dist/img/bullet.png",
       "file": "catalog/img__bullet.png",
-      "bytes": 123
+      "bytes": 123,
+      "size": {
+        "width": 7,
+        "height": 7
+      }
     },
     {
       "source": "dist/img/button.png",
       "file": "catalog/img__button.png",
-      "bytes": 213
+      "bytes": 213,
+      "size": {
+        "width": 64,
+        "height": 64
+      }
     },
     {
       "source": "dist/img/button2.png",
       "file": "catalog/img__button2.png",
-      "bytes": 209
+      "bytes": 209,
+      "size": {
+        "width": 64,
+        "height": 64
+      }
     },
     {
       "source": "dist/img/button3.png",
       "file": "catalog/img__button3.png",
-      "bytes": 233
+      "bytes": 233,
+      "size": {
+        "width": 64,
+        "height": 64
+      }
     },
     {
       "source": "dist/img/characters_with_shadow_4x.png",
       "file": "catalog/img__characters_with_shadow_4x.png",
-      "bytes": 1235
+      "bytes": 1235,
+      "size": {
+        "width": 656,
+        "height": 22
+      }
     },
     {
       "source": "dist/img/characters.png",
       "file": "catalog/img__characters.png",
-      "bytes": 284
+      "bytes": 284,
+      "size": {
+        "width": 144,
+        "height": 5
+      }
     },
     {
       "source": "dist/img/conveyor_left_hollow.png",
       "file": "catalog/img__conveyor_left_hollow.png",
-      "bytes": 172
+      "bytes": 172,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/conveyor_left_original.png",
       "file": "catalog/img__conveyor_left_original.png",
-      "bytes": 158
+      "bytes": 158,
+      "size": {
+        "width": 16,
+        "height": 4
+      }
     },
     {
       "source": "dist/img/conveyor_left.png",
       "file": "catalog/img__conveyor_left.png",
-      "bytes": 446
+      "bytes": 446,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/conveyor_right_hollow.png",
       "file": "catalog/img__conveyor_right_hollow.png",
-      "bytes": 172
+      "bytes": 172,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/conveyor_right_old.png",
       "file": "catalog/img__conveyor_right_old.png",
-      "bytes": 130
+      "bytes": 130,
+      "size": {
+        "width": 16,
+        "height": 4
+      }
     },
     {
       "source": "dist/img/conveyor_right_test_2.png",
       "file": "catalog/img__conveyor_right_test_2.png",
-      "bytes": 564
+      "bytes": 564,
+      "size": {
+        "width": 72,
+        "height": 18
+      }
     },
     {
       "source": "dist/img/conveyor_right_test.png",
       "file": "catalog/img__conveyor_right_test.png",
-      "bytes": 332
+      "bytes": 332,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/conveyor_right_yellow.png",
       "file": "catalog/img__conveyor_right_yellow.png",
-      "bytes": 433
+      "bytes": 433,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/conveyor_right.png",
       "file": "catalog/img__conveyor_right.png",
-      "bytes": 461
+      "bytes": 461,
+      "size": {
+        "width": 64,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/cool_cat.png",
       "file": "catalog/img__cool_cat.png",
-      "bytes": 439
+      "bytes": 439,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/cool_cat2.png",
       "file": "catalog/img__cool_cat2.png",
-      "bytes": 432
+      "bytes": 432,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/copy.png",
       "file": "catalog/img__copy.png",
-      "bytes": 154
+      "bytes": 154,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/credits_symbol.png",
       "file": "catalog/img__credits_symbol.png",
-      "bytes": 379
+      "bytes": 379,
+      "size": {
+        "width": 32,
+        "height": 32
+      }
     },
     {
       "source": "dist/img/cryoblaster_icon.png",
       "file": "catalog/img__cryoblaster_icon.png",
-      "bytes": 218
+      "bytes": 218,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/cryoblaster.png",
       "file": "catalog/img__cryoblaster.png",
-      "bytes": 357
+      "bytes": 357,
+      "size": {
+        "width": 22,
+        "height": 24
+      }
     },
     {
       "source": "dist/img/cursor_default.png",
       "file": "catalog/img__cursor_default.png",
-      "bytes": 185
+      "bytes": 185,
+      "size": {
+        "width": 14,
+        "height": 14
+      }
     },
     {
       "source": "dist/img/cursor_demolish.png",
       "file": "catalog/img__cursor_demolish.png",
-      "bytes": 224
+      "bytes": 224,
+      "size": {
+        "width": 24,
+        "height": 14
+      }
     },
     {
       "source": "dist/img/cursor_marquee.png",
       "file": "catalog/img__cursor_marquee.png",
-      "bytes": 233
+      "bytes": 233,
+      "size": {
+        "width": 24,
+        "height": 14
+      }
     },
     {
       "source": "dist/img/cursor.png",
       "file": "catalog/img__cursor.png",
-      "bytes": 254
+      "bytes": 254,
+      "size": {
+        "width": 32,
+        "height": 32
+      }
     },
     {
       "source": "dist/img/default_icon.png",
       "file": "catalog/img__default_icon.png",
-      "bytes": 150
+      "bytes": 150,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/demolisher_icon.png",
       "file": "catalog/img__demolisher_icon.png",
-      "bytes": 211
+      "bytes": 211,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/digger_icon.png",
       "file": "catalog/img__digger_icon.png",
-      "bytes": 300
+      "bytes": 300,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/digger.png",
       "file": "catalog/img__digger.png",
-      "bytes": 318
+      "bytes": 318,
+      "size": {
+        "width": 17,
+        "height": 17
+      }
     },
     {
       "source": "dist/img/drone.png",
       "file": "catalog/img__drone.png",
-      "bytes": 246
+      "bytes": 246,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/drop_pod.png",
       "file": "catalog/img__drop_pod.png",
-      "bytes": 929
+      "bytes": 929,
+      "size": {
+        "width": 44,
+        "height": 82
+      }
     },
     {
       "source": "dist/img/energy_particle.png",
       "file": "catalog/img__energy_particle.png",
-      "bytes": 112
+      "bytes": 112,
+      "size": {
+        "width": 8,
+        "height": 8
+      }
     },
     {
       "source": "dist/img/explosion_11x11.png",
       "file": "catalog/img__explosion_11x11.png",
-      "bytes": 400
+      "bytes": 400,
+      "size": {
+        "width": 44,
+        "height": 11
+      }
     },
     {
       "source": "dist/img/explosion_44x44_center.png",
       "file": "catalog/img__explosion_44x44_center.png",
-      "bytes": 1224
+      "bytes": 1224,
+      "size": {
+        "width": 184,
+        "height": 46
+      }
     },
     {
       "source": "dist/img/explosion_44x44_ne.png",
       "file": "catalog/img__explosion_44x44_ne.png",
-      "bytes": 1327
+      "bytes": 1327,
+      "size": {
+        "width": 184,
+        "height": 46
+      }
     },
     {
       "source": "dist/img/explosion_44x44_nw.png",
       "file": "catalog/img__explosion_44x44_nw.png",
-      "bytes": 1331
+      "bytes": 1331,
+      "size": {
+        "width": 184,
+        "height": 46
+      }
     },
     {
       "source": "dist/img/explosion_44x44_offset.png",
       "file": "catalog/img__explosion_44x44_offset.png",
-      "bytes": 1387
+      "bytes": 1387,
+      "size": {
+        "width": 184,
+        "height": 46
+      }
     },
     {
       "source": "dist/img/explosion_44x44_sw.png",
       "file": "catalog/img__explosion_44x44_sw.png",
-      "bytes": 1387
+      "bytes": 1387,
+      "size": {
+        "width": 184,
+        "height": 46
+      }
     },
     {
       "source": "dist/img/explosion_44x44.png",
       "file": "catalog/img__explosion_44x44.png",
-      "bytes": 1585
+      "bytes": 1585,
+      "size": {
+        "width": 184,
+        "height": 46
+      }
     },
     {
       "source": "dist/img/farm.png",
       "file": "catalog/img__farm.png",
-      "bytes": 263
+      "bytes": 263,
+      "size": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "source": "dist/img/filter_left.png",
       "file": "catalog/img__filter_left.png",
-      "bytes": 392
+      "bytes": 392,
+      "size": {
+        "width": 72,
+        "height": 18
+      }
     },
     {
       "source": "dist/img/filter_right.png",
       "file": "catalog/img__filter_right.png",
-      "bytes": 396
+      "bytes": 396,
+      "size": {
+        "width": 72,
+        "height": 18
+      }
     },
     {
       "source": "dist/img/flamethrower_icon.png",
       "file": "catalog/img__flamethrower_icon.png",
-      "bytes": 191
+      "bytes": 191,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/flamethrower.png",
       "file": "catalog/img__flamethrower.png",
-      "bytes": 272
+      "bytes": 272,
+      "size": {
+        "width": 26,
+        "height": 14
+      }
     },
     {
       "source": "dist/img/fluxite_symbol.png",
       "file": "catalog/img__fluxite_symbol.png",
-      "bytes": 322
+      "bytes": 322,
+      "size": {
+        "width": 32,
+        "height": 32
+      }
     },
     {
       "source": "dist/img/fog_playtest.png",
       "file": "catalog/img__fog_playtest.png",
-      "bytes": 128940
+      "bytes": 128940,
+      "size": {
+        "width": 5120,
+        "height": 5120
+      }
     },
     {
       "source": "dist/img/frame_block.png",
       "file": "catalog/img__frame_block.png",
-      "bytes": 153
+      "bytes": 153,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/fume_particle.png",
       "file": "catalog/img__fume_particle.png",
-      "bytes": 119
+      "bytes": 119,
+      "size": {
+        "width": 8,
+        "height": 8
+      }
     },
     {
       "source": "dist/img/gloom_emitter.png",
       "file": "catalog/img__gloom_emitter.png",
-      "bytes": 239
+      "bytes": 239,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/glyph_key.png",
       "file": "catalog/img__glyph_key.png",
-      "bytes": 265
+      "bytes": 265,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/grabber_icon.png",
       "file": "catalog/img__grabber_icon.png",
-      "bytes": 228
+      "bytes": 228,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/gun_icon.png",
       "file": "catalog/img__gun_icon.png",
-      "bytes": 147
+      "bytes": 147,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/gun.png",
       "file": "catalog/img__gun.png",
-      "bytes": 299
+      "bytes": 299,
+      "size": {
+        "width": 26,
+        "height": 14
+      }
     },
     {
       "source": "dist/img/hauler_closed.png",
       "file": "catalog/img__hauler_closed.png",
-      "bytes": 492
+      "bytes": 492,
+      "size": {
+        "width": 25,
+        "height": 40
+      }
     },
     {
       "source": "dist/img/hauler_icon.png",
       "file": "catalog/img__hauler_icon.png",
-      "bytes": 247
+      "bytes": 247,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/hauler.png",
       "file": "catalog/img__hauler.png",
-      "bytes": 382
+      "bytes": 382,
+      "size": {
+        "width": 25,
+        "height": 40
+      }
     },
     {
       "source": "dist/img/Hooded_Horse_White_w_Text_4k.png",
       "file": "catalog/img__Hooded_Horse_White_w_Text_4k.png",
-      "bytes": 449694
+      "bytes": 449694,
+      "size": {
+        "width": 4096,
+        "height": 3451
+      }
     },
     {
       "source": "dist/img/hover_icon.png",
       "file": "catalog/img__hover_icon.png",
-      "bytes": 483
+      "bytes": 483,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/lantto-games_logo_white.png",
       "file": "catalog/img__lantto-games_logo_white.png",
-      "bytes": 1686
+      "bytes": 1686,
+      "size": {
+        "width": 384,
+        "height": 128
+      }
     },
     {
       "source": "dist/img/lantto-games.png",
       "file": "catalog/img__lantto-games.png",
-      "bytes": 18749
+      "bytes": 18749,
+      "size": {
+        "width": 512,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/lantto.png",
       "file": "catalog/img__lantto.png",
-      "bytes": 980
+      "bytes": 980,
+      "size": {
+        "width": 128,
+        "height": 128
+      }
     },
     {
       "source": "dist/img/launcher_hook_left.png",
       "file": "catalog/img__launcher_hook_left.png",
-      "bytes": 113
+      "bytes": 113,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/launcher_hook_right.png",
       "file": "catalog/img__launcher_hook_right.png",
-      "bytes": 127
+      "bytes": 127,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/launcher_left.png",
       "file": "catalog/img__launcher_left.png",
-      "bytes": 290
+      "bytes": 290,
+      "size": {
+        "width": 18,
+        "height": 26
+      }
     },
     {
       "source": "dist/img/launcher_right_attached.png",
       "file": "catalog/img__launcher_right_attached.png",
-      "bytes": 308
+      "bytes": 308,
+      "size": {
+        "width": 26,
+        "height": 26
+      }
     },
     {
       "source": "dist/img/launcher_right.png",
       "file": "catalog/img__launcher_right.png",
-      "bytes": 272
+      "bytes": 272,
+      "size": {
+        "width": 18,
+        "height": 26
+      }
     },
     {
       "source": "dist/img/launcher.png",
       "file": "catalog/img__launcher.png",
-      "bytes": 176
+      "bytes": 176,
+      "size": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "source": "dist/img/light.png",
       "file": "catalog/img__light.png",
-      "bytes": 262
+      "bytes": 262,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/liquid_vent.png",
       "file": "catalog/img__liquid_vent.png",
-      "bytes": 232
+      "bytes": 232,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/loading_screen.png",
       "file": "catalog/img__loading_screen.png",
-      "bytes": 7216
+      "bytes": 7216,
+      "size": {
+        "width": 600,
+        "height": 400
+      }
     },
     {
       "source": "dist/img/map_blueprint_playtest_authorization.png",
       "file": "catalog/img__map_blueprint_playtest_authorization.png",
-      "bytes": 8080
+      "bytes": 8080,
+      "size": {
+        "width": 1280,
+        "height": 1280
+      }
     },
     {
       "source": "dist/img/map_blueprint_playtest_lights.png",
       "file": "catalog/img__map_blueprint_playtest_lights.png",
-      "bytes": 6528
+      "bytes": 6528,
+      "size": {
+        "width": 1280,
+        "height": 1280
+      }
     },
     {
       "source": "dist/img/map_blueprint_playtest_sensors.png",
       "file": "catalog/img__map_blueprint_playtest_sensors.png",
-      "bytes": 6458
+      "bytes": 6458,
+      "size": {
+        "width": 1280,
+        "height": 1280
+      }
     },
     {
       "source": "dist/img/map_blueprint_playtest.png",
       "file": "catalog/img__map_blueprint_playtest.png",
-      "bytes": 61275
+      "bytes": 61275,
+      "size": {
+        "width": 1280,
+        "height": 1280
+      }
     },
     {
       "source": "dist/img/map_blueprint_small_lights.png",
       "file": "catalog/img__map_blueprint_small_lights.png",
-      "bytes": 10095
+      "bytes": 10095,
+      "size": {
+        "width": 1600,
+        "height": 1600
+      }
     },
     {
       "source": "dist/img/map_blueprint_small_sensors.png",
       "file": "catalog/img__map_blueprint_small_sensors.png",
-      "bytes": 10122
+      "bytes": 10122,
+      "size": {
+        "width": 1600,
+        "height": 1600
+      }
     },
     {
       "source": "dist/img/map_blueprint_small_test.png",
       "file": "catalog/img__map_blueprint_small_test.png",
-      "bytes": 45098
+      "bytes": 45098,
+      "size": {
+        "width": 1600,
+        "height": 1600
+      }
     },
     {
       "source": "dist/img/map_blueprint_small.png",
       "file": "catalog/img__map_blueprint_small.png",
-      "bytes": 83212
+      "bytes": 83212,
+      "size": {
+        "width": 1600,
+        "height": 1600
+      }
     },
     {
       "source": "dist/img/map_blueprint.png",
       "file": "catalog/img__map_blueprint.png",
-      "bytes": 52226
+      "bytes": 52226,
+      "size": {
+        "width": 4000,
+        "height": 4000
+      }
     },
     {
       "source": "dist/img/marquee_icon.png",
       "file": "catalog/img__marquee_icon.png",
-      "bytes": 224
+      "bytes": 224,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/menu_blueprint.png",
       "file": "catalog/img__menu_blueprint.png",
-      "bytes": 6584
+      "bytes": 6584,
+      "size": {
+        "width": 720,
+        "height": 720
+      }
     },
     {
       "source": "dist/img/mountain.png",
       "file": "catalog/img__mountain.png",
-      "bytes": 1895
+      "bytes": 1895,
+      "size": {
+        "width": 278,
+        "height": 143
+      }
     },
     {
       "source": "dist/img/mountains_tiling.png",
       "file": "catalog/img__mountains_tiling.png",
-      "bytes": 5758
+      "bytes": 5758,
+      "size": {
+        "width": 500,
+        "height": 500
+      }
     },
     {
       "source": "dist/img/mountains.png",
       "file": "catalog/img__mountains.png",
-      "bytes": 15815
+      "bytes": 15815,
+      "size": {
+        "width": 1920,
+        "height": 1080
+      }
     },
     {
       "source": "dist/img/muzzle_flash.png",
       "file": "catalog/img__muzzle_flash.png",
-      "bytes": 343
+      "bytes": 343,
+      "size": {
+        "width": 64,
+        "height": 32
+      }
     },
     {
       "source": "dist/img/no_jetpack_backdrop-old.png",
       "file": "catalog/img__no_jetpack_backdrop-old.png",
-      "bytes": 169
+      "bytes": 169,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/no_jetpack_backdrop.png",
       "file": "catalog/img__no_jetpack_backdrop.png",
-      "bytes": 146
+      "bytes": 146,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/noise.png",
       "file": "catalog/img__noise.png",
-      "bytes": 67474
+      "bytes": 67474,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/numbers_with_shadow_4x.png",
       "file": "catalog/img__numbers_with_shadow_4x.png",
-      "bytes": 368
+      "bytes": 368,
+      "size": {
+        "width": 158,
+        "height": 22
+      }
     },
     {
       "source": "dist/img/numbers.png",
       "file": "catalog/img__numbers.png",
-      "bytes": 168
+      "bytes": 168,
+      "size": {
+        "width": 40,
+        "height": 5
+      }
     },
     {
       "source": "dist/img/orb.png",
       "file": "catalog/img__orb.png",
-      "bytes": 630
+      "bytes": 630,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/pipes_icon.png",
       "file": "catalog/img__pipes_icon.png",
-      "bytes": 332
+      "bytes": 332,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/pipes.png",
       "file": "catalog/img__pipes.png",
-      "bytes": 853
+      "bytes": 853,
+      "size": {
+        "width": 96,
+        "height": 48
+      }
     },
     {
       "source": "dist/img/pixel_particle.png",
       "file": "catalog/img__pixel_particle.png",
-      "bytes": 92
+      "bytes": 92,
+      "size": {
+        "width": 8,
+        "height": 8
+      }
     },
     {
       "source": "dist/img/player_alt.png",
       "file": "catalog/img__player_alt.png",
-      "bytes": 204
+      "bytes": 204,
+      "size": {
+        "width": 18,
+        "height": 34
+      }
     },
     {
       "source": "dist/img/player_arm_horisontal.png",
       "file": "catalog/img__player_arm_horisontal.png",
-      "bytes": 87
+      "bytes": 87,
+      "size": {
+        "width": 2,
+        "height": 1
+      }
     },
     {
       "source": "dist/img/player_arm_vertical.png",
       "file": "catalog/img__player_arm_vertical.png",
-      "bytes": 115
+      "bytes": 115,
+      "size": {
+        "width": 6,
+        "height": 10
+      }
     },
     {
       "source": "dist/img/player_heart.png",
       "file": "catalog/img__player_heart.png",
-      "bytes": 555
+      "bytes": 555,
+      "size": {
+        "width": 36,
+        "height": 34
+      }
     },
     {
       "source": "dist/img/player.png",
       "file": "catalog/img__player.png",
-      "bytes": 315
+      "bytes": 315,
+      "size": {
+        "width": 18,
+        "height": 34
+      }
     },
     {
       "source": "dist/img/playerhead_cool2.png",
       "file": "catalog/img__playerhead_cool2.png",
-      "bytes": 563
+      "bytes": 563,
+      "size": {
+        "width": 128,
+        "height": 128
+      }
     },
     {
       "source": "dist/img/playerhead.png",
       "file": "catalog/img__playerhead.png",
-      "bytes": 203
+      "bytes": 203,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/boiler/custom.png",
       "file": "catalog/img__procgen__prefabs__boiler__custom.png",
-      "bytes": 447
+      "bytes": 447,
+      "size": {
+        "width": 203,
+        "height": 439
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/boiler/terrain.png",
       "file": "catalog/img__procgen__prefabs__boiler__terrain.png",
-      "bytes": 2703
+      "bytes": 2703,
+      "size": {
+        "width": 203,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/boiler/wall.png",
       "file": "catalog/img__procgen__prefabs__boiler__wall.png",
-      "bytes": 1398
+      "bytes": 1398,
+      "size": {
+        "width": 203,
+        "height": 439
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/bridge/authorization.png",
       "file": "catalog/img__procgen__prefabs__bridge__authorization.png",
-      "bytes": 948
+      "bytes": 948,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/bridge/decor.png",
       "file": "catalog/img__procgen__prefabs__bridge__decor.png",
-      "bytes": 374
+      "bytes": 374,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/bridge/light.png",
       "file": "catalog/img__procgen__prefabs__bridge__light.png",
-      "bytes": 354
+      "bytes": 354,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/bridge/terrain.png",
       "file": "catalog/img__procgen__prefabs__bridge__terrain.png",
-      "bytes": 2025
+      "bytes": 2025,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/bridge/wall.png",
       "file": "catalog/img__procgen__prefabs__bridge__wall.png",
-      "bytes": 1202
+      "bytes": 1202,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/build/authorization.png",
       "file": "catalog/img__procgen__prefabs__build__authorization.png",
-      "bytes": 936
+      "bytes": 936,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/build/decor.png",
       "file": "catalog/img__procgen__prefabs__build__decor.png",
-      "bytes": 379
+      "bytes": 379,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/build/light.png",
       "file": "catalog/img__procgen__prefabs__build__light.png",
-      "bytes": 362
+      "bytes": 362,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/build/terrain.png",
       "file": "catalog/img__procgen__prefabs__build__terrain.png",
-      "bytes": 2945
+      "bytes": 2945,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/build/wall.png",
       "file": "catalog/img__procgen__prefabs__build__wall.png",
-      "bytes": 976
+      "bytes": 976,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/burn/authorization.png",
       "file": "catalog/img__procgen__prefabs__burn__authorization.png",
-      "bytes": 937
+      "bytes": 937,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/burn/light.png",
       "file": "catalog/img__procgen__prefabs__burn__light.png",
-      "bytes": 369
+      "bytes": 369,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/burn/terrain.png",
       "file": "catalog/img__procgen__prefabs__burn__terrain.png",
-      "bytes": 3617
+      "bytes": 3617,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/burn/wall.png",
       "file": "catalog/img__procgen__prefabs__burn__wall.png",
-      "bytes": 1284
+      "bytes": 1284,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/cave/terrain_2.png",
       "file": "catalog/img__procgen__prefabs__cave__terrain_2.png",
-      "bytes": 5864
+      "bytes": 5864,
+      "size": {
+        "width": 297,
+        "height": 350
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/cave/terrain.png",
       "file": "catalog/img__procgen__prefabs__cave__terrain.png",
-      "bytes": 5855
+      "bytes": 5855,
+      "size": {
+        "width": 297,
+        "height": 350
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/cave/wall.png",
       "file": "catalog/img__procgen__prefabs__cave__wall.png",
-      "bytes": 995
+      "bytes": 995,
+      "size": {
+        "width": 297,
+        "height": 512
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/fluxroom/Layer 1.png",
       "file": "catalog/img__procgen__prefabs__fluxroom__Layer 1.png",
-      "bytes": 347
+      "bytes": 347,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/fluxroom/light.png",
       "file": "catalog/img__procgen__prefabs__fluxroom__light.png",
-      "bytes": 347
+      "bytes": 347,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/fluxroom/terrain.png",
       "file": "catalog/img__procgen__prefabs__fluxroom__terrain.png",
-      "bytes": 5365
+      "bytes": 5365,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/glyph/decor_2.png",
       "file": "catalog/img__procgen__prefabs__glyph__decor_2.png",
-      "bytes": 1235
+      "bytes": 1235,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/glyph/decor.png",
       "file": "catalog/img__procgen__prefabs__glyph__decor.png",
-      "bytes": 1011
+      "bytes": 1011,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/glyph/light.png",
       "file": "catalog/img__procgen__prefabs__glyph__light.png",
-      "bytes": 358
+      "bytes": 358,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/glyph/terrain.png",
       "file": "catalog/img__procgen__prefabs__glyph__terrain.png",
-      "bytes": 4443
+      "bytes": 4443,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/glyph/wall.png",
       "file": "catalog/img__procgen__prefabs__glyph__wall.png",
-      "bytes": 644
+      "bytes": 644,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_a_2.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_a_2.png",
-      "bytes": 4975
+      "bytes": 4975,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_a_3.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_a_3.png",
-      "bytes": 4710
+      "bytes": 4710,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_a_4.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_a_4.png",
-      "bytes": 5236
+      "bytes": 5236,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_a.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_a.png",
-      "bytes": 4833
+      "bytes": 4833,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_b_2.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_b_2.png",
-      "bytes": 4998
+      "bytes": 4998,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_b.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_b.png",
-      "bytes": 4454
+      "bytes": 4454,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_c_2.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_c_2.png",
-      "bytes": 4574
+      "bytes": 4574,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_c.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_c.png",
-      "bytes": 4496
+      "bytes": 4496,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_d_2.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_d_2.png",
-      "bytes": 3336
+      "bytes": 3336,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_d.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_d.png",
-      "bytes": 3367
+      "bytes": 3367,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_e.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_e.png",
-      "bytes": 3654
+      "bytes": 3654,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_f.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_f.png",
-      "bytes": 4919
+      "bytes": 4919,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_g.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_g.png",
-      "bytes": 4358
+      "bytes": 4358,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_h.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_h.png",
-      "bytes": 2021
+      "bytes": 2021,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_i_2.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_i_2.png",
-      "bytes": 4711
+      "bytes": 4711,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_i.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_i.png",
-      "bytes": 4775
+      "bytes": 4775,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_j.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_j.png",
-      "bytes": 2847
+      "bytes": 2847,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_k_2.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_k_2.png",
-      "bytes": 4414
+      "bytes": 4414,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_k.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_k.png",
-      "bytes": 4236
+      "bytes": 4236,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_l_2.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_l_2.png",
-      "bytes": 3902
+      "bytes": 3902,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_l.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_l.png",
-      "bytes": 3810
+      "bytes": 3810,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_m.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_m.png",
-      "bytes": 2923
+      "bytes": 2923,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_n.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_n.png",
-      "bytes": 2923
+      "bytes": 2923,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_o.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_o.png",
-      "bytes": 2923
+      "bytes": 2923,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/herringbone_p.png",
       "file": "catalog/img__procgen__prefabs__herringbone__herringbone_p.png",
-      "bytes": 1154
+      "bytes": 1154,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/herringbone/sketch.png",
       "file": "catalog/img__procgen__prefabs__herringbone__sketch.png",
-      "bytes": 12130
+      "bytes": 12130,
+      "size": {
+        "width": 512,
+        "height": 512
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/moonpach/authorization.png",
       "file": "catalog/img__procgen__prefabs__moonpach__authorization.png",
-      "bytes": 1122
+      "bytes": 1122,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/moonpach/light.png",
       "file": "catalog/img__procgen__prefabs__moonpach__light.png",
-      "bytes": 367
+      "bytes": 367,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/moonpach/terrain.png",
       "file": "catalog/img__procgen__prefabs__moonpach__terrain.png",
-      "bytes": 2228
+      "bytes": 2228,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/moonpach/wall.png",
       "file": "catalog/img__procgen__prefabs__moonpach__wall.png",
-      "bytes": 1104
+      "bytes": 1104,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/pach/authorization.png",
       "file": "catalog/img__procgen__prefabs__pach__authorization.png",
-      "bytes": 995
+      "bytes": 995,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/pach/decor.png",
       "file": "catalog/img__procgen__prefabs__pach__decor.png",
-      "bytes": 486
+      "bytes": 486,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/pach/light.png",
       "file": "catalog/img__procgen__prefabs__pach__light.png",
-      "bytes": 368
+      "bytes": 368,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/pach/terrain.png",
       "file": "catalog/img__procgen__prefabs__pach__terrain.png",
-      "bytes": 4146
+      "bytes": 4146,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/pach/wall.png",
       "file": "catalog/img__procgen__prefabs__pach__wall.png",
-      "bytes": 1038
+      "bytes": 1038,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/prefab_artifact_tik.png",
       "file": "catalog/img__procgen__prefabs__prefab_artifact_tik.png",
-      "bytes": 2146
+      "bytes": 2146,
+      "size": {
+        "width": 255,
+        "height": 187
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_1.png",
       "file": "catalog/img__procgen__prefabs__props__entities_1.png",
-      "bytes": 458
+      "bytes": 458,
+      "size": {
+        "width": 47,
+        "height": 60
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_10.png",
       "file": "catalog/img__procgen__prefabs__props__entities_10.png",
-      "bytes": 374
+      "bytes": 374,
+      "size": {
+        "width": 39,
+        "height": 25
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_11.png",
       "file": "catalog/img__procgen__prefabs__props__entities_11.png",
-      "bytes": 343
+      "bytes": 343,
+      "size": {
+        "width": 29,
+        "height": 35
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_12.png",
       "file": "catalog/img__procgen__prefabs__props__entities_12.png",
-      "bytes": 1260
+      "bytes": 1260,
+      "size": {
+        "width": 100,
+        "height": 100
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_13.png",
       "file": "catalog/img__procgen__prefabs__props__entities_13.png",
-      "bytes": 411
+      "bytes": 411,
+      "size": {
+        "width": 53,
+        "height": 54
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_14.png",
       "file": "catalog/img__procgen__prefabs__props__entities_14.png",
-      "bytes": 890
+      "bytes": 890,
+      "size": {
+        "width": 100,
+        "height": 100
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_15.png",
       "file": "catalog/img__procgen__prefabs__props__entities_15.png",
-      "bytes": 1101
+      "bytes": 1101,
+      "size": {
+        "width": 100,
+        "height": 100
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_16.png",
       "file": "catalog/img__procgen__prefabs__props__entities_16.png",
-      "bytes": 827
+      "bytes": 827,
+      "size": {
+        "width": 100,
+        "height": 100
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_2.png",
       "file": "catalog/img__procgen__prefabs__props__entities_2.png",
-      "bytes": 849
+      "bytes": 849,
+      "size": {
+        "width": 88,
+        "height": 120
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_3.png",
       "file": "catalog/img__procgen__prefabs__props__entities_3.png",
-      "bytes": 1391
+      "bytes": 1391,
+      "size": {
+        "width": 120,
+        "height": 120
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_4.png",
       "file": "catalog/img__procgen__prefabs__props__entities_4.png",
-      "bytes": 1582
+      "bytes": 1582,
+      "size": {
+        "width": 120,
+        "height": 110
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_5.png",
       "file": "catalog/img__procgen__prefabs__props__entities_5.png",
-      "bytes": 679
+      "bytes": 679,
+      "size": {
+        "width": 80,
+        "height": 58
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_6.png",
       "file": "catalog/img__procgen__prefabs__props__entities_6.png",
-      "bytes": 1018
+      "bytes": 1018,
+      "size": {
+        "width": 120,
+        "height": 120
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_7.png",
       "file": "catalog/img__procgen__prefabs__props__entities_7.png",
-      "bytes": 1465
+      "bytes": 1465,
+      "size": {
+        "width": 110,
+        "height": 100
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_8.png",
       "file": "catalog/img__procgen__prefabs__props__entities_8.png",
-      "bytes": 1594
+      "bytes": 1594,
+      "size": {
+        "width": 100,
+        "height": 105
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/entities_9.png",
       "file": "catalog/img__procgen__prefabs__props__entities_9.png",
-      "bytes": 210
+      "bytes": 210,
+      "size": {
+        "width": 17,
+        "height": 21
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_1.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_1.png",
-      "bytes": 472
+      "bytes": 472,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_10.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_10.png",
-      "bytes": 358
+      "bytes": 358,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_11.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_11.png",
-      "bytes": 568
+      "bytes": 568,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_12.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_12.png",
-      "bytes": 569
+      "bytes": 569,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_13.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_13.png",
-      "bytes": 410
+      "bytes": 410,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_14.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_14.png",
-      "bytes": 487
+      "bytes": 487,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_15.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_15.png",
-      "bytes": 436
+      "bytes": 436,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_16.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_16.png",
-      "bytes": 599
+      "bytes": 599,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_2.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_2.png",
-      "bytes": 602
+      "bytes": 602,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_3.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_3.png",
-      "bytes": 656
+      "bytes": 656,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_4.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_4.png",
-      "bytes": 468
+      "bytes": 468,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_5.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_5.png",
-      "bytes": 549
+      "bytes": 549,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_6.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_6.png",
-      "bytes": 507
+      "bytes": 507,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_7.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_7.png",
-      "bytes": 637
+      "bytes": 637,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_8.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_8.png",
-      "bytes": 555
+      "bytes": 555,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/fluxite_9.png",
       "file": "catalog/img__procgen__prefabs__props__fluxite_9.png",
-      "bytes": 226
+      "bytes": 226,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_1.png",
       "file": "catalog/img__procgen__prefabs__props__random_1.png",
-      "bytes": 1989
+      "bytes": 1989,
+      "size": {
+        "width": 160,
+        "height": 123
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_10.png",
       "file": "catalog/img__procgen__prefabs__props__random_10.png",
-      "bytes": 4676
+      "bytes": 4676,
+      "size": {
+        "width": 356,
+        "height": 234
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_11.png",
       "file": "catalog/img__procgen__prefabs__props__random_11.png",
-      "bytes": 2608
+      "bytes": 2608,
+      "size": {
+        "width": 157,
+        "height": 153
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_12.png",
       "file": "catalog/img__procgen__prefabs__props__random_12.png",
-      "bytes": 7052
+      "bytes": 7052,
+      "size": {
+        "width": 380,
+        "height": 372
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_13.png",
       "file": "catalog/img__procgen__prefabs__props__random_13.png",
-      "bytes": 5388
+      "bytes": 5388,
+      "size": {
+        "width": 285,
+        "height": 485
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_14.png",
       "file": "catalog/img__procgen__prefabs__props__random_14.png",
-      "bytes": 2065
+      "bytes": 2065,
+      "size": {
+        "width": 179,
+        "height": 134
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_15.png",
       "file": "catalog/img__procgen__prefabs__props__random_15.png",
-      "bytes": 775
+      "bytes": 775,
+      "size": {
+        "width": 63,
+        "height": 53
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_16.png",
       "file": "catalog/img__procgen__prefabs__props__random_16.png",
-      "bytes": 811
+      "bytes": 811,
+      "size": {
+        "width": 55,
+        "height": 49
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_17.png",
       "file": "catalog/img__procgen__prefabs__props__random_17.png",
-      "bytes": 2719
+      "bytes": 2719,
+      "size": {
+        "width": 189,
+        "height": 107
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_18.png",
       "file": "catalog/img__procgen__prefabs__props__random_18.png",
-      "bytes": 189
+      "bytes": 189,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_19.png",
       "file": "catalog/img__procgen__prefabs__props__random_19.png",
-      "bytes": 192
+      "bytes": 192,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_2.png",
       "file": "catalog/img__procgen__prefabs__props__random_2.png",
-      "bytes": 2140
+      "bytes": 2140,
+      "size": {
+        "width": 187,
+        "height": 152
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_20.png",
       "file": "catalog/img__procgen__prefabs__props__random_20.png",
-      "bytes": 185
+      "bytes": 185,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_21.png",
       "file": "catalog/img__procgen__prefabs__props__random_21.png",
-      "bytes": 187
+      "bytes": 187,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_22.png",
       "file": "catalog/img__procgen__prefabs__props__random_22.png",
-      "bytes": 211
+      "bytes": 211,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_23.png",
       "file": "catalog/img__procgen__prefabs__props__random_23.png",
-      "bytes": 207
+      "bytes": 207,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_24.png",
       "file": "catalog/img__procgen__prefabs__props__random_24.png",
-      "bytes": 207
+      "bytes": 207,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_25.png",
       "file": "catalog/img__procgen__prefabs__props__random_25.png",
-      "bytes": 193
+      "bytes": 193,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_26.png",
       "file": "catalog/img__procgen__prefabs__props__random_26.png",
-      "bytes": 212
+      "bytes": 212,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_27.png",
       "file": "catalog/img__procgen__prefabs__props__random_27.png",
-      "bytes": 187
+      "bytes": 187,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_28.png",
       "file": "catalog/img__procgen__prefabs__props__random_28.png",
-      "bytes": 211
+      "bytes": 211,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_29.png",
       "file": "catalog/img__procgen__prefabs__props__random_29.png",
-      "bytes": 207
+      "bytes": 207,
+      "size": {
+        "width": 20,
+        "height": 20
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_3.png",
       "file": "catalog/img__procgen__prefabs__props__random_3.png",
-      "bytes": 3180
+      "bytes": 3180,
+      "size": {
+        "width": 178,
+        "height": 246
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_4.png",
       "file": "catalog/img__procgen__prefabs__props__random_4.png",
-      "bytes": 3258
+      "bytes": 3258,
+      "size": {
+        "width": 200,
+        "height": 180
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_5.png",
       "file": "catalog/img__procgen__prefabs__props__random_5.png",
-      "bytes": 2037
+      "bytes": 2037,
+      "size": {
+        "width": 142,
+        "height": 169
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_6.png",
       "file": "catalog/img__procgen__prefabs__props__random_6.png",
-      "bytes": 938
+      "bytes": 938,
+      "size": {
+        "width": 113,
+        "height": 80
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_7.png",
       "file": "catalog/img__procgen__prefabs__props__random_7.png",
-      "bytes": 2942
+      "bytes": 2942,
+      "size": {
+        "width": 262,
+        "height": 132
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_8.png",
       "file": "catalog/img__procgen__prefabs__props__random_8.png",
-      "bytes": 2136
+      "bytes": 2136,
+      "size": {
+        "width": 175,
+        "height": 153
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/random_9.png",
       "file": "catalog/img__procgen__prefabs__props__random_9.png",
-      "bytes": 1139
+      "bytes": 1139,
+      "size": {
+        "width": 101,
+        "height": 136
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/redsand_1.png",
       "file": "catalog/img__procgen__prefabs__props__redsand_1.png",
-      "bytes": 2648
+      "bytes": 2648,
+      "size": {
+        "width": 250,
+        "height": 250
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/redsand_2.png",
       "file": "catalog/img__procgen__prefabs__props__redsand_2.png",
-      "bytes": 429
+      "bytes": 429,
+      "size": {
+        "width": 50,
+        "height": 50
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/redsand_3.png",
       "file": "catalog/img__procgen__prefabs__props__redsand_3.png",
-      "bytes": 2664
+      "bytes": 2664,
+      "size": {
+        "width": 250,
+        "height": 250
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/redsand_4.png",
       "file": "catalog/img__procgen__prefabs__props__redsand_4.png",
-      "bytes": 1197
+      "bytes": 1197,
+      "size": {
+        "width": 125,
+        "height": 125
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/props/redsand_5.png",
       "file": "catalog/img__procgen__prefabs__props__redsand_5.png",
-      "bytes": 1221
+      "bytes": 1221,
+      "size": {
+        "width": 125,
+        "height": 125
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/pyramid/terrain.png",
       "file": "catalog/img__procgen__prefabs__pyramid__terrain.png",
-      "bytes": 1863
+      "bytes": 1863,
+      "size": {
+        "width": 383,
+        "height": 192
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/rocket/light.png",
       "file": "catalog/img__procgen__prefabs__rocket__light.png",
-      "bytes": 355
+      "bytes": 355,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/rocket/terrain.png",
       "file": "catalog/img__procgen__prefabs__rocket__terrain.png",
-      "bytes": 2353
+      "bytes": 2353,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/rocket/wall.png",
       "file": "catalog/img__procgen__prefabs__rocket__wall.png",
-      "bytes": 619
+      "bytes": 619,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/rocket_burn/authorization.png",
       "file": "catalog/img__procgen__prefabs__rocket_burn__authorization.png",
-      "bytes": 1387
+      "bytes": 1387,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/rocket_burn/light.png",
       "file": "catalog/img__procgen__prefabs__rocket_burn__light.png",
-      "bytes": 379
+      "bytes": 379,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/rocket_burn/terrain.png",
       "file": "catalog/img__procgen__prefabs__rocket_burn__terrain.png",
-      "bytes": 3436
+      "bytes": 3436,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/rocket_burn/wall.png",
       "file": "catalog/img__procgen__prefabs__rocket_burn__wall.png",
-      "bytes": 1316
+      "bytes": 1316,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/shoot/authorization.png",
       "file": "catalog/img__procgen__prefabs__shoot__authorization.png",
-      "bytes": 1411
+      "bytes": 1411,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/shoot/light.png",
       "file": "catalog/img__procgen__prefabs__shoot__light.png",
-      "bytes": 375
+      "bytes": 375,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/shoot/sensor.png",
       "file": "catalog/img__procgen__prefabs__shoot__sensor.png",
-      "bytes": 354
+      "bytes": 354,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/shoot/terrain.png",
       "file": "catalog/img__procgen__prefabs__shoot__terrain.png",
-      "bytes": 3475
+      "bytes": 3475,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/shoot/wall.png",
       "file": "catalog/img__procgen__prefabs__shoot__wall.png",
-      "bytes": 2309
+      "bytes": 2309,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab_11.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab_11.png",
-      "bytes": 3343
+      "bytes": 3343,
+      "size": {
+        "width": 288,
+        "height": 232
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab_13.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab_13.png",
-      "bytes": 1248
+      "bytes": 1248,
+      "size": {
+        "width": 186,
+        "height": 92
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab_14.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab_14.png",
-      "bytes": 1198
+      "bytes": 1198,
+      "size": {
+        "width": 233,
+        "height": 124
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab1.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab1.png",
-      "bytes": 9044
+      "bytes": 9044,
+      "size": {
+        "width": 400,
+        "height": 400
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab3.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab3.png",
-      "bytes": 1765
+      "bytes": 1765,
+      "size": {
+        "width": 187,
+        "height": 187
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab4.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab4.png",
-      "bytes": 912
+      "bytes": 912,
+      "size": {
+        "width": 100,
+        "height": 100
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab5_light.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab5_light.png",
-      "bytes": 257
+      "bytes": 257,
+      "size": {
+        "width": 200,
+        "height": 200
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab5.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab5.png",
-      "bytes": 3360
+      "bytes": 3360,
+      "size": {
+        "width": 200,
+        "height": 200
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab7.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab7.png",
-      "bytes": 1990
+      "bytes": 1990,
+      "size": {
+        "width": 150,
+        "height": 150
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab8_light.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab8_light.png",
-      "bytes": 263
+      "bytes": 263,
+      "size": {
+        "width": 200,
+        "height": 200
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab8.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab8.png",
-      "bytes": 2874
+      "bytes": 2874,
+      "size": {
+        "width": 200,
+        "height": 200
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/sketch/prefab9.png",
       "file": "catalog/img__procgen__prefabs__sketch__prefab9.png",
-      "bytes": 6480
+      "bytes": 6480,
+      "size": {
+        "width": 400,
+        "height": 400
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/start/authorization.png",
       "file": "catalog/img__procgen__prefabs__start__authorization.png",
-      "bytes": 1490
+      "bytes": 1490,
+      "size": {
+        "width": 512,
+        "height": 512
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/start/terrain_2.png",
       "file": "catalog/img__procgen__prefabs__start__terrain_2.png",
-      "bytes": 16266
+      "bytes": 16266,
+      "size": {
+        "width": 512,
+        "height": 512
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/start/terrain_3.png",
       "file": "catalog/img__procgen__prefabs__start__terrain_3.png",
-      "bytes": 16182
+      "bytes": 16182,
+      "size": {
+        "width": 512,
+        "height": 512
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/start/terrain_4.png",
       "file": "catalog/img__procgen__prefabs__start__terrain_4.png",
-      "bytes": 16227
+      "bytes": 16227,
+      "size": {
+        "width": 512,
+        "height": 512
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/start/terrain_5.png",
       "file": "catalog/img__procgen__prefabs__start__terrain_5.png",
-      "bytes": 15919
+      "bytes": 15919,
+      "size": {
+        "width": 512,
+        "height": 512
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/start/terrain_6.png",
       "file": "catalog/img__procgen__prefabs__start__terrain_6.png",
-      "bytes": 17030
+      "bytes": 17030,
+      "size": {
+        "width": 512,
+        "height": 512
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/start/terrain.png",
       "file": "catalog/img__procgen__prefabs__start__terrain.png",
-      "bytes": 16195
+      "bytes": 16195,
+      "size": {
+        "width": 512,
+        "height": 512
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/start/wall.png",
       "file": "catalog/img__procgen__prefabs__start__wall.png",
-      "bytes": 1772
+      "bytes": 1772,
+      "size": {
+        "width": 512,
+        "height": 512
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/strataform/terrain_2.png",
       "file": "catalog/img__procgen__prefabs__strataform__terrain_2.png",
-      "bytes": 2621
+      "bytes": 2621,
+      "size": {
+        "width": 200,
+        "height": 200
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/strataform/terrain_3.png",
       "file": "catalog/img__procgen__prefabs__strataform__terrain_3.png",
-      "bytes": 2134
+      "bytes": 2134,
+      "size": {
+        "width": 200,
+        "height": 200
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/strataform/terrain.png",
       "file": "catalog/img__procgen__prefabs__strataform__terrain.png",
-      "bytes": 2476
+      "bytes": 2476,
+      "size": {
+        "width": 200,
+        "height": 200
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/timer/authorization.png",
       "file": "catalog/img__procgen__prefabs__timer__authorization.png",
-      "bytes": 935
+      "bytes": 935,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/timer/light.png",
       "file": "catalog/img__procgen__prefabs__timer__light.png",
-      "bytes": 367
+      "bytes": 367,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/timer/terrain.png",
       "file": "catalog/img__procgen__prefabs__timer__terrain.png",
-      "bytes": 3504
+      "bytes": 3504,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/timer/wall.png",
       "file": "catalog/img__procgen__prefabs__timer__wall.png",
-      "bytes": 1014
+      "bytes": 1014,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/void/authorization.png",
       "file": "catalog/img__procgen__prefabs__void__authorization.png",
-      "bytes": 1784
+      "bytes": 1784,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/void/terrain_2.png",
       "file": "catalog/img__procgen__prefabs__void__terrain_2.png",
-      "bytes": 5821
+      "bytes": 5821,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/void/terrain_copy.png",
       "file": "catalog/img__procgen__prefabs__void__terrain_copy.png",
-      "bytes": 4734
+      "bytes": 4734,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/void/terrain.png",
       "file": "catalog/img__procgen__prefabs__void__terrain.png",
-      "bytes": 1773
+      "bytes": 1773,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/procgen/prefabs/void/wall.png",
       "file": "catalog/img__procgen__prefabs__void__wall.png",
-      "bytes": 5174
+      "bytes": 5174,
+      "size": {
+        "width": 256,
+        "height": 256
+      }
     },
     {
       "source": "dist/img/pump.png",
       "file": "catalog/img__pump.png",
-      "bytes": 218
+      "bytes": 218,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/rocket_launcher_sprite.png",
       "file": "catalog/img__rocket_launcher_sprite.png",
-      "bytes": 351
+      "bytes": 351,
+      "size": {
+        "width": 26,
+        "height": 14
+      }
     },
     {
       "source": "dist/img/rocket_launcher.png",
       "file": "catalog/img__rocket_launcher.png",
-      "bytes": 212
+      "bytes": 212,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/rocket.png",
       "file": "catalog/img__rocket.png",
-      "bytes": 161
+      "bytes": 161,
+      "size": {
+        "width": 11,
+        "height": 11
+      }
     },
     {
       "source": "dist/img/sell.png",
       "file": "catalog/img__sell.png",
-      "bytes": 369
+      "bytes": 369,
+      "size": {
+        "width": 96,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/shaker_left.png",
       "file": "catalog/img__shaker_left.png",
-      "bytes": 219
+      "bytes": 219,
+      "size": {
+        "width": 36,
+        "height": 22
+      }
     },
     {
       "source": "dist/img/shaker_right.png",
       "file": "catalog/img__shaker_right.png",
-      "bytes": 218
+      "bytes": 218,
+      "size": {
+        "width": 36,
+        "height": 22
+      }
     },
     {
       "source": "dist/img/shovel.png",
       "file": "catalog/img__shovel.png",
-      "bytes": 248
+      "bytes": 248,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/soil_backdrop_test.png",
       "file": "catalog/img__soil_backdrop_test.png",
-      "bytes": 135
+      "bytes": 135,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/soil_backdrop_test2.png",
       "file": "catalog/img__soil_backdrop_test2.png",
-      "bytes": 202
+      "bytes": 202,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/soil_backdrop.png",
       "file": "catalog/img__soil_backdrop.png",
-      "bytes": 203
+      "bytes": 203,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/sound_box_flash.png",
       "file": "catalog/img__sound_box_flash.png",
-      "bytes": 351
+      "bytes": 351,
+      "size": {
+        "width": 256,
+        "height": 32
+      }
     },
     {
       "source": "dist/img/sound_box.png",
       "file": "catalog/img__sound_box.png",
-      "bytes": 162
+      "bytes": 162,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/splitter_left.png",
       "file": "catalog/img__splitter_left.png",
-      "bytes": 147
+      "bytes": 147,
+      "size": {
+        "width": 7,
+        "height": 4
+      }
     },
     {
       "source": "dist/img/splitter_right.png",
       "file": "catalog/img__splitter_right.png",
-      "bytes": 147
+      "bytes": 147,
+      "size": {
+        "width": 7,
+        "height": 4
+      }
     },
     {
       "source": "dist/img/stratacore.png",
       "file": "catalog/img__stratacore.png",
-      "bytes": 297
+      "bytes": 297,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/triangle_left_del.png",
       "file": "catalog/img__triangle_left_del.png",
-      "bytes": 144
+      "bytes": 144,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/triangle_left.png",
       "file": "catalog/img__triangle_left.png",
-      "bytes": 149
+      "bytes": 149,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/triangle_right_del.png",
       "file": "catalog/img__triangle_right_del.png",
-      "bytes": 148
+      "bytes": 148,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/triangle_right.png",
       "file": "catalog/img__triangle_right.png",
-      "bytes": 161
+      "bytes": 161,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/vacuum_icon.png",
       "file": "catalog/img__vacuum_icon.png",
-      "bytes": 286
+      "bytes": 286,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "source": "dist/img/vacuum.png",
       "file": "catalog/img__vacuum.png",
-      "bytes": 421
+      "bytes": 421,
+      "size": {
+        "width": 22,
+        "height": 24
+      }
     },
     {
       "source": "dist/img/velocity.png",
       "file": "catalog/img__velocity.png",
-      "bytes": 631
+      "bytes": 631,
+      "size": {
+        "width": 18,
+        "height": 417
+      }
     },
     {
       "source": "dist/img/wall_crack.png",
       "file": "catalog/img__wall_crack.png",
-      "bytes": 103
+      "bytes": 103,
+      "size": {
+        "width": 7,
+        "height": 7
+      }
     },
     {
       "source": "dist/img/weapon.png",
       "file": "catalog/img__weapon.png",
-      "bytes": 270
+      "bytes": 270,
+      "size": {
+        "width": 22,
+        "height": 14
+      }
     },
     {
       "source": "dist/img/wheels.png",
       "file": "catalog/img__wheels.png",
-      "bytes": 174
+      "bytes": 174,
+      "size": {
+        "width": 18,
+        "height": 9
+      }
     },
     {
       "source": "dist/img/x.png",
       "file": "catalog/img__x.png",
-      "bytes": 151
+      "bytes": 151,
+      "size": {
+        "width": 16,
+        "height": 16
+      }
     }
   ]
 }

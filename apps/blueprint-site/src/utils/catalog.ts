@@ -20,6 +20,8 @@ export type CatalogEntry = {
   definition?: unknown;
   render?: RenderMetadata | string;
   assetPath?: string;
+  assetFrame?: { width: number; height: number };
+  assetSize?: { width: number; height: number };
   source: string;
 };
 
