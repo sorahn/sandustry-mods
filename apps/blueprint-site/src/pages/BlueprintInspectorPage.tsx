@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { decodeBlueprint, type Blueprint } from "../utils/blueprint";
 import { debugComponent } from "../components/DebugComponentWrapper";
@@ -42,6 +42,7 @@ function structureLabel(type: Blueprint["data"][number]["type"]) {
 const REMEMBER_BLUEPRINT_KEY = "sandustry.blueprintInspector.remember";
 const SAVED_BLUEPRINT_KEY = "sandustry.blueprintInspector.string";
 const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
+const MAP_PANEL_SCROLL_OFFSET = 16;
 function readLocalValue(key: string) {
   try {
     return window.localStorage.getItem(key);
@@ -93,6 +94,7 @@ export function BlueprintInspectorPage() {
   const [inspectedBlueprintKey, setInspectedBlueprintKey] = useState("");
   const [summary, setSummary] = useState<BlueprintSummary | null>(null);
   const [message, setMessage] = useState("Paste a v2 blueprint string to inspect it.");
+  const mapPanelRef = useRef<HTMLDivElement>(null);
   const inspect = () => {
     const value = encoded.trim();
     if (value.startsWith("SAND:BP:v1:") || value.startsWith("SAND:BACKUP:v1:")) {
@@ -120,6 +122,16 @@ export function BlueprintInspectorPage() {
     // The initial remembered value should be inspected once after the page mounts.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  useEffect(() => {
+    if (!blueprint || !summary || !mapPanelRef.current) return;
+    const frame = window.requestAnimationFrame(() => {
+      const panel = mapPanelRef.current;
+      if (!panel) return;
+      const top = window.scrollY + panel.getBoundingClientRect().top - MAP_PANEL_SCROLL_OFFSET;
+      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [blueprint, inspectedBlueprintKey, summary]);
   const rememberHeader = debugComponent(PersistentCheckbox, {
     boxed: true,
     defaultChecked: remember,
@@ -161,17 +173,19 @@ export function BlueprintInspectorPage() {
       />
       {blueprint && summary ? (
         <>
-          <BlueprintMapPanel
-            blueprint={blueprint}
-            remember={remember}
-            blueprintKey={inspectedBlueprintKey}
-            showSidebar={showMapSidebar}
-            onShowSidebarChange={setShowMapSidebar}
-            showGrid={showGrid}
-            onShowGridChange={setShowGrid}
-            showPngBackground={showPngBackground}
-            onShowPngBackgroundChange={setShowPngBackground}
-          />
+          <div ref={mapPanelRef} className="scroll-mt-4">
+            <BlueprintMapPanel
+              blueprint={blueprint}
+              remember={remember}
+              blueprintKey={inspectedBlueprintKey}
+              showSidebar={showMapSidebar}
+              onShowSidebarChange={setShowMapSidebar}
+              showGrid={showGrid}
+              onShowGridChange={setShowGrid}
+              showPngBackground={showPngBackground}
+              onShowPngBackgroundChange={setShowPngBackground}
+            />
+          </div>
           <BlueprintStructuresPanel blueprint={blueprint} structureLabel={structureLabel} />
         </>
       ) : null}
