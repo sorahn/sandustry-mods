@@ -81,7 +81,7 @@ export function Checkbox({
     {
       className: `sd-checkbox${size === "small" ? " sd-checkbox--small" : ""}${boxed ? " sd-checkbox--boxed" : ""} ${className}`,
     },
-    createElement("input", { ...props, type: "checkbox", className: "sd-checkbox__input" }),
     label ? createElement("span", { className: "sd-checkbox__label" }, label) : null,
+    createElement("input", { ...props, type: "checkbox", className: "sd-checkbox__input" }),
   );
 }

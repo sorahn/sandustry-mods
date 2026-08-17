@@ -1,1 +1,10 @@
-{}
+{
+  "overrides": [
+    {
+      "files": ["**/bundle*.js", "**/build/**/*.js"],
+      "options": {
+        "printWidth": 320
+      }
+    }
+  ]
+}

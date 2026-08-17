@@ -7,7 +7,7 @@ import {
   encodeBlueprint,
   type Blueprint,
 } from "../utils/blueprint";
-import { catalogEntry } from "../utils/catalog";
+import { catalogEntry, catalogRender, catalogRenderSize } from "../utils/catalog";
 import { debugComponent } from "../components/DebugComponentWrapper";
 
 export function AppLayout() {
@@ -476,6 +476,7 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                   if (event.key === "Enter" || event.key === " ") setSelectedIndex(index);
                 }}
                 className="cursor-pointer"
+                data-render-image={entry ? catalogRender(entry)?.imageName : undefined}
               >
                 <rect
                   x={left}
@@ -517,6 +518,8 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
           <div className="mt-3 space-y-3">
             {(() => {
               const entry = catalogEntry(selected.type);
+              const render = entry ? catalogRender(entry) : undefined;
+              const renderSize = render ? catalogRenderSize(render) : undefined;
               return (
                 <>
                   <p className="break-all font-mono text-yellow-200">
@@ -540,6 +543,12 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                       ) : null}
                       {entry.variants ? (
                         <p className="break-all">Variants {JSON.stringify(entry.variants)}</p>
+                      ) : null}
+                      {render?.imageName ? (
+                        <p className="break-all">
+                          Render asset <strong className="text-white">{render.imageName}</strong>
+                          {renderSize ? ` · ${renderSize.width}×${renderSize.height}px` : ""}
+                        </p>
                       ) : null}
                       <details className="rounded border border-slate-800 bg-black/30 p-2">
                         <summary className="cursor-pointer text-slate-300">

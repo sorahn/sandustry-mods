@@ -1,6 +1,13 @@
 import type { BlueprintType } from "@sandustry/blueprint-core";
 import generatedCatalog from "../structure-catalog.json";
 
+export type RenderMetadata = {
+  imageName?: string;
+  size?: unknown;
+  ui?: unknown;
+  [key: string]: unknown;
+};
+
 export type CatalogEntry = {
   type: BlueprintType;
   name?: string;
@@ -11,6 +18,7 @@ export type CatalogEntry = {
   buildModes?: unknown;
   variants?: unknown;
   definition?: unknown;
+  render?: RenderMetadata | string;
   source: string;
 };
 
@@ -99,4 +107,16 @@ const byType = new Map(CATALOG.map((entry) => [entry.type, entry]));
 
 export function catalogEntry(type: BlueprintType): CatalogEntry | undefined {
   return byType.get(type);
+}
+
+export function catalogRender(entry: CatalogEntry): RenderMetadata | undefined {
+  return typeof entry.render === "object" && entry.render !== null ? entry.render : undefined;
+}
+
+export function catalogRenderSize(render: RenderMetadata) {
+  if (!render.size || typeof render.size !== "object") return undefined;
+  const size = render.size as { width?: unknown; height?: unknown };
+  return typeof size.width === "number" && typeof size.height === "number"
+    ? { width: size.width, height: size.height }
+    : undefined;
 }
