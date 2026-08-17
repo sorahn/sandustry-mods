@@ -57,6 +57,10 @@ separate dependency graphs:
 
 Keep commit messages short, lowercase, and minimally punctuated.
 
+Run Git operations that write inside `.git` with elevated permissions from the
+start so the sandbox does not block them. This applies to staging, committing,
+merging, rebasing, and other repository metadata updates.
+
 ## Planning workflow
 
 Repository-level implementation plans live locally in the top-level directory
