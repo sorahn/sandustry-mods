@@ -192,6 +192,7 @@ const assetPresentationOverrides = new Map([
   [7, { assetOffset: { x: -1, y: -1 } }],
   [17, { assetOffset: { x: -1, y: -1 } }],
   [18, { assetOffset: { x: -1, y: -1 } }],
+  [21, { assetClip: false, assetOffset: { x: -1 } }],
   ["filterLeftMk2", { assetOffset: { x: -1, y: -1 } }],
   ["filterRightMk2", { assetOffset: { x: -1, y: -1 } }],
   [
