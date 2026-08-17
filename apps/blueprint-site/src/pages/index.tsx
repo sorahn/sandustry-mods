@@ -522,6 +522,7 @@ function BlueprintMap({
   const [pan, setPan] = useState(() => readStoredMapView(blueprintKey)?.pan ?? { x: 0, y: 0 });
   const [mapSizeReady, setMapSizeReady] = useState(() => readStoredMapView(blueprintKey) !== null);
   const viewportRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const dragRef = useRef<{
     pointerId: number;
     lastX: number;
@@ -658,6 +659,52 @@ function BlueprintMap({
       ),
     });
   };
+  const exportSvg = async () => {
+    const source = svgRef.current;
+    if (!source) return;
+    const svg = source.cloneNode(true) as SVGSVGElement;
+    svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    svg.setAttribute("xmlns:xlink", "http://www.w3.org/1999/xlink");
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    svg.setAttribute("width", String(width));
+    svg.setAttribute("height", String(height));
+    svg.removeAttribute("class");
+    svg.removeAttribute("style");
+    svg.querySelectorAll('rect[fill="#33a8ff"]').forEach((background) => background.remove());
+    await Promise.all(
+      Array.from(svg.querySelectorAll("image")).map(async (image) => {
+        const href = image.getAttribute("href") ?? image.getAttribute("xlink:href");
+        if (!href || href.startsWith("data:")) return;
+        try {
+          const response = await fetch(new URL(href, document.baseURI));
+          if (!response.ok) return;
+          const blob = await response.blob();
+          const dataUrl = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result));
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(blob);
+          });
+          image.setAttribute("href", dataUrl);
+          image.removeAttribute("xlink:href");
+        } catch {
+          // Keep the original reference if an asset cannot be embedded.
+        }
+      }),
+    );
+    const serialized = new XMLSerializer().serializeToString(svg);
+    const blob = new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${serialized}`], {
+      type: "image/svg+xml;charset=utf-8",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${blueprint.name.trim().replace(/[^a-z0-9._-]+/gi, "-") || "blueprint"}.svg`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  };
   return (
     <div
       className={
@@ -677,6 +724,13 @@ function BlueprintMap({
         }
       >
         <div className="absolute right-3 top-3 z-10 flex items-center gap-2 rounded border border-slate-700/80 bg-slate-950/60 p-2 font-mono text-xs text-slate-300 shadow-lg backdrop-blur-sm">
+          <button
+            type="button"
+            className="sd-button sd-button--compact sd-button--no-shift"
+            onClick={exportSvg}
+          >
+            Export SVG
+          </button>
           <span className="mr-1">{Math.round(zoom * 100)}%</span>
           <button
             type="button"
@@ -712,6 +766,7 @@ function BlueprintMap({
           </button>
         </div>
         <svg
+          ref={svgRef}
           viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
           role="img"
           aria-label={`${blueprint.name} structure map`}
@@ -1268,7 +1323,7 @@ export function BlueprintInspectorPage() {
               </p>
             </div>
           </Panel>
-          <Panel title="Structures">
+          <Panel title="Structures" collapsible defaultCollapsed>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[42rem] text-left font-mono text-xs">
                 <thead className="border-b border-slate-800 text-slate-500">

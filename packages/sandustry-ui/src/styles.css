@@ -45,6 +45,30 @@ sd-button {
   color: rgb(255 255 255 / 0.7);
   font-size: 11px;
 }
+.sd-panel__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--sd-space) * 1);
+  border: 0;
+  padding: 0;
+  color: rgb(148 163 184 / 1);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+.sd-panel__toggle:focus-visible {
+  outline: 2px solid var(--sd-yellow);
+  outline-offset: 3px;
+}
+.sd-panel__caret {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  transition: transform 150ms ease;
+}
+.sd-panel__caret--collapsed {
+  transform: rotate(-90deg);
+}
 .sd-button {
   position: relative;
   left: 0;
