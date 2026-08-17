@@ -246,6 +246,7 @@ function tileColor(type: Blueprint["data"][number]["type"]) {
 
 const REMEMBER_BLUEPRINT_KEY = "sandustry.blueprintInspector.remember";
 const SAVED_BLUEPRINT_KEY = "sandustry.blueprintInspector.string";
+const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
 const SHOW_DEBUG_CELLS_KEY = "sandustry.blueprintInspector.showDebugCells";
 const SHOW_NAMES_KEY = "sandustry.blueprintInspector.showNames";
 const KINETIC_PRESS_SCALE = 4;
@@ -261,7 +262,9 @@ function readLocalValue(key: string) {
 }
 
 function readStoredBoolean(key: string, fallback: boolean) {
-  return typeof window !== "undefined" ? readLocalValue(key) !== "false" : fallback;
+  if (typeof window === "undefined") return fallback;
+  const stored = readLocalValue(key);
+  return stored === null ? fallback : stored !== "false";
 }
 
 function writeLocalValue(key: string, value: string) {
@@ -280,6 +283,41 @@ function removeLocalValue(key: string) {
   }
 }
 
+type MapView = {
+  zoom: number;
+  pan: { x: number; y: number };
+};
+
+function readStoredMapView(blueprintKey: string): MapView | null {
+  if (typeof window === "undefined" || !blueprintKey) return null;
+  const stored = readLocalValue(SAVED_MAP_VIEW_KEY);
+  if (!stored) return null;
+  try {
+    const value = JSON.parse(stored) as {
+      blueprint?: unknown;
+      zoom?: unknown;
+      pan?: { x?: unknown; y?: unknown };
+    };
+    if (
+      value.blueprint !== blueprintKey ||
+      typeof value.zoom !== "number" ||
+      !Number.isFinite(value.zoom) ||
+      typeof value.pan?.x !== "number" ||
+      typeof value.pan?.y !== "number" ||
+      !Number.isFinite(value.pan.x) ||
+      !Number.isFinite(value.pan.y)
+    ) {
+      return null;
+    }
+    return {
+      zoom: Math.max(0.75, Math.min(4, value.zoom)),
+      pan: { x: value.pan.x, y: value.pan.y },
+    };
+  } catch {
+    return null;
+  }
+}
+
 function structureTopY(structure: Blueprint["data"][number]) {
   const entry = catalogEntry(structure.type);
   const height = entry?.footprint.height ?? 1;
@@ -289,7 +327,10 @@ function structureTopY(structure: Blueprint["data"][number]) {
 function structureVisualTopY(structure: Blueprint["data"][number]) {
   const entry = catalogEntry(structure.type);
   const topY = structureTopY(structure);
-  if (entry?.assetScale !== "cell" || entry.positionAnchor !== "bottom") return topY;
+  const assetOffsetY = (entry?.assetOffset?.y ?? 0) / 4;
+  if (entry?.assetScale !== "cell" || entry.positionAnchor !== "bottom") {
+    return topY + assetOffsetY;
+  }
   const frameHeight = entry.assetFrame?.width ?? 1;
   const sourceHeight = entry.assetSize?.height ?? frameHeight;
   const scale = structure.type === 20 ? KINETIC_PRESS_SCALE : 1;
@@ -297,7 +338,8 @@ function structureVisualTopY(structure: Blueprint["data"][number]) {
     structure.y +
     1 -
     (sourceHeight / frameHeight) * scale +
-    (structure.type === 20 ? KINETIC_PRESS_ANCHOR_OFFSET_CELLS : 0)
+    (structure.type === 20 ? KINETIC_PRESS_ANCHOR_OFFSET_CELLS : 0) +
+    assetOffsetY
   );
 }
 
@@ -305,14 +347,22 @@ function renderPixelScale(cell: number) {
   return cell / 4;
 }
 
-function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
+function BlueprintMap({
+  blueprint,
+  remember,
+  blueprintKey,
+}: {
+  blueprint: Blueprint;
+  remember: boolean;
+  blueprintKey: string;
+}) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showDebugCells, setShowDebugCells] = useState(() =>
-    readStoredBoolean(SHOW_DEBUG_CELLS_KEY, true),
+    readStoredBoolean(SHOW_DEBUG_CELLS_KEY, false),
   );
-  const [showNames, setShowNames] = useState(() => readStoredBoolean(SHOW_NAMES_KEY, true));
-  const [zoom, setZoom] = useState(1);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [showNames, setShowNames] = useState(() => readStoredBoolean(SHOW_NAMES_KEY, false));
+  const [zoom, setZoom] = useState(() => readStoredMapView(blueprintKey)?.zoom ?? 1);
+  const [pan, setPan] = useState(() => readStoredMapView(blueprintKey)?.pan ?? { x: 0, y: 0 });
   const dragRef = useRef<{
     pointerId: number;
     lastX: number;
@@ -324,8 +374,10 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const cell = 56;
   const xs = blueprint.data.length
     ? blueprint.data.flatMap((structure) => {
-        const width = catalogEntry(structure.type)?.footprint.width ?? 1;
-        return [structure.x, structure.x + width - 1];
+        const entry = catalogEntry(structure.type);
+        const width = entry?.footprint.width ?? 1;
+        const assetOffsetX = (entry?.assetOffset?.x ?? 0) / 4;
+        return [structure.x + assetOffsetX, structure.x + width - 1 + assetOffsetX];
       })
     : [0];
   const ys = blueprint.data.length
@@ -344,8 +396,8 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const height = (maxY - minY + padding * 2 + 1) * cell;
   const viewWidth = width / zoom;
   const viewHeight = height / zoom;
-  const maxPanX = (width - viewWidth) / 2;
-  const maxPanY = (height - viewHeight) / 2;
+  const maxPanX = Math.max(0, (width - viewWidth) / 2);
+  const maxPanY = Math.max(0, (height - viewHeight) / 2);
   const viewX = maxPanX + pan.x;
   const viewY = maxPanY + pan.y;
   const point = (x: number, y: number) => ({
@@ -384,12 +436,33 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
     },
   });
   useEffect(() => {
-    setPan({ x: 0, y: 0 });
+    const stored = remember ? readStoredMapView(blueprintKey) : null;
+    const restoredZoom = stored?.zoom ?? 1;
+    const restoredMaxPanX = Math.max(0, (width - width / restoredZoom) / 2);
+    const restoredMaxPanY = Math.max(0, (height - height / restoredZoom) / 2);
+    setZoom(restoredZoom);
+    setPan({
+      x: Math.max(-restoredMaxPanX, Math.min(restoredMaxPanX, stored?.pan.x ?? 0)),
+      y: Math.max(-restoredMaxPanY, Math.min(restoredMaxPanY, stored?.pan.y ?? 0)),
+    });
     setSelectedIndex(null);
-  }, [blueprint]);
+  }, [blueprint, blueprintKey, height, remember, width]);
+  useEffect(() => {
+    if (!remember || !blueprintKey) return;
+    writeLocalValue(SAVED_MAP_VIEW_KEY, JSON.stringify({ blueprint: blueprintKey, zoom, pan }));
+  }, [blueprintKey, pan, remember, zoom]);
   const setMapZoom = (nextZoom: number) => {
+    const nextViewWidth = width / nextZoom;
+    const nextViewHeight = height / nextZoom;
+    const nextMaxPanX = Math.max(0, (width - nextViewWidth) / 2);
+    const nextMaxPanY = Math.max(0, (height - nextViewHeight) / 2);
+    const centerX = viewX + viewWidth / 2;
+    const centerY = viewY + viewHeight / 2;
     setZoom(nextZoom);
-    setPan({ x: 0, y: 0 });
+    setPan({
+      x: Math.max(-nextMaxPanX, Math.min(nextMaxPanX, centerX - nextViewWidth / 2 - nextMaxPanX)),
+      y: Math.max(-nextMaxPanY, Math.min(nextMaxPanY, centerY - nextViewHeight / 2 - nextMaxPanY)),
+    });
   };
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_18rem]">
@@ -571,15 +644,18 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                         : undefined;
                       const frameWidth = frame?.width ?? runtimeSize?.width ?? sourceWidth;
                       const frameHeight = frame?.height ?? runtimeSize?.height ?? sourceHeight;
+                      const assetScaleFactor = entry.assetScaleFactor ?? 1;
+                      const useNativeAssetSize =
+                        runtimeSize !== undefined || entry.assetScaleFactor !== undefined;
                       const needsFrameClip = entry.assetClip ?? sourceWidth > frameWidth;
                       const pixelScale = renderPixelScale(cell);
-                      const visualWidth = runtimeSize
-                        ? frameWidth * pixelScale
+                      const visualWidth = useNativeAssetSize
+                        ? frameWidth * pixelScale * assetScaleFactor
                         : entry.assetScale === "cell"
                           ? cell * (structure.type === 20 ? KINETIC_PRESS_SCALE : 1)
                           : tileWidth;
-                      const visualHeight = runtimeSize
-                        ? frameHeight * pixelScale
+                      const visualHeight = useNativeAssetSize
+                        ? frameHeight * pixelScale * assetScaleFactor
                         : frame
                           ? visualWidth * (sourceHeight / frameWidth)
                           : tileHeight;
@@ -588,17 +664,21 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                         renderOffset && typeof renderOffset === "object"
                           ? (renderOffset as { x?: unknown; y?: unknown })
                           : undefined;
-                      const offsetX = typeof offset?.x === "number" ? offset.x * pixelScale : 0;
-                      const offsetY = typeof offset?.y === "number" ? offset.y * pixelScale : 0;
-                      const imageX = left + offsetX;
+                      const offsetX =
+                        (typeof offset?.x === "number" ? offset.x : 0) +
+                        (entry.assetOffset?.x ?? 0);
+                      const offsetY =
+                        (typeof offset?.y === "number" ? offset.y : 0) +
+                        (entry.assetOffset?.y ?? 0);
+                      const imageX = left + offsetX * pixelScale;
                       const imageY =
                         entry.positionAnchor === "bottom"
                           ? top +
                             tileHeight -
                             visualHeight +
                             (structure.type === 20 ? KINETIC_PRESS_ANCHOR_OFFSET_CELLS * cell : 0) +
-                            offsetY
-                          : top + offsetY;
+                            offsetY * pixelScale
+                          : top + offsetY * pixelScale;
                       return (
                         <>
                           <clipPath id={`asset-clip-${index}`}>
@@ -762,6 +842,7 @@ export function BlueprintInspectorPage() {
     return readLocalValue(SAVED_BLUEPRINT_KEY) ?? "";
   });
   const [blueprint, setBlueprint] = useState<Blueprint | null>(null);
+  const [inspectedBlueprintKey, setInspectedBlueprintKey] = useState("");
   const [summary, setSummary] = useState<BlueprintSummary | null>(null);
   const [message, setMessage] = useState("Paste a v2 blueprint string to inspect it.");
   const inspect = () => {
@@ -777,6 +858,7 @@ export function BlueprintInspectorPage() {
     try {
       const decoded = decodeBlueprint(value);
       setBlueprint(decoded);
+      setInspectedBlueprintKey(value);
       setSummary(summarizeBlueprint(value, decoded));
       setMessage(`Inspected ${decoded.data.length} structure(s) from ${decoded.name}.`);
     } catch (error) {
@@ -800,7 +882,10 @@ export function BlueprintInspectorPage() {
       setRemember(nextRemember);
       writeLocalValue(REMEMBER_BLUEPRINT_KEY, String(nextRemember));
       if (nextRemember) writeLocalValue(SAVED_BLUEPRINT_KEY, encoded);
-      else removeLocalValue(SAVED_BLUEPRINT_KEY);
+      else {
+        removeLocalValue(SAVED_BLUEPRINT_KEY);
+        removeLocalValue(SAVED_MAP_VIEW_KEY);
+      }
     },
   });
   return (
@@ -873,7 +958,11 @@ export function BlueprintInspectorPage() {
           </Panel>
           <Panel title="Blueprint map">
             <div className="p-4">
-              <BlueprintMap blueprint={blueprint} />
+              <BlueprintMap
+                blueprint={blueprint}
+                remember={remember}
+                blueprintKey={inspectedBlueprintKey}
+              />
               <p className="mt-4 text-xs text-slate-500">
                 The captured native runtime catalog supplies names and footprints. Other content
                 remains visible through the unknown-ID fallback.
