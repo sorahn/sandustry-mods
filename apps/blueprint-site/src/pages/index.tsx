@@ -267,7 +267,7 @@ function BlueprintInspectorEditorPage() {
   });
   const [blueprint, setBlueprint] = useState<Blueprint | null>(null);
   const [showMapSidebar, setShowMapSidebar] = useState(() =>
-    readStoredBoolean(SHOW_MAP_SIDEBAR_KEY, false),
+    readStoredBoolean(SHOW_MAP_SIDEBAR_KEY, true),
   );
   const [showGrid, setShowGrid] = useState(() => readStoredBoolean(SHOW_GRID_KEY, true));
   const [showPngBackground, setShowPngBackground] = useState(() =>

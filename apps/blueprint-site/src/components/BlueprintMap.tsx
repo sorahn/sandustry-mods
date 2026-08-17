@@ -145,6 +145,7 @@ function writeLocalValue(key: string, value: string) {
 type MapView = {
   zoom: number;
   pan: { x: number; y: number };
+  viewportWidth?: number;
 };
 
 function readStoredMapView(blueprintKey: string): MapView | null {
@@ -156,6 +157,7 @@ function readStoredMapView(blueprintKey: string): MapView | null {
       blueprint?: unknown;
       zoom?: unknown;
       pan?: { x?: unknown; y?: unknown };
+      viewportWidth?: unknown;
     };
     if (
       value.blueprint !== blueprintKey ||
@@ -171,6 +173,10 @@ function readStoredMapView(blueprintKey: string): MapView | null {
     return {
       zoom: Math.max(MAP_ZOOM_LEVELS[0], Math.min(4, value.zoom)),
       pan: { x: value.pan.x, y: value.pan.y },
+      viewportWidth:
+        typeof value.viewportWidth === "number" && Number.isFinite(value.viewportWidth)
+          ? value.viewportWidth
+          : undefined,
     };
   } catch {
     return null;
@@ -582,11 +588,11 @@ export function BlueprintMap({
       y: Math.max(-restoredMaxPanY, Math.min(restoredMaxPanY, stored?.pan.y ?? 0)),
     });
     setSelectedIndex(null);
-    setMapSizeReady(stored !== null);
-  }, [blueprint, blueprintKey, height, remember, viewportSize, width]);
+    setMapSizeReady(stored?.viewportWidth === viewportSize.width && viewportSize.width > 0);
+  }, [blueprint, blueprintKey, height, remember, width]);
   useEffect(() => {
     const stored = remember ? readStoredMapView(blueprintKey) : null;
-    if (stored) return;
+    if (stored?.viewportWidth === viewportSize.width) return;
     if (!viewportSize.width || !viewportSize.height) return;
     setMapSizeReady(false);
     const fitToViewport = () => {
@@ -605,8 +611,11 @@ export function BlueprintMap({
   }, [blueprintKey, height, remember, viewportSize.width, width]);
   useEffect(() => {
     if (!remember || !blueprintKey || !mapSizeReady) return;
-    writeLocalValue(SAVED_MAP_VIEW_KEY, JSON.stringify({ blueprint: blueprintKey, zoom, pan }));
-  }, [blueprintKey, mapSizeReady, pan, remember, zoom]);
+    writeLocalValue(
+      SAVED_MAP_VIEW_KEY,
+      JSON.stringify({ blueprint: blueprintKey, viewportWidth: viewportSize.width, zoom, pan }),
+    );
+  }, [blueprintKey, mapSizeReady, pan, remember, viewportSize.width, zoom]);
   const setMapZoom = (nextZoom: number) => {
     const snappedZoom = snapMapZoom(nextZoom);
     const nextViewWidth = width / snappedZoom;
