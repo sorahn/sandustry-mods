@@ -4,9 +4,13 @@ import generatedCatalog from "../structure-catalog.json";
 export type CatalogEntry = {
   type: BlueprintType;
   name?: string;
+  nameKey?: string;
   category?: string;
   footprint: { width: number; height: number };
   rotations?: number[];
+  buildModes?: unknown;
+  variants?: unknown;
+  definition?: unknown;
   source: string;
 };
 

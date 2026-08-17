@@ -515,32 +515,61 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
         <p className="font-mono uppercase tracking-[0.18em] text-slate-500">Selected record</p>
         {selected ? (
           <div className="mt-3 space-y-3">
-            <p className="break-all font-mono text-yellow-200">
-              {catalogEntry(selected.type)?.name ?? structureLabel(selected.type)}
-            </p>
-            {catalogEntry(selected.type) ? (
-              <p>
-                Catalog footprint{" "}
-                <strong className="text-white">
-                  {catalogEntry(selected.type)!.footprint.width}×
-                  {catalogEntry(selected.type)!.footprint.height}
-                </strong>
-              </p>
-            ) : null}
-            <p>
-              Position{" "}
-              <strong className="text-white">
-                {selected.x}, {selected.y}
-              </strong>
-            </p>
-            <p className="break-all whitespace-pre-wrap">
-              {selected.filter ? `filter ${JSON.stringify(selected.filter, null, 2)}` : "No filter"}
-            </p>
-            <p className="break-all whitespace-pre-wrap">
-              {selected.data !== undefined
-                ? `data ${JSON.stringify(selected.data, null, 2)}`
-                : "No structure data"}
-            </p>
+            {(() => {
+              const entry = catalogEntry(selected.type);
+              return (
+                <>
+                  <p className="break-all font-mono text-yellow-200">
+                    {entry?.name ?? structureLabel(selected.type)}
+                  </p>
+                  {entry ? (
+                    <>
+                      <p>
+                        Catalog footprint{" "}
+                        <strong className="text-white">
+                          {entry.footprint.width}×{entry.footprint.height}
+                        </strong>
+                      </p>
+                      {entry.category ? (
+                        <p>
+                          Category <strong className="text-white">{entry.category}</strong>
+                        </p>
+                      ) : null}
+                      {entry.buildModes ? (
+                        <p className="break-all">Build modes {JSON.stringify(entry.buildModes)}</p>
+                      ) : null}
+                      {entry.variants ? (
+                        <p className="break-all">Variants {JSON.stringify(entry.variants)}</p>
+                      ) : null}
+                      <details className="rounded border border-slate-800 bg-black/30 p-2">
+                        <summary className="cursor-pointer text-slate-300">
+                          Runtime definition
+                        </summary>
+                        <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap break-all text-[11px] leading-5 text-slate-500">
+                          {JSON.stringify(entry.definition ?? entry, null, 2)}
+                        </pre>
+                      </details>
+                    </>
+                  ) : null}
+                  <p>
+                    Position{" "}
+                    <strong className="text-white">
+                      {selected.x}, {selected.y}
+                    </strong>
+                  </p>
+                  <p className="break-all whitespace-pre-wrap">
+                    {selected.filter
+                      ? `filter ${JSON.stringify(selected.filter, null, 2)}`
+                      : "No filter"}
+                  </p>
+                  <p className="break-all whitespace-pre-wrap">
+                    {selected.data !== undefined
+                      ? `data ${JSON.stringify(selected.data, null, 2)}`
+                      : "No structure data"}
+                  </p>
+                </>
+              );
+            })()}
           </div>
         ) : (
           <p className="mt-3 leading-6">Choose a tile to inspect its raw blueprint record.</p>
