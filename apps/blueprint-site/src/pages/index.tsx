@@ -271,6 +271,22 @@ function removeLocalValue(key: string) {
   }
 }
 
+function structureTopY(structure: Blueprint["data"][number]) {
+  const entry = catalogEntry(structure.type);
+  const height = entry?.footprint.height ?? 1;
+  return entry?.positionAnchor === "bottom" ? structure.y - height + 1 : structure.y;
+}
+
+function structureVisualTopY(structure: Blueprint["data"][number], kineticTopY?: number) {
+  const entry = catalogEntry(structure.type);
+  const topY = structureTopY(structure);
+  if (entry?.assetScale !== "cell" || entry.positionAnchor !== "bottom") return topY;
+  if (structure.type === 20 && kineticTopY !== undefined) return kineticTopY;
+  const frameHeight = entry.assetFrame?.width ?? 1;
+  const sourceHeight = entry.assetSize?.height ?? frameHeight;
+  return structure.y + 1 - sourceHeight / frameHeight;
+}
+
 function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [zoom, setZoom] = useState(1);
@@ -284,6 +300,12 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const suppressClickRef = useRef(false);
   const padding = 2;
   const cell = 56;
+  const kineticTopY = blueprint.data
+    .filter((structure) => structure.type === 1 || structure.type === 2)
+    .reduce<number | undefined>(
+      (top, structure) => Math.min(top ?? structure.y, structure.y),
+      undefined,
+    );
   const xs = blueprint.data.length
     ? blueprint.data.flatMap((structure) => {
         const width = catalogEntry(structure.type)?.footprint.width ?? 1;
@@ -292,8 +314,10 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
     : [0];
   const ys = blueprint.data.length
     ? blueprint.data.flatMap((structure) => {
+        const topY = structureTopY(structure);
+        const visualTopY = structureVisualTopY(structure, kineticTopY);
         const height = catalogEntry(structure.type)?.footprint.height ?? 1;
-        return [structure.y, structure.y + height - 1];
+        return [visualTopY, topY + height - 1];
       })
     : [0];
   const minX = Math.min(...xs);
@@ -313,6 +337,14 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
     y: (y - minY + padding + 0.5) * cell,
   });
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
+  const renderStructures = blueprint.data
+    .map((structure, index) => ({ structure, index }))
+    .sort(
+      (left, right) =>
+        left.structure.y - right.structure.y ||
+        left.structure.x - right.structure.x ||
+        left.index - right.index,
+    );
   useEffect(() => {
     setPan({ x: 0, y: 0 });
     setSelectedIndex(null);
@@ -435,14 +467,15 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
               />
             );
           })}
-          {blueprint.data.map((structure, index) => {
+          {renderStructures.map(({ structure, index }) => {
             const entry = catalogEntry(structure.type);
             const footprint = entry?.footprint ?? { width: 1, height: 1 };
             const position = point(structure.x, structure.y);
-            const left = (structure.x - minX + padding) * cell + 3;
-            const top = (structure.y - minY + padding) * cell + 3;
-            const tileWidth = footprint.width * cell - 6;
-            const tileHeight = footprint.height * cell - 6;
+            const topY = structureTopY(structure);
+            const left = (structure.x - minX + padding) * cell;
+            const top = (topY - minY + padding) * cell;
+            const tileWidth = footprint.width * cell;
+            const tileHeight = footprint.height * cell;
             const labelX = left + tileWidth / 2;
             const label = String(
               entry?.name ??
@@ -488,29 +521,51 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
                 />
                 {entry?.assetPath
                   ? (() => {
-                      const inset = 6;
                       const frame = entry.assetFrame;
                       const source = entry.assetSize;
-                      const imageWidth = Math.max(1, tileWidth - inset * 2);
-                      const imageHeight = Math.max(1, tileHeight - inset * 2);
+                      const imageWidth = tileWidth;
+                      const imageHeight = tileHeight;
                       const sourceWidth = source?.width ?? frame?.width ?? 1;
                       const sourceHeight = source?.height ?? frame?.height ?? 1;
-                      const scaledImageHeight = frame
-                        ? imageWidth * (sourceHeight / frame.width)
-                        : imageHeight;
+                      const isKineticPress = structure.type === 20 && kineticTopY !== undefined;
+                      const visualWidth = isKineticPress
+                        ? ((structure.y + 1 - kineticTopY) * cell * sourceWidth) / sourceHeight
+                        : entry.assetScale === "cell"
+                          ? cell
+                          : imageWidth;
+                      const visualHeight = isKineticPress
+                        ? (structure.y + 1 - kineticTopY) * cell
+                        : frame
+                          ? visualWidth * (sourceHeight / frame.width)
+                          : imageHeight;
+                      const imageX = isKineticPress
+                        ? left + tileWidth / 2 - visualWidth / 2
+                        : entry.assetScale === "cell"
+                          ? left
+                          : left;
+                      const imageY = isKineticPress
+                        ? (kineticTopY - minY + padding) * cell
+                        : entry.positionAnchor === "bottom"
+                          ? top + tileHeight - visualHeight
+                          : top;
                       return (
                         <>
                           <clipPath id={`asset-clip-${index}`}>
-                            <rect x={left + inset} y="0" width={imageWidth} height={height} />
+                            <rect x={imageX} y="0" width={visualWidth} height={height} />
                           </clipPath>
                           <image
                             href={`${import.meta.env.BASE_URL}${entry.assetPath}`}
-                            x={left + inset}
-                            y={top + inset}
-                            width={frame ? imageWidth * (sourceWidth / frame.width) : imageWidth}
-                            height={frame ? scaledImageHeight : imageHeight}
+                            x={imageX}
+                            y={imageY}
+                            width={frame ? visualWidth * (sourceWidth / frame.width) : visualWidth}
+                            height={visualHeight}
                             preserveAspectRatio={frame ? "none" : "xMidYMid meet"}
                             clipPath={`url(#asset-clip-${index})`}
+                            transform={
+                              entry.assetRotation
+                                ? `rotate(${entry.assetRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
+                                : undefined
+                            }
                             style={{ imageRendering: "pixelated", pointerEvents: "none" }}
                           />
                         </>

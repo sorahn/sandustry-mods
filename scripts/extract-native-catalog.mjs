@@ -13,6 +13,44 @@ const menuPath = path.join(root, "resources/building-menu.html");
 const catalogPath = path.join(root, "apps/blueprint-site/src/structure-catalog.json");
 const assetRoot = path.join(root, "apps/blueprint-site/public/catalog");
 
+// These are native variant IDs from the F8 runtime definitions. They are not
+// separate menu entries, so the building-menu capture cannot map them by name.
+const variantAssetSources = new Map([
+  [1, "dist/img/conveyor_left.png"],
+  [3, "dist/img/shaker_left.png"],
+  [6, "dist/img/launcher_left.png"],
+  [7, "dist/img/launcher_right.png"],
+  [17, "dist/img/filter_left.png"],
+  [8, "dist/img/splitter_left.png"],
+  [9, "dist/img/splitter_right.png"],
+  [12, "dist/img/triangle_right.png"],
+  [13, "dist/img/triangle_right.png"],
+  [14, "dist/img/triangle_right.png"],
+  [15, "dist/img/triangle_right.png"],
+]);
+
+const variantAssetFrames = new Map([
+  [1, { width: 16, height: 16 }],
+  [3, { width: 18, height: 18 }],
+  [6, { width: 18, height: 18 }],
+  [7, { width: 18, height: 18 }],
+  [17, { width: 18, height: 18 }],
+  [12, { width: 16, height: 16 }],
+  [13, { width: 16, height: 16 }],
+  [14, { width: 16, height: 16 }],
+  [15, { width: 16, height: 16 }],
+]);
+
+const variantAssetRotations = new Map([
+  [12, 270],
+  [13, 0],
+  [14, 180],
+  [15, 90],
+]);
+
+const bottomAnchoredTypes = new Set([20]);
+const cellScaledTypes = new Set([20]);
+
 function readAsarHeader(buffer) {
   if (buffer.length < 8) throw new Error("ASAR is too small to contain a header");
   const jsonSize = buffer.length >= 12 ? buffer.readUInt32LE(8) : buffer.readUInt32LE(4);
@@ -116,14 +154,24 @@ const catalogWithAssets = {
     const renderAsset = typeof imageName === "string" ? assetByStem.get(assetStem(imageName)) : undefined;
     const menuCapture = typeof entry.name === "string" ? menuAssets.get(entry.name) : undefined;
     const menuAsset = menuCapture ? assetBySource.get(menuCapture.source) : undefined;
-    const assetPath = renderAsset ?? menuAsset;
+    const variantSource = typeof entry.type === "number" ? variantAssetSources.get(entry.type) : undefined;
+    const variantAsset = variantSource ? assetBySource.get(variantSource) : undefined;
+    const assetPath = renderAsset ?? menuAsset ?? variantAsset;
     const asset = assetPath ? assets.find((candidate) => candidate.file === assetPath) : undefined;
+    const assetFrame =
+      menuCapture?.frame ??
+      (typeof entry.type === "number" ? variantAssetFrames.get(entry.type) : undefined);
     return assetPath
       ? {
           ...entry,
           assetPath,
+          ...(bottomAnchoredTypes.has(entry.type) ? { positionAnchor: "bottom" } : {}),
+          ...(cellScaledTypes.has(entry.type) ? { assetScale: "cell" } : {}),
           ...(asset?.size ? { assetSize: asset.size } : {}),
-          ...(menuCapture?.frame && !renderAsset ? { assetFrame: menuCapture.frame } : {}),
+          ...(assetFrame && !renderAsset ? { assetFrame } : {}),
+          ...(variantAssetRotations.has(entry.type)
+            ? { assetRotation: variantAssetRotations.get(entry.type) }
+            : {}),
         }
       : entry;
   }),

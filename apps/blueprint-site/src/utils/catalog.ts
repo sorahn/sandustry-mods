@@ -22,6 +22,9 @@ export type CatalogEntry = {
   assetPath?: string;
   assetFrame?: { width: number; height: number };
   assetSize?: { width: number; height: number };
+  assetRotation?: number;
+  positionAnchor?: string;
+  assetScale?: "tile" | "cell" | string;
   source: string;
 };
 

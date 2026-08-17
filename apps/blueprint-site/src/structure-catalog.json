@@ -25,7 +25,16 @@
           [15, 15, 15, 15]
         ]
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__conveyor_left.png",
+      "assetSize": {
+        "width": 64,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      }
     },
     {
       "type": 2,
@@ -108,7 +117,16 @@
       },
       "footprintSource": "native default 4x4",
       "definition": {},
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__shaker_left.png",
+      "assetSize": {
+        "width": 36,
+        "height": 22
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": 4,
@@ -254,7 +272,16 @@
       },
       "footprintSource": "native default 4x4",
       "definition": {},
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__launcher_left.png",
+      "assetSize": {
+        "width": 18,
+        "height": 26
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": 7,
@@ -265,7 +292,16 @@
       },
       "footprintSource": "native default 4x4",
       "definition": {},
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__launcher_right.png",
+      "assetSize": {
+        "width": 18,
+        "height": 26
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": 8,
@@ -324,7 +360,12 @@
         "categoryKey": "logistics",
         "order": 30
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__splitter_left.png",
+      "assetSize": {
+        "width": 7,
+        "height": 4
+      }
     },
     {
       "type": 9,
@@ -348,7 +389,12 @@
           [15, 0, 0, 0]
         ]
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__splitter_right.png",
+      "assetSize": {
+        "width": 7,
+        "height": 4
+      }
     },
     {
       "type": 10,
@@ -522,7 +568,17 @@
           [17, 15, 15, 15]
         ]
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__triangle_right.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      },
+      "assetRotation": 270
     },
     {
       "type": 13,
@@ -546,7 +602,17 @@
           [0, 0, 0, 15]
         ]
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__triangle_right.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      },
+      "assetRotation": 0
     },
     {
       "type": 14,
@@ -570,7 +636,17 @@
           [15, 15, 15, 18]
         ]
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__triangle_right.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      },
+      "assetRotation": 180
     },
     {
       "type": 15,
@@ -606,7 +682,17 @@
           }
         ]
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__triangle_right.png",
+      "assetSize": {
+        "width": 16,
+        "height": 16
+      },
+      "assetFrame": {
+        "width": 16,
+        "height": 16
+      },
+      "assetRotation": 90
     },
     {
       "type": 16,
@@ -681,7 +767,16 @@
           "type": "filter"
         }
       },
-      "source": "runtime structure definition"
+      "source": "runtime structure definition",
+      "assetPath": "catalog/img__filter_left.png",
+      "assetSize": {
+        "width": 72,
+        "height": 18
+      },
+      "assetFrame": {
+        "width": 18,
+        "height": 18
+      }
     },
     {
       "type": 18,
@@ -876,6 +971,8 @@
       },
       "source": "runtime structure definition",
       "assetPath": "catalog/img__velocity.png",
+      "positionAnchor": "bottom",
+      "assetScale": "cell",
       "assetSize": {
         "width": 18,
         "height": 417
