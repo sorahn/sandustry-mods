@@ -246,6 +246,8 @@ function tileColor(type: Blueprint["data"][number]["type"]) {
 
 const REMEMBER_BLUEPRINT_KEY = "sandustry.blueprintInspector.remember";
 const SAVED_BLUEPRINT_KEY = "sandustry.blueprintInspector.string";
+const SHOW_DEBUG_CELLS_KEY = "sandustry.blueprintInspector.showDebugCells";
+const SHOW_NAMES_KEY = "sandustry.blueprintInspector.showNames";
 const KINETIC_PRESS_SCALE = 4;
 const KINETIC_PRESS_EXPECTED_HEIGHT = 468;
 const KINETIC_PRESS_ANCHOR_OFFSET_CELLS = 3;
@@ -256,6 +258,10 @@ function readLocalValue(key: string) {
   } catch {
     return null;
   }
+}
+
+function readStoredBoolean(key: string, fallback: boolean) {
+  return typeof window !== "undefined" ? readLocalValue(key) !== "false" : fallback;
 }
 
 function writeLocalValue(key: string, value: string) {
@@ -297,8 +303,10 @@ function structureVisualTopY(structure: Blueprint["data"][number]) {
 
 function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const [showDebugCells, setShowDebugCells] = useState(true);
-  const [showNames, setShowNames] = useState(true);
+  const [showDebugCells, setShowDebugCells] = useState(() =>
+    readStoredBoolean(SHOW_DEBUG_CELLS_KEY, true),
+  );
+  const [showNames, setShowNames] = useState(() => readStoredBoolean(SHOW_NAMES_KEY, true));
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const dragRef = useRef<{
@@ -354,15 +362,22 @@ function BlueprintMap({ blueprint }: { blueprint: Blueprint }) {
     checked: showDebugCells,
     label: "debug cells",
     size: "small",
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
-      setShowDebugCells(event.target.checked),
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+      const nextValue = event.target.checked;
+      setShowDebugCells(nextValue);
+      writeLocalValue(SHOW_DEBUG_CELLS_KEY, String(nextValue));
+    },
   });
   const debugNamesToggle = debugComponent(Checkbox, {
     boxed: true,
     checked: showNames,
     label: "show names",
     size: "small",
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => setShowNames(event.target.checked),
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
+      const nextValue = event.target.checked;
+      setShowNames(nextValue);
+      writeLocalValue(SHOW_NAMES_KEY, String(nextValue));
+    },
   });
   useEffect(() => {
     setPan({ x: 0, y: 0 });

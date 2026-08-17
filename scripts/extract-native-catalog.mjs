@@ -27,6 +27,13 @@ const variantAssetSources = new Map([
   [13, "dist/img/triangle_right.png"],
   [14, "dist/img/triangle_right.png"],
   [15, "dist/img/triangle_right.png"],
+  ["conveyorLeftMk2", "dist/img/conveyor_left.png"],
+  ["conveyorRightMk2", "dist/img/conveyor_right.png"],
+  ["filterLeftMk2", "dist/img/filter_left.png"],
+  ["filterRightMk2", "dist/img/filter_right.png"],
+  ["launcherLeftMk2", "dist/img/launcher_left.png"],
+  ["launcherRightMk2", "dist/img/launcher_right.png"],
+  ["launcherUpMk2", "dist/img/launcher.png"],
 ]);
 
 const variantAssetFrames = new Map([
@@ -39,6 +46,13 @@ const variantAssetFrames = new Map([
   [13, { width: 16, height: 16 }],
   [14, { width: 16, height: 16 }],
   [15, { width: 16, height: 16 }],
+  ["conveyorLeftMk2", { width: 16, height: 16 }],
+  ["conveyorRightMk2", { width: 16, height: 16 }],
+  ["filterLeftMk2", { width: 18, height: 18 }],
+  ["filterRightMk2", { width: 18, height: 18 }],
+  ["launcherLeftMk2", { width: 18, height: 18 }],
+  ["launcherRightMk2", { width: 18, height: 18 }],
+  ["launcherUpMk2", { width: 18, height: 18 }],
 ]);
 
 const variantAssetRotations = new Map([
@@ -154,13 +168,13 @@ const catalogWithAssets = {
     const renderAsset = typeof imageName === "string" ? assetByStem.get(assetStem(imageName)) : undefined;
     const menuCapture = typeof entry.name === "string" ? menuAssets.get(entry.name) : undefined;
     const menuAsset = menuCapture ? assetBySource.get(menuCapture.source) : undefined;
-    const variantSource = typeof entry.type === "number" ? variantAssetSources.get(entry.type) : undefined;
+    const variantSource = variantAssetSources.get(entry.type);
     const variantAsset = variantSource ? assetBySource.get(variantSource) : undefined;
     const assetPath = renderAsset ?? menuAsset ?? variantAsset;
     const asset = assetPath ? assets.find((candidate) => candidate.file === assetPath) : undefined;
     const assetFrame =
       menuCapture?.frame ??
-      (typeof entry.type === "number" ? variantAssetFrames.get(entry.type) : undefined);
+      variantAssetFrames.get(entry.type);
     return assetPath
       ? {
           ...entry,
