@@ -40,6 +40,10 @@ export function AppLayout() {
             __GIT_INFO__.label
           )}
         </div>
+        <p className="w-full text-center text-[10px] text-slate-600 mb-4">
+          This is a community project and is not affiliated with Lantto Games or Hooded Horse. All
+          rights reserved to their respective owners.
+        </p>
       </footer>
     </div>
   );
