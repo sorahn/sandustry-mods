@@ -4,7 +4,9 @@ import {
   catalogEntry,
   catalogRender,
   catalogRenderSize,
+  catalogSignalPoints,
   type CatalogEntry,
+  type SignalPoint,
 } from "../utils/catalog";
 import { debugComponent } from "./DebugComponentWrapper";
 import { MapDebugOptions } from "./MapDebugOptions";
@@ -311,6 +313,66 @@ function renderPixelScale(cell: number) {
   return cell / NATIVE_PIXELS_PER_CELL;
 }
 
+type Coordinate = { x: number; y: number };
+
+function signalCoordinateOffset(blueprint: Blueprint): Coordinate {
+  const origins = blueprint.data;
+  const endpoints = (blueprint.signalLinks ?? []).flatMap((link) => [link.from, link.to]);
+  if (!endpoints.length || !origins.length) return { x: 0, y: 0 };
+  const candidates = new Map<string, { offset: Coordinate; matches: number }>();
+  for (const endpoint of endpoints) {
+    for (const structure of origins) {
+      const offset = { x: endpoint.x - structure.x, y: endpoint.y - structure.y };
+      const key = `${offset.x},${offset.y}`;
+      const candidate = candidates.get(key) ?? { offset, matches: 0 };
+      candidate.matches += 1;
+      candidates.set(key, candidate);
+    }
+  }
+  const best = [...candidates.values()].sort((left, right) => right.matches - left.matches)[0];
+  return best?.matches === endpoints.length ? best.offset : { x: 0, y: 0 };
+}
+
+function signalStructureAt(blueprint: Blueprint, coordinate: Coordinate) {
+  return blueprint.data.find(
+    (structure) => structure.x === coordinate.x && structure.y === coordinate.y,
+  );
+}
+
+function signalEndpoint(
+  blueprint: Blueprint,
+  raw: Coordinate,
+  offset: Coordinate,
+  side: "from" | "to",
+): Coordinate {
+  const origin = { x: raw.x - offset.x, y: raw.y - offset.y };
+  const structure = signalStructureAt(blueprint, origin);
+  if (!structure) return origin;
+  const points = catalogSignalPoints(structure.type);
+  const local: SignalPoint | undefined =
+    points?.shared ?? points?.[side === "from" ? "output" : "input"];
+  return local ? { x: structure.x + local.x, y: structure.y + local.y } : origin;
+}
+
+function signalWirePath(
+  from: Coordinate,
+  to: Coordinate,
+  straight: boolean,
+  nativePixelScale: number,
+) {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  if (straight) return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
+  const distance = Math.hypot(dx, dy);
+  const curve = Math.min(24 * nativePixelScale, Math.max(6 * nativePixelScale, distance * 0.15));
+  return [
+    `M ${from.x} ${from.y}`,
+    `C ${from.x + dx * 0.25} ${from.y + dy * 0.25 + curve}`,
+    `${from.x + dx * 0.75} ${from.y + dy * 0.75 + curve}`,
+    `${to.x} ${to.y}`,
+  ].join(" ");
+}
+
 function foundationOutlinePath(
   structures: Blueprint["data"],
   minX: number,
@@ -402,6 +464,24 @@ function foundationOutlinePath(
 }
 
 type CollectorSprite = { frameIndex: number; rotation: number };
+
+function stateSpriteIndex(structure: Blueprint["data"][number]): number | undefined {
+  if (structure.type !== "signalLamp" && structure.type !== "signalGate") return undefined;
+  if (!structure.data || typeof structure.data !== "object") return undefined;
+  const state = structure.data as Record<string, unknown>;
+  if (typeof state.spriteIndex === "number" && Number.isInteger(state.spriteIndex)) {
+    return state.spriteIndex;
+  }
+  if (structure.type === "signalGate" && typeof state.desiredOpen === "boolean") {
+    return state.desiredOpen ? 1 : 0;
+  }
+  if (structure.type === "signalLamp") {
+    for (const key of ["on", "outputValue"]) {
+      if (typeof state[key] === "boolean") return state[key] ? 1 : 0;
+    }
+  }
+  return undefined;
+}
 
 function collectorSprites(
   structures: Blueprint["data"],
@@ -499,6 +579,7 @@ export function BlueprintMap({
   const [hideSprites, setHideSprites] = useState(false);
   const [showCustomShapes, setShowCustomShapes] = useState(false);
   const [hideFoundationOutlines, setHideFoundationOutlines] = useState(false);
+  const [showSignalLinks, setShowSignalLinks] = useState(true);
   const [zoom, setZoom] = useState(() =>
     captureOnly ? 1 : snapMapZoom(readStoredMapView(blueprintKey)?.zoom ?? 1),
   );
@@ -635,6 +716,7 @@ export function BlueprintMap({
     x: (x - minX + padding + 0.5) * cell,
     y: (y - minY + padding + 0.5) * cell,
   });
+  const signalOffset = signalCoordinateOffset(blueprint);
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
   const renderStructures = blueprint.data
     .map((structure, index) => {
@@ -662,6 +744,8 @@ export function BlueprintMap({
     onShowCustomShapesChange: setShowCustomShapes,
     hideFoundationOutlines,
     onHideFoundationOutlinesChange: setHideFoundationOutlines,
+    showSignalLinks,
+    onShowSignalLinksChange: setShowSignalLinks,
   });
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -1061,24 +1145,35 @@ export function BlueprintMap({
               })}
             </g>
           ) : null}
-          {(blueprint.signalLinks ?? []).map((link, index) => {
-            const from = point(link.from.x, link.from.y);
-            const to = point(link.to.x, link.to.y);
-            return (
-              <line
-                key={`link-${index}`}
-                x1={from.x}
-                y1={from.y}
-                x2={to.x}
-                y2={to.y}
-                stroke={link.on ? "#ffe700" : "#657082"}
-                strokeDasharray={link.on ? undefined : "5 4"}
-                strokeWidth="3"
-                opacity=".8"
-                style={mapLayerStyle("signalLinks")}
-              />
-            );
-          })}
+          {showSignalLinks
+            ? (blueprint.signalLinks ?? []).map((link, index) => {
+                const fromCoordinate = signalEndpoint(blueprint, link.from, signalOffset, "from");
+                const toCoordinate = signalEndpoint(blueprint, link.to, signalOffset, "to");
+                const from = point(fromCoordinate.x, fromCoordinate.y);
+                const to = point(toCoordinate.x, toCoordinate.y);
+                const source = signalStructureAt(blueprint, {
+                  x: link.from.x - signalOffset.x,
+                  y: link.from.y - signalOffset.y,
+                });
+                return (
+                  <path
+                    key={`link-${index}`}
+                    d={signalWirePath(
+                      from,
+                      to,
+                      source?.type === "signalBuffer",
+                      renderPixelScale(cell),
+                    )}
+                    stroke={link.on ? "#00ff99" : "#ff3333"}
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeWidth="3"
+                    opacity=".7"
+                    style={mapLayerStyle("signalLinks")}
+                  />
+                );
+              })
+            : null}
           {renderStructures.map(({ structure, index }) => {
             const entry = catalogEntry(structure.type);
             const footprint = structureFootprint(structure);
@@ -1180,7 +1275,11 @@ export function BlueprintMap({
                       const frameWidth = frame?.width ?? runtimeSize?.width ?? sourceWidth;
                       const frameHeight = frame?.height ?? runtimeSize?.height ?? sourceHeight;
                       const collectorSprite = collectorSpriteMap.get(index);
-                      const frameIndex = collectorSprite?.frameIndex ?? renderAsset.frameIndex ?? 0;
+                      const frameIndex =
+                        stateSpriteIndex(structure) ??
+                        collectorSprite?.frameIndex ??
+                        renderAsset.frameIndex ??
+                        0;
                       const spriteRotation = collectorSprite?.rotation ?? renderAsset.rotation;
                       const customLightColor =
                         renderAsset.lightColor ??
