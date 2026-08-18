@@ -497,7 +497,7 @@ function collectorSprites(
   const result = new Map<number, CollectorSprite>();
   const visited = new Set<number>();
 
-  for (const { structure: start, index: startIndex } of collectors) {
+  for (const { index: startIndex } of collectors) {
     if (visited.has(startIndex)) continue;
     const component: number[] = [];
     const queue = [startIndex];
@@ -641,10 +641,6 @@ export function BlueprintMap({
   const aspectRatioViewportHeight = blueprintFitsDefaultViewport
     ? defaultViewportHeight
     : Math.max(defaultViewportHeight, blueprintAspectViewportHeight);
-  const viewWidth = zoom <= 1 ? width : width / zoom;
-  const viewHeight = zoom <= 1 ? height : height / zoom;
-  const centeredViewX = (width - viewWidth) / 2;
-  const centeredViewY = (height - viewHeight) / 2;
   const maxPanX = Math.max(0, (width * zoom - (viewportSize.width || width)) / (2 * zoom));
   const maxPanY = Math.max(0, (height * zoom - (viewportSize.height || height)) / (2 * zoom));
   const fitZoomForViewport = (availableWidth: number, availableHeight: number) => {
@@ -1179,7 +1175,6 @@ export function BlueprintMap({
             const footprint = structureFootprint(structure);
             const shape = structureShape(structure);
             const isCustomShape = shape !== undefined;
-            const position = point(structure.x, structure.y);
             const topY = structureTopY(structure);
             const left = (structure.x - minX + padding) * cell;
             const top = (topY - minY + padding) * cell;
