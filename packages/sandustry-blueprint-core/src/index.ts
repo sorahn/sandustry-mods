@@ -26,6 +26,7 @@ export {
   type BlueprintCoordinate,
   type PreparedBlueprint,
   type PreparedSignalLink,
+  type PreparedStructure,
   type PrepareBlueprintOptions,
   type SignalPoint,
   type SignalPoints,

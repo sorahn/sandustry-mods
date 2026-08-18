@@ -29,8 +29,15 @@ export type PreparedSignalLink = SignalLink & {
       };
 };
 
+export type PreparedStructure = {
+  structure: BlueprintStructure;
+  index: number;
+  spriteIndex?: number;
+};
+
 export type PreparedBlueprint = Blueprint & {
   signalCoordinateOffset: BlueprintCoordinate;
+  preparedStructures: PreparedStructure[];
   preparedSignalLinks: PreparedSignalLink[];
 };
 
@@ -67,6 +74,24 @@ export function defaultSignalPoints(type: BlueprintType): SignalPoints | undefin
   if (type === "signalButton") return { output: CORNER_OUTPUT };
   if (SENSOR_TYPES.has(type)) return { shared: SENSOR };
   if (type === "signalBuffer") return { shared: CENTER };
+  return undefined;
+}
+
+function spriteIndexFor(structure: BlueprintStructure) {
+  if (structure.type !== "signalLamp" && structure.type !== "signalGate") return undefined;
+  if (!structure.data || typeof structure.data !== "object") return undefined;
+  const state = structure.data as Record<string, unknown>;
+  if (typeof state.spriteIndex === "number" && Number.isInteger(state.spriteIndex)) {
+    return state.spriteIndex;
+  }
+  if (structure.type === "signalGate" && typeof state.desiredOpen === "boolean") {
+    return state.desiredOpen ? 1 : 0;
+  }
+  if (structure.type === "signalLamp") {
+    for (const key of ["on", "outputValue"]) {
+      if (typeof state[key] === "boolean") return state[key] ? 1 : 0;
+    }
+  }
   return undefined;
 }
 
@@ -131,6 +156,11 @@ export function prepareBlueprint(
   options: PrepareBlueprintOptions = {},
 ): PreparedBlueprint {
   const resolveSignalPoints = options.resolveSignalPoints ?? defaultSignalPoints;
+  const preparedStructures = blueprint.data.map((structure, index) => ({
+    structure,
+    index,
+    spriteIndex: spriteIndexFor(structure),
+  }));
   const signalCoordinateOffset = coordinateOffset(blueprint);
   const preparedSignalLinks = (blueprint.signalLinks ?? []).map((link) => {
     const from = resolveEndpoint(
@@ -159,5 +189,5 @@ export function prepareBlueprint(
       path: wirePath(from.point, to.point, sourceType === "signalBuffer"),
     };
   });
-  return { ...blueprint, signalCoordinateOffset, preparedSignalLinks };
+  return { ...blueprint, signalCoordinateOffset, preparedStructures, preparedSignalLinks };
 }

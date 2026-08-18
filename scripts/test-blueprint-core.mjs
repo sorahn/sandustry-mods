@@ -58,6 +58,17 @@ assert.deepEqual(preparedRelative.preparedSignalLinks[0].fromPoint, { x: 1.5, y:
 assert.equal(preparedRelative.preparedSignalLinks[0].path.kind, "line");
 assert.equal(preparedRelative.preparedSignalLinks[1].path.kind, "cubic");
 
+const statefulStructures = core.prepareBlueprint({
+  name: "Stateful structures",
+  data: [
+    { type: "signalLamp", x: 0, y: 0, data: { spriteIndex: 1 } },
+    { type: "signalGate", x: 8, y: 0, data: { desiredOpen: true } },
+  ],
+  signalLinks: null,
+});
+assert.equal(statefulStructures.preparedStructures[0].spriteIndex, 1);
+assert.equal(statefulStructures.preparedStructures[1].spriteIndex, 1);
+
 const absoluteSignals = {
   ...relativeSignals,
   signalLinks: relativeSignals.signalLinks.map((link) => ({

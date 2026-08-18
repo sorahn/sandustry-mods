@@ -404,24 +404,6 @@ function foundationOutlinePath(
 
 type CollectorSprite = { frameIndex: number; rotation: number };
 
-function stateSpriteIndex(structure: Blueprint["data"][number]): number | undefined {
-  if (structure.type !== "signalLamp" && structure.type !== "signalGate") return undefined;
-  if (!structure.data || typeof structure.data !== "object") return undefined;
-  const state = structure.data as Record<string, unknown>;
-  if (typeof state.spriteIndex === "number" && Number.isInteger(state.spriteIndex)) {
-    return state.spriteIndex;
-  }
-  if (structure.type === "signalGate" && typeof state.desiredOpen === "boolean") {
-    return state.desiredOpen ? 1 : 0;
-  }
-  if (structure.type === "signalLamp") {
-    for (const key of ["on", "outputValue"]) {
-      if (typeof state[key] === "boolean") return state[key] ? 1 : 0;
-    }
-  }
-  return undefined;
-}
-
 function collectorSprites(
   structures: Blueprint["data"],
   entries: Array<{ structure: Blueprint["data"][number]; index: number }>,
@@ -1218,7 +1200,7 @@ export function BlueprintMap({
                       const frameHeight = frame?.height ?? runtimeSize?.height ?? sourceHeight;
                       const collectorSprite = collectorSpriteMap.get(index);
                       const frameIndex =
-                        stateSpriteIndex(structure) ??
+                        preparedBlueprint.preparedStructures[index].spriteIndex ??
                         collectorSprite?.frameIndex ??
                         renderAsset.frameIndex ??
                         0;
