@@ -3,9 +3,9 @@ import { PersistentCheckbox } from "./PersistentCheckbox";
 
 const SHOW_DEBUG_CELLS_KEY = "sandustry.blueprintInspector.showDebugCells";
 const SHOW_NAMES_KEY = "sandustry.blueprintInspector.showNames";
-const HIDE_SPRITES_KEY = "sandustry.blueprintInspector.hideSprites";
+const SHOW_SPRITES_KEY = "sandustry.blueprintInspector.showSprites";
 const SHOW_CUSTOM_SHAPES_KEY = "sandustry.blueprintInspector.showCustomShapes";
-const HIDE_FOUNDATION_OUTLINES_KEY = "sandustry.blueprintInspector.hideFoundationOutlines";
+const SHOW_FOUNDATION_OUTLINES_KEY = "sandustry.blueprintInspector.showFoundationOutlines";
 const SHOW_SIGNAL_LINKS_KEY = "sandustry.blueprintInspector.showSignalLinks";
 
 type MapDebugOptionsProps = {
@@ -13,12 +13,12 @@ type MapDebugOptionsProps = {
   onShowDebugCellsChange: (value: boolean) => void;
   showNames: boolean;
   onShowNamesChange: (value: boolean) => void;
-  hideSprites: boolean;
-  onHideSpritesChange: (value: boolean) => void;
+  showSprites: boolean;
+  onShowSpritesChange: (value: boolean) => void;
   showCustomShapes: boolean;
   onShowCustomShapesChange: (value: boolean) => void;
-  hideFoundationOutlines: boolean;
-  onHideFoundationOutlinesChange: (value: boolean) => void;
+  showFoundationOutlines: boolean;
+  onShowFoundationOutlinesChange: (value: boolean) => void;
   showSignalLinks: boolean;
   onShowSignalLinksChange: (value: boolean) => void;
 };
@@ -28,12 +28,12 @@ export function MapDebugOptions({
   onShowDebugCellsChange,
   showNames,
   onShowNamesChange,
-  hideSprites,
-  onHideSpritesChange,
+  showSprites,
+  onShowSpritesChange,
   showCustomShapes,
   onShowCustomShapesChange,
-  hideFoundationOutlines,
-  onHideFoundationOutlinesChange,
+  showFoundationOutlines,
+  onShowFoundationOutlinesChange,
   showSignalLinks,
   onShowSignalLinksChange,
 }: MapDebugOptionsProps) {
@@ -41,7 +41,7 @@ export function MapDebugOptions({
     <PersistentCheckbox
       boxed
       size="small"
-      label="debug cells"
+      label="cells"
       storageKey={SHOW_DEBUG_CELLS_KEY}
       defaultChecked={showDebugCells}
       onCheckedChange={onShowDebugCellsChange}
@@ -50,7 +50,7 @@ export function MapDebugOptions({
     <PersistentCheckbox
       boxed
       size="small"
-      label="show names"
+      label="names"
       storageKey={SHOW_NAMES_KEY}
       defaultChecked={showNames}
       onCheckedChange={onShowNamesChange}
@@ -59,16 +59,16 @@ export function MapDebugOptions({
     <PersistentCheckbox
       boxed
       size="small"
-      label="hide sprites"
-      storageKey={HIDE_SPRITES_KEY}
-      defaultChecked={hideSprites}
-      onCheckedChange={onHideSpritesChange}
-      onInitialCheckedChange={onHideSpritesChange}
+      label="sprites"
+      storageKey={SHOW_SPRITES_KEY}
+      defaultChecked={showSprites}
+      onCheckedChange={onShowSpritesChange}
+      onInitialCheckedChange={onShowSpritesChange}
     />,
     <PersistentCheckbox
       boxed
       size="small"
-      label="show custom shapes"
+      label="custom shapes"
       storageKey={SHOW_CUSTOM_SHAPES_KEY}
       defaultChecked={showCustomShapes}
       onCheckedChange={onShowCustomShapesChange}
@@ -77,16 +77,16 @@ export function MapDebugOptions({
     <PersistentCheckbox
       boxed
       size="small"
-      label="hide foundation outlines"
-      storageKey={HIDE_FOUNDATION_OUTLINES_KEY}
-      defaultChecked={hideFoundationOutlines}
-      onCheckedChange={onHideFoundationOutlinesChange}
-      onInitialCheckedChange={onHideFoundationOutlinesChange}
+      label="foundation outlines"
+      storageKey={SHOW_FOUNDATION_OUTLINES_KEY}
+      defaultChecked={showFoundationOutlines}
+      onCheckedChange={onShowFoundationOutlinesChange}
+      onInitialCheckedChange={onShowFoundationOutlinesChange}
     />,
     <PersistentCheckbox
       boxed
       size="small"
-      label="signal links"
+      label="signals"
       storageKey={SHOW_SIGNAL_LINKS_KEY}
       defaultChecked={showSignalLinks}
       onCheckedChange={onShowSignalLinksChange}

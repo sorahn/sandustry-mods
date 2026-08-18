@@ -576,10 +576,15 @@ export function BlueprintMap({
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [showDebugCells, setShowDebugCells] = useState(false);
   const [showNames, setShowNames] = useState(false);
-  const [hideSprites, setHideSprites] = useState(false);
+  const [showSprites, setShowSprites] = useState(true);
   const [showCustomShapes, setShowCustomShapes] = useState(false);
-  const [hideFoundationOutlines, setHideFoundationOutlines] = useState(false);
+  const [showFoundationOutlines, setShowFoundationOutlines] = useState(true);
   const [showSignalLinks, setShowSignalLinks] = useState(true);
+  // Sprite hiding is a local renderer debugging aid. Keep the production
+  // render path hard-wired to sprites regardless of persisted debug state.
+  const spritesVisible = import.meta.env.PROD || showSprites;
+  const foundationOutlinesVisible = import.meta.env.PROD || showFoundationOutlines;
+  const signalLinksVisible = import.meta.env.PROD || showSignalLinks;
   const [zoom, setZoom] = useState(() =>
     captureOnly ? 1 : snapMapZoom(readStoredMapView(blueprintKey)?.zoom ?? 1),
   );
@@ -734,12 +739,12 @@ export function BlueprintMap({
     onShowDebugCellsChange: setShowDebugCells,
     showNames,
     onShowNamesChange: setShowNames,
-    hideSprites,
-    onHideSpritesChange: setHideSprites,
+    showSprites,
+    onShowSpritesChange: setShowSprites,
     showCustomShapes,
     onShowCustomShapesChange: setShowCustomShapes,
-    hideFoundationOutlines,
-    onHideFoundationOutlinesChange: setHideFoundationOutlines,
+    showFoundationOutlines,
+    onShowFoundationOutlinesChange: setShowFoundationOutlines,
     showSignalLinks,
     onShowSignalLinksChange: setShowSignalLinks,
   });
@@ -1141,7 +1146,7 @@ export function BlueprintMap({
               })}
             </g>
           ) : null}
-          {showSignalLinks
+          {signalLinksVisible
             ? (blueprint.signalLinks ?? []).map((link, index) => {
                 const fromCoordinate = signalEndpoint(blueprint, link.from, signalOffset, "from");
                 const toCoordinate = signalEndpoint(blueprint, link.to, signalOffset, "to");
@@ -1189,8 +1194,11 @@ export function BlueprintMap({
               entry?.name ??
                 (typeof structure.type === "number" ? structure.type : structure.type.slice(0, 8)),
             );
-            const labelFontSize = 36;
-            const labelLineHeight = 42;
+            // Labels live in the same display-pixel coordinate space as the
+            // map. Keep them proportional to a cell so they remain useful at
+            // the renderer's native scale instead of overwhelming sprites.
+            const labelFontSize = Math.max(8, cell * 0.9);
+            const labelLineHeight = labelFontSize * 1.15;
             const labelLines = wrapLabel(
               label,
               Math.max(3, Math.floor(tileWidth / (labelFontSize * 0.6))),
@@ -1224,13 +1232,15 @@ export function BlueprintMap({
                   height={tileHeight}
                   rx="5"
                   fill={
-                    hideSprites || isCustomShape || entry?.renderAsset
+                    !spritesVisible || isCustomShape || entry?.renderAsset
                       ? "transparent"
                       : tileColor(structure.type)
                   }
                   // Sprites own their visible shape. A generic footprint border
                   // leaks through the transparent corners of triangle foundations.
-                  stroke={hideSprites || isCustomShape || entry?.renderAsset ? "none" : "#8491a3"}
+                  stroke={
+                    !spritesVisible || isCustomShape || entry?.renderAsset ? "none" : "#8491a3"
+                  }
                   strokeWidth="1.5"
                 />
                 {isCustomShape && showCustomShapes
@@ -1253,7 +1263,7 @@ export function BlueprintMap({
                       ),
                     )
                   : null}
-                {!hideSprites && assetEntry?.renderAsset
+                {spritesVisible && assetEntry?.renderAsset
                   ? (() => {
                       const assetEntry =
                         isCustomShape && !entry?.renderAsset ? catalogEntry(11)! : entry!;
@@ -1431,7 +1441,7 @@ export function BlueprintMap({
               </g>
             );
           })}
-          {!hideFoundationOutlines &&
+          {foundationOutlinesVisible &&
           foundationOutlinePath(
             blueprint.data,
             minX,
