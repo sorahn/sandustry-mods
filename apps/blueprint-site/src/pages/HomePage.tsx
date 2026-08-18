@@ -14,6 +14,9 @@ export function HomePage() {
           into a string. Everything runs locally in your browser.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
+          <Link to="/inspect" className="sd-button sd-button--accent">
+            Open the blueprint inspector
+          </Link>
           <Link to="/codec" className="sd-button sd-button--accent">
             Open the codec
           </Link>
