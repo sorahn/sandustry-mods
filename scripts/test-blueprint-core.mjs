@@ -39,6 +39,40 @@ assert.deepEqual(
   { name: "Empty", data: [], signalLinks: [] },
 );
 
+const signalStructures = [
+  { type: "signalBuffer", x: 0, y: 8 },
+  { type: "signalToggle", x: 8, y: 8 },
+  { type: "signalLamp", x: 16, y: 8 },
+];
+const relativeSignals = {
+  name: "Relative signals",
+  data: signalStructures,
+  signalLinks: [
+    { from: { x: 0, y: 8 }, to: { x: 8, y: 8 }, on: false },
+    { from: { x: 8, y: 8 }, to: { x: 16, y: 8 }, on: true },
+  ],
+};
+const preparedRelative = core.prepareBlueprint(relativeSignals);
+assert.deepEqual(preparedRelative.signalCoordinateOffset, { x: 0, y: 0 });
+assert.deepEqual(preparedRelative.preparedSignalLinks[0].fromPoint, { x: 1.5, y: 9.5 });
+assert.equal(preparedRelative.preparedSignalLinks[0].path.kind, "line");
+assert.equal(preparedRelative.preparedSignalLinks[1].path.kind, "cubic");
+
+const absoluteSignals = {
+  ...relativeSignals,
+  signalLinks: relativeSignals.signalLinks.map((link) => ({
+    ...link,
+    from: { x: link.from.x + 2096, y: link.from.y + 1012 },
+    to: { x: link.to.x + 2096, y: link.to.y + 1012 },
+  })),
+};
+const preparedAbsolute = core.prepareBlueprint(absoluteSignals);
+assert.deepEqual(preparedAbsolute.signalCoordinateOffset, { x: 2096, y: 1012 });
+assert.deepEqual(
+  preparedAbsolute.preparedSignalLinks.map(({ fromPoint, toPoint }) => ({ fromPoint, toPoint })),
+  preparedRelative.preparedSignalLinks.map(({ fromPoint, toPoint }) => ({ fromPoint, toPoint })),
+);
+
 const oversizedTypeTable = [4, 1, 120, 65];
 for (let index = 0; index < 65; index++) oversizedTypeTable.push(0, index);
 oversizedTypeTable.push(1, 63, 0, 0, 0);

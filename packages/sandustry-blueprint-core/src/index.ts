@@ -20,6 +20,18 @@ export type Blueprint = {
   signalLinks: SignalLink[] | null;
 };
 
+export {
+  defaultSignalPoints,
+  prepareBlueprint,
+  type BlueprintCoordinate,
+  type PreparedBlueprint,
+  type PreparedSignalLink,
+  type PrepareBlueprintOptions,
+  type SignalPoint,
+  type SignalPoints,
+  type SignalPointResolver,
+} from "./prepare";
+
 const BINARY_PREFIX = "SAND:BP:v2:";
 const TEXT_PREFIX = "SAND:BP:v2t:";
 const LEGACY_PREFIX = "SAND:BP:v1:";

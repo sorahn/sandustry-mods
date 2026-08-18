@@ -1,4 +1,4 @@
-import type { BlueprintType } from "@sandustry/blueprint-core";
+import type { BlueprintType, SignalPoints } from "@sandustry/blueprint-core";
 import generatedCatalog from "../structure-catalog.json";
 
 export type RenderMetadata = {
@@ -31,14 +31,6 @@ export type RenderAsset = {
   lightColor?: string;
 };
 
-export type SignalPoint = { x: number; y: number };
-
-export type SignalPoints = {
-  input?: SignalPoint;
-  output?: SignalPoint;
-  shared?: SignalPoint;
-};
-
 export type CatalogEntry = {
   type: BlueprintType;
   name?: string;
@@ -69,38 +61,6 @@ const DIRECTIONAL_NAME_ALIASES: Record<string, string> = {
   launcherRightMk2: "Launcher Mk.2",
   launcherUpMk2: "Launcher Mk.2",
 };
-
-const SIGNAL_CORNER_INPUT: SignalPoint = { x: 0, y: 0 };
-const SIGNAL_CORNER_OUTPUT: SignalPoint = { x: 3, y: 3 };
-// Signal points are measured from the structure's top-left cell. The center
-// of a four-cell footprint falls between cells 1 and 2, rather than at the
-// center of cell 2.
-const SIGNAL_CENTER: SignalPoint = { x: 1.5, y: 1.5 };
-const SIGNAL_SENSOR: SignalPoint = { x: 3, y: 3 };
-const SIGNAL_GATE_TYPES = [
-  "signalAnd",
-  "signalNand",
-  "signalNor",
-  "signalNot",
-  "signalOr",
-  "signalXnor",
-  "signalXor",
-];
-const SIGNAL_INPUT_OUTPUT_TYPES = ["signalLamp", "signalRepeater", "signalSwitch", "signalToggle"];
-const SIGNAL_OUTPUT_TYPES = ["signalButton"];
-const SIGNAL_SENSOR_TYPES = ["signalPresenceSensor", "signalPulseSensor", "signalSensor"];
-
-const SIGNAL_POINTS = new Map<string, SignalPoints>([
-  ...SIGNAL_GATE_TYPES.map(
-    (type) => [type, { input: SIGNAL_CORNER_INPUT, output: SIGNAL_CORNER_OUTPUT }] as const,
-  ),
-  ...SIGNAL_INPUT_OUTPUT_TYPES.map(
-    (type) => [type, { input: SIGNAL_CORNER_INPUT, output: SIGNAL_CORNER_OUTPUT }] as const,
-  ),
-  ...SIGNAL_OUTPUT_TYPES.map((type) => [type, { output: SIGNAL_CORNER_OUTPUT }] as const),
-  ...SIGNAL_SENSOR_TYPES.map((type) => [type, { shared: SIGNAL_SENSOR }] as const),
-  ["signalBuffer", { shared: SIGNAL_CENTER }],
-]);
 
 // The runtime debug probes do not expose a complete catalog. Missing entries
 // intentionally continue through the renderer's unknown-content fallback.
@@ -161,10 +121,6 @@ const byType = new Map(CATALOG.map((entry) => [entry.type, entry]));
 
 export function catalogEntry(type: BlueprintType): CatalogEntry | undefined {
   return byType.get(type);
-}
-
-export function catalogSignalPoints(type: BlueprintType): SignalPoints | undefined {
-  return typeof type === "string" ? SIGNAL_POINTS.get(type) : undefined;
 }
 
 export function catalogRender(entry: CatalogEntry): RenderMetadata | undefined {

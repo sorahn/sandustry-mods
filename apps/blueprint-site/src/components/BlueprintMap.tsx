@@ -1,12 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
+import { prepareBlueprint } from "@sandustry/blueprint-core";
 import { type Blueprint } from "../utils/blueprint";
 import {
   catalogEntry,
   catalogRender,
   catalogRenderSize,
-  catalogSignalPoints,
   type CatalogEntry,
-  type SignalPoint,
 } from "../utils/catalog";
 import { debugComponent } from "./DebugComponentWrapper";
 import { MapDebugOptions } from "./MapDebugOptions";
@@ -311,66 +310,6 @@ function structureVisualTopY(structure: Blueprint["data"][number]) {
 
 function renderPixelScale(cell: number) {
   return cell / NATIVE_PIXELS_PER_CELL;
-}
-
-type Coordinate = { x: number; y: number };
-
-function signalCoordinateOffset(blueprint: Blueprint): Coordinate {
-  const origins = blueprint.data;
-  const endpoints = (blueprint.signalLinks ?? []).flatMap((link) => [link.from, link.to]);
-  if (!endpoints.length || !origins.length) return { x: 0, y: 0 };
-  const candidates = new Map<string, { offset: Coordinate; matches: number }>();
-  for (const endpoint of endpoints) {
-    for (const structure of origins) {
-      const offset = { x: endpoint.x - structure.x, y: endpoint.y - structure.y };
-      const key = `${offset.x},${offset.y}`;
-      const candidate = candidates.get(key) ?? { offset, matches: 0 };
-      candidate.matches += 1;
-      candidates.set(key, candidate);
-    }
-  }
-  const best = [...candidates.values()].sort((left, right) => right.matches - left.matches)[0];
-  return best?.matches === endpoints.length ? best.offset : { x: 0, y: 0 };
-}
-
-function signalStructureAt(blueprint: Blueprint, coordinate: Coordinate) {
-  return blueprint.data.find(
-    (structure) => structure.x === coordinate.x && structure.y === coordinate.y,
-  );
-}
-
-function signalEndpoint(
-  blueprint: Blueprint,
-  raw: Coordinate,
-  offset: Coordinate,
-  side: "from" | "to",
-): Coordinate {
-  const origin = { x: raw.x - offset.x, y: raw.y - offset.y };
-  const structure = signalStructureAt(blueprint, origin);
-  if (!structure) return origin;
-  const points = catalogSignalPoints(structure.type);
-  const local: SignalPoint | undefined =
-    points?.shared ?? points?.[side === "from" ? "output" : "input"];
-  return local ? { x: structure.x + local.x, y: structure.y + local.y } : origin;
-}
-
-function signalWirePath(
-  from: Coordinate,
-  to: Coordinate,
-  straight: boolean,
-  nativePixelScale: number,
-) {
-  const dx = to.x - from.x;
-  const dy = to.y - from.y;
-  if (straight) return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
-  const distance = Math.hypot(dx, dy);
-  const curve = Math.min(24 * nativePixelScale, Math.max(6 * nativePixelScale, distance * 0.15));
-  return [
-    `M ${from.x} ${from.y}`,
-    `C ${from.x + dx * 0.25} ${from.y + dy * 0.25 + curve}`,
-    `${from.x + dx * 0.75} ${from.y + dy * 0.75 + curve}`,
-    `${to.x} ${to.y}`,
-  ].join(" ");
 }
 
 function foundationOutlinePath(
@@ -717,7 +656,7 @@ export function BlueprintMap({
     x: (x - minX + padding + 0.5) * cell,
     y: (y - minY + padding + 0.5) * cell,
   });
-  const signalOffset = signalCoordinateOffset(blueprint);
+  const preparedBlueprint = prepareBlueprint(blueprint);
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
   const renderStructures = blueprint.data
     .map((structure, index) => {
@@ -1147,24 +1086,22 @@ export function BlueprintMap({
             </g>
           ) : null}
           {signalLinksVisible
-            ? (blueprint.signalLinks ?? []).map((link, index) => {
-                const fromCoordinate = signalEndpoint(blueprint, link.from, signalOffset, "from");
-                const toCoordinate = signalEndpoint(blueprint, link.to, signalOffset, "to");
-                const from = point(fromCoordinate.x, fromCoordinate.y);
-                const to = point(toCoordinate.x, toCoordinate.y);
-                const source = signalStructureAt(blueprint, {
-                  x: link.from.x - signalOffset.x,
-                  y: link.from.y - signalOffset.y,
-                });
+            ? preparedBlueprint.preparedSignalLinks.map((link, index) => {
+                const wire = link.path;
+                const from = point(wire.from.x, wire.from.y);
+                const to = point(wire.to.x, wire.to.y);
+                const d =
+                  wire.kind === "line"
+                    ? `M ${from.x} ${from.y} L ${to.x} ${to.y}`
+                    : (() => {
+                        const control1 = point(wire.control1.x, wire.control1.y);
+                        const control2 = point(wire.control2.x, wire.control2.y);
+                        return `M ${from.x} ${from.y} C ${control1.x} ${control1.y} ${control2.x} ${control2.y} ${to.x} ${to.y}`;
+                      })();
                 return (
                   <path
                     key={`link-${index}`}
-                    d={signalWirePath(
-                      from,
-                      to,
-                      source?.type === "signalBuffer",
-                      renderPixelScale(cell),
-                    )}
+                    d={d}
                     stroke={link.on ? "#00ff99" : "#ff3333"}
                     fill="none"
                     strokeLinecap="round"
