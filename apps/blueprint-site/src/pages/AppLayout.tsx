@@ -1,5 +1,4 @@
 import { Link, Outlet } from "@tanstack/react-router";
-import { debugComponent } from "../components/DebugComponentWrapper";
 
 export function AppLayout() {
   return (
@@ -13,11 +12,9 @@ export function AppLayout() {
             <Link to="/" activeProps={{ className: "text-yellow-300" }}>
               Home
             </Link>
-            {debugComponent(Link, {
-              to: "/inspect",
-              activeProps: { className: "text-yellow-300" },
-              children: "Inspect",
-            })}
+            <Link to="/inspect" activeProps={{ className: "text-yellow-300" }}>
+              Inspect
+            </Link>
             <Link to="/codec" activeProps={{ className: "text-yellow-300" }}>
               Encode / Decode
             </Link>
