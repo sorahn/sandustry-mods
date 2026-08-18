@@ -1,8 +1,8 @@
 import { createRootRoute, createRoute } from "@tanstack/react-router";
-import { AppLayout } from "./pages/AppLayout";
-import { BlueprintCodecPage } from "./pages/BlueprintCodecPage";
-import { BlueprintInspectorPage } from "./pages/BlueprintInspectorPage";
-import { BlueprintVisualFixturePage } from "./pages/BlueprintVisualFixturePage";
+import { AppLayout } from "./components/AppLayout";
+import { BlueprintCodecPage } from "./pages/Codec";
+import { BlueprintInspectorPage } from "./pages/Inspector";
+import { BlueprintVisualFixturePage } from "./pages/VisualFixture";
 import { HomePage } from "./pages/HomePage";
 
 const rootRoute = createRootRoute({ component: AppLayout });

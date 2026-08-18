@@ -499,9 +499,15 @@ export function BlueprintMap({
   const [hideSprites, setHideSprites] = useState(false);
   const [showCustomShapes, setShowCustomShapes] = useState(false);
   const [hideFoundationOutlines, setHideFoundationOutlines] = useState(false);
-  const [zoom, setZoom] = useState(() => snapMapZoom(readStoredMapView(blueprintKey)?.zoom ?? 1));
-  const [pan, setPan] = useState(() => readStoredMapView(blueprintKey)?.pan ?? { x: 0, y: 0 });
-  const [mapSizeReady, setMapSizeReady] = useState(() => readStoredMapView(blueprintKey) !== null);
+  const [zoom, setZoom] = useState(() =>
+    captureOnly ? 1 : snapMapZoom(readStoredMapView(blueprintKey)?.zoom ?? 1),
+  );
+  const [pan, setPan] = useState(() =>
+    captureOnly ? { x: 0, y: 0 } : (readStoredMapView(blueprintKey)?.pan ?? { x: 0, y: 0 }),
+  );
+  const [mapSizeReady, setMapSizeReady] = useState(
+    () => captureOnly || readStoredMapView(blueprintKey) !== null,
+  );
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
   const viewportRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -516,7 +522,7 @@ export function BlueprintMap({
   const suppressClickRef = useRef(false);
   const panCommitTimerRef = useRef<number | null>(null);
   const livePanRef = useRef(pan);
-  const fitModeRef = useRef(readStoredMapView(blueprintKey)?.fit ?? true);
+  const fitModeRef = useRef(captureOnly ? true : (readStoredMapView(blueprintKey)?.fit ?? true));
   const padding = 6;
   // Blueprint coordinates are cell-sized units. Four native sprite pixels
   // make one cell, and four cells make one blueprint block. At 100% four
@@ -669,9 +675,9 @@ export function BlueprintMap({
     return () => observer.disconnect();
   }, []);
   useEffect(() => {
-    const stored = remember ? readStoredMapView(blueprintKey) : null;
+    const stored = remember && !captureOnly ? readStoredMapView(blueprintKey) : null;
     fitModeRef.current = stored?.fit ?? true;
-    const restoredZoom = snapMapZoom(stored?.zoom ?? 1);
+    const restoredZoom = captureOnly ? 1 : snapMapZoom(stored?.zoom ?? 1);
     const restoredMaxPanX = Math.max(
       0,
       (width * restoredZoom - (viewportSize.width || width)) / (2 * restoredZoom),
@@ -681,13 +687,19 @@ export function BlueprintMap({
       (height * restoredZoom - (viewportSize.height || height)) / (2 * restoredZoom),
     );
     setZoom(restoredZoom);
-    setPan({
-      x: Math.max(-restoredMaxPanX, Math.min(restoredMaxPanX, stored?.pan.x ?? 0)),
-      y: Math.max(-restoredMaxPanY, Math.min(restoredMaxPanY, stored?.pan.y ?? 0)),
-    });
+    setPan(
+      captureOnly
+        ? { x: 0, y: 0 }
+        : {
+            x: Math.max(-restoredMaxPanX, Math.min(restoredMaxPanX, stored?.pan.x ?? 0)),
+            y: Math.max(-restoredMaxPanY, Math.min(restoredMaxPanY, stored?.pan.y ?? 0)),
+          },
+    );
     setSelectedIndex(null);
-    setMapSizeReady(stored?.viewportWidth === viewportSize.width && viewportSize.width > 0);
-  }, [blueprint, blueprintKey, remember]);
+    setMapSizeReady(
+      captureOnly || (stored?.viewportWidth === viewportSize.width && viewportSize.width > 0),
+    );
+  }, [blueprint, blueprintKey, captureOnly, remember]);
   const fitToViewport = () => {
     fitModeRef.current = true;
     const availableWidth = viewportRef.current?.clientWidth || viewportSize.width;
@@ -701,6 +713,7 @@ export function BlueprintMap({
     setPan({ x: 0, y: 0 });
   };
   useLayoutEffect(() => {
+    if (captureOnly) return;
     const stored = remember ? readStoredMapView(blueprintKey) : null;
     if (stored?.viewportWidth === viewportSize.width) return;
     if (!viewportSize.width || !viewportSize.height) return;
@@ -711,7 +724,7 @@ export function BlueprintMap({
     }
     fitToViewport();
     setMapSizeReady(true);
-  }, [blueprintKey, remember, viewportSize.height, viewportSize.width, width]);
+  }, [blueprintKey, captureOnly, remember, viewportSize.height, viewportSize.width, width]);
   useEffect(() => {
     if (!remember || !blueprintKey || !mapSizeReady) return;
     writeLocalValue(

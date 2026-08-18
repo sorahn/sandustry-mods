@@ -1,5 +1,5 @@
-export { AppLayout } from "./AppLayout";
+export { AppLayout } from "../components/AppLayout";
 export { HomePage } from "./HomePage";
-export { BlueprintCodecPage } from "./BlueprintCodecPage";
-export { BlueprintInspectorPage } from "./BlueprintInspectorPage";
-export { BlueprintVisualFixturePage } from "./BlueprintVisualFixturePage";
+export { BlueprintCodecPage } from "./Codec";
+export { BlueprintInspectorPage } from "./Inspector";
+export { BlueprintVisualFixturePage } from "./VisualFixture";

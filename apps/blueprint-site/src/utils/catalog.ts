@@ -86,6 +86,19 @@ const MANUAL_CATALOG: CatalogEntry[] = [
     footprint: { width: 4, height: 4 },
     source: "repository mod definition",
   },
+  {
+    type: "signalCounter4",
+    name: "[DEPRECATED] Signal Counter",
+    category: "logic",
+    footprint: { width: 4, height: 4 },
+    renderAsset: {
+      path: "catalog/mods__signalCounter4.png",
+      sourceSize: { width: 32, height: 16 },
+      frame: { width: 16, height: 16 },
+      clip: true,
+    },
+    source: "extracted sprite asset; runtime definition not captured",
+  },
 ];
 
 const runtimeCatalog: CatalogEntry[] = generatedCatalog.entries.map((entry) => ({
