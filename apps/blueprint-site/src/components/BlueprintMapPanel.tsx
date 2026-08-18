@@ -107,7 +107,6 @@ export function BlueprintMapPanel({
                 <li>
                   Pipe structures and their connection/topology visuals are not calibrated yet.
                 </li>
-                <li>Wires and signal connections are not supported yet.</li>
                 <li>
                   Some rotations, variants, multi-cell visuals, and newer or modded structures may
                   be approximate.
