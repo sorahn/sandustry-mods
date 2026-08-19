@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { customShapeFromStructure } from "@sandustry/blueprint-core";
 import { type Blueprint } from "../utils/blueprint";
 import { catalogEntry } from "../utils/catalog";
@@ -12,6 +12,7 @@ import {
   BlueprintMapGridLayer,
   BlueprintMapSignalLinksLayer,
 } from "./BlueprintMapLayers";
+import { useBlueprintMapViewport } from "../hooks/useBlueprintMapViewport";
 import {
   BLOCK_COORDINATE_SIZE,
   DISPLAY_PIXELS_PER_BLOCK_AT_100,
@@ -176,11 +177,7 @@ export function BlueprintMap({
   const [mapSizeReady, setMapSizeReady] = useState(
     () => captureOnly || readStoredMapView(blueprintKey) !== null,
   );
-  const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
-  const viewportRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
-  const hoverMarkerRef = useRef<SVGRectElement>(null);
-  const hoverBlockRef = useRef<{ x: number; y: number } | null>(null);
   const dragRef = useRef<{
     pointerId: number;
     lastX: number;
@@ -198,6 +195,8 @@ export function BlueprintMap({
   const cell = DISPLAY_PIXELS_PER_BLOCK_AT_100 / NATIVE_PIXELS_PER_CELL;
   const mapModel = createBlueprintMapModel(blueprint, padding, cell);
   const { preparedBlueprint, minX, minY, width, height, blueprintWidth } = mapModel;
+  const { viewportRef, viewportSize, hoverMarkerRef, updateHoverBlock, clearHoverBlock } =
+    useBlueprintMapViewport({ cell, minX, minY, padding });
   const viewportWidth = viewportSize.width || width;
   const fitWidth = blueprintWidth + MAP_FIT_MARGIN_CELLS_TOTAL * cell;
   const fitZoomForViewport = (availableWidth: number) => {
@@ -228,29 +227,6 @@ export function BlueprintMap({
       setPan(livePanRef.current);
     }, PAN_COMMIT_DEBOUNCE_MS);
   };
-  const updateHoverBlock = (event: PointerEvent<SVGSVGElement>) => {
-    const svg = event.currentTarget;
-    const transform = svg.getScreenCTM();
-    if (!transform) return;
-    const pointer = svg.createSVGPoint();
-    pointer.x = event.clientX;
-    pointer.y = event.clientY;
-    const local = pointer.matrixTransform(transform.inverse());
-    const blueprintX = local.x / cell + minX - padding - 0.5;
-    const blueprintY = local.y / cell + minY - padding - 0.5;
-    const nextBlock = {
-      x: Math.floor(blueprintX / BLOCK_COORDINATE_SIZE) * BLOCK_COORDINATE_SIZE,
-      y: Math.floor(blueprintY / BLOCK_COORDINATE_SIZE) * BLOCK_COORDINATE_SIZE,
-    };
-    const previousBlock = hoverBlockRef.current;
-    if (previousBlock?.x === nextBlock.x && previousBlock.y === nextBlock.y) return;
-    hoverBlockRef.current = nextBlock;
-    const marker = hoverMarkerRef.current;
-    if (!marker) return;
-    marker.setAttribute("x", String((nextBlock.x - minX + padding) * cell));
-    marker.setAttribute("y", String((nextBlock.y - minY + padding) * cell));
-    marker.setAttribute("visibility", "visible");
-  };
   const gridOriginX = (padding - minX) * cell;
   const gridOriginY = (padding - minY) * cell;
   const point = (x: number, y: number) => ({
@@ -273,17 +249,6 @@ export function BlueprintMap({
     showSignalLinks,
     onShowSignalLinksChange: setShowSignalLinks,
   });
-  useEffect(() => {
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    const updateSize = () => {
-      setViewportSize({ width: viewport.clientWidth, height: viewport.clientHeight });
-    };
-    updateSize();
-    const observer = new ResizeObserver(updateSize);
-    observer.observe(viewport);
-    return () => observer.disconnect();
-  }, []);
   useEffect(() => {
     const stored = remember && !captureOnly ? readStoredMapView(blueprintKey) : null;
     fitModeRef.current = stored?.fit ?? true;
@@ -568,8 +533,7 @@ export function BlueprintMap({
             schedulePanCommit();
           }}
           onPointerLeave={() => {
-            hoverBlockRef.current = null;
-            hoverMarkerRef.current?.setAttribute("visibility", "hidden");
+            clearHoverBlock();
           }}
         >
           <BlueprintMapGridLayer
