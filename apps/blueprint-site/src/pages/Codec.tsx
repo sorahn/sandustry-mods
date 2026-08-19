@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { Button, Panel, Select, TextArea } from "@sandustry/ui";
 import {
   decodeBlueprint,
@@ -7,6 +6,7 @@ import {
   encodeBlueprint,
   type Blueprint,
 } from "../utils/blueprint";
+import { PageHeader } from "../components/PageHeader";
 
 export function BlueprintCodecPage() {
   const [encoded, setEncoded] = useState("");
@@ -37,16 +37,10 @@ export function BlueprintCodecPage() {
   };
   return (
     <section className="space-y-6">
-      <div>
-        <Link to="/" className="font-mono text-xs text-slate-500 hover:text-yellow-300">
-          ← Home
-        </Link>
-        <h1 className="mt-4 text-3xl font-bold text-white">Blueprint encode / decode</h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
-          Convert locally in your browser. Nothing is uploaded. The normalized JSON preserves
-          structure IDs, filters, arbitrary structure data, and v4 signal links.
-        </p>
-      </div>
+      <PageHeader title="Blueprint encode / decode">
+        Convert locally in your browser. Nothing is uploaded. The normalized JSON preserves
+        structure IDs, filters, arbitrary structure data, and v4 signal links.
+      </PageHeader>
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel title="Blueprint string">
           <div className="space-y-4 p-4">

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { structureLabel } from "@sandustry/blueprint-core";
 import { decodeBlueprint, type Blueprint } from "../utils/blueprint";
 import { debugComponent } from "../components/DebugComponentWrapper";
@@ -10,6 +9,7 @@ import {
   type BlueprintSummary,
 } from "../components/BlueprintSubmissionPanel";
 import { BlueprintStructuresPanel } from "../components/BlueprintStructuresPanel";
+import { PageHeader } from "../components/PageHeader";
 import {
   readStorageValue,
   readStoredBoolean,
@@ -122,20 +122,14 @@ export function BlueprintInspectorPage() {
   });
   return (
     <section className="space-y-6">
-      <div>
-        <Link to="/" className="font-mono text-xs text-slate-500 hover:text-yellow-300">
-          ← Home
-        </Link>
-        <h1 className="mt-4 text-3xl font-bold text-white">Blueprint Inspector</h1>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-400">
-          Inspect your Sandustry blueprints here. <br />
-          Browse and share your prints with the community at the{" "}
-          <a rel="noopener noreferrer" target="_blank" href="https://sandustryvault.com/">
-            Sandustry Vault
-          </a>
-          !
-        </p>
-      </div>
+      <PageHeader title="Blueprint Inspector">
+        Inspect your Sandustry blueprints here. <br />
+        Browse and share your prints with the community at the{" "}
+        <a rel="noopener noreferrer" target="_blank" href="https://sandustryvault.com/">
+          Sandustry Vault
+        </a>
+        !
+      </PageHeader>
       <BlueprintSubmissionPanel
         encoded={encoded}
         message={message}
