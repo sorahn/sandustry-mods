@@ -22,3 +22,8 @@ export {
   type HotbarSlot,
   type HotbarStepperProps,
 } from "./components/Hotbar";
+export {
+  ElementPicker,
+  type ElementPickerItem,
+  type ElementPickerProps,
+} from "./components/ElementPicker";
