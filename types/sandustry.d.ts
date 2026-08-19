@@ -128,6 +128,7 @@ interface SandustryApi {
     createParticlesAtWorld(worldX: number, worldY: number, options?: Record<string, unknown>): void;
   };
   energy: { consume(amount: number, options?: { allOrNothing?: boolean }): number };
+  authorization: { canUseTool(player: any, isFlamethrower?: boolean): boolean };
   patterns: {
     createCircle(size: number): number[][];
     excavateAtCell(

@@ -1,4 +1,4 @@
-/* Filtered Lenses: a native laser upgrade with an element whitelist picker. */
+/* Filtered Lenses: a native laser upgrade with a terrain whitelist picker. */
 
 "use strict";
 
@@ -8,7 +8,7 @@ const LASER_ID = "laser";
 const UPGRADE_ID = "filteredLenses";
 const FILTER_STORAGE_KEY = `${MOD_ID}.element`;
 const CONFIGURE_BINDING_ID = `${MOD_ID}:configure`;
-const PICKER_ID = `${MOD_ID}-element-picker`;
+const PICKER_ID = `${MOD_ID}-terrain-picker`;
 const NAV_SCOPE = `${PICKER_ID}-scope`;
 const UIReact = sandkit.react ?? null;
 
@@ -33,8 +33,9 @@ const TEXT: Record<string, string> = {
   "upgrades|laser|filteredLenses|description":
     "Mine only the selected terrain. Press L while the laser is selected to change the filter.",
   "mods|filteredLenses|configurePrompt": "Enter a terrain ID to mine (for example: stone).",
-  "mods|filteredLenses|configured": "Laser filter set to {element}.",
+  "mods|filteredLenses|configured": "Laser filter set to {terrain}.",
   "mods|filteredLenses|notPurchased": "Purchase Filtered Lenses before configuring the laser.",
+  "mods|filteredLenses|cannotUseHere": "You cannot use the laser here.",
   "Filtered Lenses enabled": "Filtered Lenses enabled",
   "Allow the Filtered Lenses upgrade to affect the laser.":
     "Allow the Filtered Lenses upgrade to affect the laser.",
@@ -185,7 +186,7 @@ const ElementGridButton = ({
   onSelect: () => void;
 }) => {
   if (!UIReact) return null;
-  const key = (value: Entry) => `${PICKER_ID}-element-${value.id || `type-${value.type}`}`;
+  const key = (value: Entry) => `${PICKER_ID}-terrain-${value.id || `type-${value.type}`}`;
   const column = index % 4;
   const focusable = api.ui.navigation.useFocusable({
     id: key(entry),
@@ -219,7 +220,7 @@ const ElementGridButton = ({
   );
 };
 
-const ElementPicker = () => {
+const TerrainPicker = () => {
   if (!UIReact) return null;
   const [query, setQuery] = UIReact.useState("");
   const [, bump] = UIReact.useState(0);
@@ -248,7 +249,7 @@ const ElementPicker = () => {
     id: `${PICKER_ID}-search`,
     scope: NAV_SCOPE,
     onActivate: (element: HTMLElement | null) => element?.focus(),
-    neighbors: { up: `${PICKER_ID}-minimize`, down: `${PICKER_ID}-element-0` },
+    neighbors: { up: `${PICKER_ID}-minimize`, down: `${PICKER_ID}-terrain-0` },
     scrollIntoView: true,
   });
   if (!picker) return null;
@@ -264,16 +265,16 @@ const ElementPicker = () => {
           transform: "translateX(-50%)",
           zIndex: 10000,
         }}
-        onClick={() => void openElementPicker(picker.current)}
+        onClick={() => void openTerrainPicker(picker.current)}
       >
         <span className="text-white text-xs opacity-70">Laser filter</span>
         <FocusableButton
           id={`${PICKER_ID}-selected`}
-          onActivate={() => void openElementPicker(picker.current)}
+          onActivate={() => void openTerrainPicker(picker.current)}
           className="flex items-center gap-2 text-xs text-white"
         >
           <span className="w-3 h-3" style={{ backgroundColor: selected?.color || "#9aa7b5" }} />
-          {selected?.name || "No element"}
+          {selected?.name || "No terrain"}
         </FocusableButton>
         <span className="text-xs text-slate-500">Click to expand</span>
       </div>
@@ -317,7 +318,7 @@ const ElementPicker = () => {
           ref={search.ref}
           autoFocus
           value={query}
-          placeholder="Search elements..."
+          placeholder="Search terrain..."
           maxLength={64}
           onChange={(event) => setQuery(event.target.value)}
           onKeyDown={(event) => {
@@ -348,7 +349,7 @@ const registerPicker = () => {
   if (pickerOverlayReady) return true;
   if (!UIReact) return false;
   try {
-    const dispose = api.ui.inject(PICKER_ID, ElementPicker);
+    const dispose = api.ui.inject(PICKER_ID, TerrainPicker);
     pickerOverlayReady = typeof dispose === "function";
     return pickerOverlayReady;
   } catch (error) {
@@ -356,7 +357,7 @@ const registerPicker = () => {
     return false;
   }
 };
-const openElementPicker = async (current: Selection) => {
+const openTerrainPicker = async (current: Selection) => {
   if (registerPicker()) {
     if (pickerPromise) return pickerPromise;
     pickerPromise = new Promise((resolve) => {
@@ -393,10 +394,10 @@ const configure = async () => {
     api.ui.toast(TEXT["mods|filteredLenses|notPurchased"]);
     return;
   }
-  const selection = await openElementPicker(currentSelection());
+  const selection = await openTerrainPicker(currentSelection());
   if (!selection) return;
   api.storage.local.set(FILTER_STORAGE_KEY, `terrain:${selection.id}`);
-  api.ui.toast(TEXT["mods|filteredLenses|configured"].replace("{element}", selection.id));
+  api.ui.toast(TEXT["mods|filteredLenses|configured"].replace("{terrain}", selection.id));
 };
 
 api.i18n.register("en", TEXT);
@@ -421,12 +422,18 @@ const laserTargetCell = (state: any) => {
   const startX = player.x + player.width / 2;
   const startY = player.y + player.height / 2 + 2;
   const angle = Math.atan2(mouse.y - startY, mouse.x - startX);
-  return api.raycast.castFromWorld(startX, startY, angle, 1000);
+  return api.raycast.castFromWorld(startX, startY, angle, LASER_RANGE);
 };
 
 let laserBeam: any = null;
 let laserChargeStart = 0;
-let laserShotFired = false;
+const LASER_ENERGY_COST = 60;
+const LASER_RANGE = 1000;
+const LASER_CHARGE_MS = 1000;
+const LASER_PATTERN_SIZE = 7;
+const LASER_COLOR = 0xff0000;
+const DEBUG_LASER = false;
+let laserCharged = false;
 let laserSessionActive = false;
 let laserDebugLastLog = 0;
 
@@ -436,6 +443,7 @@ const debugLaser = (
   details: Record<string, unknown> = {},
   force = false,
 ) => {
+  if (!DEBUG_LASER) return;
   const now = Number(state?.store?.meta?.time) || Date.now();
   if (!force && now - laserDebugLastLog < 250) return;
   laserDebugLastLog = now;
@@ -448,7 +456,7 @@ const debugLaser = (
       end: Boolean(state?.session?.action?.state?.[3]),
       beam: Boolean(laserBeam),
       chargeStart: laserChargeStart,
-      shotFired: laserShotFired,
+      charged: laserCharged,
       ...details,
     })}`,
   );
@@ -458,7 +466,7 @@ const clearLaser = () => {
   laserBeam?.destroy?.();
   laserBeam = null;
   laserChargeStart = 0;
-  laserShotFired = false;
+  laserCharged = false;
   laserSessionActive = false;
 };
 
@@ -480,29 +488,56 @@ const runFilteredLaser = (state: any) => {
 
   const now = Number(state?.store?.meta?.time) || Date.now();
   if (!laserChargeStart || actionState[1]) {
+    if (api.authorization?.canUseTool && !api.authorization.canUseTool(player)) {
+      api.ui.toast(TEXT["mods|filteredLenses|cannotUseHere"]);
+      clearLaser();
+      return;
+    }
     laserChargeStart = now;
-    laserShotFired = false;
+    laserCharged = false;
+    api.sound?.play?.("charge_up", { offset: 1.5, volume: 0.2, fadeIn: 1.5 });
+    api.sound?.play?.("charge_up_2", { maxDuration: 0.95, volume: 0.1 });
+    api.sound?.play?.("charge_up_3", {
+      maxDuration: 1,
+      offset: 0.5 + Math.random() * 1.5,
+      volume: 0.05,
+      fadeIn: 1,
+    });
   }
   const startX = player.x + player.width / 2;
   const startY = player.y + player.height / 2 + 2;
   const angle = Math.atan2(mouse.y - startY, mouse.x - startX);
   const target = laserTargetCell(state);
-  if (!target && !laserShotFired) laserChargeStart = now;
-  const charge = Math.min((now - laserChargeStart) / 1000, 1);
+  if (!target && !laserCharged) laserChargeStart = now;
+  const charge = Math.min((now - laserChargeStart) / LASER_CHARGE_MS, 1);
   const metrics = api.rendering.getGridMetrics();
+  const camera = state?.session?.camera || { x: 0, y: 0 };
   const endX = target
     ? target.x * metrics.cellSize + metrics.cellSize / 2
-    : startX + Math.cos(angle) * 1000;
+    : startX + Math.cos(angle) * LASER_RANGE;
   const endY = target
     ? target.y * metrics.cellSize + metrics.cellSize / 2
-    : startY + Math.sin(angle) * 1000;
+    : startY + Math.sin(angle) * LASER_RANGE;
 
   laserBeam?.destroy?.();
-  laserBeam = api.effects.createLaserAtWorld(startX, startY, endX, endY, {
-    width: charge < 1 ? 1 + 2 * charge : 3,
-    brightness: charge < 1 ? 0.1 + 0.4 * charge : 1,
-    color: 0xff0000,
-    glow: true,
+  laserBeam = api.effects.createLaserAtWorld(
+    startX - camera.x,
+    startY - camera.y,
+    endX - camera.x,
+    endY - camera.y,
+    {
+      width: charge < 1 ? 1 + 2 * charge : 3,
+      brightness: charge < 1 ? 0.1 + 0.4 * charge : 1,
+      color: LASER_COLOR,
+      glow: true,
+    },
+  );
+  api.effects.createLightAtWorld(startX, startY, {
+    brightness: 0.8 * (charge < 1 ? 0.1 + 0.4 * charge : 1),
+    duration: 1,
+    size: 300,
+    color: [1, 0, 0, 1],
+    dedupKey: "laser:origin",
   });
   debugLaser(state, "filtered laser frame", {
     now,
@@ -510,24 +545,46 @@ const runFilteredLaser = (state: any) => {
     target: target ? { x: target.x, y: target.y, distance: target.distance } : null,
     startWorld: { x: startX, y: startY },
     endWorld: { x: endX, y: endY },
+    camera: { x: camera.x, y: camera.y },
+    beamType: laserBeam?.constructor?.name || typeof laserBeam,
+    beamCanDestroy: typeof laserBeam?.destroy === "function",
   });
 
   if (charge >= 1 && target) {
-    const firstChargedExcavation = !laserShotFired;
-    laserShotFired = true;
+    const firstChargedExcavation = !laserCharged;
+    laserCharged = true;
     debugLaser(
       state,
       firstChargedExcavation ? "filtered laser excavation begin" : "filtered laser excavation tick",
       { target: { x: target.x, y: target.y } },
       firstChargedExcavation,
     );
-    if (api.energy.consume(60, { allOrNothing: true }) !== 60) {
+    if (firstChargedExcavation) {
+      for (let flash = 0; flash < 3; flash += 1) {
+        setTimeout(() => {
+          api.effects.createLightAtWorld(target.x * metrics.cellSize, target.y * metrics.cellSize, {
+            brightness: 0.5,
+            duration: 100,
+            size: 300,
+            color: [1, 0, 0, 1],
+            unclamped: true,
+            skipDedup: true,
+          });
+        }, 100 * flash);
+      }
+    }
+    if (api.energy.consume(LASER_ENERGY_COST, { allOrNothing: true }) !== LASER_ENERGY_COST) {
       api.ui.toast("Not enough energy.");
+      api.sound?.play?.("ammo_empty", {
+        rateLimitKey: "laser_no_energy",
+        rateLimitMs: 1000,
+        volume: 0.15,
+      });
       debugLaser(state, "filtered laser shot denied", {}, true);
       return;
     }
     const selected = currentSelection();
-    const pattern = api.patterns.createCircle(7);
+    const pattern = api.patterns.createCircle(LASER_PATTERN_SIZE);
     const radius = Math.floor(pattern.length / 2);
     const outVelocity = { x: 300 * Math.cos(angle), y: 300 * -Math.sin(angle) };
     const matchingCells: Array<{ x: number; y: number; type: number | null }> = [];
@@ -560,13 +617,17 @@ const runFilteredLaser = (state: any) => {
       count: 8,
       minSpeed: 100,
       maxSpeed: 200,
-      color: 0xff0000,
+      color: LASER_COLOR,
       minSize: 1,
       maxSize: 2,
       minLifetime: 0.2,
       maxLifetime: 0.4,
     });
-    api.sound?.play?.("laser_hit", { volume: 0.02, maxInstances: 96 });
+    api.sound?.play?.("laser_hit", {
+      playbackRate: 0.1 + Math.random() * 1.4,
+      volume: 0.02,
+      maxInstances: 96,
+    });
     debugLaser(state, "filtered laser excavation tick end", {}, firstChargedExcavation);
   }
 };
