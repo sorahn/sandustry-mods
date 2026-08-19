@@ -210,8 +210,10 @@ const assetPresentationOverrides = new Map([
     },
   ],
   // The menu capture reports an 18x18 presentation box, but the native
-  // conveyor-portal export is a single 16x16 frame.
-  ["quantumPortal", { frame: { width: 16, height: 16 } }],
+  // conveyor-portal export is a single 16x16 frame. The runtime render
+  // metadata is offset by -1/-1, so counter it for the extracted asset.
+  ["quantumPortal", { frame: { width: 16, height: 16 }, offset: { x: 1, y: 1 } }],
+  ["quantumPortalExit", { offset: { x: 1, y: 1 } }],
   ["clearingFrameLeft", { frame: { width: 16, height: 20 }, clip: true, offset: { y: -4 } }],
   ["clearingFrameRight", { frame: { width: 16, height: 20 }, clip: true, offset: { y: -4 } }],
   // These native exports are complete sprites even though their presentation
