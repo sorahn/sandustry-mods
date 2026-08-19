@@ -1,8 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
-import {
-  customShapeFromStructure,
-  foundationOutlinePath as coreFoundationOutlinePath,
-} from "@sandustry/blueprint-core";
+import { customShapeFromStructure } from "@sandustry/blueprint-core";
 import { type Blueprint } from "../utils/blueprint";
 import { catalogEntry } from "../utils/catalog";
 import { debugComponent } from "./DebugComponentWrapper";
@@ -10,6 +7,11 @@ import { MapDebugOptions } from "./MapDebugOptions";
 import { BlueprintMapSidebar } from "./BlueprintMapSidebar";
 import { BlueprintMapStructure } from "./BlueprintMapStructure";
 import { BlueprintMapViewportControls } from "./BlueprintMapViewportControls";
+import {
+  BlueprintMapFoundationOutlineLayer,
+  BlueprintMapGridLayer,
+  BlueprintMapSignalLinksLayer,
+} from "./BlueprintMapLayers";
 import {
   BLOCK_COORDINATE_SIZE,
   DISPLAY_PIXELS_PER_BLOCK_AT_100,
@@ -570,45 +572,14 @@ export function BlueprintMap({
             hoverMarkerRef.current?.setAttribute("visibility", "hidden");
           }}
         >
-          <defs>
-            <pattern
-              id="blueprint-block-grid"
-              x={gridOriginX}
-              y={gridOriginY}
-              width={cell}
-              height={cell}
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d={`M ${cell} 0 L 0 0 0 ${cell} M ${cell} 0 L ${cell} ${cell} M 0 ${cell} L ${cell} ${cell}`}
-                fill="none"
-                stroke="#718096"
-                strokeWidth="1"
-              />
-            </pattern>
-            <pattern
-              id="blueprint-cell-grid"
-              x={gridOriginX}
-              y={gridOriginY}
-              width={cell * NATIVE_PIXELS_PER_CELL}
-              height={cell * NATIVE_PIXELS_PER_CELL}
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d={`M ${cell * NATIVE_PIXELS_PER_CELL} 0 L 0 0 0 ${cell * NATIVE_PIXELS_PER_CELL} M ${cell * NATIVE_PIXELS_PER_CELL} 0 L ${cell * NATIVE_PIXELS_PER_CELL} ${cell * NATIVE_PIXELS_PER_CELL} M 0 ${cell * NATIVE_PIXELS_PER_CELL} L ${cell * NATIVE_PIXELS_PER_CELL} ${cell * NATIVE_PIXELS_PER_CELL}`}
-                fill="none"
-                stroke="#17202c"
-                strokeWidth="1.25"
-              />
-            </pattern>
-          </defs>
-          <rect width={width} height={height} fill="#33a8ff" style={mapLayerStyle("background")} />
-          {showGrid ? (
-            <g opacity="0.25" style={mapLayerStyle("grid")}>
-              <rect width={width} height={height} fill="url(#blueprint-block-grid)" />
-              <rect width={width} height={height} fill="url(#blueprint-cell-grid)" />
-            </g>
-          ) : null}
+          <BlueprintMapGridLayer
+            width={width}
+            height={height}
+            gridOriginX={gridOriginX}
+            gridOriginY={gridOriginY}
+            cell={cell}
+            showGrid={showGrid}
+          />
           {showDebugCells ? (
             <g opacity="0.8" pointerEvents="none" style={mapLayerStyle("debugCells")}>
               {blueprint.data.flatMap((structure, structureIndex) => {
@@ -640,33 +611,11 @@ export function BlueprintMap({
               })}
             </g>
           ) : null}
-          {signalLinksVisible
-            ? preparedBlueprint.preparedSignalLinks.map((link, index) => {
-                const wire = link.path;
-                const from = point(wire.from.x, wire.from.y);
-                const to = point(wire.to.x, wire.to.y);
-                const d =
-                  wire.kind === "line"
-                    ? `M ${from.x} ${from.y} L ${to.x} ${to.y}`
-                    : (() => {
-                        const control1 = point(wire.control1.x, wire.control1.y);
-                        const control2 = point(wire.control2.x, wire.control2.y);
-                        return `M ${from.x} ${from.y} C ${control1.x} ${control1.y} ${control2.x} ${control2.y} ${to.x} ${to.y}`;
-                      })();
-                return (
-                  <path
-                    key={`link-${index}`}
-                    d={d}
-                    stroke={link.on ? "#00ff99" : "#ff3333"}
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeWidth="3"
-                    opacity=".7"
-                    style={mapLayerStyle("signalLinks")}
-                  />
-                );
-              })
-            : null}
+          <BlueprintMapSignalLinksLayer
+            preparedBlueprint={preparedBlueprint}
+            visible={signalLinksVisible}
+            point={point}
+          />
           {(() => {
             const isFoundationShape = ({ structure, index }: (typeof renderStructures)[number]) => {
               const prepared = preparedBlueprint.preparedStructures[index];
@@ -981,29 +930,14 @@ export function BlueprintMap({
               </>
             );
           })()}
-          {foundationOutlinesVisible &&
-          coreFoundationOutlinePath(
-            preparedBlueprint.preparedStructures,
-            minX,
-            minY,
-            padding,
-            cell,
-          ) ? (
-            <path
-              d={coreFoundationOutlinePath(
-                preparedBlueprint.preparedStructures,
-                minX,
-                minY,
-                padding,
-                cell,
-              )}
-              fill="none"
-              stroke="#000000"
-              strokeWidth={renderPixelScale(cell)}
-              pointerEvents="none"
-              style={mapLayerStyle("foundationShapes")}
-            />
-          ) : null}
+          <BlueprintMapFoundationOutlineLayer
+            preparedBlueprint={preparedBlueprint}
+            visible={foundationOutlinesVisible}
+            minX={minX}
+            minY={minY}
+            padding={padding}
+            cell={cell}
+          />
           {selected ? (
             <rect
               x={(selected.x - minX + padding) * cell}
