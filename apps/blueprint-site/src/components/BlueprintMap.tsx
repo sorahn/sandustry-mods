@@ -331,81 +331,6 @@ function foundationOutlinePath(
   return contours.join(" ");
 }
 
-type CollectorSprite = { frameIndex: number; rotation: number };
-
-function collectorSprites(
-  structures: Blueprint["data"],
-  entries: Array<{ structure: Blueprint["data"][number]; index: number }>,
-) {
-  const collectors = entries.filter(
-    ({ structure }) =>
-      catalogEntry(structure.type)?.renderAsset?.animation?.topology === "collector",
-  );
-  const byPosition = new Map(
-    collectors.map(({ structure, index }) => [`${structure.x},${structure.y}`, index]),
-  );
-  const result = new Map<number, CollectorSprite>();
-  const visited = new Set<number>();
-
-  for (const { index: startIndex } of collectors) {
-    if (visited.has(startIndex)) continue;
-    const component: number[] = [];
-    const queue = [startIndex];
-    visited.add(startIndex);
-    while (queue.length) {
-      const index = queue.shift()!;
-      component.push(index);
-      const structure = structures[index];
-      for (const [dx, dy] of [
-        [4, 0],
-        [-4, 0],
-        [0, 4],
-        [0, -4],
-      ]) {
-        const neighbor = byPosition.get(`${structure.x + dx},${structure.y + dy}`);
-        if (neighbor !== undefined && !visited.has(neighbor)) {
-          visited.add(neighbor);
-          queue.push(neighbor);
-        }
-      }
-    }
-
-    const bounds = component.reduce(
-      (value, index) => {
-        const structure = structures[index];
-        return {
-          minX: Math.min(value.minX, structure.x),
-          maxX: Math.max(value.maxX, structure.x),
-          minY: Math.min(value.minY, structure.y),
-          maxY: Math.max(value.maxY, structure.y),
-        };
-      },
-      { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity },
-    );
-
-    for (const index of component) {
-      const structure = structures[index];
-      const atLeft = structure.x === bounds.minX;
-      const atRight = structure.x === bounds.maxX;
-      const atTop = structure.y === bounds.minY;
-      const atBottom = structure.y === bounds.maxY;
-      const animation = catalogEntry(structure.type)?.renderAsset?.animation;
-      let frameIndex = animation?.interiorFrame ?? 2;
-      let rotation = 0;
-      if ((atTop || atBottom) && (atLeft || atRight)) {
-        frameIndex = animation?.cornerFrame ?? 0;
-      } else if (atTop || atBottom) {
-        frameIndex = animation?.edgeFrame ?? 3;
-      } else if (atLeft || atRight) {
-        frameIndex = animation?.edgeFrame ?? 3;
-        rotation = animation?.sideRotation ?? 90;
-      }
-      result.set(index, { frameIndex, rotation });
-    }
-  }
-  return result;
-}
-
 export function BlueprintMap({
   blueprint,
   remember,
@@ -595,7 +520,6 @@ export function BlueprintMap({
         left.structure.x - right.structure.x ||
         left.index - right.index,
     );
-  const collectorSpriteMap = collectorSprites(blueprint.data, renderStructures);
   const debugOptions = debugComponent(MapDebugOptions, {
     showDebugCells,
     onShowDebugCellsChange: setShowDebugCells,
@@ -1037,9 +961,11 @@ export function BlueprintMap({
             : null}
           {renderStructures.map(({ structure, index }) => {
             const entry = catalogEntry(structure.type);
-            const footprint = structureFootprint(structure);
-            const shape = structureShape(structure);
-            const isCustomShape = shape !== undefined;
+            const prepared = preparedBlueprint.preparedStructures[index];
+            const footprint = prepared.footprint;
+            const shape = prepared.shape;
+            const isCustomShape =
+              prepared.customShape !== undefined || (shape !== undefined && !entry?.renderAsset);
             const topY = structureTopY(structure);
             const left = (structure.x - minX + padding) * cell;
             const top = (topY - minY + padding) * cell;
@@ -1139,13 +1065,13 @@ export function BlueprintMap({
                         : undefined;
                       const frameWidth = frame?.width ?? runtimeSize?.width ?? sourceWidth;
                       const frameHeight = frame?.height ?? runtimeSize?.height ?? sourceHeight;
-                      const collectorSprite = collectorSpriteMap.get(index);
                       const frameIndex =
-                        preparedBlueprint.preparedStructures[index].spriteIndex ??
-                        collectorSprite?.frameIndex ??
+                        preparedBlueprint.preparedStructures[index].sprite?.frameIndex ??
                         renderAsset.frameIndex ??
                         0;
-                      const spriteRotation = collectorSprite?.rotation ?? renderAsset.rotation;
+                      const spriteRotation =
+                        preparedBlueprint.preparedStructures[index].sprite?.rotation ??
+                        renderAsset.rotation;
                       const customLightColor =
                         renderAsset.lightColor ??
                         preparedBlueprint.preparedStructures[index].lightColor;
