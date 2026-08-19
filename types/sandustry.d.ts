@@ -34,6 +34,59 @@ interface SandustryNavigation {
   controllerFocusClass(focused: boolean): string;
 }
 
+interface SandustryEvents {
+  on(event: string, callback: (...args: unknown[]) => void): void;
+}
+
+interface SandustrySettings {
+  get<T = unknown>(key: string): T;
+  getAll(): Record<string, unknown>;
+  onChange(callback: () => void): void;
+}
+
+interface SandustryStructureBuildMode {
+  type: string;
+  directions?: string[];
+}
+
+interface SandustryStructureVariant {
+  id: string | number;
+  angles: number[];
+}
+
+interface SandustryStructureRender {
+  imageName?: string;
+  size?: { width: number; height: number };
+  offset?: { x: number; y: number };
+}
+
+interface SandustryStructureDefinition {
+  id: string;
+  nameKey?: string;
+  descriptionKey?: string;
+  categoryKey?: string;
+  order?: number;
+  buildModes?: SandustryStructureBuildMode[];
+  shape?: number[][];
+  variants?: SandustryStructureVariant[];
+  render?: SandustryStructureRender;
+}
+
+interface SandustryInputBindingHandlers {
+  down?: () => void;
+  up?: () => void;
+}
+
+interface SandustryInputBindingDefinition {
+  displayName: string;
+  category: string;
+  handlers: SandustryInputBindingHandlers;
+}
+
+interface SandustryPropagationOptions {
+  propagateToWorkers?: boolean;
+}
+
 interface SandustryApi {
   elements: {
     getDefinitionByType(type: number | null | undefined): SandustryElementDefinition | null;
@@ -43,7 +96,7 @@ interface SandustryApi {
     getInfoAtCell(x: number, y: number): SandustryElementInfo | null;
     removeAtCellWhenIdle(x: number, y: number): void;
   };
-  events: Record<string, any>;
+  events: SandustryEvents;
   grid: {
     forEachCellInRect(
       x: number,
@@ -58,18 +111,18 @@ interface SandustryApi {
     getName(definition: SandustryElementDefinition): string;
   };
   player: { buildings: { unlockByType(id: string): void } };
-  settings: Record<string, any>;
+  settings: SandustrySettings;
   sprites: { loadFromMod(id: string, path: string): Promise<unknown> };
   storage: { local: { get(key: string): unknown; set(key: string, value: string): void } };
   structures: {
     forEachOfType(id: string, callback: (structure: SandustryStructure) => void): void;
-    register(definition: Record<string, any>): void;
+    register(definition: SandustryStructureDefinition): void;
     setSpritesheetIndex(structure: SandustryStructure, index: number): void;
-    update(structure: SandustryStructure, options?: Record<string, unknown>): void;
+    update(structure: SandustryStructure, options?: SandustryPropagationOptions): void;
     setData(
       structure: SandustryStructure,
       data: SandustryStructureData,
-      options?: Record<string, any>,
+      options?: SandustryPropagationOptions,
     ): void;
   };
   terrains: {
@@ -77,7 +130,7 @@ interface SandustryApi {
     getTypeAtCell(x: number, y: number): number | null;
     isTypeAtCell(x: number, y: number, type: string): boolean;
     createAtCellWhenIdle(x: number, y: number, type: string): void;
-    removeAtCellWhenIdle(x: number, y: number, options?: Record<string, unknown>): void;
+    removeAtCellWhenIdle(x: number, y: number, options?: SandustryPropagationOptions): void;
   };
   triggers: { register(id: string, definition: { interval: number; callback: () => void }): void };
   ui: {
@@ -97,7 +150,7 @@ interface SandustryApi {
     registerBinding(
       bindingId: string,
       defaultKeys: string[],
-      definition: Record<string, unknown>,
+      definition: SandustryInputBindingDefinition,
     ): string;
   };
 }
