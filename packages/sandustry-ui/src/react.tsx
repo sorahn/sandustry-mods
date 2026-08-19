@@ -20,6 +20,7 @@ type PanelProps = PropsWithChildren<HTMLAttributes<HTMLElement>> & {
 };
 type ButtonProps = PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> & {
   accent?: boolean;
+  variant?: "default" | "accent" | "danger";
 };
 type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement>;
 type SelectProps = PropsWithChildren<SelectHTMLAttributes<HTMLSelectElement>>;
@@ -88,10 +89,23 @@ export function Panel({
   );
 }
 
-export function Button({ accent = false, className = "", children, ...props }: ButtonProps) {
+export function Button({
+  accent = false,
+  variant,
+  className = "",
+  children,
+  ...props
+}: ButtonProps) {
+  const buttonVariant = variant ?? (accent ? "accent" : "default");
   return createElement(
     "sd-button",
-    { accent: accent ? "" : undefined, class: className, ...props },
+    {
+      accent: buttonVariant === "accent" ? "" : undefined,
+      variant: buttonVariant === "default" ? undefined : buttonVariant,
+      class:
+        `${buttonVariant === "default" ? "" : `sd-button--${buttonVariant}`} ${className}`.trim(),
+      ...props,
+    },
     children,
   );
 }

@@ -24,23 +24,36 @@ class SdButton extends HTMLElement {
   connectedCallback() {
     if (this.button) return;
     this.button = document.createElement("button");
-    this.button.className = `sd-button${this.hasAttribute("accent") ? " sd-button--accent" : ""}`;
     const type = this.getAttribute("type");
     this.button.type = type === "submit" || type === "reset" ? type : "button";
     this.button.disabled = this.hasAttribute("disabled");
     while (this.firstChild) this.button.append(this.firstChild);
     this.append(this.button);
+    this.syncButtonClasses();
   }
 
   static get observedAttributes() {
-    return ["accent", "disabled"];
+    return ["accent", "class", "disabled", "variant"];
   }
 
   attributeChangedCallback(name: string) {
     if (!this.button) return;
     if (name === "disabled") this.button.disabled = this.hasAttribute("disabled");
-    if (name === "accent")
-      this.button.classList.toggle("sd-button--accent", this.hasAttribute("accent"));
+    if (name === "accent" || name === "class" || name === "variant") this.syncButtonClasses();
+  }
+
+  private syncButtonClasses() {
+    if (!this.button) return;
+    this.button.className = "sd-button";
+    const variant = this.getAttribute("variant");
+    if (variant === "accent" || (!variant && this.hasAttribute("accent"))) {
+      this.button.classList.add("sd-button--accent");
+    } else if (variant === "danger") {
+      this.button.classList.add("sd-button--danger");
+    }
+    for (const className of this.classList) {
+      if (className !== "sd-button") this.button.classList.add(className);
+    }
   }
 }
 

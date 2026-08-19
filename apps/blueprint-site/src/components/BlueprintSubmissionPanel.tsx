@@ -21,6 +21,7 @@ type BlueprintSubmissionPanelProps = {
   message: string;
   rememberHeader: ReactNode;
   onEncodedChange: (value: string) => void;
+  onClear: () => void;
   onInspect: () => void;
   summary: BlueprintSummary | null;
   blueprint: Blueprint | null;
@@ -31,6 +32,7 @@ export function BlueprintSubmissionPanel({
   message,
   rememberHeader,
   onEncodedChange,
+  onClear,
   onInspect,
   summary,
   blueprint,
@@ -51,7 +53,12 @@ export function BlueprintSubmissionPanel({
           spellCheck={false}
           className="min-h-48 placeholder:text-slate-600"
         />
-        <Button onClick={onInspect}>Inspect blueprint</Button>
+        <div className="flex items-center justify-between gap-3">
+          <Button onClick={onInspect}>Inspect blueprint</Button>
+          <Button variant="danger" onClick={onClear}>
+            Clear input
+          </Button>
+        </div>
         <p
           role="status"
           className="border-l-2 border-yellow-300/60 bg-black/40 px-3 py-2 font-mono text-xs text-slate-400"

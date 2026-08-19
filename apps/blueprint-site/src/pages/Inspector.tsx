@@ -169,6 +169,10 @@ export function BlueprintInspectorPage() {
           setEncoded(value);
           if (remember) writeLocalValue(SAVED_BLUEPRINT_KEY, value);
         }}
+        onClear={() => {
+          setEncoded("");
+          if (remember) writeLocalValue(SAVED_BLUEPRINT_KEY, "");
+        }}
         onInspect={inspect}
       />
       {blueprint && summary ? (
