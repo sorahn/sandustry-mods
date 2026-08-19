@@ -14,9 +14,12 @@ import {
   ItemCard,
   ListItem,
   LockedState,
+  List,
   MetadataRow,
   Panel,
   Popover,
+  ProgressList,
+  ProgressListItem,
   ProgressBar,
   SegmentedControl,
   SplitPane,
@@ -137,42 +140,44 @@ export function DebugPage() {
       </ShowcaseSection>
 
       <ShowcaseSection title="Form controls">
-        <Panel className="grid gap-5 p-5 md:grid-cols-2">
-          <FormField label="World name" required>
-            <InputGroup>
-              <TextInput defaultValue="Claybarren" maxLength={64} />
-              <IconButton
-                label="Regenerate name"
-                className="h-[38px] w-[38px] rounded-sm border border-slate-600 bg-black/60 hover:border-[#ffe700] hover:text-[#ffe700]"
-              >
-                ↻
-              </IconButton>
-            </InputGroup>
-          </FormField>
-          <FormField label="Seed" hint="Use a short stable identifier for repeatable layouts.">
-            <InputGroup>
-              <TextInput defaultValue="llcfshrd" monospace tone="accent" maxLength={32} />
-              <IconButton
-                label="Regenerate seed"
-                className="h-[38px] w-[38px] rounded-sm border border-slate-600 bg-black/60 hover:border-[#ffe700] hover:text-[#ffe700]"
-              >
-                ↻
-              </IconButton>
-            </InputGroup>
-          </FormField>
-          <FormField label="Invalid field" error="This value is required.">
-            <TextInput aria-invalid="true" className="border-red-400" />
-          </FormField>
-          <div className="flex items-center gap-5">
-            <Switch
-              checked={switchOn}
-              onChange={(event) => setSwitchOn(event.target.checked)}
-              label="Show grid"
-            />
-            <span className="text-xs text-slate-500">{switchOn ? "on" : "off"}</span>
-          </div>
-          <div className="md:col-span-2">
-            <SegmentedControl options={modeOptions} value={mode} onChange={setMode} />
+        <Panel className="p-5">
+          <div className="grid gap-6 md:grid-cols-2">
+            <FormField label="World name" required>
+              <InputGroup>
+                <TextInput defaultValue="Claybarren" maxLength={64} />
+                <IconButton
+                  label="Regenerate name"
+                  className="h-[38px] w-[38px] rounded-sm border border-slate-600 bg-black/60 hover:border-[#ffe700] hover:text-[#ffe700]"
+                >
+                  ↻
+                </IconButton>
+              </InputGroup>
+            </FormField>
+            <FormField label="Seed" hint="Use a short stable identifier for repeatable layouts.">
+              <InputGroup>
+                <TextInput defaultValue="llcfshrd" monospace tone="accent" maxLength={32} />
+                <IconButton
+                  label="Regenerate seed"
+                  className="h-[38px] w-[38px] rounded-sm border border-slate-600 bg-black/60 hover:border-[#ffe700] hover:text-[#ffe700]"
+                >
+                  ↻
+                </IconButton>
+              </InputGroup>
+            </FormField>
+            <FormField label="Invalid field" error="This value is required.">
+              <TextInput aria-invalid="true" className="border-red-400" />
+            </FormField>
+            <div className="grid content-start gap-6">
+              <div className="flex items-center gap-5">
+                <Switch
+                  checked={switchOn}
+                  onChange={(event) => setSwitchOn(event.target.checked)}
+                  label="Show grid"
+                />
+                <span className="text-xs text-slate-500">{switchOn ? "on" : "off"}</span>
+              </div>
+              <SegmentedControl options={modeOptions} value={mode} onChange={setMode} />
+            </div>
           </div>
         </Panel>
       </ShowcaseSection>
@@ -217,6 +222,39 @@ export function DebugPage() {
           </div>
         </Panel>
       </ShowcaseSection>
+
+      <div className="grid gap-10 lg:grid-cols-2">
+        <ShowcaseSection title="Lists and variants">
+          <Panel className="p-5">
+            <List variant="panel">
+              <ListItem label="Default item" description="Standard list density" />
+              <ListItem label="Compact item" description="Reduced spacing" variant="compact" />
+              <ListItem
+                label="Subtle item"
+                description="Muted presentation variant"
+                variant="subtle"
+              />
+              <ListItem label="Selected item" selected />
+            </List>
+          </Panel>
+        </ShowcaseSection>
+
+        <ShowcaseSection title="Progress list">
+          <Panel className="p-5">
+            <ProgressList>
+              <ProgressListItem>Loading sounds</ProgressListItem>
+              <ProgressListItem>Initializing systems</ProgressListItem>
+              <ProgressListItem variant="active" last>
+                Starting game
+              </ProgressListItem>
+              <ProgressListItem variant="substep">Generating cave systems</ProgressListItem>
+              <ProgressListItem variant="substep" last>
+                Generating wall textures
+              </ProgressListItem>
+            </ProgressList>
+          </Panel>
+        </ShowcaseSection>
+      </div>
 
       <ShowcaseSection title="Lists and metadata">
         <SplitPane

@@ -7,6 +7,7 @@ export type ListItemProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "child
   leading?: ReactNode;
   trailing?: ReactNode;
   selected?: boolean;
+  variant?: "default" | "compact" | "subtle";
 };
 
 export function ListItem({
@@ -15,6 +16,7 @@ export function ListItem({
   leading,
   trailing,
   selected = false,
+  variant = "default",
   className = "",
   ...props
 }: ListItemProps) {
@@ -24,7 +26,10 @@ export function ListItem({
       type="button"
       aria-current={selected ? "true" : undefined}
       className={cx(
-        "flex w-full items-center gap-2 border-l-2 px-3 py-3 text-left transition-all duration-150",
+        "flex w-full items-center gap-2 border-l-2 text-left transition-all duration-150",
+        variant === "default" && "px-3 py-3",
+        variant === "compact" && "px-2 py-1.5",
+        variant === "subtle" && "px-3 py-2 text-slate-400",
         selected
           ? "border-l-[#ffe700] bg-slate-800/60"
           : "border-l-transparent hover:border-l-slate-600 hover:bg-slate-800/30",

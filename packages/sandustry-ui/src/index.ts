@@ -32,7 +32,15 @@ export {
 } from "./components/ElementPicker";
 export { Dialog, type DialogProps } from "./components/Dialog";
 export { SplitPane, type SplitPaneProps } from "./components/SplitPane";
+export { List, type ListProps } from "./components/List";
 export { ListItem, type ListItemProps } from "./components/ListItem";
+export {
+  ProgressList,
+  ProgressListItem,
+  type ProgressListItemProps,
+  type ProgressListItemVariant,
+  type ProgressListProps,
+} from "./components/ProgressList";
 export { IconButton, type IconButtonProps } from "./components/IconButton";
 export { MetadataRow, type MetadataItem, type MetadataRowProps } from "./components/MetadataRow";
 export { ActionBar, type ActionBarProps } from "./components/ActionBar";

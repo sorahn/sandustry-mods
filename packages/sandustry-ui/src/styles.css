@@ -19,3 +19,34 @@
   --sd-caret-size: 6px;
   --sd-caret-inset: 9px;
 }
+
+@keyframes sd-progress-item-fade-in {
+  to {
+    opacity: 1;
+    transform: translateZ(0) translateX(0);
+  }
+}
+
+@keyframes sd-progress-marker-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateZ(0) scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateZ(0) scale(1.1);
+  }
+}
+
+@keyframes sd-progress-marker-slide {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: translateZ(0) translateX(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateZ(0) translateX(2px);
+  }
+}
