@@ -85,4 +85,28 @@ export function catalogEntry(type: BlueprintType): CatalogEntry | undefined {
   return byType.get(type);
 }
 
+export function blueprintCatalog() {
+  return {
+    get: (type: BlueprintType) => {
+      const entry = catalogEntry(type);
+      if (!entry) return undefined;
+      const render = catalogRender(entry);
+      const renderAsset = entry.renderAsset
+        ? {
+            ...entry.renderAsset,
+            renderSize: catalogRenderSize(render),
+          }
+        : undefined;
+      return {
+        name: entry.name,
+        footprint: entry.footprint,
+        shape: Array.isArray(entry.shape) ? entry.shape : undefined,
+        signalPoints: entry.signalPoints,
+        z: typeof render?.z === "number" ? render.z : undefined,
+        renderAsset,
+      };
+    },
+  };
+}
+
 export { catalogRender, catalogRenderSize };

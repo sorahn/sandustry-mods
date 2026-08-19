@@ -1,7 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { customShapeFromStructure, renderSvgToPng } from "@sandustry/blueprint-core";
+import {
+  customShapeFromStructure,
+  renderBlueprintToSvg,
+  renderSvgToPng,
+} from "@sandustry/blueprint-core";
 import { type Blueprint } from "../utils/blueprint";
-import { catalogEntry } from "../utils/catalog";
+import { blueprintCatalog, catalogEntry } from "../utils/catalog";
 import { debugComponent } from "./DebugComponentWrapper";
 import { MapDebugOptions } from "./MapDebugOptions";
 import { BlueprintMapSidebar } from "./BlueprintMapSidebar";
@@ -347,10 +351,18 @@ export function BlueprintMap({
   const exportPng = async () => {
     const source = svgRef.current;
     if (!source) return;
-    const svg = source.cloneNode(true) as SVGSVGElement;
-    const serialized = new XMLSerializer().serializeToString(svg);
+    const rendered = renderBlueprintToSvg(blueprint, {
+      catalog: blueprintCatalog(),
+      padding,
+      cell,
+      assetBaseUrl: import.meta.env.BASE_URL,
+      includeBackground: showPngBackground,
+      showGrid,
+      showFoundationOutlines: true,
+      showSignalLinks: true,
+    });
     const exportScale = 1 / renderPixelScale(cell);
-    const png = await renderSvgToPng(serialized, {
+    const png = await renderSvgToPng(rendered.svg, {
       width,
       height,
       scale: exportScale,

@@ -44,8 +44,8 @@ export function catalogRender(entry: CatalogEntry): RenderMetadata | undefined {
   return typeof entry.render === "object" && entry.render !== null ? entry.render : undefined;
 }
 
-export function catalogRenderSize(render: RenderMetadata) {
-  if (!render.size || typeof render.size !== "object") return undefined;
+export function catalogRenderSize(render: RenderMetadata | undefined) {
+  if (!render || !render.size || typeof render.size !== "object") return undefined;
   const size = render.size as { width?: unknown; height?: unknown };
   return typeof size.width === "number" && typeof size.height === "number"
     ? { width: size.width, height: size.height }
