@@ -53,6 +53,13 @@ separate dependency graphs:
 - Preserve the boundary with workspace/package rules or automated import checks
   so accidental cross-project dependencies fail early.
 
+For blueprint-site changes, run the app-specific TypeScript check before
+handing off the work:
+
+```sh
+npm --workspace apps/blueprint-site run tsc
+```
+
 ## Git workflow
 
 Keep commit messages short, lowercase, and minimally punctuated.

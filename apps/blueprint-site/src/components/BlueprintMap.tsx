@@ -497,11 +497,12 @@ export function BlueprintMap({
       get: (type) => {
         const entry = catalogEntry(type);
         if (!entry) return undefined;
+        const render = catalogRender(entry);
         return {
           footprint: entry.footprint,
           shape: Array.isArray(entry.shape) ? entry.shape : undefined,
           signalPoints: entry.signalPoints,
-          z: typeof catalogRender(entry)?.z === "number" ? catalogRender(entry)?.z : undefined,
+          z: typeof render?.z === "number" ? render.z : undefined,
           renderAsset: entry.renderAsset,
         };
       },
@@ -963,9 +964,15 @@ export function BlueprintMap({
             const entry = catalogEntry(structure.type);
             const prepared = preparedBlueprint.preparedStructures[index];
             const footprint = prepared.footprint;
-            const shape = prepared.shape;
+            const preparedShape = prepared.shape;
+            const shape =
+              preparedShape ??
+              Array.from({ length: footprint.height }, () =>
+                Array.from({ length: footprint.width }, () => 1),
+              );
             const isCustomShape =
-              prepared.customShape !== undefined || (shape !== undefined && !entry?.renderAsset);
+              prepared.customShape !== undefined ||
+              (preparedShape !== undefined && !entry?.renderAsset);
             const topY = structureTopY(structure);
             const left = (structure.x - minX + padding) * cell;
             const top = (topY - minY + padding) * cell;
