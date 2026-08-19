@@ -35,3 +35,4 @@ export { MetadataRow, type MetadataItem, type MetadataRowProps } from "./compone
 export { ActionBar, type ActionBarProps } from "./components/ActionBar";
 export { TextInput, type TextInputProps } from "./components/TextInput";
 export { FormField, type FormFieldProps } from "./components/FormField";
+export { InputGroup, type InputGroupProps } from "./components/InputGroup";
