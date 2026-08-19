@@ -1,4 +1,4 @@
-import { Button, buttonStyles } from "@sandustry/ui/react";
+import { Button, buttonStyles } from "@sandustry/ui";
 import cx from "clsx";
 
 export function BlueprintMapViewportControls({

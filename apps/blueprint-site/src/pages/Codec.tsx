@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Button, Panel, Select, TextArea } from "@sandustry/ui/react";
+import { Button, Panel, Select, TextArea } from "@sandustry/ui";
 import {
   decodeBlueprint,
   emptyBlueprint,

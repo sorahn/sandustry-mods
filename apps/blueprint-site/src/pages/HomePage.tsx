@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { buttonStyles, Panel } from "@sandustry/ui/react";
+import { buttonStyles, Panel } from "@sandustry/ui";
 import cx from "clsx";
 
 export function HomePage() {

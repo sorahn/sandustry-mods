@@ -1,5 +1,5 @@
 import { type ChangeEvent, type ComponentProps, useEffect, useState } from "react";
-import { Checkbox } from "@sandustry/ui/react";
+import { Checkbox } from "@sandustry/ui";
 
 function readStoredBoolean(key: string, fallback: boolean) {
   if (typeof window === "undefined") return fallback;

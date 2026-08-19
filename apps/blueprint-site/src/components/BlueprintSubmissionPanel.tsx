@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { Button, Panel, TextArea } from "@sandustry/ui/react";
+import { Button, Panel, TextArea } from "@sandustry/ui";
 import { type Blueprint } from "../utils/blueprint";
 
 export type BlueprintSummary = {

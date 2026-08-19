@@ -1,4 +1,4 @@
-import { Panel } from "@sandustry/ui/react";
+import { Panel } from "@sandustry/ui";
 import { type Blueprint } from "../utils/blueprint";
 
 type BlueprintStructuresPanelProps = {

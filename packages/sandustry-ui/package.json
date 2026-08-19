@@ -8,10 +8,6 @@
       "types": "./src/index.ts",
       "import": "./src/index.ts"
     },
-    "./react": {
-      "types": "./src/react.tsx",
-      "import": "./src/react.tsx"
-    },
     "./styles.css": "./src/styles.css"
   },
   "scripts": {
