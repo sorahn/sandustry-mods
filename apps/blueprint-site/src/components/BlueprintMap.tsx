@@ -28,7 +28,6 @@ import {
   structureShape,
   structureTopY,
   tileColor,
-  viewportHeightForWidth,
   writeLocalValue,
   wrapLabel,
   createBlueprintMapModel,
@@ -36,6 +35,7 @@ import {
 
 const MAP_FIT_ZOOM_MIN = 0.25;
 const MAP_FIT_ZOOM_MAX = 2;
+const MAP_FIT_MARGIN_CELLS_TOTAL = 24;
 
 const BELT_TYPES = new Set<Blueprint["data"][number]["type"]>([
   1,
@@ -199,44 +199,23 @@ export function BlueprintMap({
   // blueprint coordinates therefore render at 32 display pixels.
   const cell = DISPLAY_PIXELS_PER_BLOCK_AT_100 / NATIVE_PIXELS_PER_CELL;
   const mapModel = createBlueprintMapModel(blueprint, padding, cell);
-  const { preparedBlueprint, minX, minY, width, height, blueprintWidth, blueprintHeight } =
-    mapModel;
+  const { preparedBlueprint, minX, minY, width, height, blueprintWidth } = mapModel;
   const viewportWidth = viewportSize.width || width;
-  const defaultViewportHeight = viewportHeightForWidth(viewportWidth);
-  const blueprintFitsDefaultViewport =
-    blueprintWidth <= viewportWidth && blueprintHeight <= defaultViewportHeight;
-  const blueprintAspectViewportHeight = viewportWidth * (height / width) + MAP_VIEWPORT_BORDER_SIZE;
-  const aspectRatioViewportHeight = blueprintFitsDefaultViewport
-    ? defaultViewportHeight
-    : Math.max(defaultViewportHeight, blueprintAspectViewportHeight);
-  const maxPanX = Math.max(0, (width * zoom - (viewportSize.width || width)) / (2 * zoom));
-  const maxPanY = Math.max(0, (height * zoom - (viewportSize.height || height)) / (2 * zoom));
-  const fitZoomForViewport = (availableWidth: number, availableHeight: number) => {
-    const blueprintFits = blueprintWidth <= availableWidth && blueprintHeight <= availableHeight;
-    if (blueprintFits) {
-      // Keep the whole blueprint visible while using the zoom to trim the
-      // generous renderer padding around small blueprints.
-      const maxZoom = Math.min(
-        MAP_FIT_ZOOM_MAX,
-        availableWidth / blueprintWidth,
-        availableHeight / blueprintHeight,
-      );
-      return (
-        MAP_ZOOM_LEVELS.filter(
-          (level) => level >= MAP_FIT_ZOOM_MIN && level <= maxZoom,
-        ).reverse()[0] ?? MAP_FIT_ZOOM_MIN
-      );
-    }
+  const fitWidth = blueprintWidth + MAP_FIT_MARGIN_CELLS_TOTAL * cell;
+  const fitZoomForViewport = (availableWidth: number) => {
+    const maxZoom = Math.min(MAP_FIT_ZOOM_MAX, availableWidth / fitWidth);
     return (
-      MAP_ZOOM_LEVELS.filter((level) => level >= MAP_FIT_ZOOM_MIN && level <= 1)
-        .reverse()
-        .find((level) => width * level <= availableWidth) ?? MAP_FIT_ZOOM_MIN
+      MAP_ZOOM_LEVELS.filter(
+        (level) => level >= MAP_FIT_ZOOM_MIN && level <= maxZoom,
+      ).reverse()[0] ?? MAP_FIT_ZOOM_MIN
     );
   };
-  const measuredFitZoom = fitZoomForViewport(
-    viewportSize.width || width,
-    Math.max(viewportSize.height, 512, aspectRatioViewportHeight),
-  );
+  const measuredFitZoom = fitZoomForViewport(viewportWidth);
+  const horizontalCanvasGap = Math.max(0, (viewportWidth - width * measuredFitZoom) / 2);
+  const aspectRatioViewportHeight =
+    height * measuredFitZoom + horizontalCanvasGap * 2 + MAP_VIEWPORT_BORDER_SIZE;
+  const maxPanX = Math.max(0, (width * zoom - (viewportSize.width || width)) / (2 * zoom));
+  const maxPanY = Math.max(0, (height * zoom - (viewportSize.height || height)) / (2 * zoom));
   const applyLivePan = (nextPan: { x: number; y: number }) => {
     const svg = svgRef.current;
     if (!svg) return;
@@ -336,13 +315,7 @@ export function BlueprintMap({
   const fitToViewport = () => {
     fitModeRef.current = true;
     const availableWidth = viewportRef.current?.clientWidth || viewportSize.width;
-    const availableHeight = Math.max(
-      viewportRef.current?.clientHeight || 0,
-      viewportSize.height,
-      512,
-      aspectRatioViewportHeight,
-    );
-    setZoom(fitZoomForViewport(availableWidth || width, availableHeight));
+    setZoom(fitZoomForViewport(availableWidth || width));
     setPan({ x: 0, y: 0 });
   };
   useLayoutEffect(() => {
