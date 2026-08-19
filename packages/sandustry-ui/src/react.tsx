@@ -15,3 +15,10 @@ export { Tooltip, type TooltipProps } from "./components/Tooltip";
 export { Popover, type PopoverProps } from "./components/Popover";
 export { ProgressBar, type ProgressBarProps } from "./components/ProgressBar";
 export { ItemCard, type ItemCardProps } from "./components/ItemCard";
+export {
+  Hotbar,
+  HotbarStepper,
+  type HotbarProps,
+  type HotbarSlot,
+  type HotbarStepperProps,
+} from "./components/Hotbar";
