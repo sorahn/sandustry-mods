@@ -9,3 +9,4 @@ export {
   type Segment,
   type SegmentedControlProps,
 } from "./components/SegmentedControl";
+export { Switch, type SwitchProps } from "./components/Switch";
