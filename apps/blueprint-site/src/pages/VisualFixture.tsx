@@ -3,6 +3,7 @@ import cx from "clsx";
 import { renderBlueprintStringToPng } from "@sandustry/blueprint-core";
 import { decodeBlueprint, encodeBlueprint } from "../utils/blueprint";
 import { blueprintCatalog } from "../utils/catalog";
+import { createBrowserPngPlatform, createImageResolver } from "../utils/png-platform";
 import { catalogVisualFixture } from "../visual-fixtures/catalog";
 
 export function BlueprintVisualFixturePage() {
@@ -72,54 +73,10 @@ function CorePngFixture({
       showGrid: true,
       showFoundationOutlines: true,
       showSignalLinks: true,
-      resolveImage: async (source) => {
-        const response = await fetch(source);
-        if (!response.ok) return undefined;
-        const blob = await response.blob();
-        return String(
-          await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(reader.error);
-            reader.readAsDataURL(blob);
-          }),
-        );
-      },
-      platform: {
-        loadSvg: async (svg) => {
-          const image = new Image();
-          const url = URL.createObjectURL(
-            new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${svg}`], {
-              type: "image/svg+xml;charset=utf-8",
-            }),
-          );
-          await new Promise<void>((resolve, reject) => {
-            image.onload = () => resolve();
-            image.onerror = () => reject(new Error("Unable to render blueprint SVG"));
-            image.src = url;
-          });
-          URL.revokeObjectURL(url);
-          return image;
-        },
-        createCanvas: (width, height) => {
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          return canvas;
-        },
-        drawImage: (canvas, image, width, height) => {
-          const context = canvas.getContext("2d");
-          if (!context) throw new Error("Unable to create PNG canvas context");
-          context.drawImage(image, 0, 0, width, height);
-        },
-        encodePng: async (canvas) => {
-          const blob = await new Promise<Blob | null>((resolve) =>
-            canvas.toBlob(resolve, "image/png"),
-          );
-          if (!blob) throw new Error("Unable to encode blueprint PNG");
-          return new Uint8Array(await blob.arrayBuffer());
-        },
-      },
+      resolveImage: createImageResolver(
+        new URL(import.meta.env.BASE_URL, window.location.origin).href,
+      ),
+      platform: createBrowserPngPlatform(),
     })
       .then((png) => {
         if (cancelled) return;

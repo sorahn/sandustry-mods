@@ -7,6 +7,7 @@ import {
 import { type Blueprint } from "../utils/blueprint";
 import { blueprintCatalog, catalogEntry } from "../utils/catalog";
 import { debugComponent } from "./DebugComponentWrapper";
+import { createBrowserPngPlatform, createImageResolver } from "../utils/png-platform";
 import { MapDebugOptions } from "./MapDebugOptions";
 import { BlueprintMapSidebar } from "./BlueprintMapSidebar";
 import { BlueprintMapStructure } from "./BlueprintMapStructure";
@@ -368,59 +369,8 @@ export function BlueprintMap({
       scale: exportScale,
       title: blueprint.name,
       includeBackground: showPngBackground,
-      resolveImage: async (source) => {
-        try {
-          const response = await fetch(new URL(source, document.baseURI));
-          if (!response.ok) return undefined;
-          const blob = await response.blob();
-          return String(
-            await new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onload = () => resolve(reader.result);
-              reader.onerror = () => reject(reader.error);
-              reader.readAsDataURL(blob);
-            }),
-          );
-        } catch {
-          return undefined;
-        }
-      },
-      platform: {
-        loadSvg: async (source) => {
-          const image = new Image();
-          const url = URL.createObjectURL(
-            new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${source}`], {
-              type: "image/svg+xml;charset=utf-8",
-            }),
-          );
-          await new Promise<void>((resolve, reject) => {
-            image.onload = () => resolve();
-            image.onerror = () => reject(new Error("Unable to render blueprint SVG"));
-            image.src = url;
-          });
-          URL.revokeObjectURL(url);
-          return image;
-        },
-        createCanvas: (canvasWidth, canvasHeight) => {
-          const canvas = document.createElement("canvas");
-          canvas.width = canvasWidth;
-          canvas.height = canvasHeight;
-          return canvas;
-        },
-        drawImage: (canvas, image, canvasWidth, canvasHeight) => {
-          const context = canvas.getContext("2d");
-          if (!context) throw new Error("Unable to create PNG canvas context");
-          context.clearRect(0, 0, canvasWidth, canvasHeight);
-          context.drawImage(image, 0, 0, canvasWidth, canvasHeight);
-        },
-        encodePng: async (canvas) => {
-          const blob = await new Promise<Blob | null>((resolve) =>
-            canvas.toBlob(resolve, "image/png"),
-          );
-          if (!blob) throw new Error("Unable to encode blueprint PNG");
-          return new Uint8Array(await blob.arrayBuffer());
-        },
-      },
+      resolveImage: createImageResolver(document.baseURI),
+      platform: createBrowserPngPlatform(),
     });
     const pngBuffer = new ArrayBuffer(png.byteLength);
     new Uint8Array(pngBuffer).set(png);
