@@ -37,3 +37,4 @@ export { TextInput, type TextInputProps } from "./components/TextInput";
 export { FormField, type FormFieldProps } from "./components/FormField";
 export { InputGroup, type InputGroupProps } from "./components/InputGroup";
 export { Fieldset, type FieldsetProps } from "./components/Fieldset";
+export { LockedState, type LockedStateProps } from "./components/LockedState";
