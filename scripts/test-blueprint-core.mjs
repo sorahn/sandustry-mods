@@ -136,6 +136,37 @@ assert.deepEqual(catalogPrepared.preparedStructures[0].shape, [
 assert.equal(catalogPrepared.preparedStructures[0].z, 0.5);
 assert.deepEqual(catalogPrepared.bounds, { minX: 0, minY: 8, maxX: 16, maxY: 9 });
 
+const collectorPrepared = core.prepareBlueprint(
+  {
+    name: "Collector sprites",
+    data: [
+      { type: "collector", x: 0, y: 0 },
+      { type: "collector", x: 4, y: 0 },
+      { type: "collector", x: 0, y: 4 },
+    ],
+    signalLinks: null,
+  },
+  {
+    catalog: {
+      get: (type) =>
+        type === "collector"
+          ? { renderAsset: { animation: { topology: "collector" } } }
+          : undefined,
+    },
+  },
+);
+assert.deepEqual(
+  collectorPrepared.preparedStructures.map((prepared) => [
+    prepared.sprite?.frameIndex,
+    prepared.sprite?.rotation,
+  ]),
+  [
+    [0, 0],
+    [0, 0],
+    [0, 0],
+  ],
+);
+
 const oversizedTypeTable = [4, 1, 120, 65];
 for (let index = 0; index < 65; index++) oversizedTypeTable.push(0, index);
 oversizedTypeTable.push(1, 63, 0, 0, 0);

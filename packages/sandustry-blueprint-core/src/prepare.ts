@@ -17,6 +17,26 @@ export type StructureCatalogEntry = {
   shape?: number[][];
   signalPoints?: SignalPoints;
   z?: number;
+  renderAsset?: RenderAsset;
+};
+
+export type RenderAsset = {
+  frameIndex?: number;
+  rotation?: number;
+  animation?: {
+    topology?: string;
+    cornerFrame?: number;
+    edgeFrame?: number;
+    interiorFrame?: number;
+    sideRotation?: number;
+  };
+  [key: string]: unknown;
+};
+
+export type PreparedSprite = {
+  asset: RenderAsset;
+  frameIndex: number;
+  rotation: number;
 };
 
 export type BlueprintCatalog = {
@@ -50,6 +70,7 @@ export type PreparedStructure = {
   footprint: { width: number; height: number };
   z: number;
   bounds: { minX: number; minY: number; maxX: number; maxY: number };
+  sprite?: PreparedSprite;
 };
 
 export type PreparedBlueprint = Blueprint & {
@@ -197,6 +218,68 @@ function customShapeFor(structure: BlueprintStructure) {
   return shape.every((row) => row.length === width) ? (shape as number[][]) : undefined;
 }
 
+function prepareSprites(structures: PreparedStructure[]) {
+  const collectors = structures.filter(
+    (prepared) => prepared.sprite?.asset.animation?.topology === "collector",
+  );
+  const byPosition = new Map(
+    collectors.map((prepared) => [`${prepared.structure.x},${prepared.structure.y}`, prepared]),
+  );
+  const visited = new Set<number>();
+
+  for (const start of collectors) {
+    if (visited.has(start.index)) continue;
+    const component: PreparedStructure[] = [];
+    const queue = [start];
+    visited.add(start.index);
+    while (queue.length) {
+      const prepared = queue.shift()!;
+      component.push(prepared);
+      for (const [dx, dy] of [
+        [4, 0],
+        [-4, 0],
+        [0, 4],
+        [0, -4],
+      ]) {
+        const neighbor = byPosition.get(
+          `${prepared.structure.x + dx},${prepared.structure.y + dy}`,
+        );
+        if (neighbor && !visited.has(neighbor.index)) {
+          visited.add(neighbor.index);
+          queue.push(neighbor);
+        }
+      }
+    }
+    const bounds = component.reduce(
+      (value, prepared) => ({
+        minX: Math.min(value.minX, prepared.structure.x),
+        maxX: Math.max(value.maxX, prepared.structure.x),
+        minY: Math.min(value.minY, prepared.structure.y),
+        maxY: Math.max(value.maxY, prepared.structure.y),
+      }),
+      { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity },
+    );
+    for (const prepared of component) {
+      const animation = prepared.sprite!.asset.animation!;
+      const atLeft = prepared.structure.x === bounds.minX;
+      const atRight = prepared.structure.x === bounds.maxX;
+      const atTop = prepared.structure.y === bounds.minY;
+      const atBottom = prepared.structure.y === bounds.maxY;
+      let frameIndex = animation.interiorFrame ?? 2;
+      let rotation = 0;
+      if ((atTop || atBottom) && (atLeft || atRight)) {
+        frameIndex = animation.cornerFrame ?? 0;
+      } else if (atTop || atBottom) {
+        frameIndex = animation.edgeFrame ?? 3;
+      } else if (atLeft || atRight) {
+        frameIndex = animation.edgeFrame ?? 3;
+        rotation = animation.sideRotation ?? 90;
+      }
+      prepared.sprite = { ...prepared.sprite!, frameIndex, rotation };
+    }
+  }
+}
+
 function coordinateOffset(blueprint: Blueprint): BlueprintCoordinate {
   const endpoints = (blueprint.signalLinks ?? []).flatMap((link) => [link.from, link.to]);
   if (!endpoints.length || !blueprint.data.length) return { x: 0, y: 0 };
@@ -268,6 +351,7 @@ export function prepareBlueprint(
     const footprint = shape
       ? { width: shape[0].length, height: shape.length }
       : (catalogEntry?.footprint ?? { width: 1, height: 1 });
+    const renderAsset = catalogEntry?.renderAsset;
     return {
       structure,
       index,
@@ -283,8 +367,16 @@ export function prepareBlueprint(
         maxX: structure.x + footprint.width - 1,
         maxY: structure.y + footprint.height - 1,
       },
+      sprite: renderAsset
+        ? {
+            asset: renderAsset,
+            frameIndex: spriteIndexFor(structure) ?? renderAsset.frameIndex ?? 0,
+            rotation: renderAsset.rotation ?? 0,
+          }
+        : undefined,
     };
   });
+  prepareSprites(preparedStructures);
   const bounds = preparedStructures.length
     ? preparedStructures.slice(1).reduce(
         (value, prepared) => ({

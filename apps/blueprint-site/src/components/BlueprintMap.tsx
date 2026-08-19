@@ -577,6 +577,7 @@ export function BlueprintMap({
           shape: Array.isArray(entry.shape) ? entry.shape : undefined,
           signalPoints: entry.signalPoints,
           z: typeof catalogRender(entry)?.z === "number" ? catalogRender(entry)?.z : undefined,
+          renderAsset: entry.renderAsset,
         };
       },
     },

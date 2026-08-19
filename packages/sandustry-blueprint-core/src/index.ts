@@ -28,11 +28,13 @@ export {
   type BlueprintCoordinate,
   type PreparedBlueprint,
   type PreparedSignalLink,
+  type PreparedSprite,
   type PrepareBlueprintOptions,
   type SignalPoint,
   type SignalPoints,
   type SignalPointResolver,
   type StructureCatalogEntry,
+  type RenderAsset,
 } from "./prepare";
 
 const BINARY_PREFIX = "SAND:BP:v2:";
