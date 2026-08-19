@@ -2,222 +2,40 @@ import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from 
 import {
   customShapeFromStructure,
   foundationOutlinePath as coreFoundationOutlinePath,
-  prepareBlueprint,
-  shapeForStructure,
 } from "@sandustry/blueprint-core";
 import { type Blueprint } from "../utils/blueprint";
-import {
-  catalogEntry,
-  catalogRender,
-  catalogRenderSize,
-  type CatalogEntry,
-} from "../utils/catalog";
+import { catalogEntry, catalogRender, catalogRenderSize } from "../utils/catalog";
 import { debugComponent } from "./DebugComponentWrapper";
 import { MapDebugOptions } from "./MapDebugOptions";
+import {
+  BLOCK_COORDINATE_SIZE,
+  DISPLAY_PIXELS_PER_BLOCK_AT_100,
+  MAP_ZOOM_LEVELS,
+  MAP_VIEWPORT_BORDER_SIZE,
+  NATIVE_PIXELS_PER_CELL,
+  PAN_COMMIT_DEBOUNCE_MS,
+  SAVED_MAP_VIEW_KEY,
+  mapLayerStyle,
+  renderAnchorEdge,
+  renderAnchorOffsetCells,
+  renderPixelScale,
+  renderScaleFactor,
+  renderScaleMode,
+  readStoredMapView,
+  snapMapZoom,
+  structureFootprint,
+  structureLabel,
+  structureShape,
+  structureTopY,
+  tileColor,
+  viewportHeightForWidth,
+  writeLocalValue,
+  wrapLabel,
+  createBlueprintMapModel,
+} from "../utils/blueprint-map";
 
-function structureLabel(type: Blueprint["data"][number]["type"]) {
-  return typeof type === "number" ? `native ${type}` : type;
-}
-
-function wrapLabel(label: string, maxCharacters: number) {
-  const words = label.split(/\s+/).filter(Boolean);
-  const lines: string[] = [];
-  let line = "";
-  for (const word of words) {
-    if (word.length > maxCharacters && !line) {
-      for (let index = 0; index < word.length; index += maxCharacters) {
-        lines.push(word.slice(index, index + maxCharacters));
-      }
-      continue;
-    }
-    const candidate = line ? `${line} ${word}` : word;
-    if (line && candidate.length > maxCharacters) {
-      lines.push(line);
-      line = word;
-    } else {
-      line = candidate;
-    }
-  }
-  if (line) lines.push(line);
-  return lines.length ? lines : [label];
-}
-
-function tileColor(type: Blueprint["data"][number]["type"]) {
-  if (typeof type === "number") return "#314158";
-  let hash = 0;
-  for (const character of type) hash = (hash * 31 + character.charCodeAt(0)) | 0;
-  return ["#4b3c62", "#315a5e", "#66522f", "#563d46"][Math.abs(hash) % 4];
-}
-
-const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
-const MAP_ZOOM_LEVELS = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
-const NATIVE_PIXELS_PER_CELL = 4;
-const DISPLAY_PIXELS_PER_BLOCK_AT_100 = 32;
-const BLOCK_COORDINATE_SIZE = NATIVE_PIXELS_PER_CELL;
-const MAP_VIEWPORT_BORDER_SIZE = 2;
-const MAP_VIEWPORT_ASPECT_WIDTH = 16;
-const MAP_VIEWPORT_ASPECT_HEIGHT = 10;
 const MAP_FIT_ZOOM_MIN = 0.25;
 const MAP_FIT_ZOOM_MAX = 2;
-const PAN_COMMIT_DEBOUNCE_MS = 80;
-const MAP_LAYER_ORDER = [
-  "background",
-  "grid",
-  "debugCells",
-  "foundationShapes",
-  "sprites",
-  "signalLinks",
-  "selectedHighlight",
-  "hoverHighlight",
-] as const;
-
-type MapLayer = (typeof MAP_LAYER_ORDER)[number];
-
-function mapLayerStyle(layer: MapLayer) {
-  return { zIndex: MAP_LAYER_ORDER.indexOf(layer) };
-}
-
-function snapMapZoom(value: number) {
-  return MAP_ZOOM_LEVELS.reduce((nearest, level) =>
-    Math.abs(level - value) < Math.abs(nearest - value) ? level : nearest,
-  );
-}
-
-function viewportHeightForWidth(width: number) {
-  return (
-    width * (MAP_VIEWPORT_ASPECT_HEIGHT / MAP_VIEWPORT_ASPECT_WIDTH) + MAP_VIEWPORT_BORDER_SIZE
-  );
-}
-
-function readLocalValue(key: string) {
-  try {
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-
-function writeLocalValue(key: string, value: string) {
-  try {
-    window.localStorage.setItem(key, value);
-  } catch {
-    // Local storage can be unavailable in private browsing contexts.
-  }
-}
-
-type MapView = {
-  zoom: number;
-  pan: { x: number; y: number };
-  viewportWidth?: number;
-  fit?: boolean;
-};
-
-function readStoredMapView(blueprintKey: string): MapView | null {
-  if (typeof window === "undefined" || !blueprintKey) return null;
-  const stored = readLocalValue(SAVED_MAP_VIEW_KEY);
-  if (!stored) return null;
-  try {
-    const value = JSON.parse(stored) as {
-      blueprint?: unknown;
-      zoom?: unknown;
-      pan?: { x?: unknown; y?: unknown };
-      viewportWidth?: unknown;
-      fit?: unknown;
-    };
-    if (
-      value.blueprint !== blueprintKey ||
-      typeof value.zoom !== "number" ||
-      !Number.isFinite(value.zoom) ||
-      typeof value.pan?.x !== "number" ||
-      typeof value.pan?.y !== "number" ||
-      !Number.isFinite(value.pan.x) ||
-      !Number.isFinite(value.pan.y)
-    ) {
-      return null;
-    }
-    return {
-      zoom: Math.max(MAP_ZOOM_LEVELS[0], Math.min(4, value.zoom)),
-      pan: { x: value.pan.x, y: value.pan.y },
-      viewportWidth:
-        typeof value.viewportWidth === "number" && Number.isFinite(value.viewportWidth)
-          ? value.viewportWidth
-          : undefined,
-      fit: typeof value.fit === "boolean" ? value.fit : undefined,
-    };
-  } catch {
-    return null;
-  }
-}
-
-function structureTopY(structure: Blueprint["data"][number]) {
-  const entry = catalogEntry(structure.type);
-  const height = structureFootprint(structure).height;
-  const anchor = entry?.renderAsset?.anchor;
-  const edge = typeof anchor === "string" ? anchor : anchor?.edge;
-  return edge === "bottom" ? structure.y - height + 1 : structure.y;
-}
-
-function renderScaleMode(scale: NonNullable<CatalogEntry["renderAsset"]>["scale"]) {
-  return typeof scale === "object" && scale !== null ? scale.mode : scale;
-}
-
-function renderScaleFactor(scale: NonNullable<CatalogEntry["renderAsset"]>["scale"]) {
-  return typeof scale === "object" && scale !== null ? (scale.factor ?? 1) : 1;
-}
-
-function renderAnchorEdge(anchor: NonNullable<CatalogEntry["renderAsset"]>["anchor"]) {
-  return typeof anchor === "object" && anchor !== null ? anchor.edge : anchor;
-}
-
-function renderAnchorOffsetCells(anchor: NonNullable<CatalogEntry["renderAsset"]>["anchor"]) {
-  return typeof anchor === "object" && anchor !== null ? (anchor.offsetCells ?? 0) : 0;
-}
-
-type StructureShape = number[][];
-
-function structureShape(structure: Blueprint["data"][number]): StructureShape | undefined {
-  const entry = catalogEntry(structure.type);
-  return shapeForStructure(structure, {
-    shape: Array.isArray(entry?.shape) ? entry.shape : undefined,
-  });
-}
-
-function structureFootprint(structure: Blueprint["data"][number]) {
-  const entry = catalogEntry(structure.type);
-  const shape = customShapeFromStructure(structure);
-  return shape
-    ? { width: shape[0].length, height: shape.length }
-    : (entry?.footprint ?? { width: 1, height: 1 });
-}
-
-function _structureVisualTopY(structure: Blueprint["data"][number]) {
-  const entry = catalogEntry(structure.type);
-  const topY = structureTopY(structure);
-  const renderAsset = entry?.renderAsset;
-  const assetOffsetY = (renderAsset?.offset?.y ?? 0) / 4;
-  if (
-    renderScaleMode(renderAsset?.scale) !== "cell" ||
-    renderAnchorEdge(renderAsset?.anchor) !== "bottom"
-  ) {
-    return topY + assetOffsetY;
-  }
-  if (!renderAsset) return topY + assetOffsetY;
-  const frameHeight = renderAsset.frame?.width ?? 1;
-  const sourceHeight =
-    renderAsset.sourceCrop?.height ?? renderAsset.sourceSize?.height ?? frameHeight;
-  const scale = renderScaleFactor(renderAsset.scale);
-  return (
-    structure.y +
-    1 -
-    (sourceHeight / frameHeight) * scale +
-    renderAnchorOffsetCells(renderAsset.anchor) +
-    assetOffsetY
-  );
-}
-
-function renderPixelScale(cell: number) {
-  return cell / NATIVE_PIXELS_PER_CELL;
-}
 
 const BELT_TYPES = new Set<Blueprint["data"][number]["type"]>([
   1,
@@ -380,47 +198,9 @@ export function BlueprintMap({
   // make one cell, and four cells make one blueprint block. At 100% four
   // blueprint coordinates therefore render at 32 display pixels.
   const cell = DISPLAY_PIXELS_PER_BLOCK_AT_100 / NATIVE_PIXELS_PER_CELL;
-  const preparedBlueprint = prepareBlueprint(blueprint, {
-    catalog: {
-      get: (type) => {
-        const entry = catalogEntry(type);
-        if (!entry) return undefined;
-        const render = catalogRender(entry);
-        return {
-          footprint: entry.footprint,
-          shape: Array.isArray(entry.shape) ? entry.shape : undefined,
-          signalPoints: entry.signalPoints,
-          z: typeof render?.z === "number" ? render.z : undefined,
-          renderAsset: entry.renderAsset,
-        };
-      },
-    },
-  });
-  const xs = blueprint.data.length
-    ? blueprint.data.flatMap((structure, index) => {
-        const prepared = preparedBlueprint.preparedStructures[index];
-        const entry = catalogEntry(structure.type);
-        const assetOffsetX = (entry?.renderAsset?.offset?.x ?? 0) / 4;
-        return [
-          structure.x + assetOffsetX,
-          structure.x + prepared.footprint.width - 1 + assetOffsetX,
-        ];
-      })
-    : [0];
-  const ys = blueprint.data.length
-    ? blueprint.data.flatMap((structure, index) => {
-        const prepared = preparedBlueprint.preparedStructures[index];
-        return [prepared.visualTopY, prepared.topY + prepared.footprint.height - 1];
-      })
-    : [0];
-  const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys);
-  const width = (maxX - minX + padding * 2 + 1) * cell;
-  const height = (maxY - minY + padding * 2 + 1) * cell;
-  const blueprintWidth = (maxX - minX + 1) * cell;
-  const blueprintHeight = (maxY - minY + 1) * cell;
+  const mapModel = createBlueprintMapModel(blueprint, padding, cell);
+  const { preparedBlueprint, minX, minY, width, height, blueprintWidth, blueprintHeight } =
+    mapModel;
   const viewportWidth = viewportSize.width || width;
   const defaultViewportHeight = viewportHeightForWidth(viewportWidth);
   const blueprintFitsDefaultViewport =
@@ -501,18 +281,7 @@ export function BlueprintMap({
     y: (y - minY + padding + 0.5) * cell,
   });
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
-  const renderStructures = blueprint.data
-    .map((structure, index) => {
-      const z = preparedBlueprint.preparedStructures[index].z;
-      return { structure, index, z };
-    })
-    .sort(
-      (left, right) =>
-        left.z - right.z ||
-        left.structure.y - right.structure.y ||
-        left.structure.x - right.structure.x ||
-        left.index - right.index,
-    );
+  const { renderStructures } = mapModel;
   const debugOptions = debugComponent(MapDebugOptions, {
     showDebugCells,
     onShowDebugCellsChange: setShowDebugCells,
