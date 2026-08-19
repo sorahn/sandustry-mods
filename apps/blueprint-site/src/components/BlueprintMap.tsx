@@ -1256,7 +1256,7 @@ export function BlueprintMap({
             minY,
             padding,
             cell,
-            renderPixelScale(cell) / 2,
+            0,
           ) ? (
             <path
               d={coreFoundationOutlinePath(
@@ -1265,7 +1265,7 @@ export function BlueprintMap({
                 minY,
                 padding,
                 cell,
-                renderPixelScale(cell) / 2,
+                0,
               )}
               fill="none"
               stroke="#000000"

@@ -304,6 +304,7 @@ export function foundationOutlinePath(
   cell: number,
   cornerRadius: number,
 ) {
+  const outlineOffset = 0.5 / 4;
   const occupied = new Set<string>();
   for (const prepared of structures) {
     const type = prepared.structure.type;
@@ -361,30 +362,57 @@ export function foundationOutlinePath(
       currentIndex = next;
     }
     if (points.length > 1) points.pop();
-    const transformed = points.map(([x, y]) => [
-      (x - minX + padding) * cell,
-      (y - minY + padding) * cell,
-    ]);
-    const rounded: string[] = [];
-    transformed.forEach((current, index) => {
-      const previous = transformed[(index + transformed.length - 1) % transformed.length];
-      const next = transformed[(index + 1) % transformed.length];
-      const previousLength = Math.hypot(current[0] - previous[0], current[1] - previous[1]);
-      const nextLength = Math.hypot(next[0] - current[0], next[1] - current[1]);
-      const radius = Math.min(cornerRadius, previousLength / 2, nextLength / 2);
-      const entry = [
-        current[0] + ((previous[0] - current[0]) / previousLength) * radius,
-        current[1] + ((previous[1] - current[1]) / previousLength) * radius,
-      ];
-      const exit = [
-        current[0] + ((next[0] - current[0]) / nextLength) * radius,
-        current[1] + ((next[1] - current[1]) / nextLength) * radius,
-      ];
-      rounded.push(
-        `${index === 0 ? `M ${entry[0]} ${entry[1]}` : `L ${entry[0]} ${entry[1]}`} Q ${current[0]} ${current[1]} ${exit[0]} ${exit[1]}`,
+    const contourPoints = points.filter((current, index) => {
+      const previous = points[(index + points.length - 1) % points.length];
+      const next = points[(index + 1) % points.length];
+      return (
+        (current[0] - previous[0]) * (next[1] - current[1]) -
+          (current[1] - previous[1]) * (next[0] - current[0]) !==
+        0
       );
     });
-    contours.push(`${rounded.join(" ")} Z`);
+    const area = contourPoints.reduce((sum, current, index) => {
+      const next = contourPoints[(index + 1) % contourPoints.length];
+      return sum + current[0] * next[1] - next[0] * current[1];
+    }, 0);
+    const offsetPoint = (
+      previous: [number, number],
+      current: [number, number],
+      next: [number, number],
+    ) => {
+      const offsetLine = (from: [number, number], to: [number, number]) => {
+        const dx = to[0] - from[0];
+        const dy = to[1] - from[1];
+        const length = Math.hypot(dx, dy);
+        const normal = area > 0 ? [dy / length, -dx / length] : [-dy / length, dx / length];
+        return {
+          from: [from[0] + normal[0] * outlineOffset, from[1] + normal[1] * outlineOffset],
+          to: [to[0] + normal[0] * outlineOffset, to[1] + normal[1] * outlineOffset],
+        };
+      };
+      const incoming = offsetLine(previous, current);
+      const outgoing = offsetLine(current, next);
+      const denominator =
+        (incoming.from[0] - incoming.to[0]) * (outgoing.from[1] - outgoing.to[1]) -
+        (incoming.from[1] - incoming.to[1]) * (outgoing.from[0] - outgoing.to[0]);
+      if (denominator === 0) return current;
+      const factor =
+        ((incoming.from[0] - outgoing.from[0]) * (outgoing.from[1] - outgoing.to[1]) -
+          (incoming.from[1] - outgoing.from[1]) * (outgoing.from[0] - outgoing.to[0])) /
+        denominator;
+      return [
+        incoming.from[0] + factor * (incoming.to[0] - incoming.from[0]),
+        incoming.from[1] + factor * (incoming.to[1] - incoming.from[1]),
+      ];
+    };
+    const transformed = contourPoints.map((current, index) => {
+      const previous = contourPoints[(index + contourPoints.length - 1) % contourPoints.length];
+      const next = contourPoints[(index + 1) % contourPoints.length];
+      const offset = offsetPoint(previous, current, next);
+      return [(offset[0] - minX + padding) * cell, (offset[1] - minY + padding) * cell];
+    });
+    const contour = transformed.map(([x, y], index) => `${index === 0 ? "M" : "L"} ${x} ${y}`);
+    contours.push(`${contour.join(" ")} Z`);
   });
   return contours.join(" ");
 }
