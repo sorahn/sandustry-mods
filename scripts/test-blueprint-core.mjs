@@ -88,6 +88,36 @@ assert.equal(renderModel.height, 128);
 assert.equal(core.tileColor("machine"), "#563d46");
 assert.deepEqual(core.wrapLabel("Signal Presence Sensor", 8), ["Signal", "Presence", "Sensor"]);
 
+const renderedSvg = core.renderBlueprintToSvg(
+  {
+    name: "SVG fixture",
+    data: [{ type: "machine", x: 0, y: 0 }],
+    signalLinks: null,
+  },
+  {
+    padding: 1,
+    cell: 8,
+    catalog: {
+      get: (type) =>
+        type === "machine"
+          ? {
+              name: "Mill",
+              footprint: { width: 4, height: 4 },
+              renderAsset: { path: "machine.png", sourceSize: { width: 16, height: 16 } },
+            }
+          : undefined,
+    },
+    assetBaseUrl: "/assets/",
+    showGrid: false,
+    showFoundationOutlines: false,
+    showSignalLinks: false,
+    showNames: true,
+  },
+);
+assert.match(renderedSvg.svg, /href="\/assets\/machine\.png"/);
+assert.match(renderedSvg.svg, /<text[^>]*>Mill<\/text>/);
+assert.match(renderedSvg.svg, /viewBox="0 0 48 48"/);
+
 const signalStructures = [
   { type: "signalBuffer", x: 0, y: 8 },
   { type: "signalToggle", x: 8, y: 8 },

@@ -66,6 +66,11 @@ export {
   type BlueprintRenderStructure,
 } from "./render-model";
 export {
+  renderBlueprintToSvg,
+  type BlueprintSvgRenderOptions,
+  type BlueprintSvgRenderResult,
+} from "./svg-renderer";
+export {
   prepareSvgForPng,
   renderSvgToPng,
   type BlueprintPngPlatform,
