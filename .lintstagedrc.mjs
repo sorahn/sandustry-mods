@@ -1,4 +1,4 @@
-const supported = /\.(?:ts|tsx|js|json)$/;
+const supported = /\.(?:ts|tsx|js|mjs|cjs|json)$/;
 
 export default {
   "**/*": (files) => {
