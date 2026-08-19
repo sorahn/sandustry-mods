@@ -95,6 +95,16 @@ function renderShapeRects(
     .join("");
 }
 
+function isFoundationStructure(model: BlueprintRenderModel, index: number) {
+  const prepared = model.preparedBlueprint.preparedStructures[index];
+  const type = prepared.structure.type;
+  return (
+    (typeof type === "number" && type >= 11 && type <= 15) ||
+    prepared.customShape !== undefined ||
+    (prepared.shape !== undefined && prepared.sprite === undefined)
+  );
+}
+
 function renderStructure(
   model: BlueprintRenderModel,
   index: number,
@@ -200,7 +210,13 @@ export function renderBlueprintToSvg(
   const showGrid = options.showGrid ?? true;
   const showFoundationOutlines = options.showFoundationOutlines ?? true;
   const showSignalLinks = options.showSignalLinks ?? true;
-  const structureMarkup = model.renderStructures
+  const foundationStructures = model.renderStructures.filter(({ index }) =>
+    isFoundationStructure(model, index),
+  );
+  const spriteStructures = model.renderStructures.filter(
+    ({ index }) => !isFoundationStructure(model, index),
+  );
+  const structureMarkup = [...foundationStructures, ...spriteStructures]
     .map(({ index }) => renderStructure(model, index, options))
     .join("");
   const foundationPath = showFoundationOutlines
@@ -227,6 +243,6 @@ export function renderBlueprintToSvg(
   const signals = showSignalLinks ? renderSignalLinks(model) : "";
   return {
     model,
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${number(model.width)} ${number(model.height)}" width="${number(model.width)}" height="${number(model.height)}"><title>${escapeXml(blueprint.name || "Sandustry blueprint")}</title><desc>Rendered Sandustry blueprint map</desc><style>image{image-rendering:pixelated}</style>${background}${outline}<g>${structureMarkup}</g>${signals}</svg>`,
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${number(model.width)} ${number(model.height)}" width="${number(model.width)}" height="${number(model.height)}" preserveAspectRatio="xMidYMid meet"><title>${escapeXml(blueprint.name || "Sandustry blueprint")}</title><desc>Rendered Sandustry blueprint map</desc><style>image{image-rendering:pixelated}</style>${background}${outline}<g>${structureMarkup}</g>${signals}</svg>`,
   };
 }
