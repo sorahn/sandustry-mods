@@ -3,11 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "postbuild": "node scripts/copy-404.mjs",
     "build:preview": "tsc --noEmit && vite build --mode preview && node scripts/copy-404.mjs",
-    "preview": "npm run build:preview && vite preview"
+    "build": "tsc --noEmit && vite build",
+    "dev": "vite",
+    "postbuild": "node scripts/copy-404.mjs",
+    "preview": "npm run build:preview && vite preview",
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@sandustry/blueprint-core": "0.0.0",
