@@ -25,13 +25,17 @@ const temporaryFiles = bundles.map((bundle) => {
 });
 
 try {
-  execFileSync("npx", [
-    "oxfmt",
-    "--write",
-    "--config",
-    join(repoRoot, ".oxfmtrc.json"),
-    ...temporaryFiles.map(({ temporaryFile }) => temporaryFile),
-  ], { cwd: repoRoot, stdio: "inherit" });
+  execFileSync(
+    "npx",
+    [
+      "oxfmt",
+      "--write",
+      "--config",
+      join(repoRoot, ".oxfmtrc.json"),
+      ...temporaryFiles.map(({ temporaryFile }) => temporaryFile),
+    ],
+    { cwd: repoRoot, stdio: "inherit" },
+  );
 
   for (const { bundle, temporaryFile } of temporaryFiles) cpSync(temporaryFile, bundle);
   console.log(`Formatted ${bundles.length} bundle file${bundles.length === 1 ? "" : "s"}.`);

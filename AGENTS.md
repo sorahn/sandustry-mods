@@ -148,7 +148,7 @@ The supplied real v1 mods established the following patterns:
 - Unlock structures directly with
   `api.player.buildings.unlockByType(structureId)`.
 - Register recurring behavior with `api.triggers.register(triggerId, {
-  interval, callback
+interval, callback
 })`.
 - Iterate placed structures with `api.structures.forEachOfType`.
 - Register deferred behavior after native content is ready with

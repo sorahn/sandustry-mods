@@ -4,9 +4,10 @@ import styles from "../styles/button.module.css";
 
 export const buttonStyles = {
   button:
-    "min-h-[var(--sd-control-height)] rounded-[0_var(--sd-button-radius)_0_var(--sd-button-radius)] border border-slate-200 bg-black px-2.5 py-1.5 text-[11px] font-normal text-white",
+    "relative left-0 min-h-[var(--sd-control-height)] overflow-hidden rounded-[0_var(--sd-button-radius)_0_var(--sd-button-radius)] border px-2.5 py-1.5 text-[11px] font-normal transition-[border-color,left] duration-1000 ease-in-out",
+  default: "border-slate-200 bg-black text-white",
   accent: "border-yellow-300/50 bg-yellow-300/10 text-yellow-300",
-  danger: "border-red-400",
+  danger: "border-red-400 bg-black text-white",
   compact: "min-h-0 px-1.5 py-0.75 text-[10px]",
   noShift: styles.noShift,
 };
@@ -24,15 +25,15 @@ export function Button({
   ...props
 }: ButtonProps) {
   const buttonVariant = variant ?? (accent ? "accent" : "default");
+  const variantClassName =
+    buttonVariant === "accent"
+      ? buttonStyles.accent
+      : buttonVariant === "danger"
+        ? buttonStyles.danger
+        : buttonStyles.default;
   return (
     <button
-      className={cx(
-        buttonStyles.button,
-        styles.effects,
-        buttonVariant === "accent" && buttonStyles.accent,
-        buttonVariant === "danger" && buttonStyles.danger,
-        className,
-      )}
+      className={cx(buttonStyles.button, styles.effects, variantClassName, className)}
       {...props}
     >
       {children}

@@ -1,19 +1,8 @@
 .effects {
-  position: relative;
-  left: 0;
-  min-height: var(--sd-control-height);
-  overflow: hidden;
-  border: 1px solid #e2e8f0;
-  border-radius: 0 var(--sd-button-radius) 0 var(--sd-button-radius);
-  background: #000;
-  color: #fff;
-  cursor: pointer;
-  font: inherit;
-  font-size: 11px;
-  padding: calc(var(--sd-space) * 1.5) calc(var(--sd-space) * 2.5);
-  transition: border-color 1s ease-in-out, left 250ms ease-in-out;
+  transition-duration: 1s, 250ms;
+  transition-timing-function: ease-in-out;
 }
-.button::before {
+.effects::before {
   position: absolute;
   top: -1rem;
   right: 0;
@@ -25,20 +14,20 @@
   transform: translateX(48px) rotate(6deg);
   transition: transform 700ms ease;
 }
-.button:not(:disabled):hover,
-.button:not(:disabled):focus-visible {
+.effects:not(:disabled):hover,
+.effects:not(:disabled):focus-visible {
   left: 4px;
   border-color: transparent;
   color: #fff;
   outline: 0;
   transition-duration: 0s;
 }
-.button:not(:disabled):hover::first-letter,
-.button:not(:disabled):focus-visible::first-letter {
+.effects:not(:disabled):hover::first-letter,
+.effects:not(:disabled):focus-visible::first-letter {
   color: var(--sd-yellow);
 }
-.button:not(:disabled):hover::before,
-.button:not(:disabled):focus-visible::before {
+.effects:not(:disabled):hover::before,
+.effects:not(:disabled):focus-visible::before {
   transform: translateX(-208px) rotate(6deg);
 }
 .effects:disabled {
@@ -47,6 +36,10 @@
   color: #475569;
   cursor: not-allowed;
 }
-.effects:disabled::before { display: none; }
+.effects:disabled::before {
+  display: none;
+}
 .noShift:not(:disabled):hover,
-.noShift:not(:disabled):focus-visible { left: 0; }
+.noShift:not(:disabled):focus-visible {
+  left: 0;
+}

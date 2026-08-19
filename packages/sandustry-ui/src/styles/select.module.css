@@ -1,2 +1,16 @@
-.selectWrap { position: relative; display: inline-block; }
-.selectWrap::after { position: absolute; top: 50%; right: var(--sd-caret-inset); width: var(--sd-caret-size); height: var(--sd-caret-size); border-right: 1px solid #94a3b8; border-bottom: 1px solid #94a3b8; content: ""; pointer-events: none; transform: translateY(-65%) rotate(45deg); }
+.selectWrap {
+  position: relative;
+  display: inline-block;
+}
+.selectWrap::after {
+  position: absolute;
+  top: 50%;
+  right: var(--sd-caret-inset);
+  width: var(--sd-caret-size);
+  height: var(--sd-caret-size);
+  border-right: 1px solid #94a3b8;
+  border-bottom: 1px solid #94a3b8;
+  content: "";
+  pointer-events: none;
+  transform: translateY(-65%) rotate(45deg);
+}
