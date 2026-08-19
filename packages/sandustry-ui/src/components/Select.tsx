@@ -9,7 +9,13 @@ export function Select({
 }: PropsWithChildren<SelectHTMLAttributes<HTMLSelectElement>>) {
   return (
     <span className={styles.selectWrap}>
-      <select className={cx(styles.select, className)} {...props}>
+      <select
+        className={cx(
+          "min-h-[var(--sd-control-height)] appearance-none rounded-[var(--sd-radius)_0_var(--sd-radius)_0] border border-slate-700 bg-black/70 px-2.5 py-1.5 pr-5 font-mono text-[11px] leading-normal text-slate-200 focus:border-slate-500 focus:outline-2 focus:outline-yellow-300 focus:outline-offset-2",
+          className,
+        )}
+        {...props}
+      >
         {children}
       </select>
     </span>

@@ -1,7 +1,0 @@
-.panel { overflow: hidden; border: 1px solid var(--sd-slate-700); border-radius: var(--sd-radius); background: var(--sd-panel); box-shadow: var(--sd-panel-shadow); }
-.header { display: flex; min-height: var(--sd-control-height); box-sizing: border-box; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--sd-slate-800); padding: calc(var(--sd-space) * 2) calc(var(--sd-space) * 4); }
-.label { color: rgb(255 255 255 / 0.7); font-size: 11px; }
-.toggle { display: inline-flex; align-items: center; gap: calc(var(--sd-space) * 2); border: 0; padding: 0; color: rgb(148 163 184 / 1); background: transparent; cursor: pointer; font: inherit; }
-.toggle:focus-visible { outline: 2px solid var(--sd-yellow); outline-offset: 3px; }
-.caret { width: 12px; height: 12px; flex-shrink: 0; transition: transform 150ms ease; }
-.caretCollapsed { transform: rotate(-90deg); }

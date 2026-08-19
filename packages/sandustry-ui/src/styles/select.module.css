@@ -1,4 +1,2 @@
 .selectWrap { position: relative; display: inline-block; }
 .selectWrap::after { position: absolute; top: 50%; right: var(--sd-caret-inset); width: var(--sd-caret-size); height: var(--sd-caret-size); border-right: 1px solid #94a3b8; border-bottom: 1px solid #94a3b8; content: ""; pointer-events: none; transform: translateY(-65%) rotate(45deg); }
-.select { min-height: var(--sd-control-height); appearance: none; border: 1px solid var(--sd-slate-700); border-radius: var(--sd-radius) 0 var(--sd-radius) 0; background: rgb(0 0 0 / 0.7); color: #e2e8f0; padding: calc(var(--sd-space) * 1.5) calc(var(--sd-space) * 5) calc(var(--sd-space) * 1.5) calc(var(--sd-space) * 2.5); font: 11px/normal ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-.select:focus { border-color: var(--sd-slate-500, #64748b); outline: 2px solid var(--sd-yellow); outline-offset: 2px; }

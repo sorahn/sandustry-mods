@@ -1,3 +1,5 @@
+@import "tailwindcss";
+@source "./components";
 @import "@fontsource/play/400.css";
 @import "@fontsource/play/700.css";
 

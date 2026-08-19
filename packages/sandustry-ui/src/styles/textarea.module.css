@@ -1,3 +1,0 @@
-.textarea { min-height: 20rem; width: 100%; resize: vertical; border: 1px solid var(--sd-slate-700); border-radius: var(--sd-radius); background: rgb(0 0 0 / 0.7); color: #e2e8f0; padding: calc(var(--sd-space) * 3); font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-.textarea::placeholder { color: #475569; }
-.textarea:focus { border-color: var(--sd-slate-500, #64748b); outline: 2px solid var(--sd-yellow); outline-offset: 2px; }

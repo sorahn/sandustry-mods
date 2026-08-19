@@ -1,6 +1,5 @@
 import type { InputHTMLAttributes, ReactNode } from "react";
 import cx from "clsx";
-import styles from "../styles/checkbox.module.css";
 
 export type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, "size" | "type"> & {
   boxed?: boolean;
@@ -18,14 +17,15 @@ export function Checkbox({
   return (
     <label
       className={cx(
-        styles.checkbox,
-        size === "small" && styles.small,
-        boxed && styles.boxed,
+        "inline-flex cursor-pointer items-center gap-1.5 font-mono text-[11px] text-slate-400",
+        size === "small" && "min-h-6 gap-1 text-[10px]",
+        boxed &&
+          "gap-2.5 rounded-[var(--sd-radius)_0_var(--sd-radius)_0] border border-slate-300/25 bg-black px-2.5 py-1",
         className,
       )}
     >
-      {label ? <span className={styles.label}>{label}</span> : null}
-      <input {...props} type="checkbox" className={styles.input} />
+      {label ? <span>{label}</span> : null}
+      <input {...props} type="checkbox" className="cursor-pointer accent-yellow-300" />
     </label>
   );
 }
