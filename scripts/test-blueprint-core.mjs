@@ -115,10 +115,24 @@ assert.deepEqual(
 const catalogPrepared = core.prepareBlueprint(relativeSignals, {
   catalog: {
     get: (type) =>
-      type === "signalBuffer" ? { signalPoints: { shared: { x: 0.5, y: 0.5 } } } : undefined,
+      type === "signalBuffer"
+        ? {
+            footprint: { width: 4, height: 4 },
+            signalPoints: { shared: { x: 0.5, y: 0.5 } },
+            shape: [
+              [1, 1],
+              [1, 0],
+            ],
+          }
+        : undefined,
   },
 });
 assert.deepEqual(catalogPrepared.preparedSignalLinks[0].fromPoint, { x: 0.5, y: 8.5 });
+assert.deepEqual(catalogPrepared.preparedStructures[0].footprint, { width: 2, height: 2 });
+assert.deepEqual(catalogPrepared.preparedStructures[0].shape, [
+  [1, 1],
+  [1, 0],
+]);
 
 const oversizedTypeTable = [4, 1, 120, 65];
 for (let index = 0; index < 65; index++) oversizedTypeTable.push(0, index);

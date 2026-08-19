@@ -567,7 +567,19 @@ export function BlueprintMap({
     x: (x - minX + padding + 0.5) * cell,
     y: (y - minY + padding + 0.5) * cell,
   });
-  const preparedBlueprint = prepareBlueprint(blueprint);
+  const preparedBlueprint = prepareBlueprint(blueprint, {
+    catalog: {
+      get: (type) => {
+        const entry = catalogEntry(type);
+        if (!entry) return undefined;
+        return {
+          footprint: entry.footprint,
+          shape: Array.isArray(entry.shape) ? entry.shape : undefined,
+          signalPoints: entry.signalPoints,
+        };
+      },
+    },
+  });
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
   const renderStructures = blueprint.data
     .map((structure, index) => {

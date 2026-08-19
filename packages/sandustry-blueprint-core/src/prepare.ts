@@ -45,6 +45,8 @@ export type PreparedStructure = {
   spriteIndex?: number;
   lightColor?: string;
   customShape?: number[][];
+  shape?: number[][];
+  footprint: { width: number; height: number };
 };
 
 export type PreparedBlueprint = Blueprint & {
@@ -261,6 +263,13 @@ export function prepareBlueprint(
     spriteIndex: spriteIndexFor(structure),
     lightColor: lightColorFor(structure),
     customShape: customShapeFor(structure),
+    shape: customShapeFor(structure) ?? options.catalog?.get(structure.type)?.shape,
+    footprint: (() => {
+      const shape = customShapeFor(structure) ?? options.catalog?.get(structure.type)?.shape;
+      return shape
+        ? { width: shape[0].length, height: shape.length }
+        : (options.catalog?.get(structure.type)?.footprint ?? { width: 1, height: 1 });
+    })(),
   }));
   const signalCoordinateOffset = coordinateOffset(blueprint);
   const preparedSignalLinks = (blueprint.signalLinks ?? []).map((link) => {
