@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
 import {
   customShapeFromStructure,
+  foundationOutlinePath as coreFoundationOutlinePath,
   prepareBlueprint,
   shapeForStructure,
 } from "@sandustry/blueprint-core";
@@ -1249,8 +1250,8 @@ export function BlueprintMap({
             );
           })()}
           {foundationOutlinesVisible &&
-          foundationOutlinePath(
-            blueprint.data,
+          coreFoundationOutlinePath(
+            preparedBlueprint.preparedStructures,
             minX,
             minY,
             padding,
@@ -1258,8 +1259,8 @@ export function BlueprintMap({
             renderPixelScale(cell) / 2,
           ) ? (
             <path
-              d={foundationOutlinePath(
-                blueprint.data,
+              d={coreFoundationOutlinePath(
+                preparedBlueprint.preparedStructures,
                 minX,
                 minY,
                 padding,

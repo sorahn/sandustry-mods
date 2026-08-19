@@ -286,6 +286,109 @@ export function structureVisualTopY(
   );
 }
 
+const FOUNDATION_TYPES = new Set<BlueprintType>([11, 12, 13, 14, 15]);
+const BELT_TYPES = new Set<BlueprintType>([
+  1,
+  2,
+  "conveyorLeftMk2",
+  "conveyorRightMk2",
+  "burnerBeltLeft",
+  "burnerBeltRight",
+]);
+
+export function foundationOutlinePath(
+  structures: PreparedStructure[],
+  minX: number,
+  minY: number,
+  padding: number,
+  cell: number,
+  cornerRadius: number,
+) {
+  const occupied = new Set<string>();
+  for (const prepared of structures) {
+    const type = prepared.structure.type;
+    if (
+      !FOUNDATION_TYPES.has(type) &&
+      !BELT_TYPES.has(type) &&
+      prepared.customShape === undefined
+    ) {
+      continue;
+    }
+    const shape =
+      prepared.shape ??
+      Array.from({ length: prepared.footprint.height }, () =>
+        Array.from({ length: prepared.footprint.width }, () => 1),
+      );
+    shape.forEach((row, rowIndex) => {
+      row.forEach((value, columnIndex) => {
+        if (value !== 0) {
+          occupied.add(`${prepared.structure.x + columnIndex},${prepared.topY + rowIndex}`);
+        }
+      });
+    });
+  }
+
+  const edges: Array<{ from: [number, number]; to: [number, number] }> = [];
+  const edge = (x: number, y: number, nextX: number, nextY: number) => {
+    edges.push({ from: [x, y], to: [nextX, nextY] });
+  };
+  for (const key of occupied) {
+    const [x, y] = key.split(",").map(Number);
+    if (!occupied.has(`${x - 1},${y}`)) edge(x, y, x, y + 1);
+    if (!occupied.has(`${x + 1},${y}`)) edge(x + 1, y + 1, x + 1, y);
+    if (!occupied.has(`${x},${y - 1}`)) edge(x + 1, y, x, y);
+    if (!occupied.has(`${x},${y + 1}`)) edge(x, y + 1, x + 1, y + 1);
+  }
+  const outgoing = new Map<string, number[]>();
+  edges.forEach((currentEdge, index) => {
+    const key = currentEdge.from.join(",");
+    outgoing.set(key, [...(outgoing.get(key) ?? []), index]);
+  });
+  const visited = new Set<number>();
+  const contours: string[] = [];
+  edges.forEach((startEdge, startIndex) => {
+    if (visited.has(startIndex)) return;
+    const start = startEdge.from;
+    let currentIndex = startIndex;
+    const points: Array<[number, number]> = [start];
+    while (!visited.has(currentIndex)) {
+      visited.add(currentIndex);
+      const currentEdge = edges[currentIndex];
+      points.push(currentEdge.to);
+      if (currentEdge.to[0] === start[0] && currentEdge.to[1] === start[1]) break;
+      const next = outgoing.get(currentEdge.to.join(","))?.find((index) => !visited.has(index));
+      if (next === undefined) break;
+      currentIndex = next;
+    }
+    if (points.length > 1) points.pop();
+    const transformed = points.map(([x, y]) => [
+      (x - minX + padding) * cell,
+      (y - minY + padding) * cell,
+    ]);
+    const rounded: string[] = [];
+    transformed.forEach((current, index) => {
+      const previous = transformed[(index + transformed.length - 1) % transformed.length];
+      const next = transformed[(index + 1) % transformed.length];
+      const previousLength = Math.hypot(current[0] - previous[0], current[1] - previous[1]);
+      const nextLength = Math.hypot(next[0] - current[0], next[1] - current[1]);
+      const radius = Math.min(cornerRadius, previousLength / 2, nextLength / 2);
+      const entry = [
+        current[0] + ((previous[0] - current[0]) / previousLength) * radius,
+        current[1] + ((previous[1] - current[1]) / previousLength) * radius,
+      ];
+      const exit = [
+        current[0] + ((next[0] - current[0]) / nextLength) * radius,
+        current[1] + ((next[1] - current[1]) / nextLength) * radius,
+      ];
+      rounded.push(
+        `${index === 0 ? `M ${entry[0]} ${entry[1]}` : `L ${entry[0]} ${entry[1]}`} Q ${current[0]} ${current[1]} ${exit[0]} ${exit[1]}`,
+      );
+    });
+    contours.push(`${rounded.join(" ")} Z`);
+  });
+  return contours.join(" ");
+}
+
 function prepareSprites(structures: PreparedStructure[]) {
   const collectors = structures.filter(
     (prepared) => prepared.sprite?.asset.animation?.topology === "collector",

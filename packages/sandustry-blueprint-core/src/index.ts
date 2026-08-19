@@ -39,6 +39,7 @@ export {
   shapeForStructure,
   structureTopY,
   structureVisualTopY,
+  foundationOutlinePath,
 } from "./prepare";
 export {
   catalogRender,
