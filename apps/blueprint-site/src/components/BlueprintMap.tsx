@@ -575,11 +575,6 @@ export function BlueprintMap({
               })}
             </g>
           ) : null}
-          <BlueprintMapSignalLinksLayer
-            preparedBlueprint={preparedBlueprint}
-            visible={signalLinksVisible}
-            point={point}
-          />
           {(() => {
             const isFoundationShape = ({ structure, index }: (typeof renderStructures)[number]) => {
               const prepared = preparedBlueprint.preparedStructures[index];
@@ -621,6 +616,11 @@ export function BlueprintMap({
               </>
             );
           })()}
+          <BlueprintMapSignalLinksLayer
+            preparedBlueprint={preparedBlueprint}
+            visible={signalLinksVisible}
+            point={point}
+          />
           <BlueprintMapFoundationOutlineLayer
             preparedBlueprint={preparedBlueprint}
             visible={foundationOutlinesVisible}
