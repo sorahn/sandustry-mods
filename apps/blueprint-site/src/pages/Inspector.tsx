@@ -14,6 +14,12 @@ import {
   type BlueprintSummary,
 } from "../components/BlueprintSubmissionPanel";
 import { BlueprintStructuresPanel } from "../components/BlueprintStructuresPanel";
+import {
+  readStorageValue,
+  readStoredBoolean,
+  removeStorageValue,
+  writeStorageValue,
+} from "../utils/storage";
 
 function summarizeBlueprint(input: string, blueprint: Blueprint): BlueprintSummary {
   const xs = blueprint.data.length ? blueprint.data.map(({ x }) => x) : [0];
@@ -43,45 +49,15 @@ const REMEMBER_BLUEPRINT_KEY = "sandustry.blueprintInspector.remember";
 const SAVED_BLUEPRINT_KEY = "sandustry.blueprintInspector.string";
 const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
 const MAP_PANEL_SCROLL_OFFSET = 16;
-function readLocalValue(key: string) {
-  try {
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-
-function readStoredBoolean(key: string, fallback: boolean) {
-  if (typeof window === "undefined") return fallback;
-  const stored = readLocalValue(key);
-  return stored === null ? fallback : stored !== "false";
-}
-
-function writeLocalValue(key: string, value: string) {
-  try {
-    window.localStorage.setItem(key, value);
-  } catch {
-    // Local storage can be unavailable in private browsing contexts.
-  }
-}
-
-function removeLocalValue(key: string) {
-  try {
-    window.localStorage.removeItem(key);
-  } catch {
-    // Local storage can be unavailable in private browsing contexts.
-  }
-}
-
 export function BlueprintInspectorPage() {
   const [remember, setRemember] = useState(
-    () => typeof window !== "undefined" && readLocalValue(REMEMBER_BLUEPRINT_KEY) === "true",
+    () => readStorageValue(REMEMBER_BLUEPRINT_KEY) === "true",
   );
   const [encoded, setEncoded] = useState(() => {
-    if (typeof window === "undefined" || readLocalValue(REMEMBER_BLUEPRINT_KEY) !== "true") {
+    if (readStorageValue(REMEMBER_BLUEPRINT_KEY) !== "true") {
       return "";
     }
-    return readLocalValue(SAVED_BLUEPRINT_KEY) ?? "";
+    return readStorageValue(SAVED_BLUEPRINT_KEY) ?? "";
   });
   const [blueprint, setBlueprint] = useState<Blueprint | null>(null);
   const [showMapSidebar, setShowMapSidebar] = useState(() =>
@@ -140,10 +116,10 @@ export function BlueprintInspectorPage() {
     size: "small",
     onCheckedChange: (nextRemember: boolean) => {
       setRemember(nextRemember);
-      if (nextRemember) writeLocalValue(SAVED_BLUEPRINT_KEY, encoded);
+      if (nextRemember) writeStorageValue(SAVED_BLUEPRINT_KEY, encoded);
       else {
-        removeLocalValue(SAVED_BLUEPRINT_KEY);
-        removeLocalValue(SAVED_MAP_VIEW_KEY);
+        removeStorageValue(SAVED_BLUEPRINT_KEY);
+        removeStorageValue(SAVED_MAP_VIEW_KEY);
       }
     },
   });
@@ -171,11 +147,11 @@ export function BlueprintInspectorPage() {
         blueprint={blueprint}
         onEncodedChange={(value) => {
           setEncoded(value);
-          if (remember) writeLocalValue(SAVED_BLUEPRINT_KEY, value);
+          if (remember) writeStorageValue(SAVED_BLUEPRINT_KEY, value);
         }}
         onClear={() => {
           setEncoded("");
-          if (remember) writeLocalValue(SAVED_BLUEPRINT_KEY, "");
+          if (remember) writeStorageValue(SAVED_BLUEPRINT_KEY, "");
         }}
         onInspect={inspect}
       />

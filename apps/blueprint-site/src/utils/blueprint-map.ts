@@ -6,6 +6,7 @@ import {
   createBlueprintRenderModel,
 } from "@sandustry/blueprint-core";
 import { blueprintCatalog } from "./catalog";
+import { readStorageValue } from "./storage";
 
 export const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
 export const MAP_ZOOM_LEVELS = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
@@ -138,25 +139,9 @@ export function renderPixelScale(cell: number) {
   return cell / NATIVE_PIXELS_PER_CELL;
 }
 
-function readLocalValue(key: string) {
-  try {
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-
-export function writeLocalValue(key: string, value: string) {
-  try {
-    window.localStorage.setItem(key, value);
-  } catch {
-    // Local storage can be unavailable in private browsing contexts.
-  }
-}
-
 export function readStoredMapView(blueprintKey: string): MapView | null {
   if (typeof window === "undefined" || !blueprintKey) return null;
-  const stored = readLocalValue(SAVED_MAP_VIEW_KEY);
+  const stored = readStorageValue(SAVED_MAP_VIEW_KEY);
   if (!stored) return null;
   try {
     const value = JSON.parse(stored) as {

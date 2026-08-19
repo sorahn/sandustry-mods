@@ -32,9 +32,9 @@ import {
   structureShape,
   structureTopY,
   tileColor,
-  writeLocalValue,
   createBlueprintMapModel,
 } from "../utils/blueprint-map";
+import { writeStorageValue } from "../utils/storage";
 
 const MAP_FIT_ZOOM_MIN = 0.25;
 const MAP_FIT_ZOOM_MAX = 2;
@@ -300,7 +300,7 @@ export function BlueprintMap({
   }, [blueprintKey, captureOnly, remember, viewportSize.height, viewportSize.width, width]);
   useEffect(() => {
     if (!remember || !blueprintKey || !mapSizeReady) return;
-    writeLocalValue(
+    writeStorageValue(
       SAVED_MAP_VIEW_KEY,
       JSON.stringify({
         blueprint: blueprintKey,
