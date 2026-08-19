@@ -1,5 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
-import { prepareBlueprint } from "@sandustry/blueprint-core";
+import {
+  customShapeFromStructure,
+  prepareBlueprint,
+  shapeForStructure,
+} from "@sandustry/blueprint-core";
 import { type Blueprint } from "../utils/blueprint";
 import {
   catalogEntry,
@@ -170,43 +174,16 @@ function renderAnchorOffsetCells(anchor: NonNullable<CatalogEntry["renderAsset"]
 
 type StructureShape = number[][];
 
-function customStructureShape(structure: Blueprint["data"][number]): StructureShape | undefined {
-  if (typeof structure.data !== "object" || structure.data === null) return undefined;
-  const data = structure.data as Record<string, unknown>;
-  const blueprint = data.__prefabulatorBlueprint;
-  if (typeof blueprint !== "object" || blueprint === null) return undefined;
-  const definition = (blueprint as Record<string, unknown>).definition;
-  if (typeof definition !== "object" || definition === null) return undefined;
-  const shape = (definition as Record<string, unknown>).shape;
-  if (
-    !Array.isArray(shape) ||
-    shape.length === 0 ||
-    !shape.every(
-      (row) =>
-        Array.isArray(row) &&
-        row.length > 0 &&
-        row.every((value) => typeof value === "number" && Number.isFinite(value)),
-    )
-  ) {
-    return undefined;
-  }
-  const width = shape[0].length;
-  return shape.every((row) => row.length === width) ? (shape as StructureShape) : undefined;
-}
-
 function structureShape(structure: Blueprint["data"][number]): StructureShape | undefined {
-  return (
-    customStructureShape(structure) ??
-    (() => {
-      const shape = catalogEntry(structure.type)?.shape;
-      return Array.isArray(shape) ? shape : undefined;
-    })()
-  );
+  const entry = catalogEntry(structure.type);
+  return shapeForStructure(structure, {
+    shape: Array.isArray(entry?.shape) ? entry.shape : undefined,
+  });
 }
 
 function structureFootprint(structure: Blueprint["data"][number]) {
   const entry = catalogEntry(structure.type);
-  const shape = customStructureShape(structure);
+  const shape = customShapeFromStructure(structure);
   return shape
     ? { width: shape[0].length, height: shape.length }
     : (entry?.footprint ?? { width: 1, height: 1 });
@@ -265,7 +242,7 @@ function foundationOutlinePath(
     if (
       !isNativeFoundation &&
       !BELT_TYPES.has(structure.type) &&
-      customStructureShape(structure) === undefined
+      customShapeFromStructure(structure) === undefined
     ) {
       continue;
     }

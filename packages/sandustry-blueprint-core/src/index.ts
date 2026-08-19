@@ -35,6 +35,8 @@ export {
   type SignalPointResolver,
   type StructureCatalogEntry,
   type RenderAsset,
+  customShapeFromStructure,
+  shapeForStructure,
 } from "./prepare";
 export {
   catalogRender,

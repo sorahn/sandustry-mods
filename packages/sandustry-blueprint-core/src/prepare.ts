@@ -194,7 +194,7 @@ function lightColorFor(structure: BlueprintStructure) {
   return nestedLightColor(structure.data) ?? nestedLightColor(structure.filter);
 }
 
-function customShapeFor(structure: BlueprintStructure) {
+export function customShapeFromStructure(structure: BlueprintStructure) {
   if (typeof structure.data !== "object" || structure.data === null) return undefined;
   const data = structure.data as Record<string, unknown>;
   const prefabulator = data.__prefabulatorBlueprint;
@@ -216,6 +216,13 @@ function customShapeFor(structure: BlueprintStructure) {
   }
   const width = shape[0].length;
   return shape.every((row) => row.length === width) ? (shape as number[][]) : undefined;
+}
+
+export function shapeForStructure(
+  structure: BlueprintStructure,
+  catalogEntry?: StructureCatalogEntry,
+) {
+  return customShapeFromStructure(structure) ?? catalogEntry?.shape;
 }
 
 function prepareSprites(structures: PreparedStructure[]) {
@@ -346,8 +353,8 @@ export function prepareBlueprint(
       options.catalog?.get(type)?.signalPoints ?? defaultSignalPoints(type));
   const preparedStructures = blueprint.data.map((structure, index) => {
     const catalogEntry = options.catalog?.get(structure.type);
-    const customShape = customShapeFor(structure);
-    const shape = customShape ?? catalogEntry?.shape;
+    const customShape = customShapeFromStructure(structure);
+    const shape = shapeForStructure(structure, catalogEntry);
     const footprint = shape
       ? { width: shape[0].length, height: shape.length }
       : (catalogEntry?.footprint ?? { width: 1, height: 1 });
