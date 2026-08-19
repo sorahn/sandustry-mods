@@ -29,3 +29,4 @@ export {
 } from "./components/ElementPicker";
 export { Dialog, type DialogProps } from "./components/Dialog";
 export { SplitPane, type SplitPaneProps } from "./components/SplitPane";
+export { ListItem, type ListItemProps } from "./components/ListItem";
