@@ -1,3 +1,6 @@
+import { Button, buttonStyles } from "@sandustry/ui/react";
+import cx from "clsx";
+
 export function BlueprintMapViewportControls({
   zoom,
   minZoom,
@@ -23,40 +26,40 @@ export function BlueprintMapViewportControls({
 }) {
   return (
     <div className="absolute right-3 top-3 z-10 flex items-center gap-2 rounded border border-slate-700/80 bg-slate-950/60 p-2 font-mono text-xs text-slate-300 shadow-lg backdrop-blur-sm">
-      <button
+      <Button
         type="button"
-        className="sd-button sd-button--compact sd-button--no-shift"
+        className={cx(buttonStyles.compact, buttonStyles.noShift)}
         onClick={onExport}
       >
         Export PNG
-      </button>
+      </Button>
       <span className="mr-1">{Math.round(zoom * 100)}%</span>
-      <button
+      <Button
         type="button"
-        className="sd-button sd-button--compact sd-button--no-shift"
+        className={cx(buttonStyles.compact, buttonStyles.noShift)}
         onClick={onZoomOut}
         disabled={zoom <= minZoom}
         aria-label="Zoom out"
       >
         −
-      </button>
-      <button
+      </Button>
+      <Button
         type="button"
-        className="sd-button sd-button--compact sd-button--no-shift"
+        className={cx(buttonStyles.compact, buttonStyles.noShift)}
         onClick={onFit}
         disabled={fitMode && zoom === measuredFitZoom && pan.x === 0 && pan.y === 0}
       >
         Fit
-      </button>
-      <button
+      </Button>
+      <Button
         type="button"
-        className="sd-button sd-button--compact sd-button--no-shift"
+        className={cx(buttonStyles.compact, buttonStyles.noShift)}
         onClick={onZoomIn}
         disabled={zoom >= maxZoom}
         aria-label="Zoom in"
       >
         +
-      </button>
+      </Button>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { BlueprintMap } from "../components/BlueprintMap";
+import cx from "clsx";
 import { decodeBlueprint } from "../utils/blueprint";
 import { catalogVisualFixture } from "../visual-fixtures/catalog";
 
@@ -20,9 +21,7 @@ export function BlueprintVisualFixturePage() {
   }
 
   return (
-    <div
-      className={`blueprint-visual-test${visualCapture ? " blueprint-visual-test--capture" : ""}`}
-    >
+    <div className={cx("blueprint-visual-test", visualCapture && "blueprint-visual-test--capture")}>
       <BlueprintMap
         blueprint={blueprint}
         remember={false}

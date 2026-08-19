@@ -19,7 +19,8 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@fontsource/play": "^5.3.0"
+    "@fontsource/play": "^5.3.0",
+    "clsx": "^2.1.1"
   },
   "peerDependencies": {
     "react": ">=18",

@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import cx from "clsx";
 import { type Blueprint } from "../utils/blueprint";
 import { catalogEntry, catalogRender, catalogRenderSize } from "../utils/catalog";
 import { structureFootprint, structureLabel } from "../utils/blueprint-map";
@@ -16,7 +17,10 @@ export function BlueprintMapSidebar({
     <aside className="flex flex-col border-l border-slate-800 pl-4 text-xs text-slate-400">
       {debugOptions}
       <p
-        className={`${debugOptions ? "pt-4" : null} font-mono uppercase tracking-[0.18em] text-slate-500`}
+        className={cx(
+          debugOptions && "pt-4",
+          "font-mono uppercase tracking-[0.18em] text-slate-500",
+        )}
       >
         Selected record
       </p>

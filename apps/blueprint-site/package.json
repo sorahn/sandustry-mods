@@ -15,6 +15,7 @@
     "@sandustry/blueprint-core": "0.0.0",
     "@sandustry/ui": "0.0.0",
     "@tanstack/react-router": "1.170.29",
+    "clsx": "^2.1.1",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },

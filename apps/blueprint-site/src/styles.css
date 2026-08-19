@@ -16,9 +16,6 @@ body {
 .site-shell {
   max-width: 80rem;
 }
-.sd-panel__toggle {
-  gap: calc(var(--sd-space) * 2);
-}
 @media (min-width: 100rem) {
   .site-shell {
     max-width: 96rem;
