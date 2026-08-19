@@ -4,6 +4,7 @@ import {
   Badge,
   Button,
   Dialog,
+  Divider,
   ElementPicker,
   Fieldset,
   FormField,
@@ -19,8 +20,10 @@ import {
   ProgressBar,
   SegmentedControl,
   SplitPane,
+  StatusIndicator,
   Switch,
   TextInput,
+  TextAction,
   Tooltip,
 } from "@sandustry/ui";
 
@@ -179,12 +182,40 @@ export function DebugPage() {
           <Fieldset legend="World options">
             <LockedState icon={<span>♙</span>} />
           </Fieldset>
-          <Panel title="Collapsible panel" collapsible className="p-4">
+          <Panel title="Collapsible panel" collapsible contentClassName="p-4">
             <p className="text-sm leading-6 text-slate-400">
               Panel content can be collapsed without leaving the surrounding layout.
             </p>
           </Panel>
         </div>
+      </ShowcaseSection>
+
+      <ShowcaseSection title="Hero panel and text actions">
+        <Panel variant="hero" className="mx-auto max-w-3xl px-8 py-5 text-center">
+          <h2 className="text-2xl tracking-wider text-[#ffe700]">
+            This library is still in development.
+          </h2>
+          <div className="px-4 py-2">
+            <Divider variant="accent" />
+          </div>
+          <p className="mt-2 text-sm leading-relaxed text-white/90">
+            A high-attention surface for welcome messages, release notes, or important product
+            context.
+          </p>
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
+            <StatusIndicator tone="online" label="online" value="4,736" />
+            <StatusIndicator tone="neutral" label="members" value="14,902" />
+            <StatusIndicator tone="warning" label="maintenance" />
+          </div>
+          <Divider className="my-4" />
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <TextAction as="a" href="https://example.com" target="_blank" rel="noreferrer">
+              Community
+            </TextAction>
+            <TextAction icon={<span aria-hidden="true">◌</span>}>Send feedback</TextAction>
+            <TextAction>Credits</TextAction>
+          </div>
+        </Panel>
       </ShowcaseSection>
 
       <ShowcaseSection title="Lists and metadata">

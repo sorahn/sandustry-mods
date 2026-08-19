@@ -5,14 +5,14 @@ import cx from "clsx";
 export function HomePage() {
   return (
     <section className="grid min-h-[60vh] place-items-center">
-      <Panel className="w-full max-w-2xl p-8">
+      <Panel variant="hero" className="w-full max-w-2xl p-8">
         <p className="mb-3 font-mono text-xs uppercase tracking-[0.25em] text-yellow-300/80">
           Sandustry blueprint tools
         </p>
         <h1 className="text-3xl font-bold text-white">Read and convert your blueprints.</h1>
         <p className="mt-4 max-w-xl text-sm leading-7 text-slate-400">
           Paste a Sandustry blueprint string to inspect its contents, or turn readable JSON back
-          into a string. Everything runs locally in your browser.
+          into a string. Render blueprints as images, too. Everything runs locally in your browser.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link to="/inspect" className={cx(buttonStyles.button, buttonStyles.accent)}>

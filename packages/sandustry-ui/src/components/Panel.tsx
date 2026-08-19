@@ -7,6 +7,8 @@ export type PanelProps = PropsWithChildren<HTMLAttributes<HTMLElement>> & {
   title?: ReactNode;
   collapsible?: boolean;
   defaultCollapsed?: boolean;
+  variant?: "default" | "hero";
+  contentClassName?: string;
 };
 
 export function Panel({
@@ -14,6 +16,8 @@ export function Panel({
   title,
   collapsible = false,
   defaultCollapsed = false,
+  variant = "default",
+  contentClassName = "",
   className = "",
   children,
   ...props
@@ -58,13 +62,16 @@ export function Panel({
   return (
     <section
       className={cx(
-        "overflow-hidden rounded border border-slate-700 bg-black/75 shadow-xl",
+        "overflow-hidden border border-slate-700 bg-black/75 shadow-xl",
+        variant === "hero"
+          ? "rounded-[0_12px] border-slate-500/70 bg-black/[0.92] shadow-[0_28px_64px_rgba(0,0,0,0.56)] outline outline-1 outline-black"
+          : "rounded",
         className,
       )}
       {...props}
     >
       {panelHeader}
-      {collapsed ? null : children}
+      {collapsed ? null : <div className={contentClassName}>{children}</div>}
     </section>
   );
 }

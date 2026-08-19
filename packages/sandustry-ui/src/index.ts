@@ -1,6 +1,9 @@
 export { Button, buttonStyles, type ButtonProps } from "./components/Button";
 export { Checkbox, type CheckboxProps } from "./components/Checkbox";
 export { Panel, type PanelProps } from "./components/Panel";
+export { Divider, type DividerProps } from "./components/Divider";
+export { StatusIndicator, type StatusIndicatorProps } from "./components/StatusIndicator";
+export { TextAction, type TextActionProps } from "./components/TextAction";
 export { Select } from "./components/Select";
 export { TextArea } from "./components/TextArea";
 export { SearchInput, type SearchInputProps } from "./components/SearchInput";
