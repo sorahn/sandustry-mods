@@ -120,8 +120,25 @@ interface SandustryApi {
       endWorldY: number,
       options?: Record<string, unknown>,
     ): any;
+    createLightAtWorld(
+      worldX: number,
+      worldY: number,
+      options?: Record<string, unknown>,
+    ): { index: number | null };
+    createParticlesAtWorld(worldX: number, worldY: number, options?: Record<string, unknown>): void;
   };
   energy: { consume(amount: number, options?: { allOrNothing?: boolean }): number };
+  patterns: {
+    createCircle(size: number): number[][];
+    excavateAtCell(
+      cellX: number,
+      cellY: number,
+      pattern: number[][],
+      outVelocity: { x: number; y: number },
+      power: number,
+      options?: Record<string, unknown>,
+    ): void;
+  };
   excavation: {
     registerProfile(
       id: string,
@@ -200,7 +217,17 @@ interface SandustryApi {
   rendering: {
     getGridMetrics(): { cellSize: number; snapGridCellSize: number };
   };
-  world: { isCellEmptyAtCell(x: number, y: number): boolean };
+  world: {
+    isCellEmptyAtCell(x: number, y: number): boolean;
+    excavateAtCell(
+      x: number,
+      y: number,
+      outVelocity: { x: number; y: number },
+      damage: number,
+      options?: Record<string, unknown>,
+    ): void;
+  };
+  sound?: { play(soundId: string, options?: Record<string, unknown>): unknown };
   action?: { getSelected(): { id?: string } | null };
   input: {
     registerBinding(
