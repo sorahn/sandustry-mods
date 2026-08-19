@@ -1,16 +1,16 @@
 import { type Blueprint } from "./blueprint";
-import { catalogEntry, catalogRender, type CatalogEntry } from "./catalog";
+import { catalogEntry, catalogRender } from "./catalog";
 import {
   customShapeFromStructure,
   shapeForStructure,
   createBlueprintRenderModel,
+  NATIVE_PIXELS_PER_CELL,
 } from "@sandustry/blueprint-core";
 import { blueprintCatalog } from "./catalog";
 import { readStorageValue } from "./storage";
 
 export const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
 export const MAP_ZOOM_LEVELS = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
-export const NATIVE_PIXELS_PER_CELL = 4;
 export const DISPLAY_PIXELS_PER_BLOCK_AT_100 = 32;
 export const BLOCK_COORDINATE_SIZE = NATIVE_PIXELS_PER_CELL;
 export const MAP_VIEWPORT_BORDER_SIZE = 2;
@@ -42,40 +42,6 @@ export type BlueprintMapModel = ReturnType<typeof createBlueprintMapModel>;
 
 export function mapLayerStyle(layer: MapLayer) {
   return { zIndex: MAP_LAYER_ORDER.indexOf(layer) };
-}
-
-export function structureLabel(type: Blueprint["data"][number]["type"]) {
-  return typeof type === "number" ? `native ${type}` : type;
-}
-
-export function wrapLabel(label: string, maxCharacters: number) {
-  const words = label.split(/\s+/).filter(Boolean);
-  const lines: string[] = [];
-  let line = "";
-  for (const word of words) {
-    if (word.length > maxCharacters && !line) {
-      for (let index = 0; index < word.length; index += maxCharacters) {
-        lines.push(word.slice(index, index + maxCharacters));
-      }
-      continue;
-    }
-    const candidate = line ? `${line} ${word}` : word;
-    if (line && candidate.length > maxCharacters) {
-      lines.push(line);
-      line = word;
-    } else {
-      line = candidate;
-    }
-  }
-  if (line) lines.push(line);
-  return lines.length ? lines : [label];
-}
-
-export function tileColor(type: Blueprint["data"][number]["type"]) {
-  if (typeof type === "number") return "#314158";
-  let hash = 0;
-  for (const character of type) hash = (hash * 31 + character.charCodeAt(0)) | 0;
-  return ["#4b3c62", "#315a5e", "#66522f", "#563d46"][Math.abs(hash) % 4];
 }
 
 export function snapMapZoom(value: number) {
@@ -115,28 +81,6 @@ export function structureShape(structure: Blueprint["data"][number]): StructureS
 
 export function createBlueprintMapModel(blueprint: Blueprint, padding: number, cell: number) {
   return createBlueprintRenderModel(blueprint, { catalog: blueprintCatalog(), padding, cell });
-}
-
-export function renderScaleMode(scale: NonNullable<CatalogEntry["renderAsset"]>["scale"]) {
-  return typeof scale === "object" && scale !== null ? scale.mode : scale;
-}
-
-export function renderScaleFactor(scale: NonNullable<CatalogEntry["renderAsset"]>["scale"]) {
-  return typeof scale === "object" && scale !== null ? (scale.factor ?? 1) : 1;
-}
-
-export function renderAnchorEdge(anchor: NonNullable<CatalogEntry["renderAsset"]>["anchor"]) {
-  return typeof anchor === "object" && anchor !== null ? anchor.edge : anchor;
-}
-
-export function renderAnchorOffsetCells(
-  anchor: NonNullable<CatalogEntry["renderAsset"]>["anchor"],
-) {
-  return typeof anchor === "object" && anchor !== null ? (anchor.offsetCells ?? 0) : 0;
-}
-
-export function renderPixelScale(cell: number) {
-  return cell / NATIVE_PIXELS_PER_CELL;
 }
 
 export function readStoredMapView(blueprintKey: string): MapView | null {

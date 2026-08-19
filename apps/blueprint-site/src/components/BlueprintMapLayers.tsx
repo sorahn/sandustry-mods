@@ -1,10 +1,9 @@
-import { foundationOutlinePath } from "@sandustry/blueprint-core";
 import {
+  foundationOutlinePath,
   NATIVE_PIXELS_PER_CELL,
   renderPixelScale,
-  type BlueprintMapModel,
-  mapLayerStyle,
-} from "../utils/blueprint-map";
+} from "@sandustry/blueprint-core";
+import { type BlueprintMapModel, mapLayerStyle } from "../utils/blueprint-map";
 
 type PreparedBlueprint = BlueprintMapModel["preparedBlueprint"];
 

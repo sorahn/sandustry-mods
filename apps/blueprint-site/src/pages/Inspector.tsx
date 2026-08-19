@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { structureLabel } from "@sandustry/blueprint-core";
 import { decodeBlueprint, type Blueprint } from "../utils/blueprint";
 import { debugComponent } from "../components/DebugComponentWrapper";
 import {
@@ -39,10 +40,6 @@ function summarizeBlueprint(input: string, blueprint: Blueprint): BlueprintSumma
     dataRecords: blueprint.data.filter(({ data }) => data !== undefined).length,
     links: blueprint.signalLinks?.length ?? 0,
   };
-}
-
-function structureLabel(type: Blueprint["data"][number]["type"]) {
-  return typeof type === "number" ? `native ${type}` : type;
 }
 
 const REMEMBER_BLUEPRINT_KEY = "sandustry.blueprintInspector.remember";

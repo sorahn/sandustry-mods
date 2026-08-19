@@ -7,9 +7,9 @@ import {
   renderScaleMode,
   structureLabel,
   tileColor,
-  type BlueprintMapModel,
   wrapLabel,
-} from "../utils/blueprint-map";
+} from "@sandustry/blueprint-core";
+import { type BlueprintMapModel } from "../utils/blueprint-map";
 
 type PreparedBlueprint = BlueprintMapModel["preparedBlueprint"];
 type RenderStructure = BlueprintMapModel["renderStructures"][number];

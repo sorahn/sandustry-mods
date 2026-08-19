@@ -2,7 +2,8 @@ import { type ReactNode } from "react";
 import cx from "clsx";
 import { type Blueprint } from "../utils/blueprint";
 import { catalogEntry, catalogRender, catalogRenderSize } from "../utils/catalog";
-import { structureFootprint, structureLabel } from "../utils/blueprint-map";
+import { structureLabel } from "@sandustry/blueprint-core";
+import { structureFootprint } from "../utils/blueprint-map";
 
 type BlueprintStructure = Blueprint["data"][number];
 
