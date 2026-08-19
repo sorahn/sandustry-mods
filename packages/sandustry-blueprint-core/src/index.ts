@@ -36,6 +36,13 @@ export {
   type StructureCatalogEntry,
   type RenderAsset,
 } from "./prepare";
+export {
+  catalogRender,
+  catalogRenderSize,
+  type CatalogEntry,
+  type CatalogRenderAsset,
+  type RenderMetadata,
+} from "./catalog";
 
 const BINARY_PREFIX = "SAND:BP:v2:";
 const TEXT_PREFIX = "SAND:BP:v2t:";
