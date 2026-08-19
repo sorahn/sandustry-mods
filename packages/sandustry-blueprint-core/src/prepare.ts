@@ -21,8 +21,16 @@ export type StructureCatalogEntry = {
 };
 
 export type RenderAsset = {
+  sourceSize?: { width: number; height: number };
+  sourceCrop?: { x: number; y: number; width: number; height: number };
+  frame?: { width: number; height: number };
   frameIndex?: number;
+  scale?: string | { mode: string; factor?: number };
+  clip?: boolean;
+  offset?: { x?: number; y?: number };
   rotation?: number;
+  anchor?: string | { edge: string; offsetCells?: number };
+  lightColor?: string;
   animation?: {
     topology?: string;
     cornerFrame?: number;
@@ -58,6 +66,7 @@ export type PreparedSignalLink = SignalLink & {
         control2: BlueprintCoordinate;
         to: BlueprintCoordinate;
       };
+  [key: string]: unknown;
 };
 
 export type PreparedStructure = {
@@ -68,6 +77,8 @@ export type PreparedStructure = {
   customShape?: number[][];
   shape?: number[][];
   footprint: { width: number; height: number };
+  topY: number;
+  visualTopY: number;
   z: number;
   bounds: { minX: number; minY: number; maxX: number; maxY: number };
   sprite?: PreparedSprite;
@@ -225,6 +236,56 @@ export function shapeForStructure(
   return customShapeFromStructure(structure) ?? catalogEntry?.shape;
 }
 
+function anchorEdge(anchor: RenderAsset["anchor"]) {
+  return typeof anchor === "object" && anchor !== null ? anchor.edge : anchor;
+}
+
+function anchorOffsetCells(anchor: RenderAsset["anchor"]) {
+  return typeof anchor === "object" && anchor !== null ? (anchor.offsetCells ?? 0) : 0;
+}
+
+function scaleMode(scale: RenderAsset["scale"]) {
+  return typeof scale === "object" && scale !== null ? scale.mode : scale;
+}
+
+function scaleFactor(scale: RenderAsset["scale"]) {
+  return typeof scale === "object" && scale !== null ? (scale.factor ?? 1) : 1;
+}
+
+export function structureTopY(
+  structure: BlueprintStructure,
+  footprint: { width: number; height: number },
+  renderAsset?: RenderAsset,
+) {
+  return anchorEdge(renderAsset?.anchor) === "bottom"
+    ? structure.y - footprint.height + 1
+    : structure.y;
+}
+
+export function structureVisualTopY(
+  structure: BlueprintStructure,
+  footprint: { width: number; height: number },
+  renderAsset?: RenderAsset,
+) {
+  const topY = structureTopY(structure, footprint, renderAsset);
+  const assetOffsetY = (renderAsset?.offset?.y ?? 0) / 4;
+  if (scaleMode(renderAsset?.scale) !== "cell" || anchorEdge(renderAsset?.anchor) !== "bottom") {
+    return topY + assetOffsetY;
+  }
+  if (!renderAsset) return topY + assetOffsetY;
+  const frameHeight = renderAsset.frame?.width ?? 1;
+  const sourceHeight =
+    renderAsset.sourceCrop?.height ?? renderAsset.sourceSize?.height ?? frameHeight;
+  const scale = scaleFactor(renderAsset.scale);
+  return (
+    structure.y +
+    1 -
+    (sourceHeight / frameHeight) * scale +
+    anchorOffsetCells(renderAsset.anchor) +
+    assetOffsetY
+  );
+}
+
 function prepareSprites(structures: PreparedStructure[]) {
   const collectors = structures.filter(
     (prepared) => prepared.sprite?.asset.animation?.topology === "collector",
@@ -359,6 +420,8 @@ export function prepareBlueprint(
       ? { width: shape[0].length, height: shape.length }
       : (catalogEntry?.footprint ?? { width: 1, height: 1 });
     const renderAsset = catalogEntry?.renderAsset;
+    const topY = structureTopY(structure, footprint, renderAsset);
+    const visualTopY = structureVisualTopY(structure, footprint, renderAsset);
     return {
       structure,
       index,
@@ -367,12 +430,14 @@ export function prepareBlueprint(
       customShape,
       shape,
       footprint,
+      topY,
+      visualTopY,
       z: catalogEntry?.z ?? 0.5,
       bounds: {
         minX: structure.x,
-        minY: structure.y,
+        minY: topY,
         maxX: structure.x + footprint.width - 1,
-        maxY: structure.y + footprint.height - 1,
+        maxY: topY + footprint.height - 1,
       },
       sprite: renderAsset
         ? {

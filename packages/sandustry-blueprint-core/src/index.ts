@@ -37,6 +37,8 @@ export {
   type RenderAsset,
   customShapeFromStructure,
   shapeForStructure,
+  structureTopY,
+  structureVisualTopY,
 } from "./prepare";
 export {
   catalogRender,

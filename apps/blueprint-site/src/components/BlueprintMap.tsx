@@ -379,20 +379,37 @@ export function BlueprintMap({
   // make one cell, and four cells make one blueprint block. At 100% four
   // blueprint coordinates therefore render at 32 display pixels.
   const cell = DISPLAY_PIXELS_PER_BLOCK_AT_100 / NATIVE_PIXELS_PER_CELL;
+  const preparedBlueprint = prepareBlueprint(blueprint, {
+    catalog: {
+      get: (type) => {
+        const entry = catalogEntry(type);
+        if (!entry) return undefined;
+        const render = catalogRender(entry);
+        return {
+          footprint: entry.footprint,
+          shape: Array.isArray(entry.shape) ? entry.shape : undefined,
+          signalPoints: entry.signalPoints,
+          z: typeof render?.z === "number" ? render.z : undefined,
+          renderAsset: entry.renderAsset,
+        };
+      },
+    },
+  });
   const xs = blueprint.data.length
-    ? blueprint.data.flatMap((structure) => {
+    ? blueprint.data.flatMap((structure, index) => {
+        const prepared = preparedBlueprint.preparedStructures[index];
         const entry = catalogEntry(structure.type);
-        const width = structureFootprint(structure).width;
         const assetOffsetX = (entry?.renderAsset?.offset?.x ?? 0) / 4;
-        return [structure.x + assetOffsetX, structure.x + width - 1 + assetOffsetX];
+        return [
+          structure.x + assetOffsetX,
+          structure.x + prepared.footprint.width - 1 + assetOffsetX,
+        ];
       })
     : [0];
   const ys = blueprint.data.length
-    ? blueprint.data.flatMap((structure) => {
-        const topY = structureTopY(structure);
-        const visualTopY = structureVisualTopY(structure);
-        const height = structureFootprint(structure).height;
-        return [visualTopY, topY + height - 1];
+    ? blueprint.data.flatMap((structure, index) => {
+        const prepared = preparedBlueprint.preparedStructures[index];
+        return [prepared.visualTopY, prepared.topY + prepared.footprint.height - 1];
       })
     : [0];
   const minX = Math.min(...xs);
@@ -481,22 +498,6 @@ export function BlueprintMap({
   const point = (x: number, y: number) => ({
     x: (x - minX + padding + 0.5) * cell,
     y: (y - minY + padding + 0.5) * cell,
-  });
-  const preparedBlueprint = prepareBlueprint(blueprint, {
-    catalog: {
-      get: (type) => {
-        const entry = catalogEntry(type);
-        if (!entry) return undefined;
-        const render = catalogRender(entry);
-        return {
-          footprint: entry.footprint,
-          shape: Array.isArray(entry.shape) ? entry.shape : undefined,
-          signalPoints: entry.signalPoints,
-          z: typeof render?.z === "number" ? render.z : undefined,
-          renderAsset: entry.renderAsset,
-        };
-      },
-    },
   });
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
   const renderStructures = blueprint.data
@@ -896,13 +897,14 @@ export function BlueprintMap({
           {showDebugCells ? (
             <g opacity="0.8" pointerEvents="none" style={mapLayerStyle("debugCells")}>
               {blueprint.data.flatMap((structure, structureIndex) => {
-                const footprint = structureFootprint(structure);
+                const prepared = preparedBlueprint.preparedStructures[structureIndex];
+                const footprint = prepared.footprint;
                 const shape =
-                  structureShape(structure) ??
+                  prepared.shape ??
                   Array.from({ length: footprint.height }, () =>
                     Array.from({ length: footprint.width }, () => 1),
                   );
-                const topY = structureTopY(structure);
+                const topY = prepared.topY;
                 const left = (structure.x - minX + padding) * cell;
                 const top = (topY - minY + padding) * cell;
                 return shape.flatMap((row, rowIndex) =>
@@ -975,7 +977,7 @@ export function BlueprintMap({
               const isCustomShape =
                 prepared.customShape !== undefined ||
                 (preparedShape !== undefined && !entry?.renderAsset);
-              const topY = structureTopY(structure);
+              const topY = prepared.topY;
               const left = (structure.x - minX + padding) * cell;
               const top = (topY - minY + padding) * cell;
               const tileWidth = footprint.width * cell;
