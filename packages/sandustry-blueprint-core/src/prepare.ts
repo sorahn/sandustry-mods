@@ -13,6 +13,7 @@ export type SignalPoints = {
 export type SignalPointResolver = (type: BlueprintType) => SignalPoints | undefined;
 
 export type StructureCatalogEntry = {
+  name?: string;
   footprint?: { width: number; height: number };
   shape?: number[][];
   signalPoints?: SignalPoints;

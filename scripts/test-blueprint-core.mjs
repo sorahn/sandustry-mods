@@ -57,6 +57,37 @@ assert.match(preparedSvg, /<title>Test &amp; blueprint<\/title>/);
 assert.doesNotMatch(preparedSvg, /#33a8ff/);
 assert.match(preparedSvg, /href="data:image\/png;base64,19"/);
 
+const renderModel = core.createBlueprintRenderModel(
+  {
+    name: "Render model",
+    data: [
+      { type: "machine", x: 4, y: 8 },
+      { type: 11, x: 0, y: 0 },
+    ],
+    signalLinks: null,
+  },
+  {
+    padding: 2,
+    cell: 8,
+    catalog: {
+      get: (type) =>
+        type === "machine"
+          ? { name: "Machine", footprint: { width: 4, height: 4 }, z: 2 }
+          : type === 11
+            ? { name: "Foundation", footprint: { width: 4, height: 4 }, z: 0 }
+            : undefined,
+    },
+  },
+);
+assert.deepEqual(
+  renderModel.renderStructures.map(({ structure }) => structure.type),
+  [11, "machine"],
+);
+assert.equal(renderModel.width, 96);
+assert.equal(renderModel.height, 128);
+assert.equal(core.tileColor("machine"), "#563d46");
+assert.deepEqual(core.wrapLabel("Signal Presence Sensor", 8), ["Signal", "Presence", "Sensor"]);
+
 const signalStructures = [
   { type: "signalBuffer", x: 0, y: 8 },
   { type: "signalToggle", x: 8, y: 8 },

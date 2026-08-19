@@ -49,6 +49,23 @@ export {
   type RenderMetadata,
 } from "./catalog";
 export {
+  createBlueprintRenderModel,
+  renderAnchorEdge,
+  renderAnchorOffsetCells,
+  renderPixelScale,
+  renderScaleFactor,
+  renderScaleMode,
+  structureLabel,
+  tileColor,
+  wrapLabel,
+  DEFAULT_RENDER_CELL,
+  DEFAULT_RENDER_PADDING,
+  NATIVE_PIXELS_PER_CELL,
+  type BlueprintRenderModel,
+  type BlueprintRenderOptions,
+  type BlueprintRenderStructure,
+} from "./render-model";
+export {
   prepareSvgForPng,
   renderSvgToPng,
   type BlueprintPngPlatform,
