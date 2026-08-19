@@ -1256,7 +1256,6 @@ export function BlueprintMap({
             minY,
             padding,
             cell,
-            0,
           ) ? (
             <path
               d={coreFoundationOutlinePath(
@@ -1265,7 +1264,6 @@ export function BlueprintMap({
                 minY,
                 padding,
                 cell,
-                0,
               )}
               fill="none"
               stroke="#000000"

@@ -14,6 +14,10 @@
     },
     "./styles.css": "./src/styles.css"
   },
+  "scripts": {
+    "lint": "oxlint src",
+    "tsc": "tsc --noEmit"
+  },
   "dependencies": {
     "@fontsource/play": "^5.3.0"
   },

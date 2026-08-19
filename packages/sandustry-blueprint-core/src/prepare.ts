@@ -302,7 +302,6 @@ export function foundationOutlinePath(
   minY: number,
   padding: number,
   cell: number,
-  cornerRadius: number,
 ) {
   const outlineOffset = 0.5 / 4;
   const occupied = new Set<string>();
