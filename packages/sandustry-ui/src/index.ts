@@ -33,3 +33,4 @@ export { ListItem, type ListItemProps } from "./components/ListItem";
 export { IconButton, type IconButtonProps } from "./components/IconButton";
 export { MetadataRow, type MetadataItem, type MetadataRowProps } from "./components/MetadataRow";
 export { ActionBar, type ActionBarProps } from "./components/ActionBar";
+export { TextInput, type TextInputProps } from "./components/TextInput";
