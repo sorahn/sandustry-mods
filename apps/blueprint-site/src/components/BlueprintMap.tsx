@@ -4,10 +4,11 @@ import {
   foundationOutlinePath as coreFoundationOutlinePath,
 } from "@sandustry/blueprint-core";
 import { type Blueprint } from "../utils/blueprint";
-import { catalogEntry, catalogRender, catalogRenderSize } from "../utils/catalog";
+import { catalogEntry } from "../utils/catalog";
 import { debugComponent } from "./DebugComponentWrapper";
 import { MapDebugOptions } from "./MapDebugOptions";
 import { BlueprintMapSidebar } from "./BlueprintMapSidebar";
+import { BlueprintMapStructure } from "./BlueprintMapStructure";
 import { BlueprintMapViewportControls } from "./BlueprintMapViewportControls";
 import {
   BLOCK_COORDINATE_SIZE,
@@ -18,19 +19,13 @@ import {
   PAN_COMMIT_DEBOUNCE_MS,
   SAVED_MAP_VIEW_KEY,
   mapLayerStyle,
-  renderAnchorEdge,
-  renderAnchorOffsetCells,
   renderPixelScale,
-  renderScaleFactor,
-  renderScaleMode,
   readStoredMapView,
   snapMapZoom,
-  structureLabel,
   structureShape,
   structureTopY,
   tileColor,
   writeLocalValue,
-  wrapLabel,
   createBlueprintMapModel,
 } from "../utils/blueprint-map";
 
@@ -685,6 +680,23 @@ export function BlueprintMap({
               );
             };
             const renderStructure = ({ structure, index }: (typeof renderStructures)[number]) => {
+              return (
+                <BlueprintMapStructure
+                  item={{ structure, index, z: preparedBlueprint.preparedStructures[index].z }}
+                  preparedBlueprint={preparedBlueprint}
+                  minX={minX}
+                  minY={minY}
+                  padding={padding}
+                  cell={cell}
+                  height={height}
+                  spritesVisible={spritesVisible}
+                  showCustomShapes={showCustomShapes}
+                  showNames={showNames}
+                  suppressClickRef={suppressClickRef}
+                  onSelect={setSelectedIndex}
+                />
+              );
+              /*
               const entry = catalogEntry(structure.type);
               const prepared = preparedBlueprint.preparedStructures[index];
               const footprint = prepared.footprint;
@@ -956,6 +968,7 @@ export function BlueprintMap({
                   ) : null}
                 </g>
               );
+            */
             };
             return (
               <>
