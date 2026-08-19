@@ -1,5 +1,14 @@
 # Agent Notes
 
+## Sandkit surface-map reference
+
+`resources/sandkit-surface-map/` is a high-value reference when investigating
+the Sandustry runtime API, engine state, namespaces, and captured behavior.
+Check it before inferring new `sandkit` or `SandustryApi` types. It contains
+runtime surface captures and reverse-engineering notes, so use it to guide
+investigation and type declarations while keeping unstable private engine
+internals local to the diagnostic code that needs them.
+
 ## Blueprint renderer terminology
 
 Use these native-unit terms precisely when discussing the blueprint renderer
