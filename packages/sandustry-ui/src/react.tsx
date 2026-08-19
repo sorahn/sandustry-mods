@@ -4,3 +4,8 @@ export { Panel, type PanelProps } from "./components/Panel";
 export { Select } from "./components/Select";
 export { TextArea } from "./components/TextArea";
 export { SearchInput, type SearchInputProps } from "./components/SearchInput";
+export {
+  SegmentedControl,
+  type Segment,
+  type SegmentedControlProps,
+} from "./components/SegmentedControl";
