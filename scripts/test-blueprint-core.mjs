@@ -39,6 +39,24 @@ assert.deepEqual(
   { name: "Empty", data: [], signalLinks: [] },
 );
 
+const preparedSvg = await core.prepareSvgForPng(
+  `<svg class="map" style="color:red"><rect fill="#33a8ff"/><image href="catalog/machine.png"/></svg>`,
+  {
+    width: 64,
+    height: 32,
+    scale: 2,
+    title: "Test & blueprint",
+    includeBackground: false,
+    resolveImage: async (source) => `data:image/png;base64,${source.length}`,
+  },
+);
+assert.match(preparedSvg, /xmlns="http:\/\/www\.w3\.org\/2000\/svg"/);
+assert.match(preparedSvg, /width="128"/);
+assert.match(preparedSvg, /height="64"/);
+assert.match(preparedSvg, /<title>Test &amp; blueprint<\/title>/);
+assert.doesNotMatch(preparedSvg, /#33a8ff/);
+assert.match(preparedSvg, /href="data:image\/png;base64,19"/);
+
 const signalStructures = [
   { type: "signalBuffer", x: 0, y: 8 },
   { type: "signalToggle", x: 8, y: 8 },

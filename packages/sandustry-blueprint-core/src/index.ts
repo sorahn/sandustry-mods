@@ -48,6 +48,13 @@ export {
   type CatalogRenderAsset,
   type RenderMetadata,
 } from "./catalog";
+export {
+  prepareSvgForPng,
+  renderSvgToPng,
+  type BlueprintPngPlatform,
+  type PrepareSvgForPngOptions,
+  type RenderSvgToPngOptions,
+} from "./png";
 
 const BINARY_PREFIX = "SAND:BP:v2:";
 const TEXT_PREFIX = "SAND:BP:v2t:";
