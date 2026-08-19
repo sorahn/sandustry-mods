@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { wrapLabel } from "@sandustry/blueprint-core";
-import { decodeBlueprint, encodeBlueprint } from "../blueprint";
+import { decodeBlueprint, emptyBlueprint, encodeBlueprint } from "../blueprint";
 import { snapMapZoom, structureShape, viewportHeightForWidth } from "../blueprint-map";
 
 describe("blueprint site utilities", () => {
@@ -24,6 +24,22 @@ describe("blueprint site utilities", () => {
   test("converts legacy blueprint strings for browser-only migration", () => {
     const blueprint = { name: "Legacy", data: [{ type: 3, x: 1, y: 2 }], signalLinks: null };
     expect(decodeBlueprint(encodeBlueprint(blueprint, "legacy"))).toEqual(blueprint);
+  });
+
+  test("exposes an empty blueprint and trims encoded input", () => {
+    expect(emptyBlueprint).toEqual({
+      name: "Untitled blueprint",
+      data: [],
+      signalLinks: null,
+    });
+    const encoded = encodeBlueprint(emptyBlueprint, "text");
+    expect(decodeBlueprint(`  ${encoded}\n`)).toEqual({ ...emptyBlueprint, signalLinks: [] });
+  });
+
+  test("rejects unsupported or malformed blueprint strings", () => {
+    expect(() => decodeBlueprint("SAND:UNKNOWN:v1:value")).toThrow();
+    expect(() => decodeBlueprint("SAND:BACKUP:v1:not-base64")).toThrow();
+    expect(() => decodeBlueprint("not a blueprint")).toThrow();
   });
 
   test("keeps map presentation math stable", () => {
