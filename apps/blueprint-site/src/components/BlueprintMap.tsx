@@ -59,8 +59,8 @@ const MAP_LAYER_ORDER = [
   "background",
   "grid",
   "debugCells",
+  "foundationShapes",
   "sprites",
-  "foundationOutlines",
   "signalLinks",
   "selectedHighlight",
   "hoverHighlight",
@@ -241,6 +241,15 @@ function renderPixelScale(cell: number) {
   return cell / NATIVE_PIXELS_PER_CELL;
 }
 
+const BELT_TYPES = new Set<Blueprint["data"][number]["type"]>([
+  1,
+  2,
+  "conveyorLeftMk2",
+  "conveyorRightMk2",
+  "burnerBeltLeft",
+  "burnerBeltRight",
+]);
+
 function foundationOutlinePath(
   structures: Blueprint["data"],
   minX: number,
@@ -253,7 +262,11 @@ function foundationOutlinePath(
   for (const structure of structures) {
     const isNativeFoundation =
       typeof structure.type === "number" && structure.type >= 11 && structure.type <= 15;
-    if (!isNativeFoundation && customStructureShape(structure) === undefined) {
+    if (
+      !isNativeFoundation &&
+      !BELT_TYPES.has(structure.type) &&
+      customStructureShape(structure) === undefined
+    ) {
       continue;
     }
     const shape = structureShape(structure) ?? [
@@ -960,278 +973,302 @@ export function BlueprintMap({
                 );
               })
             : null}
-          {renderStructures.map(({ structure, index }) => {
-            const entry = catalogEntry(structure.type);
-            const prepared = preparedBlueprint.preparedStructures[index];
-            const footprint = prepared.footprint;
-            const preparedShape = prepared.shape;
-            const shape =
-              preparedShape ??
-              Array.from({ length: footprint.height }, () =>
-                Array.from({ length: footprint.width }, () => 1),
+          {(() => {
+            const isFoundationShape = ({ structure, index }: (typeof renderStructures)[number]) => {
+              const prepared = preparedBlueprint.preparedStructures[index];
+              const entry = catalogEntry(structure.type);
+              return (
+                (typeof structure.type === "number" &&
+                  structure.type >= 11 &&
+                  structure.type <= 15) ||
+                prepared.customShape !== undefined ||
+                (prepared.shape !== undefined && !entry?.renderAsset)
               );
-            const isCustomShape =
-              prepared.customShape !== undefined ||
-              (preparedShape !== undefined && !entry?.renderAsset);
-            const topY = structureTopY(structure);
-            const left = (structure.x - minX + padding) * cell;
-            const top = (topY - minY + padding) * cell;
-            const tileWidth = footprint.width * cell;
-            const tileHeight = footprint.height * cell;
-            // Prefabulator blueprints carry their shape in data even for known
-            // structures. Preserve a known catalog sprite and use the generic
-            // block asset only for genuinely unknown custom structures.
-            const assetEntry = isCustomShape && !entry?.renderAsset ? catalogEntry(11) : entry;
-            const labelX = left + tileWidth / 2;
-            const label = String(
-              entry?.name ??
-                (typeof structure.type === "number" ? structure.type : structure.type.slice(0, 8)),
-            );
-            // Labels live in the same display-pixel coordinate space as the
-            // map. Keep them proportional to a cell so they remain useful at
-            // the renderer's native scale instead of overwhelming sprites.
-            const labelFontSize = Math.max(8, cell * 0.9);
-            const labelLineHeight = labelFontSize * 1.15;
-            const labelLines = wrapLabel(
-              label,
-              Math.max(3, Math.floor(tileWidth / (labelFontSize * 0.6))),
-            );
-            const labelY =
-              top + tileHeight / 2 - ((labelLines.length - 1) * labelLineHeight) / 2 + 12;
-            return (
-              <g
-                key={`${index}-${structure.x}-${structure.y}`}
-                role="button"
-                tabIndex={0}
-                aria-label={`Select ${structureLabel(structure.type)} at ${structure.x}, ${structure.y}`}
-                onClick={() => {
-                  if (suppressClickRef.current) {
-                    suppressClickRef.current = false;
-                    return;
-                  }
-                  setSelectedIndex(index);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") setSelectedIndex(index);
-                }}
-                className="blueprint-map__structure cursor-pointer"
-                data-render-image={entry ? catalogRender(entry)?.imageName : undefined}
-                style={mapLayerStyle("sprites")}
-              >
-                <rect
-                  x={left}
-                  y={top}
-                  width={tileWidth}
-                  height={tileHeight}
-                  rx="5"
-                  fill={
-                    !spritesVisible || isCustomShape || entry?.renderAsset
-                      ? "transparent"
-                      : tileColor(structure.type)
-                  }
-                  // Sprites own their visible shape. A generic footprint border
-                  // leaks through the transparent corners of triangle foundations.
-                  stroke={
-                    !spritesVisible || isCustomShape || entry?.renderAsset ? "none" : "#8491a3"
-                  }
-                  strokeWidth="1.5"
-                />
-                {isCustomShape && showCustomShapes
-                  ? shape.map((row, rowIndex) =>
-                      row.map((value, columnIndex) =>
-                        value === 0 ? null : (
-                          <rect
-                            key={`custom-cell-${rowIndex}-${columnIndex}`}
-                            x={left + columnIndex * cell}
-                            y={top + rowIndex * cell}
-                            width={cell}
-                            height={cell}
-                            rx="2"
-                            fill="#a47a45"
-                            stroke="none"
-                            strokeWidth="1"
-                            pointerEvents="none"
-                          />
+            };
+            const renderStructure = ({ structure, index }: (typeof renderStructures)[number]) => {
+              const entry = catalogEntry(structure.type);
+              const prepared = preparedBlueprint.preparedStructures[index];
+              const footprint = prepared.footprint;
+              const preparedShape = prepared.shape;
+              const shape =
+                preparedShape ??
+                Array.from({ length: footprint.height }, () =>
+                  Array.from({ length: footprint.width }, () => 1),
+                );
+              const isCustomShape =
+                prepared.customShape !== undefined ||
+                (preparedShape !== undefined && !entry?.renderAsset);
+              const topY = structureTopY(structure);
+              const left = (structure.x - minX + padding) * cell;
+              const top = (topY - minY + padding) * cell;
+              const tileWidth = footprint.width * cell;
+              const tileHeight = footprint.height * cell;
+              // Prefabulator blueprints carry their shape in data even for known
+              // structures. Preserve a known catalog sprite and use the generic
+              // block asset only for genuinely unknown custom structures.
+              const assetEntry = isCustomShape && !entry?.renderAsset ? catalogEntry(11) : entry;
+              const labelX = left + tileWidth / 2;
+              const label = String(
+                entry?.name ??
+                  (typeof structure.type === "number"
+                    ? structure.type
+                    : structure.type.slice(0, 8)),
+              );
+              // Labels live in the same display-pixel coordinate space as the
+              // map. Keep them proportional to a cell so they remain useful at
+              // the renderer's native scale instead of overwhelming sprites.
+              const labelFontSize = Math.max(8, cell * 0.9);
+              const labelLineHeight = labelFontSize * 1.15;
+              const labelLines = wrapLabel(
+                label,
+                Math.max(3, Math.floor(tileWidth / (labelFontSize * 0.6))),
+              );
+              const labelY =
+                top + tileHeight / 2 - ((labelLines.length - 1) * labelLineHeight) / 2 + 12;
+              return (
+                <g
+                  key={`${index}-${structure.x}-${structure.y}`}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Select ${structureLabel(structure.type)} at ${structure.x}, ${structure.y}`}
+                  onClick={() => {
+                    if (suppressClickRef.current) {
+                      suppressClickRef.current = false;
+                      return;
+                    }
+                    setSelectedIndex(index);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") setSelectedIndex(index);
+                  }}
+                  className="blueprint-map__structure cursor-pointer"
+                  data-render-image={entry ? catalogRender(entry)?.imageName : undefined}
+                >
+                  <rect
+                    x={left}
+                    y={top}
+                    width={tileWidth}
+                    height={tileHeight}
+                    rx="5"
+                    fill={
+                      !spritesVisible || isCustomShape || entry?.renderAsset
+                        ? "transparent"
+                        : tileColor(structure.type)
+                    }
+                    // Sprites own their visible shape. A generic footprint border
+                    // leaks through the transparent corners of triangle foundations.
+                    stroke={
+                      !spritesVisible || isCustomShape || entry?.renderAsset ? "none" : "#8491a3"
+                    }
+                    strokeWidth="1.5"
+                  />
+                  {isCustomShape && showCustomShapes
+                    ? shape.map((row, rowIndex) =>
+                        row.map((value, columnIndex) =>
+                          value === 0 ? null : (
+                            <rect
+                              key={`custom-cell-${rowIndex}-${columnIndex}`}
+                              x={left + columnIndex * cell}
+                              y={top + rowIndex * cell}
+                              width={cell}
+                              height={cell}
+                              rx="2"
+                              fill="#a47a45"
+                              stroke="none"
+                              strokeWidth="1"
+                              pointerEvents="none"
+                            />
+                          ),
                         ),
-                      ),
-                    )
-                  : null}
-                {spritesVisible && assetEntry?.renderAsset
-                  ? (() => {
-                      const assetEntry =
-                        isCustomShape && !entry?.renderAsset ? catalogEntry(11)! : entry!;
-                      const renderAsset = assetEntry.renderAsset!;
-                      const frame = renderAsset.frame;
-                      const source = renderAsset.sourceSize;
-                      const sourceCrop = renderAsset.sourceCrop;
-                      const sourceWidth = source?.width ?? frame?.width ?? 1;
-                      const sourceHeight = source?.height ?? frame?.height ?? 1;
-                      const runtimeRender = catalogRender(assetEntry);
-                      const runtimeSize = runtimeRender
-                        ? catalogRenderSize(runtimeRender)
-                        : undefined;
-                      const frameWidth = frame?.width ?? runtimeSize?.width ?? sourceWidth;
-                      const frameHeight = frame?.height ?? runtimeSize?.height ?? sourceHeight;
-                      const frameIndex =
-                        preparedBlueprint.preparedStructures[index].sprite?.frameIndex ??
-                        renderAsset.frameIndex ??
-                        0;
-                      const spriteRotation =
-                        preparedBlueprint.preparedStructures[index].sprite?.rotation ??
-                        renderAsset.rotation;
-                      const customLightColor =
-                        renderAsset.lightColor ??
-                        preparedBlueprint.preparedStructures[index].lightColor;
-                      const useNativeAssetSize =
-                        runtimeSize !== undefined ||
-                        (frame !== undefined && renderAsset.scale !== "cell");
-                      const needsFrameClip = renderAsset.clip ?? sourceWidth > frameWidth;
-                      const pixelScale = renderPixelScale(cell);
-                      const visualWidth = useNativeAssetSize
-                        ? frameWidth * pixelScale
-                        : renderScaleMode(renderAsset.scale) === "cell"
-                          ? cell * renderScaleFactor(renderAsset.scale)
-                          : tileWidth;
-                      const visualHeight = useNativeAssetSize
-                        ? frameHeight * pixelScale
-                        : frame
-                          ? visualWidth * ((sourceCrop?.height ?? sourceHeight) / frameWidth)
-                          : tileHeight;
-                      const sourceScale = visualWidth / frameWidth;
-                      const imageHeight = visualWidth * (sourceHeight / frameWidth);
-                      const renderOffset = runtimeRender?.offset;
-                      const offset =
-                        renderOffset && typeof renderOffset === "object"
-                          ? (renderOffset as { x?: unknown; y?: unknown })
+                      )
+                    : null}
+                  {spritesVisible && assetEntry?.renderAsset
+                    ? (() => {
+                        const assetEntry =
+                          isCustomShape && !entry?.renderAsset ? catalogEntry(11)! : entry!;
+                        const renderAsset = assetEntry.renderAsset!;
+                        const frame = renderAsset.frame;
+                        const source = renderAsset.sourceSize;
+                        const sourceCrop = renderAsset.sourceCrop;
+                        const sourceWidth = source?.width ?? frame?.width ?? 1;
+                        const sourceHeight = source?.height ?? frame?.height ?? 1;
+                        const runtimeRender = catalogRender(assetEntry);
+                        const runtimeSize = runtimeRender
+                          ? catalogRenderSize(runtimeRender)
                           : undefined;
-                      const offsetX =
-                        (typeof offset?.x === "number" ? offset.x : 0) +
-                        (renderAsset.offset?.x ?? 0);
-                      const offsetY =
-                        (typeof offset?.y === "number" ? offset.y : 0) +
-                        (renderAsset.offset?.y ?? 0);
-                      const imageX = left + offsetX * pixelScale;
-                      const sourceImageX = imageX - frameIndex * visualWidth;
-                      const imageY =
-                        renderAnchorEdge(renderAsset.anchor) === "bottom"
-                          ? top +
-                            tileHeight -
-                            visualHeight +
-                            renderAnchorOffsetCells(renderAsset.anchor) * cell +
-                            offsetY * pixelScale
-                          : top + offsetY * pixelScale;
-                      const imageFrameY = imageY;
-                      const sourceImageY = imageFrameY - (sourceCrop?.y ?? 0) * sourceScale;
-                      return (
-                        <>
-                          {isCustomShape ? (
-                            <defs>
-                              <mask
-                                id={`custom-shape-mask-${index}`}
-                                maskUnits="userSpaceOnUse"
-                                x={left}
-                                y={top}
-                                width={tileWidth}
-                                height={tileHeight}
-                              >
-                                <rect
+                        const frameWidth = frame?.width ?? runtimeSize?.width ?? sourceWidth;
+                        const frameHeight = frame?.height ?? runtimeSize?.height ?? sourceHeight;
+                        const frameIndex =
+                          preparedBlueprint.preparedStructures[index].sprite?.frameIndex ??
+                          renderAsset.frameIndex ??
+                          0;
+                        const spriteRotation =
+                          preparedBlueprint.preparedStructures[index].sprite?.rotation ??
+                          renderAsset.rotation;
+                        const customLightColor =
+                          renderAsset.lightColor ??
+                          preparedBlueprint.preparedStructures[index].lightColor;
+                        const useNativeAssetSize =
+                          runtimeSize !== undefined ||
+                          (frame !== undefined && renderAsset.scale !== "cell");
+                        const needsFrameClip = renderAsset.clip ?? sourceWidth > frameWidth;
+                        const pixelScale = renderPixelScale(cell);
+                        const visualWidth = useNativeAssetSize
+                          ? frameWidth * pixelScale
+                          : renderScaleMode(renderAsset.scale) === "cell"
+                            ? cell * renderScaleFactor(renderAsset.scale)
+                            : tileWidth;
+                        const visualHeight = useNativeAssetSize
+                          ? frameHeight * pixelScale
+                          : frame
+                            ? visualWidth * ((sourceCrop?.height ?? sourceHeight) / frameWidth)
+                            : tileHeight;
+                        const sourceScale = visualWidth / frameWidth;
+                        const imageHeight = visualWidth * (sourceHeight / frameWidth);
+                        const renderOffset = runtimeRender?.offset;
+                        const offset =
+                          renderOffset && typeof renderOffset === "object"
+                            ? (renderOffset as { x?: unknown; y?: unknown })
+                            : undefined;
+                        const offsetX =
+                          (typeof offset?.x === "number" ? offset.x : 0) +
+                          (renderAsset.offset?.x ?? 0);
+                        const offsetY =
+                          (typeof offset?.y === "number" ? offset.y : 0) +
+                          (renderAsset.offset?.y ?? 0);
+                        const imageX = left + offsetX * pixelScale;
+                        const sourceImageX = imageX - frameIndex * visualWidth;
+                        const imageY =
+                          renderAnchorEdge(renderAsset.anchor) === "bottom"
+                            ? top +
+                              tileHeight -
+                              visualHeight +
+                              renderAnchorOffsetCells(renderAsset.anchor) * cell +
+                              offsetY * pixelScale
+                            : top + offsetY * pixelScale;
+                        const imageFrameY = imageY;
+                        const sourceImageY = imageFrameY - (sourceCrop?.y ?? 0) * sourceScale;
+                        return (
+                          <>
+                            {isCustomShape ? (
+                              <defs>
+                                <mask
+                                  id={`custom-shape-mask-${index}`}
+                                  maskUnits="userSpaceOnUse"
                                   x={left}
                                   y={top}
                                   width={tileWidth}
                                   height={tileHeight}
-                                  fill="black"
-                                />
-                                {shape.map((row, rowIndex) =>
-                                  row.map((value, columnIndex) =>
-                                    value === 0 ? null : (
-                                      <rect
-                                        key={`custom-mask-cell-${rowIndex}-${columnIndex}`}
-                                        x={left + columnIndex * cell}
-                                        y={top + rowIndex * cell}
-                                        width={cell}
-                                        height={cell}
-                                        fill="white"
-                                      />
+                                >
+                                  <rect
+                                    x={left}
+                                    y={top}
+                                    width={tileWidth}
+                                    height={tileHeight}
+                                    fill="black"
+                                  />
+                                  {shape.map((row, rowIndex) =>
+                                    row.map((value, columnIndex) =>
+                                      value === 0 ? null : (
+                                        <rect
+                                          key={`custom-mask-cell-${rowIndex}-${columnIndex}`}
+                                          x={left + columnIndex * cell}
+                                          y={top + rowIndex * cell}
+                                          width={cell}
+                                          height={cell}
+                                          fill="white"
+                                        />
+                                      ),
                                     ),
-                                  ),
-                                )}
-                              </mask>
-                            </defs>
-                          ) : null}
-                          <clipPath id={`asset-clip-${index}`}>
-                            <rect
-                              x={imageX}
-                              y={sourceCrop ? imageFrameY : 0}
-                              width={visualWidth}
-                              height={sourceCrop ? visualHeight : height}
+                                  )}
+                                </mask>
+                              </defs>
+                            ) : null}
+                            <clipPath id={`asset-clip-${index}`}>
+                              <rect
+                                x={imageX}
+                                y={sourceCrop ? imageFrameY : 0}
+                                width={visualWidth}
+                                height={sourceCrop ? visualHeight : height}
+                              />
+                            </clipPath>
+                            <image
+                              href={`${import.meta.env.BASE_URL}${renderAsset.path}`}
+                              x={sourceImageX}
+                              y={sourceImageY}
+                              width={visualWidth * (sourceWidth / frameWidth)}
+                              height={imageHeight}
+                              preserveAspectRatio="none"
+                              clipPath={needsFrameClip ? `url(#asset-clip-${index})` : undefined}
+                              mask={
+                                isCustomShape && !entry?.renderAsset
+                                  ? `url(#custom-shape-mask-${index})`
+                                  : undefined
+                              }
+                              transform={
+                                spriteRotation
+                                  ? `rotate(${spriteRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
+                                  : undefined
+                              }
+                              style={{ imageRendering: "pixelated", pointerEvents: "none" }}
                             />
-                          </clipPath>
-                          <image
-                            href={`${import.meta.env.BASE_URL}${renderAsset.path}`}
-                            x={sourceImageX}
-                            y={sourceImageY}
-                            width={visualWidth * (sourceWidth / frameWidth)}
-                            height={imageHeight}
-                            preserveAspectRatio="none"
-                            clipPath={needsFrameClip ? `url(#asset-clip-${index})` : undefined}
-                            mask={
-                              isCustomShape && !entry?.renderAsset
-                                ? `url(#custom-shape-mask-${index})`
-                                : undefined
-                            }
-                            transform={
-                              spriteRotation
-                                ? `rotate(${spriteRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
-                                : undefined
-                            }
-                            style={{ imageRendering: "pixelated", pointerEvents: "none" }}
-                          />
-                          {customLightColor
-                            ? [4, 7, 10].map((bar) => (
-                                <rect
-                                  key={`light-color-${index}-${bar}`}
-                                  x={imageX + visualWidth * (bar / 16)}
-                                  y={imageY + visualHeight * 0.25}
-                                  width={visualWidth * (2 / 16)}
-                                  height={visualHeight * 0.5}
-                                  fill={customLightColor}
-                                  pointerEvents="none"
-                                  transform={
-                                    spriteRotation
-                                      ? `rotate(${spriteRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
-                                      : undefined
-                                  }
-                                />
-                              ))
-                            : null}
-                        </>
-                      );
-                    })()
-                  : null}
-                {showNames ? (
-                  <text
-                    x={labelX}
-                    y={labelY}
-                    textAnchor="middle"
-                    fill="#f8fafc"
-                    fontSize={labelFontSize}
-                    fontWeight="700"
-                    fontFamily="ui-monospace, monospace"
-                  >
-                    {labelLines.map((line, lineIndex) => (
-                      <tspan
-                        key={`${line}-${lineIndex}`}
-                        x={labelX}
-                        y={labelY + lineIndex * labelLineHeight}
-                      >
-                        {line}
-                      </tspan>
-                    ))}
-                  </text>
-                ) : null}
-              </g>
+                            {customLightColor
+                              ? [4, 7, 10].map((bar) => (
+                                  <rect
+                                    key={`light-color-${index}-${bar}`}
+                                    x={imageX + visualWidth * (bar / 16)}
+                                    y={imageY + visualHeight * 0.25}
+                                    width={visualWidth * (2 / 16)}
+                                    height={visualHeight * 0.5}
+                                    fill={customLightColor}
+                                    pointerEvents="none"
+                                    transform={
+                                      spriteRotation
+                                        ? `rotate(${spriteRotation} ${left + tileWidth / 2} ${top + tileHeight / 2})`
+                                        : undefined
+                                    }
+                                  />
+                                ))
+                              : null}
+                          </>
+                        );
+                      })()
+                    : null}
+                  {showNames ? (
+                    <text
+                      x={labelX}
+                      y={labelY}
+                      textAnchor="middle"
+                      fill="#f8fafc"
+                      fontSize={labelFontSize}
+                      fontWeight="700"
+                      fontFamily="ui-monospace, monospace"
+                    >
+                      {labelLines.map((line, lineIndex) => (
+                        <tspan
+                          key={`${line}-${lineIndex}`}
+                          x={labelX}
+                          y={labelY + lineIndex * labelLineHeight}
+                        >
+                          {line}
+                        </tspan>
+                      ))}
+                    </text>
+                  ) : null}
+                </g>
+              );
+            };
+            return (
+              <>
+                <g style={mapLayerStyle("foundationShapes")}>
+                  {renderStructures.filter(isFoundationShape).map(renderStructure)}
+                </g>
+                <g style={mapLayerStyle("sprites")}>
+                  {renderStructures.filter((item) => !isFoundationShape(item)).map(renderStructure)}
+                </g>
+              </>
             );
-          })}
+          })()}
           {foundationOutlinesVisible &&
           foundationOutlinePath(
             blueprint.data,
@@ -1252,9 +1289,9 @@ export function BlueprintMap({
               )}
               fill="none"
               stroke="#000000"
-              strokeWidth={renderPixelScale(cell) / 2}
+              strokeWidth={renderPixelScale(cell)}
               pointerEvents="none"
-              style={mapLayerStyle("foundationOutlines")}
+              style={mapLayerStyle("foundationShapes")}
             />
           ) : null}
           {selected ? (
