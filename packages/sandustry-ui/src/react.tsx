@@ -12,3 +12,4 @@ export {
 export { Switch, type SwitchProps } from "./components/Switch";
 export { Badge, type BadgeProps } from "./components/Badge";
 export { Tooltip, type TooltipProps } from "./components/Tooltip";
+export { Popover, type PopoverProps } from "./components/Popover";
