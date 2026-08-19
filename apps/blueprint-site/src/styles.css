@@ -31,8 +31,13 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 a {
-  color: var(--sd-yellow);
   text-decoration: none;
+}
+p a {
+  color: var(--sd-yellow);
+  text-decoration: underline;
+  text-decoration-color: rgb(255 231 0 / 0.5);
+  text-underline-offset: 3px;
 }
 *:focus-visible {
   outline: 2px solid #ffe700;
