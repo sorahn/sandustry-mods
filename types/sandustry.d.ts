@@ -13,6 +13,7 @@ interface SandustryStructure {
 
 interface SandustryElementDefinition {
   id?: string;
+  nameKey?: string;
   hidden?: boolean;
   metaColor?: number;
   matterType?: number;
@@ -20,6 +21,20 @@ interface SandustryElementDefinition {
 
 interface SandustryElementInfo {
   type?: number;
+}
+
+interface SandustryUpgradeDefinition {
+  itemId: string;
+  itemNameKey?: string;
+  categoryId?: string;
+  upgrade: {
+    id: string;
+    nameKey?: string;
+    descriptionKey?: string;
+    maxLevel: number;
+    costs: number[];
+    oneOff?: boolean;
+  };
 }
 
 interface SandustryFocusable {
@@ -94,9 +109,23 @@ interface SandustryApi {
     getTypeFromId(id: string | null | undefined): number | null;
     createAtCellWhenIdle(x: number, y: number, type: number): void;
     getInfoAtCell(x: number, y: number): SandustryElementInfo | null;
+    getResolvedTypeAtCell(x: number, y: number): number | null;
     removeAtCellWhenIdle(x: number, y: number): void;
   };
+  excavation: {
+    registerProfile(
+      id: string,
+      definition: { pattern: number[][]; power: number; options?: Record<string, unknown> },
+    ): void;
+  };
   events: SandustryEvents;
+  hooks: {
+    modify(
+      hookId: string,
+      callback: (args: Record<string, any>) => void,
+      options?: Record<string, unknown>,
+    ): () => void;
+  };
   grid: {
     forEachCellInRect(
       x: number,
@@ -128,11 +157,16 @@ interface SandustryApi {
   terrains: {
     getTypeFromId(id: string): number | null;
     getTypeAtCell(x: number, y: number): number | null;
+    isCellIdTerrain(cellId: number): boolean;
     isTypeAtCell(x: number, y: number, type: string): boolean;
     createAtCellWhenIdle(x: number, y: number, type: string): void;
     removeAtCellWhenIdle(x: number, y: number, options?: SandustryPropagationOptions): void;
   };
   triggers: { register(id: string, definition: { interval: number; callback: () => void }): void };
+  upgrades: {
+    register(definition: SandustryUpgradeDefinition): void;
+    getLevelById(itemId: string, upgradeId: string): number;
+  };
   ui: {
     update(componentId: number | string, options?: Record<string, unknown>): void;
     openPauseMenu(): void;
