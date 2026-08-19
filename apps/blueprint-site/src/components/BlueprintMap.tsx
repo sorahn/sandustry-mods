@@ -8,6 +8,7 @@ import { catalogEntry, catalogRender, catalogRenderSize } from "../utils/catalog
 import { debugComponent } from "./DebugComponentWrapper";
 import { MapDebugOptions } from "./MapDebugOptions";
 import { BlueprintMapSidebar } from "./BlueprintMapSidebar";
+import { BlueprintMapViewportControls } from "./BlueprintMapViewportControls";
 import {
   BLOCK_COORDINATE_SIZE,
   DISPLAY_PIXELS_PER_BLOCK_AT_100,
@@ -473,48 +474,24 @@ export function BlueprintMap({
               }
         }
       >
-        <div className="absolute right-3 top-3 z-10 flex items-center gap-2 rounded border border-slate-700/80 bg-slate-950/60 p-2 font-mono text-xs text-slate-300 shadow-lg backdrop-blur-sm">
-          <button
-            type="button"
-            className="sd-button sd-button--compact sd-button--no-shift"
-            onClick={exportPng}
-          >
-            Export PNG
-          </button>
-          <span className="mr-1">{Math.round(zoom * 100)}%</span>
-          <button
-            type="button"
-            className="sd-button sd-button--compact sd-button--no-shift"
-            onClick={() => {
-              const index = MAP_ZOOM_LEVELS.indexOf(snapMapZoom(zoom));
-              setMapZoom(MAP_ZOOM_LEVELS[Math.max(0, index - 1)]);
-            }}
-            disabled={zoom <= MAP_ZOOM_LEVELS[0]}
-            aria-label="Zoom out"
-          >
-            −
-          </button>
-          <button
-            type="button"
-            className="sd-button sd-button--compact sd-button--no-shift"
-            onClick={fitToViewport}
-            disabled={fitModeRef.current && zoom === measuredFitZoom && pan.x === 0 && pan.y === 0}
-          >
-            Fit
-          </button>
-          <button
-            type="button"
-            className="sd-button sd-button--compact sd-button--no-shift"
-            onClick={() => {
-              const index = MAP_ZOOM_LEVELS.indexOf(snapMapZoom(zoom));
-              setMapZoom(MAP_ZOOM_LEVELS[Math.min(MAP_ZOOM_LEVELS.length - 1, index + 1)]);
-            }}
-            disabled={zoom >= MAP_ZOOM_LEVELS[MAP_ZOOM_LEVELS.length - 1]}
-            aria-label="Zoom in"
-          >
-            +
-          </button>
-        </div>
+        <BlueprintMapViewportControls
+          zoom={zoom}
+          minZoom={MAP_ZOOM_LEVELS[0]}
+          maxZoom={MAP_ZOOM_LEVELS[MAP_ZOOM_LEVELS.length - 1]}
+          measuredFitZoom={measuredFitZoom}
+          fitMode={fitModeRef.current}
+          pan={pan}
+          onExport={exportPng}
+          onZoomOut={() => {
+            const index = MAP_ZOOM_LEVELS.indexOf(snapMapZoom(zoom));
+            setMapZoom(MAP_ZOOM_LEVELS[Math.max(0, index - 1)]);
+          }}
+          onFit={fitToViewport}
+          onZoomIn={() => {
+            const index = MAP_ZOOM_LEVELS.indexOf(snapMapZoom(zoom));
+            setMapZoom(MAP_ZOOM_LEVELS[Math.min(MAP_ZOOM_LEVELS.length - 1, index + 1)]);
+          }}
+        />
         <svg
           ref={svgRef}
           viewBox={`0 0 ${width} ${height}`}
