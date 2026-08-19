@@ -3,12 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { structureLabel } from "@sandustry/blueprint-core";
 import { decodeBlueprint, type Blueprint } from "../utils/blueprint";
 import { debugComponent } from "../components/DebugComponentWrapper";
-import {
-  BlueprintMapPanel,
-  SHOW_GRID_KEY,
-  SHOW_MAP_SIDEBAR_KEY,
-  SHOW_PNG_BACKGROUND_KEY,
-} from "../components/BlueprintMapPanel";
+import { BlueprintMapPanel } from "../components/BlueprintMapPanel";
 import { PersistentCheckbox } from "../components/PersistentCheckbox";
 import {
   BlueprintSubmissionPanel,
@@ -21,6 +16,14 @@ import {
   removeStorageValue,
   writeStorageValue,
 } from "../utils/storage";
+import {
+  REMEMBER_BLUEPRINT_KEY,
+  SAVED_BLUEPRINT_KEY,
+  SAVED_MAP_VIEW_KEY,
+  SHOW_GRID_KEY,
+  SHOW_MAP_SIDEBAR_KEY,
+  SHOW_PNG_BACKGROUND_KEY,
+} from "../utils/storage-keys";
 
 function summarizeBlueprint(input: string, blueprint: Blueprint): BlueprintSummary {
   const xs = blueprint.data.length ? blueprint.data.map(({ x }) => x) : [0];
@@ -42,9 +45,6 @@ function summarizeBlueprint(input: string, blueprint: Blueprint): BlueprintSumma
   };
 }
 
-const REMEMBER_BLUEPRINT_KEY = "sandustry.blueprintInspector.remember";
-const SAVED_BLUEPRINT_KEY = "sandustry.blueprintInspector.string";
-const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
 const MAP_PANEL_SCROLL_OFFSET = 16;
 export function BlueprintInspectorPage() {
   const [remember, setRemember] = useState(

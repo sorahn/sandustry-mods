@@ -2,10 +2,11 @@ import { Panel } from "@sandustry/ui";
 import { type Blueprint } from "../utils/blueprint";
 import { BlueprintMap } from "./BlueprintMap";
 import { PersistentCheckbox } from "./PersistentCheckbox";
-
-export const SHOW_MAP_SIDEBAR_KEY = "sandustry.blueprintInspector.showMapSidebar";
-export const SHOW_GRID_KEY = "sandustry.blueprintInspector.showGrid";
-export const SHOW_PNG_BACKGROUND_KEY = "sandustry.blueprintInspector.showPngBackground";
+import {
+  SHOW_GRID_KEY,
+  SHOW_MAP_SIDEBAR_KEY,
+  SHOW_PNG_BACKGROUND_KEY,
+} from "../utils/storage-keys";
 
 type BlueprintMapPanelProps = {
   blueprint: Blueprint;

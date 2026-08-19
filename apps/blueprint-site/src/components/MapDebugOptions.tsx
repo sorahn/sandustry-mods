@@ -1,12 +1,13 @@
 import { Fragment } from "react";
 import { PersistentCheckbox } from "./PersistentCheckbox";
-
-const SHOW_DEBUG_CELLS_KEY = "sandustry.blueprintInspector.showDebugCells";
-const SHOW_NAMES_KEY = "sandustry.blueprintInspector.showNames";
-const SHOW_SPRITES_KEY = "sandustry.blueprintInspector.showSprites";
-const SHOW_CUSTOM_SHAPES_KEY = "sandustry.blueprintInspector.showCustomShapes";
-const SHOW_FOUNDATION_OUTLINES_KEY = "sandustry.blueprintInspector.showFoundationOutlines";
-const SHOW_SIGNAL_LINKS_KEY = "sandustry.blueprintInspector.showSignalLinks";
+import {
+  SHOW_CUSTOM_SHAPES_KEY,
+  SHOW_DEBUG_CELLS_KEY,
+  SHOW_FOUNDATION_OUTLINES_KEY,
+  SHOW_NAMES_KEY,
+  SHOW_SIGNAL_LINKS_KEY,
+  SHOW_SPRITES_KEY,
+} from "../utils/storage-keys";
 
 type MapDebugOptionsProps = {
   showDebugCells: boolean;

@@ -27,7 +27,6 @@ import {
   MAP_ZOOM_LEVELS,
   MAP_VIEWPORT_BORDER_SIZE,
   PAN_COMMIT_DEBOUNCE_MS,
-  SAVED_MAP_VIEW_KEY,
   mapLayerStyle,
   readStoredMapView,
   snapMapZoom,
@@ -36,6 +35,7 @@ import {
   createBlueprintMapModel,
 } from "../utils/blueprint-map";
 import { writeStorageValue } from "../utils/storage";
+import { SAVED_MAP_VIEW_KEY } from "../utils/storage-keys";
 
 const MAP_FIT_ZOOM_MIN = 0.25;
 const MAP_FIT_ZOOM_MAX = 2;

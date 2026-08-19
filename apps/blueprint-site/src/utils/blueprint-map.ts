@@ -8,8 +8,7 @@ import {
 } from "@sandustry/blueprint-core";
 import { blueprintCatalog } from "./catalog";
 import { readStorageValue } from "./storage";
-
-export const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
+import { SAVED_MAP_VIEW_KEY } from "./storage-keys";
 export const MAP_ZOOM_LEVELS = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
 export const DISPLAY_PIXELS_PER_BLOCK_AT_100 = 32;
 export const BLOCK_COORDINATE_SIZE = NATIVE_PIXELS_PER_CELL;
