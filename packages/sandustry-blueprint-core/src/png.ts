@@ -19,6 +19,16 @@ export type RenderSvgToPngOptions<Image, Canvas> = PrepareSvgForPngOptions & {
   platform: BlueprintPngPlatform<Image, Canvas>;
 };
 
+export type RenderBlueprintStringToPngOptions<Image, Canvas> = Omit<
+  BlueprintSvgRenderOptions,
+  "includeBackground"
+> &
+  Omit<PrepareSvgForPngOptions, "width" | "height"> & {
+    includeBackground?: boolean;
+    blueprint?: Blueprint;
+    platform: BlueprintPngPlatform<Image, Canvas>;
+  };
+
 function escapeXml(value: string) {
   return value.replace(
     /[&<>"']/g,
@@ -62,10 +72,17 @@ export async function prepareSvgForPng(svg: string, options: PrepareSvgForPngOpt
   if (options.resolveImage) {
     const imagePattern = /(<image\b[^>]*?)(\s(?:href|xlink:href)=(['"])(.*?)\3)([^>]*>)/gi;
     const images = [...prepared.matchAll(imagePattern)];
-    for (const match of images) {
+    const resolvedImages = await Promise.all(
+      images.map(async (match) => {
+        const source = match[4];
+        if (!source || source.startsWith("data:")) return undefined;
+        return options.resolveImage!(source);
+      }),
+    );
+    for (const [index, match] of images.entries()) {
       const source = match[4];
       if (!source || source.startsWith("data:")) continue;
-      const resolved = await options.resolveImage(source);
+      const resolved = await resolvedImages[index];
       if (!resolved) continue;
       prepared = prepared.replace(match[0], `${match[1]} href="${escapeXml(resolved)}"${match[5]}`);
     }
@@ -85,3 +102,19 @@ export async function renderSvgToPng<Image, Canvas>(
   options.platform.drawImage(canvas, image, width, height);
   return options.platform.encodePng(canvas);
 }
+
+export async function renderBlueprintStringToPng<Image, Canvas>(
+  input: string,
+  options: RenderBlueprintStringToPngOptions<Image, Canvas>,
+) {
+  const blueprint = options.blueprint ?? decodeBlueprint(input);
+  const rendered = renderBlueprintToSvg(blueprint, options);
+  return renderSvgToPng(rendered.svg, {
+    ...options,
+    width: rendered.model.width,
+    height: rendered.model.height,
+    title: blueprint.name,
+  });
+}
+import { decodeBlueprint, type Blueprint } from "./index";
+import { renderBlueprintToSvg, type BlueprintSvgRenderOptions } from "./svg-renderer";

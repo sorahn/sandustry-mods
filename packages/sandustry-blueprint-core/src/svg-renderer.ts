@@ -147,8 +147,8 @@ function renderStructure(
           : tileHeight;
     const sourceScale = visualWidth / frameWidth;
     const imageHeight = visualWidth * (sourceHeight / frameWidth);
-    const offsetX = asset.offset?.x ?? 0;
-    const offsetY = asset.offset?.y ?? 0;
+    const offsetX = (asset.renderOffset?.x ?? 0) + (asset.offset?.x ?? 0);
+    const offsetY = (asset.renderOffset?.y ?? 0) + (asset.offset?.y ?? 0);
     const imageX = left + offsetX * renderPixelScale(model.cell);
     const imageY =
       renderAnchorEdge(asset.anchor) === "bottom"

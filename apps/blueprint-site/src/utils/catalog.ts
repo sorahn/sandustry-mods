@@ -91,9 +91,21 @@ export function blueprintCatalog() {
       const entry = catalogEntry(type);
       if (!entry) return undefined;
       const render = catalogRender(entry);
+      const runtimeOffset =
+        render?.offset && typeof render.offset === "object"
+          ? (render.offset as { x?: unknown; y?: unknown })
+          : undefined;
       const renderAsset = entry.renderAsset
         ? {
             ...entry.renderAsset,
+            renderOffset:
+              runtimeOffset &&
+              (typeof runtimeOffset.x === "number" || typeof runtimeOffset.y === "number")
+                ? {
+                    x: typeof runtimeOffset.x === "number" ? runtimeOffset.x : undefined,
+                    y: typeof runtimeOffset.y === "number" ? runtimeOffset.y : undefined,
+                  }
+                : undefined,
             renderSize: catalogRenderSize(render),
           }
         : undefined;

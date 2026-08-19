@@ -24,6 +24,7 @@ export type StructureCatalogEntry = {
 export type RenderAsset = {
   path?: string;
   renderSize?: { width: number; height: number };
+  renderOffset?: { x?: number; y?: number };
   sourceSize?: { width: number; height: number };
   sourceCrop?: { x: number; y: number; width: number; height: number };
   frame?: { width: number; height: number };

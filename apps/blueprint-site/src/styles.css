@@ -72,6 +72,16 @@ a {
   background: #090b0f;
 }
 
+.blueprint-core-png {
+  display: block;
+  image-rendering: pixelated;
+  max-width: 100%;
+}
+
+.blueprint-visual-test--capture .blueprint-core-png {
+  max-width: none;
+}
+
 .blueprint-visual-test--capture .blueprint-map__viewport {
   min-height: 0;
   border: 0;

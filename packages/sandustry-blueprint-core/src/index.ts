@@ -72,10 +72,12 @@ export {
 } from "./svg-renderer";
 export {
   prepareSvgForPng,
+  renderBlueprintStringToPng,
   renderSvgToPng,
   type BlueprintPngPlatform,
   type PrepareSvgForPngOptions,
   type RenderSvgToPngOptions,
+  type RenderBlueprintStringToPngOptions,
 } from "./png";
 
 const BINARY_PREFIX = "SAND:BP:v2:";

@@ -96,7 +96,7 @@ async function capture(chrome, job, currentPath) {
         "--disable-gpu",
         "--hide-scrollbars",
         "--run-all-compositor-stages-before-draw",
-        "--virtual-time-budget=2500",
+        "--virtual-time-budget=10000",
         "--window-size=2048,1024",
         `--screenshot=${currentPath}`,
         url,

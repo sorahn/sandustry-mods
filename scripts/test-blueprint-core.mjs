@@ -118,6 +118,24 @@ assert.match(renderedSvg.svg, /href="\/assets\/machine\.png"/);
 assert.match(renderedSvg.svg, /<text[^>]*>Mill<\/text>/);
 assert.match(renderedSvg.svg, /viewBox="0 0 48 48"/);
 
+const pngResult = await core.renderBlueprintStringToPng(
+  core.encodeBlueprint({
+    name: "PNG string fixture",
+    data: [],
+    signalLinks: null,
+  }),
+  {
+    scale: 1,
+    platform: {
+      loadSvg: async (svg) => svg,
+      createCanvas: (width, height) => ({ width, height }),
+      drawImage: () => {},
+      encodePng: async (canvas) => new Uint8Array([canvas.width, canvas.height]),
+    },
+  },
+);
+assert.deepEqual([...pngResult], [104, 104]);
+
 const signalStructures = [
   { type: "signalBuffer", x: 0, y: 8 },
   { type: "signalToggle", x: 8, y: 8 },
