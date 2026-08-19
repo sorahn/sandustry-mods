@@ -6,7 +6,6 @@ const api = sandkit.api;
 const MOD_ID = "sorahn.sandustry-filtered-lenses";
 const LASER_ID = "laser";
 const UPGRADE_ID = "filteredLenses";
-const NOOP_PROFILE_ID = `${MOD_ID}:no-op`;
 const FILTER_STORAGE_KEY = `${MOD_ID}.element`;
 const CONFIGURE_BINDING_ID = `${MOD_ID}:configure`;
 const PICKER_ID = `${MOD_ID}-element-picker`;
@@ -394,7 +393,6 @@ const configure = async () => {
 };
 
 api.i18n.register("en", TEXT);
-api.excavation.registerProfile(NOOP_PROFILE_ID, { pattern: [[0]], power: 0 });
 api.upgrades.register({
   itemId: LASER_ID,
   itemNameKey: "items|laser|name",
@@ -408,17 +406,119 @@ api.upgrades.register({
     oneOff: true,
   },
 });
-api.hooks.modify("excavation:prepare", (args) => {
-  if (
-    !isEnabled() ||
-    args.sourceId !== LASER_ID ||
-    api.upgrades.getLevelById(LASER_ID, UPGRADE_ID) < 1
-  )
-    return;
+
+const laserTargetCell = (state: any) => {
+  const player = state?.store?.player;
+  const mouse = state?.session?.input?.mouse?.worldPosition;
+  if (!player || !mouse) return null;
+  const startX = player.x + player.width / 2;
+  const startY = player.y + player.height / 2 + 2;
+  const angle = Math.atan2(mouse.y - startY, mouse.x - startX);
+  return api.raycast.castFromWorld(startX, startY, angle, 1000);
+};
+
+let filteredBeam: any = null;
+let filteredChargeStart = 0;
+let filteredShotFired = false;
+
+const clearFilteredBeam = () => {
+  filteredBeam?.destroy?.();
+  filteredBeam = null;
+  filteredChargeStart = 0;
+  filteredShotFired = false;
+};
+
+const isFilteredTarget = (state: any) => {
+  if (!isEnabled() || api.upgrades.getLevelById(LASER_ID, UPGRADE_ID) < 1) return false;
   const selected = currentSelection();
-  if (api.terrains.getTypeAtCell(args.originCellX, args.originCellY) !== selected.type)
-    args.profileId = NOOP_PROFILE_ID;
-});
+  const target = laserTargetCell(state);
+  return target === null || !api.terrains.isTypeAtCell(target.x, target.y, selected.id);
+};
+
+const renderFilteredBeam = (state: any, target: { x: number; y: number } | null) => {
+  const player = state?.store?.player;
+  const mouse = state?.session?.input?.mouse?.worldPosition;
+  const actionState = state?.session?.action?.state;
+  if (!player || !mouse || !actionState?.[2]) {
+    clearFilteredBeam();
+    return;
+  }
+
+  const now = Number(state?.store?.meta?.time) || Date.now();
+  if (!filteredChargeStart || actionState[1]) filteredChargeStart = now;
+  const charge = Math.min((now - filteredChargeStart) / 1000, 1);
+  const startX = player.x + player.width / 2;
+  const startY = player.y + player.height / 2 + 2;
+  const metrics = api.rendering.getGridMetrics();
+  const angle = Math.atan2(mouse.y - startY, mouse.x - startX);
+  const endX = target
+    ? target.x * metrics.cellSize + metrics.cellSize / 2
+    : startX + Math.cos(angle) * 1000;
+  const endY = target
+    ? target.y * metrics.cellSize + metrics.cellSize / 2
+    : startY + Math.sin(angle) * 1000;
+
+  filteredBeam?.destroy?.();
+  filteredBeam = api.effects.createLaserAtWorld(startX, startY, endX, endY, {
+    width: charge < 1 ? 1 + 2 * charge : 3,
+    brightness: charge < 1 ? 0.1 + 0.4 * charge : 1,
+    color: 0xff0000,
+    glow: true,
+  });
+
+  if (charge >= 1 && !filteredShotFired) {
+    api.energy.consume(60, { allOrNothing: true });
+    filteredShotFired = true;
+  }
+};
+
+let laserFilterInstalled = false;
+const installLaserFilter = () => {
+  if (laserFilterInstalled) return;
+  const definition = api.items.getDefinitionById(LASER_ID);
+  const originalHandleAction = definition?.handleAction;
+  const originalAfterRender = definition?.afterRender;
+  if (typeof originalHandleAction !== "function") {
+    console.warn(`[${MOD_ID}] native laser action was not available to wrap`);
+    return;
+  }
+
+  api.items.updateDefinition(LASER_ID, {
+    handleAction: (state: any, action: any) => {
+      if (isEnabled() && api.upgrades.getLevelById(LASER_ID, UPGRADE_ID) >= 1) {
+        const target = laserTargetCell(state);
+        if (isFilteredTarget(state)) {
+          renderFilteredBeam(state, target);
+          return;
+        }
+      }
+      clearFilteredBeam();
+      return originalHandleAction(state, action);
+    },
+    ...(typeof originalAfterRender === "function"
+      ? {
+          afterRender: (state: any) => {
+            if (isFilteredTarget(state) && state?.store?.player?.action) {
+              const previousAction = state.store.player.action;
+              state.store.player.action = null;
+              try {
+                originalAfterRender(state);
+              } finally {
+                state.store.player.action = previousAction;
+              }
+              return;
+            }
+            originalAfterRender(state);
+          },
+        }
+      : {}),
+  });
+  laserFilterInstalled = true;
+};
+
+installLaserFilter();
+api.events.on("game:ready", installLaserFilter);
+setTimeout(installLaserFilter, 1000);
 api.triggers.register(`${MOD_ID}:picker`, {
   interval: 100,
   callback: syncPickerToSelectedAction,

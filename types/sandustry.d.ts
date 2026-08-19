@@ -112,6 +112,16 @@ interface SandustryApi {
     getResolvedTypeAtCell(x: number, y: number): number | null;
     removeAtCellWhenIdle(x: number, y: number): void;
   };
+  effects: {
+    createLaserAtWorld(
+      startWorldX: number,
+      startWorldY: number,
+      endWorldX: number,
+      endWorldY: number,
+      options?: Record<string, unknown>,
+    ): any;
+  };
+  energy: { consume(amount: number, options?: { allOrNothing?: boolean }): number };
   excavation: {
     registerProfile(
       id: string,
@@ -139,7 +149,19 @@ interface SandustryApi {
     register(locale: string, translations: Record<string, string>): void;
     getName(definition: SandustryElementDefinition): string;
   };
+  items: {
+    getDefinitionById(id: string): any;
+    updateDefinition(id: string, partial: Record<string, unknown>): void;
+  };
   player: { buildings: { unlockByType(id: string): void } };
+  raycast: {
+    castFromWorld(
+      startWorldX: number,
+      startWorldY: number,
+      angle: number,
+      maxDistance: number,
+    ): { x: number; y: number; distance: number } | null;
+  };
   settings: SandustrySettings;
   sprites: { loadFromMod(id: string, path: string): Promise<unknown> };
   storage: { local: { get(key: string): unknown; set(key: string, value: string): void } };
