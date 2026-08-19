@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { wrapLabel } from "@sandustry/blueprint-core";
-import { decodeBlueprint, encodeBlueprint } from "../src/utils/blueprint";
-import { snapMapZoom, structureShape, viewportHeightForWidth } from "../src/utils/blueprint-map";
+import { decodeBlueprint, encodeBlueprint } from "../blueprint";
+import { snapMapZoom, structureShape, viewportHeightForWidth } from "../blueprint-map";
 
 describe("blueprint site utilities", () => {
   test("round-trips binary and text blueprint formats", () => {
