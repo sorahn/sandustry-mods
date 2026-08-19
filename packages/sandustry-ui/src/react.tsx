@@ -10,3 +10,4 @@ export {
   type SegmentedControlProps,
 } from "./components/SegmentedControl";
 export { Switch, type SwitchProps } from "./components/Switch";
+export { Badge, type BadgeProps } from "./components/Badge";
