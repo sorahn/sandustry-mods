@@ -7,6 +7,7 @@ import {
   type Blueprint,
 } from "../utils/blueprint";
 import { PageHeader } from "../components/PageHeader";
+import { copyToClipboard } from "../utils/clipboard";
 
 export function BlueprintCodecPage() {
   const [encoded, setEncoded] = useState("");
@@ -55,7 +56,7 @@ export function BlueprintCodecPage() {
               <Button accent onClick={decode}>
                 Decode to JSON
               </Button>
-              <Button onClick={() => navigator.clipboard?.writeText(encoded)}>Copy string</Button>
+              <Button onClick={() => void copyToClipboard(encoded)}>Copy string</Button>
             </div>
           </div>
         </Panel>
@@ -84,7 +85,7 @@ export function BlueprintCodecPage() {
               <Button accent onClick={encode}>
                 Encode string
               </Button>
-              <Button onClick={() => navigator.clipboard?.writeText(json)}>Copy JSON</Button>
+              <Button onClick={() => void copyToClipboard(json)}>Copy JSON</Button>
             </div>
           </div>
         </Panel>
