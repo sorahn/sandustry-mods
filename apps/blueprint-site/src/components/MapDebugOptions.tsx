@@ -77,20 +77,20 @@ export function MapDebugOptions({
     <PersistentCheckbox
       boxed
       size="small"
-      label="foundation outlines"
-      storageKey={SHOW_FOUNDATION_OUTLINES_KEY}
-      defaultChecked={showFoundationOutlines}
-      onCheckedChange={onShowFoundationOutlinesChange}
-      onInitialCheckedChange={onShowFoundationOutlinesChange}
-    />,
-    <PersistentCheckbox
-      boxed
-      size="small"
       label="signals"
       storageKey={SHOW_SIGNAL_LINKS_KEY}
       defaultChecked={showSignalLinks}
       onCheckedChange={onShowSignalLinksChange}
       onInitialCheckedChange={onShowSignalLinksChange}
+    />,
+    <PersistentCheckbox
+      boxed
+      size="small"
+      label="foundation outlines"
+      storageKey={SHOW_FOUNDATION_OUTLINES_KEY}
+      defaultChecked={showFoundationOutlines}
+      onCheckedChange={onShowFoundationOutlinesChange}
+      onInitialCheckedChange={onShowFoundationOutlinesChange}
     />,
   ];
 
