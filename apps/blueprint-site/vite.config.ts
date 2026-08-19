@@ -1,4 +1,3 @@
-// @ts-expect-error The browser app intentionally does not include the full Node type package.
 import { execSync } from "node:child_process";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";

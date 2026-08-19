@@ -1,0 +1,20 @@
+{
+  "name": "@sandustry/blueprint-node",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "lint": "oxlint src",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@sandustry/blueprint-core": "0.0.0"
+  }
+}

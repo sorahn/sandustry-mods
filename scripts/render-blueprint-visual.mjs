@@ -1,18 +1,16 @@
 #!/usr/bin/env node
 
 import { spawn } from "node:child_process";
+import { build } from "esbuild";
 import { existsSync } from "node:fs";
-import { copyFile, mkdir, rename, readdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir, rename, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
 const root = process.cwd();
-const appRoot = path.join(root, "apps/blueprint-site");
 const outputRoot = path.join(root, "artifacts/visual");
 const blueprintRoot = path.join(root, "tests/visual/blueprints");
 const baselineRoot = path.join(root, "tests/visual/baselines");
-const port = 4179;
-const siteUrl = `http://127.0.0.1:${port}/inspect/fixture`;
 const update = process.argv.includes("--update");
 const diff = process.argv.includes("--diff");
 const onlyArgument = process.argv.find((argument) => argument.startsWith("--only="));
@@ -26,44 +24,11 @@ if (onlyIndex >= 0 && !only) {
   throw new Error("--only requires a snapshot name");
 }
 
-function chromePath() {
-  const candidates =
-    process.platform === "darwin"
-      ? [
-          "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-          "/Applications/Chromium.app/Contents/MacOS/Chromium",
-        ]
-      : process.platform === "win32"
-        ? [
-            process.env.PROGRAMFILES + "\\Google\\Chrome\\Application\\chrome.exe",
-            process.env.LOCALAPPDATA + "\\Google\\Chrome\\Application\\chrome.exe",
-          ]
-        : ["/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser"];
-  const found = candidates.find((candidate) => candidate && existsSync(candidate));
-  if (!found) {
-    throw new Error("Google Chrome or Chromium is required for visual rendering.");
-  }
-  return found;
-}
-
-async function waitForServer() {
-  for (let attempt = 0; attempt < 50; attempt += 1) {
-    try {
-      const response = await fetch(siteUrl);
-      if (response.ok) return;
-    } catch {
-      // Vite is still starting.
-    }
-    await new Promise((resolve) => setTimeout(resolve, 100));
-  }
-  throw new Error(`Timed out waiting for the blueprint site at ${siteUrl}`);
-}
-
 async function visualJobs() {
   const jobs = [
     {
       name: "catalog",
-      url: `${siteUrl}?visualCapture=1`,
+      input: undefined,
       baseline: path.join(root, "tests/visual/catalog-baseline.png"),
     },
   ];
@@ -74,7 +39,7 @@ async function visualJobs() {
     if (!input) throw new Error(`Visual blueprint is empty: ${file}`);
     jobs.push({
       name,
-      url: `${siteUrl}?visualBlueprint=${encodeURIComponent(input)}&visualCapture=1`,
+      input,
       baseline: path.join(baselineRoot, `${name}.png`),
     });
   }
@@ -86,28 +51,26 @@ async function visualJobs() {
   return selected;
 }
 
-async function capture(chrome, job, currentPath) {
-  const url = job.url;
-  await new Promise((resolve, reject) => {
-    const child = spawn(
-      chrome,
-      [
-        "--headless=new",
-        "--disable-gpu",
-        "--hide-scrollbars",
-        "--run-all-compositor-stages-before-draw",
-        "--virtual-time-budget=10000",
-        "--window-size=2048,1024",
-        `--screenshot=${currentPath}`,
-        url,
-      ],
-      { stdio: "inherit" },
-    );
-    child.on("error", reject);
-    child.on("exit", (code) =>
-      code === 0 ? resolve() : reject(new Error(`Chrome exited with status ${code}`)),
-    );
+async function loadNodeRenderer() {
+  const bundlePath = path.join(outputRoot, "node-visual-renderer.mjs");
+  await build({
+    bundle: true,
+    entryPoints: [path.join(root, "scripts/node-visual-renderer.ts")],
+    external: ["@resvg/resvg-js"],
+    format: "esm",
+    platform: "node",
+    outfile: bundlePath,
   });
+  return import(bundlePath);
+}
+
+async function capture(renderer, job, currentPath) {
+  const input = job.input ?? renderer.catalogVisualBlueprint();
+  const png = await renderer.renderVisualBlueprint(
+    input,
+    path.join(root, "apps/blueprint-site/public"),
+  );
+  await writeFile(currentPath, png);
   const trimmedPath = `${currentPath}.trim.png`;
   await new Promise((resolve, reject) => {
     const child = spawn("magick", [currentPath, "-trim", "+repage", trimmedPath], {
@@ -146,33 +109,24 @@ async function compare(baselinePath, currentPath, diffPath) {
 
 async function run() {
   const jobs = await visualJobs();
-  const chrome = chromePath();
   await mkdir(outputRoot, { recursive: true });
   await mkdir(baselineRoot, { recursive: true });
-  const server = spawn("npm", ["run", "dev", "--", "--host", "127.0.0.1", "--port", String(port)], {
-    cwd: appRoot,
-    stdio: "ignore",
-  });
-  try {
-    await waitForServer();
-    for (const job of jobs) {
-      const currentPath = path.join(outputRoot, `${job.name}-current.png`);
-      await capture(chrome, job, currentPath);
-      if (update) {
-        await copyFile(currentPath, job.baseline);
-        console.log(`  updated ${job.name} baseline`);
-      } else if (!existsSync(job.baseline)) {
-        throw new Error(
-          `missing visual baseline for ${job.name}; run npm run visual:render -- --update`,
-        );
-      } else if (diff) {
-        await compare(job.baseline, currentPath, path.join(outputRoot, `${job.name}-diff.png`));
-      } else {
-        console.log(`  rendered ${job.name}: ${currentPath}`);
-      }
+  const renderer = await loadNodeRenderer();
+  for (const job of jobs) {
+    const currentPath = path.join(outputRoot, `${job.name}-current.png`);
+    await capture(renderer, job, currentPath);
+    if (update) {
+      await copyFile(currentPath, job.baseline);
+      console.log(`  updated ${job.name} baseline`);
+    } else if (!existsSync(job.baseline)) {
+      throw new Error(
+        `missing visual baseline for ${job.name}; run npm run visual:render -- --update`,
+      );
+    } else if (diff) {
+      await compare(job.baseline, currentPath, path.join(outputRoot, `${job.name}-diff.png`));
+    } else {
+      console.log(`  rendered ${job.name}: ${currentPath}`);
     }
-  } finally {
-    server.kill("SIGTERM");
   }
 }
 
