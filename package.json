@@ -12,6 +12,7 @@
     "test:blueprint": "node scripts/test-blueprint-core.mjs",
     "test:blueprint-node": "node scripts/test-blueprint-node.mjs",
     "test:catalog": "node scripts/test-catalog-invariants.mjs",
+    "test:all": "npm run tsc && npm run lint && npm run test:catalog && npm run test:blueprint && npm run test:blueprint-node && npm --workspace @sandustry/blueprint-core run tsc && npm --workspace @sandustry/blueprint-node run tsc && npm --workspace @sandustry/blueprint-node run lint && npm --workspace apps/blueprint-site run tsc && npm run visual:diff",
     "visual:render": "node scripts/render-blueprint-visual.mjs",
     "visual:diff": "node scripts/render-blueprint-visual.mjs --diff",
     "visual:update": "node scripts/render-blueprint-visual.mjs --update",
