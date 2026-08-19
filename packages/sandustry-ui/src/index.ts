@@ -30,3 +30,4 @@ export {
 export { Dialog, type DialogProps } from "./components/Dialog";
 export { SplitPane, type SplitPaneProps } from "./components/SplitPane";
 export { ListItem, type ListItemProps } from "./components/ListItem";
+export { IconButton, type IconButtonProps } from "./components/IconButton";
