@@ -1,7 +1,7 @@
 import type { HTMLAttributes, PropsWithChildren, ReactNode } from "react";
 import cx from "clsx";
 
-export type PopoverProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>> & {
+export type PopoverProps = Omit<PropsWithChildren<HTMLAttributes<HTMLDivElement>>, "content"> & {
   content: ReactNode;
   open?: boolean;
   side?: "top" | "bottom" | "left" | "right";

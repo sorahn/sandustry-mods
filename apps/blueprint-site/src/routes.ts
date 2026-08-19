@@ -3,6 +3,7 @@ import { AppLayout } from "./components/AppLayout";
 import { BlueprintCodecPage } from "./pages/Codec";
 import { BlueprintInspectorPage } from "./pages/Inspector";
 import { BlueprintVisualFixturePage } from "./pages/VisualFixture";
+import { DebugPage } from "./pages/Debug";
 import { HomePage } from "./pages/HomePage";
 
 const rootRoute = createRootRoute({ component: AppLayout });
@@ -22,10 +23,16 @@ const visualFixtureRoute = createRoute({
   path: "/inspect/fixture",
   component: BlueprintVisualFixturePage,
 });
+const debugRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/debug",
+  component: DebugPage,
+});
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
   codecRoute,
   inspectorRoute,
   visualFixtureRoute,
+  debugRoute,
 ]);
