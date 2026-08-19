@@ -12,6 +12,16 @@ export type SignalPoints = {
 
 export type SignalPointResolver = (type: BlueprintType) => SignalPoints | undefined;
 
+export type StructureCatalogEntry = {
+  footprint?: { width: number; height: number };
+  shape?: number[][];
+  signalPoints?: SignalPoints;
+};
+
+export type BlueprintCatalog = {
+  get: (type: BlueprintType) => StructureCatalogEntry | undefined;
+};
+
 export type PreparedSignalLink = SignalLink & {
   fromStructureIndex: number | null;
   toStructureIndex: number | null;
@@ -44,6 +54,7 @@ export type PreparedBlueprint = Blueprint & {
 };
 
 export type PrepareBlueprintOptions = {
+  catalog?: BlueprintCatalog;
   resolveSignalPoints?: SignalPointResolver;
 };
 
@@ -240,7 +251,10 @@ export function prepareBlueprint(
   blueprint: Blueprint,
   options: PrepareBlueprintOptions = {},
 ): PreparedBlueprint {
-  const resolveSignalPoints = options.resolveSignalPoints ?? defaultSignalPoints;
+  const resolveSignalPoints =
+    options.resolveSignalPoints ??
+    ((type: BlueprintType) =>
+      options.catalog?.get(type)?.signalPoints ?? defaultSignalPoints(type));
   const preparedStructures = blueprint.data.map((structure, index) => ({
     structure,
     index,

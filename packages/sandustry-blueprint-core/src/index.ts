@@ -23,6 +23,7 @@ export type Blueprint = {
 export {
   defaultSignalPoints,
   prepareBlueprint,
+  type BlueprintCatalog,
   type PreparedStructure,
   type BlueprintCoordinate,
   type PreparedBlueprint,
@@ -31,6 +32,7 @@ export {
   type SignalPoint,
   type SignalPoints,
   type SignalPointResolver,
+  type StructureCatalogEntry,
 } from "./prepare";
 
 const BINARY_PREFIX = "SAND:BP:v2:";

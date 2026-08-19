@@ -112,6 +112,14 @@ assert.deepEqual(
   preparedRelative.preparedSignalLinks.map(({ fromPoint, toPoint }) => ({ fromPoint, toPoint })),
 );
 
+const catalogPrepared = core.prepareBlueprint(relativeSignals, {
+  catalog: {
+    get: (type) =>
+      type === "signalBuffer" ? { signalPoints: { shared: { x: 0.5, y: 0.5 } } } : undefined,
+  },
+});
+assert.deepEqual(catalogPrepared.preparedSignalLinks[0].fromPoint, { x: 0.5, y: 8.5 });
+
 const oversizedTypeTable = [4, 1, 120, 65];
 for (let index = 0; index < 65; index++) oversizedTypeTable.push(0, index);
 oversizedTypeTable.push(1, 63, 0, 0, 0);
