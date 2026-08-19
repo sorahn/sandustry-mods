@@ -14,6 +14,7 @@
     "test:catalog": "node scripts/test-catalog-invariants.mjs",
     "visual:render": "node scripts/render-blueprint-visual.mjs",
     "visual:diff": "node scripts/render-blueprint-visual.mjs --diff",
+    "visual:update": "node scripts/render-blueprint-visual.mjs --update",
     "catalog:extract": "node scripts/extract-native-catalog.mjs",
     "format:bundles": "node scripts/format-bundles.mjs",
     "format": "oxfmt --write .",

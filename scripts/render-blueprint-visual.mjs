@@ -110,7 +110,7 @@ async function compare(baselinePath, currentPath, diffPath) {
 async function run() {
   const jobs = await visualJobs();
   await mkdir(outputRoot, { recursive: true });
-  await mkdir(baselineRoot, { recursive: true });
+  if (update) await mkdir(baselineRoot, { recursive: true });
   const renderer = await loadNodeRenderer();
   for (const job of jobs) {
     const currentPath = path.join(outputRoot, `${job.name}-current.png`);
