@@ -6,6 +6,7 @@
     "build:preview": "tsc --noEmit && vite build --mode preview && node scripts/copy-404.mjs",
     "build": "tsc --noEmit && vite build",
     "dev": "vite",
+    "lint": "oxlint src",
     "postbuild": "node scripts/copy-404.mjs",
     "preview": "npm run build:preview && vite preview",
     "tsc": "tsc --noEmit"

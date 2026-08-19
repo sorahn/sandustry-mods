@@ -190,7 +190,7 @@ function structureFootprint(structure: Blueprint["data"][number]) {
     : (entry?.footprint ?? { width: 1, height: 1 });
 }
 
-function structureVisualTopY(structure: Blueprint["data"][number]) {
+function _structureVisualTopY(structure: Blueprint["data"][number]) {
   const entry = catalogEntry(structure.type);
   const topY = structureTopY(structure);
   const renderAsset = entry?.renderAsset;
@@ -228,7 +228,7 @@ const BELT_TYPES = new Set<Blueprint["data"][number]["type"]>([
   "burnerBeltRight",
 ]);
 
-function foundationOutlinePath(
+function _foundationOutlinePath(
   structures: Blueprint["data"],
   minX: number,
   minY: number,
