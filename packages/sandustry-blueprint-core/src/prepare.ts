@@ -16,6 +16,7 @@ export type StructureCatalogEntry = {
   footprint?: { width: number; height: number };
   shape?: number[][];
   signalPoints?: SignalPoints;
+  z?: number;
 };
 
 export type BlueprintCatalog = {
@@ -47,9 +48,12 @@ export type PreparedStructure = {
   customShape?: number[][];
   shape?: number[][];
   footprint: { width: number; height: number };
+  z: number;
+  bounds: { minX: number; minY: number; maxX: number; maxY: number };
 };
 
 export type PreparedBlueprint = Blueprint & {
+  bounds: { minX: number; minY: number; maxX: number; maxY: number };
   signalCoordinateOffset: BlueprintCoordinate;
   preparedStructures: PreparedStructure[];
   preparedSignalLinks: PreparedSignalLink[];
@@ -257,20 +261,41 @@ export function prepareBlueprint(
     options.resolveSignalPoints ??
     ((type: BlueprintType) =>
       options.catalog?.get(type)?.signalPoints ?? defaultSignalPoints(type));
-  const preparedStructures = blueprint.data.map((structure, index) => ({
-    structure,
-    index,
-    spriteIndex: spriteIndexFor(structure),
-    lightColor: lightColorFor(structure),
-    customShape: customShapeFor(structure),
-    shape: customShapeFor(structure) ?? options.catalog?.get(structure.type)?.shape,
-    footprint: (() => {
-      const shape = customShapeFor(structure) ?? options.catalog?.get(structure.type)?.shape;
-      return shape
-        ? { width: shape[0].length, height: shape.length }
-        : (options.catalog?.get(structure.type)?.footprint ?? { width: 1, height: 1 });
-    })(),
-  }));
+  const preparedStructures = blueprint.data.map((structure, index) => {
+    const catalogEntry = options.catalog?.get(structure.type);
+    const customShape = customShapeFor(structure);
+    const shape = customShape ?? catalogEntry?.shape;
+    const footprint = shape
+      ? { width: shape[0].length, height: shape.length }
+      : (catalogEntry?.footprint ?? { width: 1, height: 1 });
+    return {
+      structure,
+      index,
+      spriteIndex: spriteIndexFor(structure),
+      lightColor: lightColorFor(structure),
+      customShape,
+      shape,
+      footprint,
+      z: catalogEntry?.z ?? 0.5,
+      bounds: {
+        minX: structure.x,
+        minY: structure.y,
+        maxX: structure.x + footprint.width - 1,
+        maxY: structure.y + footprint.height - 1,
+      },
+    };
+  });
+  const bounds = preparedStructures.length
+    ? preparedStructures.slice(1).reduce(
+        (value, prepared) => ({
+          minX: Math.min(value.minX, prepared.bounds.minX),
+          minY: Math.min(value.minY, prepared.bounds.minY),
+          maxX: Math.max(value.maxX, prepared.bounds.maxX),
+          maxY: Math.max(value.maxY, prepared.bounds.maxY),
+        }),
+        { ...preparedStructures[0].bounds },
+      )
+    : { minX: 0, minY: 0, maxX: 0, maxY: 0 };
   const signalCoordinateOffset = coordinateOffset(blueprint);
   const preparedSignalLinks = (blueprint.signalLinks ?? []).map((link) => {
     const from = resolveEndpoint(
@@ -299,5 +324,5 @@ export function prepareBlueprint(
       path: wirePath(from.point, to.point, sourceType === "signalBuffer"),
     };
   });
-  return { ...blueprint, signalCoordinateOffset, preparedStructures, preparedSignalLinks };
+  return { ...blueprint, bounds, signalCoordinateOffset, preparedStructures, preparedSignalLinks };
 }

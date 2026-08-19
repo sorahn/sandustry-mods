@@ -133,6 +133,8 @@ assert.deepEqual(catalogPrepared.preparedStructures[0].shape, [
   [1, 1],
   [1, 0],
 ]);
+assert.equal(catalogPrepared.preparedStructures[0].z, 0.5);
+assert.deepEqual(catalogPrepared.bounds, { minX: 0, minY: 8, maxX: 16, maxY: 9 });
 
 const oversizedTypeTable = [4, 1, 120, 65];
 for (let index = 0; index < 65; index++) oversizedTypeTable.push(0, index);

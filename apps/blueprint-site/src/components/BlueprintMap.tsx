@@ -576,6 +576,7 @@ export function BlueprintMap({
           footprint: entry.footprint,
           shape: Array.isArray(entry.shape) ? entry.shape : undefined,
           signalPoints: entry.signalPoints,
+          z: typeof catalogRender(entry)?.z === "number" ? catalogRender(entry)?.z : undefined,
         };
       },
     },
@@ -583,9 +584,7 @@ export function BlueprintMap({
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
   const renderStructures = blueprint.data
     .map((structure, index) => {
-      const entry = catalogEntry(structure.type);
-      const render = entry ? catalogRender(entry) : undefined;
-      const z = typeof render?.z === "number" ? render.z : 0.5;
+      const z = preparedBlueprint.preparedStructures[index].z;
       return { structure, index, z };
     })
     .sort(
