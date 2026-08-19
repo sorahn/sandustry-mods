@@ -1,6 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import { buttonStyles } from "@sandustry/ui";
-import cx from "clsx";
 
 export function Header() {
   return (
@@ -20,7 +18,7 @@ export function Header() {
             Encode / Decode
           </Link>
           {import.meta.env.DEV ? (
-            <Link to="/debug" className={cx(buttonStyles.button, buttonStyles.compact, "-my-1")}>
+            <Link to="/debug" activeProps={{ className: "text-yellow-300" }}>
               Components
             </Link>
           ) : null}
