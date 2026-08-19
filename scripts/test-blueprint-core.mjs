@@ -69,6 +69,34 @@ const statefulStructures = core.prepareBlueprint({
 assert.equal(statefulStructures.preparedStructures[0].spriteIndex, 1);
 assert.equal(statefulStructures.preparedStructures[1].spriteIndex, 1);
 
+const preparedRecord = core.prepareBlueprint({
+  name: "Prepared records",
+  data: [
+    {
+      type: "wallLight",
+      x: 0,
+      y: 0,
+      data: {
+        state: { lightColor: [1, 0.5, 0] },
+        __prefabulatorBlueprint: {
+          definition: {
+            shape: [
+              [1, 0],
+              [1, 1],
+            ],
+          },
+        },
+      },
+    },
+  ],
+  signalLinks: null,
+});
+assert.equal(preparedRecord.preparedStructures[0].lightColor, "rgb(255, 128, 0)");
+assert.deepEqual(preparedRecord.preparedStructures[0].customShape, [
+  [1, 0],
+  [1, 1],
+]);
+
 const absoluteSignals = {
   ...relativeSignals,
   signalLinks: relativeSignals.signalLinks.map((link) => ({

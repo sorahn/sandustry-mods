@@ -33,6 +33,8 @@ export type PreparedStructure = {
   structure: BlueprintStructure;
   index: number;
   spriteIndex?: number;
+  lightColor?: string;
+  customShape?: number[][];
 };
 
 export type PreparedBlueprint = Blueprint & {
@@ -93,6 +95,89 @@ function spriteIndexFor(structure: BlueprintStructure) {
     }
   }
   return undefined;
+}
+
+function colorValue(value: unknown): string | undefined {
+  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= 0xffffff) {
+    return `#${value.toString(16).padStart(6, "0")}`;
+  }
+  if (
+    Array.isArray(value) &&
+    value.length >= 3 &&
+    value.slice(0, 3).every((part) => typeof part === "number" && part >= 0 && part <= 255)
+  ) {
+    const channels = value.slice(0, 3) as number[];
+    const normalized = channels.every((part) => part <= 1);
+    return `rgb(${(normalized ? channels.map((part) => Math.round(part * 255)) : channels).join(", ")})`;
+  }
+  if (typeof value !== "object" || value === null) {
+    if (typeof value !== "string") return undefined;
+    try {
+      if (value.trim().startsWith("{")) return colorValue(JSON.parse(value));
+    } catch {
+      return undefined;
+    }
+    return /^#[0-9a-f]{3,8}$/i.test(value) ||
+      /^rgba?\([^)]*\)$/i.test(value) ||
+      /^hsla?\([^)]*\)$/i.test(value)
+      ? value
+      : undefined;
+  }
+  const record = value as Record<string, unknown>;
+  if ([record.r, record.g, record.b].every((part) => typeof part === "number")) {
+    return colorValue([record.r, record.g, record.b]);
+  }
+  for (const key of ["color", "colour", "lightColor", "colorHex", "hex", "value"]) {
+    const nested = colorValue(record[key]);
+    if (nested) return nested;
+  }
+  for (const [key, nestedValue] of Object.entries(record)) {
+    if (key.toLowerCase().includes("color")) {
+      const nested = colorValue(nestedValue);
+      if (nested) return nested;
+    }
+  }
+  return undefined;
+}
+
+function nestedLightColor(value: unknown): string | undefined {
+  const direct = colorValue(value);
+  if (direct) return direct;
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return undefined;
+  const record = value as Record<string, unknown>;
+  for (const key of ["data", "customData", "state", "properties", "config", "value"]) {
+    const nested = nestedLightColor(record[key]);
+    if (nested) return nested;
+  }
+  return undefined;
+}
+
+function lightColorFor(structure: BlueprintStructure) {
+  return nestedLightColor(structure.data) ?? nestedLightColor(structure.filter);
+}
+
+function customShapeFor(structure: BlueprintStructure) {
+  if (typeof structure.data !== "object" || structure.data === null) return undefined;
+  const data = structure.data as Record<string, unknown>;
+  const prefabulator = data.__prefabulatorBlueprint;
+  if (typeof prefabulator !== "object" || prefabulator === null) return undefined;
+  const definition = (prefabulator as Record<string, unknown>).definition;
+  if (typeof definition !== "object" || definition === null) return undefined;
+  const shape = (definition as Record<string, unknown>).shape;
+  if (
+    !Array.isArray(shape) ||
+    shape.length === 0 ||
+    !shape.every(
+      (row) =>
+        Array.isArray(row) &&
+        row.length > 0 &&
+        row.every((value) => typeof value === "number" && Number.isFinite(value)),
+    )
+  ) {
+    return undefined;
+  }
+  const width = shape[0].length;
+  return shape.every((row) => row.length === width) ? (shape as number[][]) : undefined;
 }
 
 function coordinateOffset(blueprint: Blueprint): BlueprintCoordinate {
@@ -160,6 +245,8 @@ export function prepareBlueprint(
     structure,
     index,
     spriteIndex: spriteIndexFor(structure),
+    lightColor: lightColorFor(structure),
+    customShape: customShapeFor(structure),
   }));
   const signalCoordinateOffset = coordinateOffset(blueprint);
   const preparedSignalLinks = (blueprint.signalLinks ?? []).map((link) => {

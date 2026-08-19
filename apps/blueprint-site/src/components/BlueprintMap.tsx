@@ -44,77 +44,6 @@ function tileColor(type: Blueprint["data"][number]["type"]) {
   return ["#4b3c62", "#315a5e", "#66522f", "#563d46"][Math.abs(hash) % 4];
 }
 
-function colorValue(value: unknown): string | undefined {
-  if (typeof value === "number" && Number.isInteger(value) && value >= 0 && value <= 0xffffff) {
-    return `#${value.toString(16).padStart(6, "0")}`;
-  }
-  if (
-    Array.isArray(value) &&
-    value.length >= 3 &&
-    value.slice(0, 3).every((part) => typeof part === "number" && part >= 0 && part <= 255)
-  ) {
-    const [red, green, blue] = value as number[];
-    const normalized = [red, green, blue].every((part) => part >= 0 && part <= 1);
-    const channels = normalized
-      ? [red, green, blue].map((part) => Math.round(part * 255))
-      : [red, green, blue];
-    return `rgb(${channels[0]}, ${channels[1]}, ${channels[2]})`;
-  }
-  if (Array.isArray(value)) {
-    for (const nestedValue of value) {
-      const nested = colorValue(nestedValue);
-      if (nested) return nested;
-    }
-  }
-  if (typeof value === "object" && value !== null) {
-    const record = value as Record<string, unknown>;
-    if (
-      [record.r, record.g, record.b].every(
-        (part) => typeof part === "number" && part >= 0 && part <= 255,
-      )
-    ) {
-      return colorValue([record.r, record.g, record.b]);
-    }
-    for (const key of ["color", "colour", "lightColor", "colorHex", "hex", "value"]) {
-      const nested = colorValue(record[key]);
-      if (nested) return nested;
-    }
-  }
-  if (typeof value !== "string") return undefined;
-  try {
-    if (value.trim().startsWith("{")) return colorValue(JSON.parse(value));
-  } catch {
-    // Continue with CSS color parsing below.
-  }
-  return /^#[0-9a-f]{3,8}$/i.test(value) ||
-    /^rgba?\([^)]*\)$/i.test(value) ||
-    /^hsla?\([^)]*\)$/i.test(value)
-    ? value
-    : undefined;
-}
-
-function lightColor(data: unknown): string | undefined {
-  if (typeof data === "string" || Array.isArray(data)) return colorValue(data);
-  if (typeof data !== "object" || data === null) return undefined;
-
-  const record = data as Record<string, unknown>;
-  for (const key of ["color", "colour", "lightColor", "colorHex", "hex"]) {
-    const direct = colorValue(record[key]);
-    if (direct) return direct;
-  }
-  for (const [key, value] of Object.entries(record)) {
-    if (key.toLowerCase().includes("color")) {
-      const direct = colorValue(value);
-      if (direct) return direct;
-    }
-  }
-  for (const key of ["data", "customData", "state", "properties", "config", "value"]) {
-    const nested = lightColor(record[key]);
-    if (nested) return nested;
-  }
-  return undefined;
-}
-
 const SAVED_MAP_VIEW_KEY = "sandustry.blueprintInspector.mapView";
 const MAP_ZOOM_LEVELS = [0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 4] as const;
 const NATIVE_PIXELS_PER_CELL = 4;
@@ -1207,9 +1136,7 @@ export function BlueprintMap({
                       const spriteRotation = collectorSprite?.rotation ?? renderAsset.rotation;
                       const customLightColor =
                         renderAsset.lightColor ??
-                        lightColor(structure) ??
-                        lightColor(structure.data) ??
-                        lightColor(structure.filter);
+                        preparedBlueprint.preparedStructures[index].lightColor;
                       const useNativeAssetSize =
                         runtimeSize !== undefined ||
                         (frame !== undefined && renderAsset.scale !== "cell");

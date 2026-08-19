@@ -23,10 +23,10 @@ export type Blueprint = {
 export {
   defaultSignalPoints,
   prepareBlueprint,
+  type PreparedStructure,
   type BlueprintCoordinate,
   type PreparedBlueprint,
   type PreparedSignalLink,
-  type PreparedStructure,
   type PrepareBlueprintOptions,
   type SignalPoint,
   type SignalPoints,
