@@ -1,7 +1,7 @@
 import { encodeBlueprint, type Blueprint } from "@sandustry/blueprint-core";
 import { renderBlueprintStringToNodePng } from "@sandustry/blueprint-node";
-import { blueprintCatalog } from "../apps/blueprint-site/src/utils/catalog";
-import { catalogVisualFixture } from "../apps/blueprint-site/src/visual-fixtures/catalog";
+import { blueprintCatalog } from "../../../../apps/blueprint-site/src/utils/catalog";
+import { catalogVisualFixture } from "../../../../apps/blueprint-site/src/visual-fixtures/catalog";
 
 export function catalogVisualBlueprint() {
   return encodeBlueprint(catalogVisualFixture);

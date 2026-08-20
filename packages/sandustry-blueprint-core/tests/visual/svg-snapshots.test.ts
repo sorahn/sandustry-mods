@@ -1,14 +1,15 @@
 import assert from "node:assert/strict";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { test } from "bun:test";
-import { catalogVisualBlueprint, renderVisualBlueprintSvg } from "./svg-visual-renderer";
+import { catalogVisualBlueprint, renderVisualBlueprintSvg } from "./svg-renderer";
 
-const root = process.cwd();
+const visualRoot = path.dirname(fileURLToPath(import.meta.url));
 
 test("blueprint SVG snapshots", async () => {
-  const blueprintRoot = path.join(root, "tests/visual/blueprints");
-  const snapshotRoot = path.join(root, "tests/visual/svg");
+  const blueprintRoot = path.join(visualRoot, "blueprints");
+  const snapshotRoot = path.join(visualRoot, "svg");
   const update = process.argv.includes("--update");
   const fixtures = [
     { name: "catalog", input: catalogVisualBlueprint() },

@@ -7,8 +7,8 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "lint": "oxlint src",
+    "lint": "oxlint src tests",
     "tsc": "tsc --noEmit",
-    "test": "bun test src"
+    "test": "bun test src tests"
   }
 }

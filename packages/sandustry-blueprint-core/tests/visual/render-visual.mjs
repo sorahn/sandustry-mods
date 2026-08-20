@@ -6,11 +6,13 @@ import { existsSync } from "node:fs";
 import { copyFile, mkdir, rename, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 
-const root = process.cwd();
+const visualRoot = path.dirname(fileURLToPath(import.meta.url));
+const root = path.resolve(visualRoot, "../../../..");
 const outputRoot = path.join(root, "artifacts/visual");
-const blueprintRoot = path.join(root, "tests/visual/blueprints");
-const baselineRoot = path.join(root, "tests/visual/baselines");
+const blueprintRoot = path.join(visualRoot, "blueprints");
+const baselineRoot = path.join(visualRoot, "baselines");
 const update = process.argv.includes("--update");
 const diff = process.argv.includes("--diff");
 const onlyArgument = process.argv.find((argument) => argument.startsWith("--only="));
@@ -29,7 +31,7 @@ async function visualJobs() {
     {
       name: "catalog",
       input: undefined,
-      baseline: path.join(root, "tests/visual/catalog-baseline.png"),
+      baseline: path.join(visualRoot, "catalog-baseline.png"),
     },
   ];
   const files = (await readdir(blueprintRoot)).filter((file) => file.endsWith(".txt")).sort();
@@ -55,7 +57,7 @@ async function loadNodeRenderer() {
   const bundlePath = path.join(outputRoot, "node-visual-renderer.mjs");
   await build({
     bundle: true,
-    entryPoints: [path.join(root, "scripts/node-visual-renderer.ts")],
+    entryPoints: [path.join(visualRoot, "node-renderer.ts")],
     external: ["@resvg/resvg-js"],
     format: "esm",
     platform: "node",

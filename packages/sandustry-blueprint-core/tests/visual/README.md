@@ -6,8 +6,8 @@ images are trimmed to the rendered map bounds, without the site navigation,
 test controls, or viewport chrome. Current images and ImageMagick diffs are
 written under `artifacts/visual/`.
 
-Put one encoded blueprint per file in `tests/visual/blueprints/`, for example
-`tests/visual/blueprints/thermal-line.txt`. Both v2 binary strings and v2 text
+Put one encoded blueprint per file in `packages/sandustry-blueprint-core/tests/visual/blueprints/`, for example
+`packages/sandustry-blueprint-core/tests/visual/blueprints/thermal-line.txt`. Both v2 binary strings and v2 text
 strings are accepted.
 
 Create or replace the checked-in baseline with:
