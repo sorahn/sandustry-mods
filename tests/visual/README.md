@@ -35,6 +35,19 @@ Compare the current image with the baseline with:
 npm run visual:diff
 ```
 
+SVG output snapshots for the catalog and every blueprint fixture are checked
+with:
+
+```sh
+npm run test:blueprint-svg
+```
+
+Refresh them after an intentional SVG renderer change with:
+
+```sh
+npm run test:blueprint-svg -- --update
+```
+
 The same selector can limit comparisons:
 
 ```sh
