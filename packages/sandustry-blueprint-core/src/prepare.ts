@@ -300,6 +300,10 @@ const BELT_TYPES = new Set<BlueprintType>([
   "burnerBeltRight",
 ]);
 
+export function isBeltType(type: BlueprintType) {
+  return BELT_TYPES.has(type);
+}
+
 export function foundationOutlinePath(
   structures: PreparedStructure[],
   minX: number,

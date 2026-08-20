@@ -111,6 +111,31 @@ describe("SVG and PNG adapters", () => {
     expect(result).toContain(">Mac</text>");
   });
 
+  test("renders foundations and belts below outlines, structures, and signals", () => {
+    const result = renderBlueprintToSvg(
+      {
+        data: [
+          { type: 11, x: 0, y: 0 },
+          { type: "conveyorLeftMk2", x: 4, y: 0 },
+          { type: "machine", x: 8, y: 0 },
+          { type: "signalBuffer", x: 12, y: 0 },
+        ],
+        signalLinks: [{ from: { x: 12, y: 0 }, to: { x: 8, y: 0 }, on: true }],
+      },
+      { showGrid: false, showSignalLinks: true },
+    ).svg;
+    const foundation = result.indexOf('data-structure-index="0"');
+    const belt = result.indexOf('data-structure-index="1"');
+    const outline = result.indexOf('stroke="#000000"');
+    const machine = result.indexOf('data-structure-index="2"');
+    const signal = result.indexOf('stroke="#00ff99"');
+    expect(foundation).toBeGreaterThanOrEqual(0);
+    expect(belt).toBeGreaterThan(foundation);
+    expect(outline).toBeGreaterThan(belt);
+    expect(machine).toBeGreaterThan(outline);
+    expect(signal).toBeGreaterThan(machine);
+  });
+
   test("runs the SVG-to-PNG platform pipeline with rounded dimensions", async () => {
     const calls: string[] = [];
     const result = await renderSvgToPng("<svg />", {

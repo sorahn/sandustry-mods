@@ -11,7 +11,7 @@ import {
   type BlueprintRenderModel,
   type BlueprintRenderOptions,
 } from "./render-model";
-import { foundationOutlinePath } from "./prepare";
+import { foundationOutlinePath, isBeltType } from "./prepare";
 
 export type BlueprintSvgRenderOptions = BlueprintRenderOptions & {
   assetBaseUrl?: string;
@@ -210,13 +210,20 @@ export function renderBlueprintToSvg(
   const showGrid = options.showGrid ?? true;
   const showFoundationOutlines = options.showFoundationOutlines ?? true;
   const showSignalLinks = options.showSignalLinks ?? true;
-  const foundationStructures = model.renderStructures.filter(({ index }) =>
-    isFoundationStructure(model, index),
+  const foundationAndBeltStructures = model.renderStructures.filter(
+    ({ index }) =>
+      isFoundationStructure(model, index) ||
+      isBeltType(model.preparedBlueprint.preparedStructures[index].structure.type),
   );
-  const spriteStructures = model.renderStructures.filter(
-    ({ index }) => !isFoundationStructure(model, index),
+  const otherStructures = model.renderStructures.filter(
+    ({ index }) =>
+      !isFoundationStructure(model, index) &&
+      !isBeltType(model.preparedBlueprint.preparedStructures[index].structure.type),
   );
-  const structureMarkup = [...foundationStructures, ...spriteStructures]
+  const foundationAndBeltMarkup = foundationAndBeltStructures
+    .map(({ index }) => renderStructure(model, index, options))
+    .join("");
+  const otherStructureMarkup = otherStructures
     .map(({ index }) => renderStructure(model, index, options))
     .join("");
   const foundationPath = showFoundationOutlines
@@ -243,6 +250,6 @@ export function renderBlueprintToSvg(
   const signals = showSignalLinks ? renderSignalLinks(model) : "";
   return {
     model,
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${number(model.width)} ${number(model.height)}" width="${number(model.width)}" height="${number(model.height)}" preserveAspectRatio="xMidYMid meet"><title>${escapeXml(blueprint.name || "Sandustry blueprint")}</title><desc>Rendered Sandustry blueprint map</desc><style>image{image-rendering:pixelated}</style>${background}${outline}<g>${structureMarkup}</g>${signals}</svg>`,
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${number(model.width)} ${number(model.height)}" width="${number(model.width)}" height="${number(model.height)}" preserveAspectRatio="xMidYMid meet"><title>${escapeXml(blueprint.name || "Sandustry blueprint")}</title><desc>Rendered Sandustry blueprint map</desc><style>image{image-rendering:pixelated}</style>${background}<g>${foundationAndBeltMarkup}</g>${outline}<g>${otherStructureMarkup}</g>${signals}</svg>`,
   };
 }
