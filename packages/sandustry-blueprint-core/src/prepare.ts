@@ -348,6 +348,35 @@ export function foundationOutlinePath(
     const key = currentEdge.from.join(",");
     outgoing.set(key, [...(outgoing.get(key) ?? []), index]);
   });
+  const nextBoundaryEdge = (currentIndex: number, candidates: number[]) => {
+    if (candidates.length < 2) return candidates[0];
+    const current = edges[currentIndex];
+    const [x, y] = current.to;
+    const northwest = occupied.has(`${x - 1},${y - 1}`);
+    const northeast = occupied.has(`${x},${y - 1}`);
+    const southwest = occupied.has(`${x - 1},${y}`);
+    const southeast = occupied.has(`${x},${y}`);
+    const diagonalTouch =
+      (northwest && southeast && !northeast && !southwest) ||
+      (northeast && southwest && !northwest && !southeast);
+    if (!diagonalTouch) return candidates[0];
+    const incomingAngle = Math.atan2(
+      current.to[1] - current.from[1],
+      current.to[0] - current.from[0],
+    );
+    return candidates.reduce((best, candidate) => {
+      const next = edges[candidate];
+      const outgoingAngle = Math.atan2(next.to[1] - next.from[1], next.to[0] - next.from[0]);
+      const bestEdge = edges[best];
+      const bestAngle = Math.atan2(
+        bestEdge.to[1] - bestEdge.from[1],
+        bestEdge.to[0] - bestEdge.from[0],
+      );
+      const turn = (outgoingAngle - incomingAngle + Math.PI * 2) % (Math.PI * 2);
+      const bestTurn = (bestAngle - incomingAngle + Math.PI * 2) % (Math.PI * 2);
+      return turn < bestTurn ? candidate : best;
+    }, candidates[0]);
+  };
   const visited = new Set<number>();
   const contours: string[] = [];
   edges.forEach((startEdge, startIndex) => {
@@ -360,7 +389,10 @@ export function foundationOutlinePath(
       const currentEdge = edges[currentIndex];
       points.push(currentEdge.to);
       if (currentEdge.to[0] === start[0] && currentEdge.to[1] === start[1]) break;
-      const next = outgoing.get(currentEdge.to.join(","))?.find((index) => !visited.has(index));
+      const next = nextBoundaryEdge(
+        currentIndex,
+        outgoing.get(currentEdge.to.join(","))?.filter((index) => !visited.has(index)) ?? [],
+      );
       if (next === undefined) break;
       currentIndex = next;
     }

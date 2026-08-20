@@ -133,6 +133,8 @@ export function BlueprintMapFoundationOutlineLayer({
       fill="none"
       stroke="#000000"
       strokeWidth={renderPixelScale(cell)}
+      strokeLinecap="round"
+      strokeLinejoin="round"
       pointerEvents="none"
       style={mapLayerStyle("foundationShapes")}
     />

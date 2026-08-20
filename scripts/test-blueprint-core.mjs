@@ -97,6 +97,50 @@ try {
   assert.deepEqual(core.wrapLabel("Signal Presence Sensor", 8), ["Signal", "Presence", "Sensor"]);
   check("render model geometry");
 
+  const diagonalOutline = core.foundationOutlinePath(
+    [
+      {
+        structure: { type: 11, x: 0, y: 0 },
+        footprint: { width: 1, height: 1 },
+        topY: 0,
+      },
+      {
+        structure: { type: 11, x: 1, y: 1 },
+        footprint: { width: 1, height: 1 },
+        topY: 1,
+      },
+    ],
+    0,
+    0,
+    0,
+    1,
+  );
+  assert.equal((diagonalOutline.match(/M /g) ?? []).length, 1);
+  check("diagonal foundation contour");
+
+  const ringOutline = core.foundationOutlinePath(
+    [
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [0, 1],
+      [2, 1],
+      [0, 2],
+      [1, 2],
+      [2, 2],
+    ].map(([x, y]) => ({
+      structure: { type: 11, x, y },
+      footprint: { width: 1, height: 1 },
+      topY: y,
+    })),
+    0,
+    0,
+    0,
+    1,
+  );
+  assert.equal((ringOutline.match(/M /g) ?? []).length, 2);
+  check("foundation inner contour");
+
   const renderedSvg = core.renderBlueprintToSvg(
     {
       name: "SVG fixture",

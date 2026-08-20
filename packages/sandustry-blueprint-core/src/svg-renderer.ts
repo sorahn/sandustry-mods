@@ -238,7 +238,7 @@ export function renderBlueprintToSvg(
         }</defs><g opacity=".25"><rect width="${number(model.width)}" height="${number(model.height)}" fill="url(#blueprint-block-grid)"/><rect width="${number(model.width)}" height="${number(model.height)}" fill="url(#blueprint-cell-grid)"/></g>`
       : "";
   const outline = foundationPath
-    ? `<path d="${escapeXml(foundationPath)}" fill="none" stroke="#000000" stroke-width="${number(renderPixelScale(model.cell))}"/>`
+    ? `<path d="${escapeXml(foundationPath)}" fill="none" stroke="#000000" stroke-width="${number(renderPixelScale(model.cell))}" stroke-linecap="round" stroke-linejoin="round"/>`
     : "";
   const signals = showSignalLinks ? renderSignalLinks(model) : "";
   return {
