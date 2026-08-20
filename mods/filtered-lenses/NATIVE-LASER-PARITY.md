@@ -12,8 +12,11 @@ details should be cleaned up after the filtered excavation is working:
 - [x] Add the three delayed impact-light flashes emitted when charging
   completes.
 - [x] Match the native randomized playback rate for `laser_hit`.
-- [ ] Review whether the custom repeated charge-cycle handling can be aligned
-  more closely with the native action transitions.
-- [ ] Verify that per-cell `world.excavateAtCell` calls preserve native terrain
+- [x] Review whether the custom repeated charge-cycle handling can be aligned
+  more closely with the native action transitions. The laser charges once and
+  excavates continuously while held; the session bridge only handles the
+  runtime's intermediate inactive state.
+- [x] Verify that per-cell `world.excavateAtCell` calls preserve native terrain
   damage, terrain outputs, and redraw behavior. This differs intentionally from
-  the native 7x7 pattern call so the selected-terrain filter can be applied.
+  the native 7x7 pattern call so the selected-terrain filter can be applied;
+  each accepted cell still uses native damage/output/redraw handling.

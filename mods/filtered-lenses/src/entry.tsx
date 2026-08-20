@@ -60,7 +60,8 @@ const isEnabled = () => {
 };
 const terrainTypeFromId = (id: string): number | null => {
   try {
-    return api.terrains.getTypeFromId(id);
+    const runtimeId = id === "frostbed" ? "freezingIceSoil" : id;
+    return api.terrains.getTypeFromId(runtimeId);
   } catch {
     return null;
   }
@@ -101,14 +102,56 @@ const TERRAIN_IDS = [
   "vine",
   "voidFlowerSoil",
 ];
+// Add unfinished or unused terrain IDs here. The picker, persisted selection,
+// and runtime excavation check all use this same list.
+const BLACKLISTED_TERRAIN_IDS = new Set([
+  "caldera",
+  "dissolvingTerrain",
+  "gameOfLifeRandom",
+  "gameOfLifeStrict",
+  "glassTerrain",
+  "golGrow",
+  "limestone",
+  "puffMushroom",
+  "sand2",
+  "sandstone",
+  "solidite",
+  "spreadingTerrain",
+]);
+// Static swatches copied from the native terrain metadata. These are picker
+// colors only; the terrain renderer may use patterns, lighting, or shaders.
+const TERRAIN_COLORS: Record<string, string> = {
+  auraliteCrystal: "#4a40b0",
+  bedrock: "#222222",
+  blackrock: "#141414",
+  copper: "#ffa500",
+  crackstone: "#fffab3",
+  dirt: "#926426",
+  dune: "#eed975",
+  earth: "#59452e",
+  florinolSoil: "#339999",
+  fluxite: "#8a2be2",
+  frostbed: "#add8e6",
+  grass: "#228b22",
+  ice: "#afeeee",
+  moss: "#1dae1d",
+  redsoil: "#8b0000",
+  scoria: "#2b2b2b",
+  shatterstone: "#b6bcc1",
+  sporemound: "#556b2f",
+  stone: "#808080",
+  vine: "#1dae1d",
+  voidFlowerSoil: "#46304d",
+};
 const entries = (): Entry[] =>
   safe(
     () =>
       TERRAIN_IDS.map((id) => {
+        if (BLACKLISTED_TERRAIN_IDS.has(id)) return null;
         const type = terrainTypeFromId(id);
         if (type === null) return null;
         const name = safe(() => api.i18n.getName({ nameKey: `terrains|${id}|name` }), id);
-        return { id, type, name: name || id, color: "#8f9aa6" };
+        return { id, type, name: name || id, color: TERRAIN_COLORS[id] || "#8f9aa6" };
       })
         .filter((entry): entry is Entry => entry !== null)
         .sort((a, b) => a.name.localeCompare(b.name)),
@@ -119,7 +162,7 @@ const currentSelection = (): Selection => {
   if (typeof saved === "string" && saved.length > 0) {
     const id = saved.startsWith("terrain:") ? saved.slice(8) : saved;
     const type = terrainTypeFromId(id);
-    if (type !== null) return { id, type };
+    if (type !== null && !BLACKLISTED_TERRAIN_IDS.has(id)) return { id, type };
   }
   const type = terrainTypeFromId("stone");
   return { id: "stone", type: type ?? 0 };
@@ -128,6 +171,7 @@ const closePicker = (selection: Selection | null) => {
   if (!pickerState) return;
   const resolve = pickerState.resolve;
   const current = selection || pickerState.current;
+  if (selection) api.storage.local.set(FILTER_STORAGE_KEY, `terrain:${selection.id}`);
   pickerState = { current, minimized: true, resolve: null };
   pickerPromise = null;
   resolve?.(selection);
@@ -593,7 +637,7 @@ const runFilteredLaser = (state: any) => {
         if (pattern[row][column] === 0) continue;
         const cellX = target.x + column - radius;
         const cellY = target.y + row - radius;
-        if (!api.terrains.isTypeAtCell(cellX, cellY, selected.id)) continue;
+        if (api.terrains.getTypeAtCell(cellX, cellY) !== selected.type) continue;
         matchingCells.push({ x: cellX, y: cellY, type: api.terrains.getTypeAtCell(cellX, cellY) });
         api.world.excavateAtCell(cellX, cellY, outVelocity, 1, { fromDrill: true });
       }
