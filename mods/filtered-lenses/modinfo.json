@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "id": "sorahn.sandustry-filtered-lenses",
   "name": "Filtered Laser Lenses",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "apiVersion": 1,
   "author": "sorahn",
   "entry": "entry.js",
