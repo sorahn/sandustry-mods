@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   customShapeFromStructure,
   renderPixelScale,
@@ -26,6 +26,7 @@ import {
   DISPLAY_PIXELS_PER_BLOCK_AT_100,
   MAP_ZOOM_LEVELS,
   MAP_VIEWPORT_BORDER_SIZE,
+  viewportHeightForWidth,
   PAN_COMMIT_DEBOUNCE_MS,
   mapLayerStyle,
   readStoredMapView,
@@ -198,24 +199,41 @@ export function BlueprintMap({
   // make one cell, and four cells make one blueprint block. At 100% four
   // blueprint coordinates therefore render at 32 display pixels.
   const cell = DISPLAY_PIXELS_PER_BLOCK_AT_100 / NATIVE_PIXELS_PER_CELL;
-  const mapModel = createBlueprintMapModel(blueprint, padding, cell);
-  const { preparedBlueprint, minX, minY, width, height, blueprintWidth } = mapModel;
+  const mapModel = useMemo(
+    () => createBlueprintMapModel(blueprint, padding, cell),
+    [blueprint, cell, padding],
+  );
+  const { preparedBlueprint, minX, minY, width, height } = mapModel;
   const { viewportRef, viewportSize, hoverMarkerRef, updateHoverBlock, clearHoverBlock } =
     useBlueprintMapViewport({ cell, minX, minY, padding });
   const viewportWidth = viewportSize.width || width;
-  const fitWidth = blueprintWidth + MAP_FIT_MARGIN_CELLS_TOTAL * cell;
-  const fitZoomForViewport = (availableWidth: number) => {
-    const maxZoom = Math.min(MAP_FIT_ZOOM_MAX, availableWidth / fitWidth);
+  const defaultViewportHeight = viewportHeightForWidth(viewportWidth);
+  const fitWidth = width + MAP_FIT_MARGIN_CELLS_TOTAL * cell;
+  const fitHeight = height + MAP_FIT_MARGIN_CELLS_TOTAL * cell;
+  const blueprintFitsDefaultViewport =
+    fitWidth <= viewportWidth && fitHeight <= defaultViewportHeight;
+  const fitZoomForViewport = (
+    availableWidth: number,
+    availableHeight = Number.POSITIVE_INFINITY,
+    maxFitZoom = MAP_FIT_ZOOM_MAX,
+  ) => {
+    const maxZoom = Math.min(maxFitZoom, availableWidth / fitWidth, availableHeight / fitHeight);
     return (
       MAP_ZOOM_LEVELS.filter(
         (level) => level >= MAP_FIT_ZOOM_MIN && level <= maxZoom,
       ).reverse()[0] ?? MAP_FIT_ZOOM_MIN
     );
   };
-  const measuredFitZoom = fitZoomForViewport(viewportWidth);
+  const measuredFitZoom = blueprintFitsDefaultViewport
+    ? fitZoomForViewport(viewportWidth, defaultViewportHeight)
+    : fitZoomForViewport(viewportWidth, Number.POSITIVE_INFINITY, 1);
   const horizontalCanvasGap = Math.max(0, (viewportWidth - width * measuredFitZoom) / 2);
-  const aspectRatioViewportHeight =
-    height * measuredFitZoom + horizontalCanvasGap * 2 + MAP_VIEWPORT_BORDER_SIZE;
+  const aspectRatioViewportHeight = blueprintFitsDefaultViewport
+    ? defaultViewportHeight
+    : Math.max(
+        defaultViewportHeight,
+        height * measuredFitZoom + horizontalCanvasGap * 2 + MAP_VIEWPORT_BORDER_SIZE,
+      );
   const maxPanX = Math.max(0, (width * zoom - (viewportSize.width || width)) / (2 * zoom));
   const maxPanY = Math.max(0, (height * zoom - (viewportSize.height || height)) / (2 * zoom));
   const applyLivePan = (nextPan: { x: number; y: number }) => {
@@ -279,11 +297,18 @@ export function BlueprintMap({
     setMapSizeReady(
       captureOnly || (stored?.viewportWidth === viewportSize.width && viewportSize.width > 0),
     );
-  }, [blueprint, blueprintKey, captureOnly, remember]);
+  }, [blueprint, blueprintKey, captureOnly]);
   const fitToViewport = () => {
     fitModeRef.current = true;
     const availableWidth = viewportRef.current?.clientWidth || viewportSize.width;
-    setZoom(fitZoomForViewport(availableWidth || width));
+    setZoom(
+      blueprintFitsDefaultViewport
+        ? fitZoomForViewport(
+            availableWidth || width,
+            viewportRef.current?.clientHeight || defaultViewportHeight,
+          )
+        : fitZoomForViewport(availableWidth || width, Number.POSITIVE_INFINITY, 1),
+    );
     setPan({ x: 0, y: 0 });
   };
   useLayoutEffect(() => {
@@ -558,6 +583,7 @@ export function BlueprintMap({
             const renderStructure = ({ structure, index }: (typeof renderStructures)[number]) => {
               return (
                 <BlueprintMapStructure
+                  key={`structure-${index}`}
                   item={{ structure, index, z: preparedBlueprint.preparedStructures[index].z }}
                   preparedBlueprint={preparedBlueprint}
                   minX={minX}
