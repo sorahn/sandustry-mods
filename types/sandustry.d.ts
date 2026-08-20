@@ -220,6 +220,8 @@ interface SandustryApi {
   };
   world: {
     isCellEmptyAtCell(x: number, y: number): boolean;
+    revealFogAtCell(x: number, y: number): void;
+    redrawAroundCellWhenIdle(x: number, y: number, radius: number): void;
     excavateAtCell(
       x: number,
       y: number,

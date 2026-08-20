@@ -726,12 +726,14 @@ const runFilteredLaser = (state: any) => {
         if (pattern[row][column] === 0) continue;
         const cellX = target.x + column - radius;
         const cellY = target.y + row - radius;
+        api.world.revealFogAtCell(cellX, cellY);
         const terrainType = api.terrains.getTypeAtCell(cellX, cellY);
         if (!terrainMatchesSelection(selected, terrainType)) continue;
         matchingCells.push({ x: cellX, y: cellY, type: terrainType });
         api.world.excavateAtCell(cellX, cellY, outVelocity, 1, { fromDrill: true });
       }
     }
+    api.world.redrawAroundCellWhenIdle(target.x, target.y, pattern.length);
     if (firstChargedExcavation) {
       debugLaser(
         state,
