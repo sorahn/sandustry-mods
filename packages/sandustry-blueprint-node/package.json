@@ -11,7 +11,8 @@
   },
   "scripts": {
     "lint": "oxlint src",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "test": "bun test ../../scripts/test-blueprint-node.test.ts"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",

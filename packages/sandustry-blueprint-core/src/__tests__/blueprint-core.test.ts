@@ -1,22 +1,8 @@
 import assert from "node:assert/strict";
-import { build } from "esbuild";
+import { test } from "bun:test";
+import * as core from "..";
 
-const result = await build({
-  bundle: true,
-  entryPoints: ["packages/sandustry-blueprint-core/src/index.ts"],
-  format: "esm",
-  platform: "node",
-  write: false,
-});
-const source = result.outputFiles[0].text;
-const core = await import(`data:text/javascript,${encodeURIComponent(source)}`);
-
-function check(label) {
-  console.log(`  ✓ ${label}`);
-}
-
-console.log("blueprint core tests");
-try {
+test("blueprint core baseline", async () => {
   const fixture = {
     name: "Codec fixture",
     data: [
@@ -44,7 +30,6 @@ try {
     core.decodeBlueprint(core.encodeBlueprint({ name: "Empty", data: [], signalLinks: null })),
     { name: "Empty", data: [], signalLinks: [] },
   );
-  check("codec round trips");
 
   const preparedSvg = await core.prepareSvgForPng(
     `<svg class="map" style="color:red"><rect fill="#33a8ff"/><image href="catalog/machine.png"/></svg>`,
@@ -63,7 +48,6 @@ try {
   assert.match(preparedSvg, /<title>Test &amp; blueprint<\/title>/);
   assert.doesNotMatch(preparedSvg, /#33a8ff/);
   assert.match(preparedSvg, /href="data:image\/png;base64,19"/);
-  check("SVG preparation");
 
   const renderModel = core.createBlueprintRenderModel(
     {
@@ -95,20 +79,11 @@ try {
   assert.equal(renderModel.height, 128);
   assert.equal(core.tileColor("machine"), "#563d46");
   assert.deepEqual(core.wrapLabel("Signal Presence Sensor", 8), ["Signal", "Presence", "Sensor"]);
-  check("render model geometry");
 
   const diagonalOutline = core.foundationOutlinePath(
     [
-      {
-        structure: { type: 11, x: 0, y: 0 },
-        footprint: { width: 1, height: 1 },
-        topY: 0,
-      },
-      {
-        structure: { type: 11, x: 1, y: 1 },
-        footprint: { width: 1, height: 1 },
-        topY: 1,
-      },
+      { structure: { type: 11, x: 0, y: 0 }, footprint: { width: 1, height: 1 }, topY: 0 },
+      { structure: { type: 11, x: 1, y: 1 }, footprint: { width: 1, height: 1 }, topY: 1 },
     ],
     0,
     0,
@@ -116,7 +91,6 @@ try {
     1,
   );
   assert.equal((diagonalOutline.match(/M /g) ?? []).length, 1);
-  check("diagonal foundation contour");
 
   const ringOutline = core.foundationOutlinePath(
     [
@@ -139,14 +113,9 @@ try {
     1,
   );
   assert.equal((ringOutline.match(/M /g) ?? []).length, 2);
-  check("foundation inner contour");
 
   const renderedSvg = core.renderBlueprintToSvg(
-    {
-      name: "SVG fixture",
-      data: [{ type: "machine", x: 0, y: 0 }],
-      signalLinks: null,
-    },
+    { name: "SVG fixture", data: [{ type: "machine", x: 0, y: 0 }], signalLinks: null },
     {
       padding: 1,
       cell: 8,
@@ -170,14 +139,9 @@ try {
   assert.match(renderedSvg.svg, /href="\/assets\/machine\.png"/);
   assert.match(renderedSvg.svg, /<text[^>]*>Mill<\/text>/);
   assert.match(renderedSvg.svg, /viewBox="0 0 48 48"/);
-  check("SVG rendering");
 
   const pngResult = await core.renderBlueprintStringToPng(
-    core.encodeBlueprint({
-      name: "PNG string fixture",
-      data: [],
-      signalLinks: null,
-    }),
+    core.encodeBlueprint({ name: "PNG string fixture", data: [], signalLinks: null }),
     {
       scale: 1,
       platform: {
@@ -189,16 +153,14 @@ try {
     },
   );
   assert.deepEqual([...pngResult], [104, 104]);
-  check("PNG platform rendering");
 
-  const signalStructures = [
-    { type: "signalBuffer", x: 0, y: 8 },
-    { type: "signalToggle", x: 8, y: 8 },
-    { type: "signalLamp", x: 16, y: 8 },
-  ];
   const relativeSignals = {
     name: "Relative signals",
-    data: signalStructures,
+    data: [
+      { type: "signalBuffer", x: 0, y: 8 },
+      { type: "signalToggle", x: 8, y: 8 },
+      { type: "signalLamp", x: 16, y: 8 },
+    ],
     signalLinks: [
       { from: { x: 0, y: 8 }, to: { x: 8, y: 8 }, on: false },
       { from: { x: 8, y: 8 }, to: { x: 16, y: 8 }, on: true },
@@ -209,7 +171,6 @@ try {
   assert.deepEqual(preparedRelative.preparedSignalLinks[0].fromPoint, { x: 1.5, y: 9.5 });
   assert.equal(preparedRelative.preparedSignalLinks[0].path.kind, "line");
   assert.equal(preparedRelative.preparedSignalLinks[1].path.kind, "cubic");
-  check("signal path preparation");
 
   const statefulStructures = core.prepareBlueprint({
     name: "Stateful structures",
@@ -221,7 +182,6 @@ try {
   });
   assert.equal(statefulStructures.preparedStructures[0].spriteIndex, 1);
   assert.equal(statefulStructures.preparedStructures[1].spriteIndex, 1);
-  check("stateful sprite preparation");
 
   const preparedRecord = core.prepareBlueprint({
     name: "Prepared records",
@@ -250,7 +210,6 @@ try {
     [1, 0],
     [1, 1],
   ]);
-  check("prepared record data");
 
   const absoluteSignals = {
     ...relativeSignals,
@@ -266,7 +225,6 @@ try {
     preparedAbsolute.preparedSignalLinks.map(({ fromPoint, toPoint }) => ({ fromPoint, toPoint })),
     preparedRelative.preparedSignalLinks.map(({ fromPoint, toPoint }) => ({ fromPoint, toPoint })),
   );
-  check("absolute signal normalization");
 
   const catalogPrepared = core.prepareBlueprint(relativeSignals, {
     catalog: {
@@ -291,7 +249,6 @@ try {
   ]);
   assert.equal(catalogPrepared.preparedStructures[0].z, 0.5);
   assert.deepEqual(catalogPrepared.bounds, { minX: 0, minY: 8, maxX: 16, maxY: 9 });
-  check("catalog geometry overrides");
 
   const collectorPrepared = core.prepareBlueprint(
     {
@@ -323,7 +280,6 @@ try {
       [0, 0],
     ],
   );
-  check("collector sprite animation");
 
   const oversizedTypeTable = [4, 1, 120, 65];
   for (let index = 0; index < 65; index++) oversizedTypeTable.push(0, index);
@@ -333,7 +289,6 @@ try {
   );
   assert.equal(oversizedDecoded.data.length, 1);
   assert.equal(oversizedDecoded.data[0].type, 63);
-  check("oversized type table decoding");
 
   const errors = [
     ["SAND:BP:v1:ignored", "Legacy v1 blueprint strings are not supported"],
@@ -342,17 +297,10 @@ try {
     ["SAND:BP:v2t:4,1", "Invalid or truncated"],
     ["SAND:UNKNOWN:value", "Unsupported blueprint prefix"],
   ];
-  for (const [input, message] of errors) {
+  for (const [input, message] of errors)
     assert.throws(() => core.decodeBlueprint(input), new RegExp(message));
-  }
-
   assert.throws(
     () => core.decodeBlueprint("SAND:BP:v2t:4,1,0,999"),
     /Invalid v2 text blueprint data/,
   );
-  check("validation errors");
-  console.log("blueprint core tests passed");
-} catch (error) {
-  console.error(`  ✕ ${error instanceof Error ? error.message : error}`);
-  throw error;
-}
+});

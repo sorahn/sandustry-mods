@@ -1,20 +1,21 @@
-#!/usr/bin/env node
-
+import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { test } from "bun:test";
 import { assertCatalogInvariants } from "./catalog-invariants.mjs";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const catalogPath = path.join(root, "apps/blueprint-site/src/structure-catalog.json");
-const assetRoot = path.join(root, "apps/blueprint-site/public/catalog");
-const catalog = JSON.parse(fs.readFileSync(catalogPath, "utf8"));
+const root = process.cwd();
 
-console.log("catalog invariant tests");
-try {
+test("catalog invariants", () => {
+  const catalogPath = path.join(root, "apps/blueprint-site/src/structure-catalog.json");
+  const assetRoot = path.join(root, "apps/blueprint-site/public/catalog");
+  const catalog = JSON.parse(fs.readFileSync(catalogPath, "utf8"));
+
   assertCatalogInvariants(catalog, { assetRoot });
 
-  const entries = new Map(catalog.entries.map((entry) => [entry.type, entry]));
+  const entries = new Map(
+    catalog.entries.map((entry: { type: string | number }) => [entry.type, entry]),
+  );
   const expected = [
     [13, { rotation: 180 }],
     [14, { rotation: 0 }],
@@ -41,20 +42,16 @@ try {
         debug: { height: 468 },
       },
     ],
-  ];
+  ] as const;
+
   for (const [type, assertions] of expected) {
     const entry = entries.get(type);
-    if (!entry) throw new Error(`catalog invariant regression entry is missing: ${String(type)}`);
-    for (const [key, value] of Object.entries(assertions)) {
-      if (JSON.stringify(entry.renderAsset?.[key]) !== JSON.stringify(value)) {
-        throw new Error(`catalog invariant regression for ${String(type)}.renderAsset.${key}`);
-      }
-    }
+    assert.ok(entry, `catalog invariant regression entry is missing: ${String(type)}`);
+    for (const [key, value] of Object.entries(assertions))
+      assert.deepEqual(
+        entry.renderAsset?.[key],
+        value,
+        `catalog invariant regression for ${String(type)}.renderAsset.${key}`,
+      );
   }
-
-  console.log(`  ✓ catalog entries and render metadata (${catalog.entries.length} entries)`);
-  console.log(`catalog invariants passed for ${catalog.entries.length} entries`);
-} catch (error) {
-  console.error(`  ✕ ${error instanceof Error ? error.message : error}`);
-  throw error;
-}
+});
