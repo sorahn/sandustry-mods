@@ -1,19 +1,19 @@
 {
   "manifestVersion": 1,
   "id": "sorahn.sandustry-filtered-lenses",
-  "name": "Filtered Lenses",
+  "name": "Filtered Laser Lenses",
   "version": "0.1.1",
   "apiVersion": 1,
   "author": "sorahn",
   "entry": "entry.js",
-  "description": "Adds a purchasable laser upgrade that mines only a selected element.",
+  "description": "Adds a purchasable filter for your laser that mines only a selected element.",
   "dependencies": [],
   "loadOrder": 1000,
   "configSchema": {
     "enabled": {
       "type": "boolean",
       "default": true,
-      "labelKey": "Filtered Lenses enabled",
+      "labelKey": "Filtered Laser Lenses enabled",
       "descriptionKey": "Allow the Filtered Lenses upgrade to affect the laser."
     }
   }
