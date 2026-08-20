@@ -108,8 +108,11 @@ const TERRAIN_IDS = [
 // Add unfinished or unused terrain IDs here. The picker, persisted selection,
 // and runtime excavation check all use this same list.
 const BLACKLISTED_TERRAIN_IDS = new Set([
+  "bedrock",
+  "blackrock",
   "caldera",
   "dissolvingTerrain",
+  "dune",
   "gameOfLifeRandom",
   "gameOfLifeStrict",
   "glassTerrain",
