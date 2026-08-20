@@ -37,7 +37,7 @@ describe("blueprint SVG snapshots", () => {
       assert.equal(
         actual,
         expected,
-        `SVG snapshot mismatch: ${fixture.name}.svg (run npm run test:blueprint-svg -- --update)`,
+        `SVG snapshot mismatch: ${fixture.name}.svg (run bun test packages/sandustry-blueprint-core/tests/visual/svg-snapshots.test.ts --update)`,
       );
     });
   }

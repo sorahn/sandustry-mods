@@ -39,25 +39,25 @@ SVG output snapshots for the catalog and every blueprint fixture are checked
 with:
 
 ```sh
-npm run test:blueprint-svg
+bun test packages/sandustry-blueprint-core/tests/visual/svg-snapshots.test.ts
 ```
 
 Refresh them after an intentional SVG renderer change with:
 
 ```sh
-npm run test:blueprint-svg -- --update
+bun test packages/sandustry-blueprint-core/tests/visual/svg-snapshots.test.ts --update
 ```
 
 PNG output snapshots are checked as individual Bun tests with:
 
 ```sh
-npm run test:blueprint-png
+bun test packages/sandustry-blueprint-core/tests/visual/png-snapshots.test.ts
 ```
 
 Refresh the PNG baselines after an intentional renderer change with:
 
 ```sh
-npm run test:blueprint-png -- --update
+bun test packages/sandustry-blueprint-core/tests/visual/png-snapshots.test.ts --update
 ```
 
 The same selector can limit comparisons:
