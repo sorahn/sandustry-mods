@@ -7,6 +7,9 @@ const MOD_ID = "sorahn.sandustry-filtered-lenses";
 const LASER_ID = "laser";
 const UPGRADE_ID = "filteredLenses";
 const FILTER_STORAGE_KEY = `${MOD_ID}.element`;
+const NO_FILTER_ID = "no-filter";
+const EARTH_FILTER_ID = "filter:earth";
+const EARTH_FILTER_TERRAIN_IDS = ["dirt", "grass", "moss", "vine", "earth"];
 const CONFIGURE_BINDING_ID = `${MOD_ID}:configure`;
 const PICKER_ID = `${MOD_ID}-terrain-picker`;
 const NAV_SCOPE = `${PICKER_ID}-scope`;
@@ -143,6 +146,18 @@ const TERRAIN_COLORS: Record<string, string> = {
   vine: "#1dae1d",
   voidFlowerSoil: "#46304d",
 };
+const NO_FILTER_ENTRY: Entry = {
+  id: NO_FILTER_ID,
+  type: -1,
+  name: "[No filter]",
+  color: "#9aa7b5",
+};
+const EARTH_FILTER_ENTRY: Entry = {
+  id: EARTH_FILTER_ID,
+  type: -2,
+  name: "Earth",
+  color: "#6b8e23",
+};
 const entries = (): Entry[] =>
   safe(
     () =>
@@ -161,11 +176,12 @@ const currentSelection = (): Selection => {
   const saved = api.storage.local.get(FILTER_STORAGE_KEY);
   if (typeof saved === "string" && saved.length > 0) {
     const id = saved.startsWith("terrain:") ? saved.slice(8) : saved;
+    if (id === NO_FILTER_ID) return NO_FILTER_ENTRY;
+    if (id === EARTH_FILTER_ID) return EARTH_FILTER_ENTRY;
     const type = terrainTypeFromId(id);
     if (type !== null && !BLACKLISTED_TERRAIN_IDS.has(id)) return { id, type };
   }
-  const type = terrainTypeFromId("stone");
-  return { id: "stone", type: type ?? 0 };
+  return NO_FILTER_ENTRY;
 };
 const closePicker = (selection: Selection | null) => {
   if (!pickerState) return;
@@ -240,7 +256,7 @@ const ElementGridButton = ({
     neighbors: {
       left: column > 0 ? key(filtered[index - 1]) : undefined,
       right: column < 3 && filtered[index + 1] ? key(filtered[index + 1]) : undefined,
-      up: index >= 4 ? key(filtered[index - 4]) : `${PICKER_ID}-search`,
+      up: index >= 4 ? key(filtered[index - 4]) : `${PICKER_ID}-custom-earth`,
       down: filtered[index + 4] ? key(filtered[index + 4]) : undefined,
     },
   });
@@ -261,6 +277,54 @@ const ElementGridButton = ({
         {entry.name}
       </span>
     </button>
+  );
+};
+
+const NoFilterButton = ({ selected, onSelect }: { selected: boolean; onSelect: () => void }) => {
+  if (!UIReact) return null;
+  return (
+    <FocusableButton
+      id={`${PICKER_ID}-${NO_FILTER_ID}`}
+      onActivate={onSelect}
+      neighbors={{ up: `${PICKER_ID}-search`, down: `${PICKER_ID}-custom-earth` }}
+      className={`flex-1 flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border ${
+        selected ? "border-[#ffe700] bg-[#ffe700]/10" : "border-slate-700 bg-black/40"
+      }`}
+    >
+      <span className="w-3 h-3 flex-shrink-0" style={{ backgroundColor: NO_FILTER_ENTRY.color }} />
+      <span className={selected ? "text-xs text-[#ffe700]" : "text-xs text-slate-300"}>
+        {NO_FILTER_ENTRY.name}
+      </span>
+    </FocusableButton>
+  );
+};
+
+const CustomFilterButton = ({
+  selected,
+  onSelect,
+}: {
+  selected: boolean;
+  onSelect: () => void;
+}) => {
+  if (!UIReact) return null;
+  return (
+    <FocusableButton
+      id={`${PICKER_ID}-custom-earth`}
+      onActivate={onSelect}
+      neighbors={{ up: `${PICKER_ID}-${NO_FILTER_ID}`, down: `${PICKER_ID}-terrain-0` }}
+      className={`flex-1 flex items-center gap-2 px-2 py-1.5 text-left w-full rounded border ${
+        selected ? "border-[#ffe700] bg-[#ffe700]/10" : "border-slate-700 bg-black/40"
+      }`}
+    >
+      <span
+        className="w-3 h-3 flex-shrink-0"
+        style={{ backgroundColor: EARTH_FILTER_ENTRY.color }}
+      />
+      <span className={selected ? "text-xs text-[#ffe700]" : "text-xs text-slate-300"}>
+        {EARTH_FILTER_ENTRY.name}
+      </span>
+      <span className="text-[10px] text-slate-500">Dirt, Grass, Moss, Vine, Earth Strataform</span>
+    </FocusableButton>
   );
 };
 
@@ -293,12 +357,17 @@ const TerrainPicker = () => {
     id: `${PICKER_ID}-search`,
     scope: NAV_SCOPE,
     onActivate: (element: HTMLElement | null) => element?.focus(),
-    neighbors: { up: `${PICKER_ID}-minimize`, down: `${PICKER_ID}-terrain-0` },
+    neighbors: { up: `${PICKER_ID}-minimize`, down: `${PICKER_ID}-${NO_FILTER_ID}` },
     scrollIntoView: true,
   });
   if (!picker) return null;
   if (picker.minimized) {
-    const selected = entries().find((entry) => entry.type === picker.current.type);
+    const selected =
+      picker.current.id === NO_FILTER_ID
+        ? NO_FILTER_ENTRY
+        : picker.current.id === EARTH_FILTER_ID
+          ? EARTH_FILTER_ENTRY
+          : entries().find((entry) => entry.type === picker.current.type);
     return (
       <div
         className="pointer-events-auto flex items-center gap-2 bg-black bg-opacity-75 border border-slate-700 rounded px-3 py-2 ui-box text-slate-300"
@@ -372,6 +441,16 @@ const TerrainPicker = () => {
         />
       </div>
       <div className="flex-1 overflow-y-auto px-4 py-2" style={{ maxHeight: 480 }}>
+        <div className="flex gap-1.5 border-b border-slate-800 pb-2 mb-1">
+          <NoFilterButton
+            selected={picker.current.id === NO_FILTER_ID}
+            onSelect={() => closePicker(NO_FILTER_ENTRY)}
+          />
+          <CustomFilterButton
+            selected={picker.current.id === EARTH_FILTER_ID}
+            onSelect={() => closePicker(EARTH_FILTER_ENTRY)}
+          />
+        </div>
         <div className="grid grid-cols-4 gap-1.5 py-1.5">
           {filtered.map((entry, index) => (
             <ElementGridButton
@@ -379,7 +458,7 @@ const TerrainPicker = () => {
               entry={entry}
               index={index}
               filtered={filtered}
-              selected={entry.type === picker.current.type}
+              selected={entry.id === picker.current.id}
               onSelect={() => closePicker(entry)}
             />
           ))}
@@ -413,6 +492,8 @@ const openTerrainPicker = async (current: Selection) => {
   const entered = await api.ui.prompt(TEXT["mods|filteredLenses|configurePrompt"]);
   if (!entered?.trim()) return null;
   const id = entered.trim();
+  if (id === NO_FILTER_ID) return NO_FILTER_ENTRY;
+  if (id === EARTH_FILTER_ID) return EARTH_FILTER_ENTRY;
   const type = terrainTypeFromId(id);
   return type === null ? null : { id, type };
 };
@@ -512,6 +593,14 @@ const clearLaser = () => {
   laserChargeStart = 0;
   laserCharged = false;
   laserSessionActive = false;
+};
+
+const terrainMatchesSelection = (selected: Selection, terrainType: number | null) => {
+  if (terrainType === null) return false;
+  if (selected.id === EARTH_FILTER_ID) {
+    return EARTH_FILTER_TERRAIN_IDS.some((id) => terrainTypeFromId(id) === terrainType);
+  }
+  return terrainType === selected.type;
 };
 
 const runFilteredLaser = (state: any) => {
@@ -637,8 +726,9 @@ const runFilteredLaser = (state: any) => {
         if (pattern[row][column] === 0) continue;
         const cellX = target.x + column - radius;
         const cellY = target.y + row - radius;
-        if (api.terrains.getTypeAtCell(cellX, cellY) !== selected.type) continue;
-        matchingCells.push({ x: cellX, y: cellY, type: api.terrains.getTypeAtCell(cellX, cellY) });
+        const terrainType = api.terrains.getTypeAtCell(cellX, cellY);
+        if (!terrainMatchesSelection(selected, terrainType)) continue;
+        matchingCells.push({ x: cellX, y: cellY, type: terrainType });
         api.world.excavateAtCell(cellX, cellY, outVelocity, 1, { fromDrill: true });
       }
     }
@@ -692,6 +782,10 @@ const installLaserFilter = () => {
       if (!isEnabled() || api.upgrades.getLevelById(LASER_ID, UPGRADE_ID) < 1) {
         return originalHandleAction(state, action);
       }
+      if (currentSelection().id === NO_FILTER_ID) {
+        clearLaser();
+        return originalHandleAction(state, action);
+      }
       try {
         runFilteredLaser(state);
         return;
@@ -702,7 +796,11 @@ const installLaserFilter = () => {
       }
     },
     afterRender: (state: any) => {
-      if (isEnabled() && api.upgrades.getLevelById(LASER_ID, UPGRADE_ID) >= 1) {
+      if (
+        isEnabled() &&
+        api.upgrades.getLevelById(LASER_ID, UPGRADE_ID) >= 1 &&
+        currentSelection().id !== NO_FILTER_ID
+      ) {
         const actionState = state?.session?.action?.state;
         if (
           actionState?.[2] ||
