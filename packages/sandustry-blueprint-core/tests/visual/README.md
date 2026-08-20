@@ -48,6 +48,18 @@ Refresh them after an intentional SVG renderer change with:
 npm run test:blueprint-svg -- --update
 ```
 
+PNG output snapshots are checked as individual Bun tests with:
+
+```sh
+npm run test:blueprint-png
+```
+
+Refresh the PNG baselines after an intentional renderer change with:
+
+```sh
+npm run test:blueprint-png -- --update
+```
+
 The same selector can limit comparisons:
 
 ```sh
