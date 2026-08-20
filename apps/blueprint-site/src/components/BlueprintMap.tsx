@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   customShapeFromStructure,
   renderPixelScale,
@@ -252,10 +252,13 @@ export function BlueprintMap({
   };
   const gridOriginX = (padding - minX) * cell;
   const gridOriginY = (padding - minY) * cell;
-  const point = (x: number, y: number) => ({
-    x: (x - minX + padding + 0.5) * cell,
-    y: (y - minY + padding + 0.5) * cell,
-  });
+  const point = useCallback(
+    (x: number, y: number) => ({
+      x: (x - minX + padding + 0.5) * cell,
+      y: (y - minY + padding + 0.5) * cell,
+    }),
+    [cell, minX, minY, padding],
+  );
   const selected = selectedIndex === null ? null : blueprint.data[selectedIndex];
   const { renderStructures } = mapModel;
   const debugOptions = debugComponent(MapDebugOptions, {

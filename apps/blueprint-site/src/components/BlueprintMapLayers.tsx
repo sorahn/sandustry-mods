@@ -3,11 +3,12 @@ import {
   NATIVE_PIXELS_PER_CELL,
   renderPixelScale,
 } from "@sandustry/blueprint-core";
+import { memo } from "react";
 import { type BlueprintMapModel, mapLayerStyle } from "../utils/blueprint-map";
 
 type PreparedBlueprint = BlueprintMapModel["preparedBlueprint"];
 
-export function BlueprintMapGridLayer({
+export const BlueprintMapGridLayer = memo(function BlueprintMapGridLayer({
   width,
   height,
   gridOriginX,
@@ -65,9 +66,9 @@ export function BlueprintMapGridLayer({
       ) : null}
     </>
   );
-}
+});
 
-export function BlueprintMapSignalLinksLayer({
+export const BlueprintMapSignalLinksLayer = memo(function BlueprintMapSignalLinksLayer({
   preparedBlueprint,
   visible,
   point,
@@ -102,9 +103,9 @@ export function BlueprintMapSignalLinksLayer({
       />
     );
   });
-}
+});
 
-export function BlueprintMapFoundationOutlineLayer({
+export const BlueprintMapFoundationOutlineLayer = memo(function BlueprintMapFoundationOutlineLayer({
   preparedBlueprint,
   visible,
   minX,
@@ -139,4 +140,4 @@ export function BlueprintMapFoundationOutlineLayer({
       style={mapLayerStyle("foundationShapes")}
     />
   ) : null;
-}
+});

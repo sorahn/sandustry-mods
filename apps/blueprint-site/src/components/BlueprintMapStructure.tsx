@@ -1,4 +1,5 @@
 import { catalogEntry, catalogRender, catalogRenderSize } from "../utils/catalog";
+import { memo } from "react";
 import {
   renderAnchorEdge,
   renderAnchorOffsetCells,
@@ -13,21 +14,7 @@ import { type BlueprintMapModel } from "../utils/blueprint-map";
 
 type PreparedBlueprint = BlueprintMapModel["preparedBlueprint"];
 type RenderStructure = BlueprintMapModel["renderStructures"][number];
-
-export function BlueprintMapStructure({
-  item,
-  preparedBlueprint,
-  minX,
-  minY,
-  padding,
-  cell,
-  height,
-  spritesVisible,
-  showCustomShapes,
-  showNames,
-  suppressClickRef,
-  onSelect,
-}: {
+type BlueprintMapStructureProps = {
   item: RenderStructure;
   preparedBlueprint: PreparedBlueprint;
   minX: number;
@@ -40,7 +27,22 @@ export function BlueprintMapStructure({
   showNames: boolean;
   suppressClickRef: { current: boolean };
   onSelect: (index: number) => void;
-}) {
+};
+
+export const BlueprintMapStructure = memo(function BlueprintMapStructure({
+  item,
+  preparedBlueprint,
+  minX,
+  minY,
+  padding,
+  cell,
+  height,
+  spritesVisible,
+  showCustomShapes,
+  showNames,
+  suppressClickRef,
+  onSelect,
+}: BlueprintMapStructureProps) {
   const { structure, index } = item;
   const entry = catalogEntry(structure.type);
   const prepared = preparedBlueprint.preparedStructures[index];
@@ -156,6 +158,26 @@ export function BlueprintMapStructure({
         </text>
       ) : null}
     </g>
+  );
+}, areBlueprintMapStructurePropsEqual);
+
+function areBlueprintMapStructurePropsEqual(
+  previous: BlueprintMapStructureProps,
+  next: BlueprintMapStructureProps,
+) {
+  return (
+    previous.item.index === next.item.index &&
+    previous.preparedBlueprint === next.preparedBlueprint &&
+    previous.minX === next.minX &&
+    previous.minY === next.minY &&
+    previous.padding === next.padding &&
+    previous.cell === next.cell &&
+    previous.height === next.height &&
+    previous.spritesVisible === next.spritesVisible &&
+    previous.showCustomShapes === next.showCustomShapes &&
+    previous.showNames === next.showNames &&
+    previous.suppressClickRef === next.suppressClickRef &&
+    previous.onSelect === next.onSelect
   );
 }
 
