@@ -1,3 +1,6 @@
 [submodule "resources/sandkit-surface-map"]
 	path = resources/sandkit-surface-map
 	url = https://github.com/udkx/sandkit-surface-map.git
+[submodule "resources/sandustry-modding-types"]
+	path = resources/sandustry-modding-types
+	url = https://github.com/flamableassassin/sandustry-modding-types.git
