@@ -85,7 +85,7 @@ merging, rebasing, and other repository metadata updates.
 
 ## Planning workflow
 
-Repository-level implementation plans live locally in the top-level directory
+Repository-level implementation plans live locally in the `planning/` directory
 as descriptive Markdown files. Every plan filename must end with `-PLAN.md`,
 such as `PICKER-CLEANUP-PLAN.md`, `BLUEPRINT-RENDERER-PLAN.md`, and
 `HOTBAR-PRESETS-PLAN.md`. Plans and reverse-engineering resources are local
