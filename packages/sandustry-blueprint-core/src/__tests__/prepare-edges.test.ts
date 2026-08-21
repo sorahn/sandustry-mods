@@ -202,4 +202,47 @@ describe("blueprint preparation edges", () => {
     );
     expect(foundationOutlinePath(raw.preparedStructures, 0, 0, 1, 8)).not.toBe("");
   });
+
+  test("treats glass foundation and prefab terrain as solid boundary masks", () => {
+    const glass = prepareBlueprint(
+      {
+        name: "Glass",
+        data: [{ type: "glassFoundation", x: 0, y: 0 }],
+        signalLinks: null,
+      },
+      {
+        catalog: {
+          get: () => ({
+            footprint: { width: 4, height: 4 },
+            shape: Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 1)),
+            rawShape: true,
+          }),
+        },
+      },
+    );
+    expect(foundationOutlinePath(glass.preparedStructures, 0, 0, 1, 8)).not.toBe("");
+
+    const prefab = prepareBlueprint({
+      name: "Prefab terrain",
+      data: [
+        {
+          type: "prefabTerrain",
+          x: 0,
+          y: 0,
+          data: {
+            __prefabulatorBlueprint: {
+              definition: {
+                shape: [
+                  [1, 1, 0],
+                  [1, 0, 0],
+                ],
+              },
+            },
+          },
+        },
+      ],
+      signalLinks: null,
+    });
+    expect(foundationOutlinePath(prefab.preparedStructures, 0, 0, 1, 8)).not.toBe("");
+  });
 });

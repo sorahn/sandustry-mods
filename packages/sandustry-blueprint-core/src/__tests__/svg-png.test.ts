@@ -137,6 +137,47 @@ describe("SVG and PNG adapters", () => {
     expect(signal).toBeGreaterThan(machine);
   });
 
+  test("renders glass foundation and prefab terrain with the shared black boundary", () => {
+    const result = renderBlueprintToSvg(
+      {
+        name: "Solid boundary fixtures",
+        data: [
+          { type: "glassFoundation", x: 0, y: 0 },
+          {
+            type: "prefabTerrain",
+            x: 8,
+            y: 0,
+            data: {
+              __prefabulatorBlueprint: {
+                definition: {
+                  shape: [
+                    [1, 1, 0],
+                    [1, 0, 0],
+                  ],
+                },
+              },
+            },
+          },
+        ],
+        signalLinks: null,
+      },
+      {
+        showGrid: false,
+        catalog: {
+          get: (type) =>
+            type === "glassFoundation"
+              ? {
+                  footprint: { width: 4, height: 4 },
+                  shape: Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 1)),
+                  rawShape: true,
+                }
+              : undefined,
+        },
+      },
+    ).svg;
+    expect(result.match(/stroke="#000000"/g)).toHaveLength(1);
+  });
+
   test("runs the SVG-to-PNG platform pipeline with rounded dimensions", async () => {
     const calls: string[] = [];
     const result = await renderSvgToPng("<svg />", {
