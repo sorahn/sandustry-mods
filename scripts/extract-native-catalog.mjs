@@ -15,6 +15,23 @@ const menuPath = path.join(root, "resources/building-menu.html");
 const catalogPath = path.join(root, "apps/blueprint-site/src/structure-catalog.json");
 const assetRoot = path.join(root, "apps/blueprint-site/public/catalog");
 
+// `shape` in a runtime definition is not enough to identify the red cells
+// shown when structure sprites are disabled. Native structures use the
+// underlying-cell shape path directly; shipped first-party mod structures
+// opt into the same path with `{ useRawShape: true }`.
+const nativeRawShapeTypes = new Set([1, 2, 8, 9, 10, 11, 12, 13, 14, 15, 19, 20]);
+const shippedRawShapeTypes = new Set([
+  "glassFoundation",
+  "conveyorLeftMk2",
+  "conveyorRightMk2",
+  "burnerBeltLeft",
+  "burnerBeltRight",
+]);
+
+function hasRawShape(entry) {
+  return nativeRawShapeTypes.has(entry.type) || shippedRawShapeTypes.has(entry.type);
+}
+
 // These are native variant IDs from the F8 runtime definitions. They are not
 // separate menu entries, so the building-menu capture cannot map them by name.
 const variantAssetSources = new Map([
@@ -375,6 +392,7 @@ const assetBySource = new Map(assets.map((asset) => [asset.source, asset.file]))
 const catalogWithAssets = {
   ...blueprintCatalog,
   entries: blueprintCatalog.entries.map((entry) => {
+    const metadata = hasRawShape(entry) ? { rawShape: true } : {};
     const imageName = findImageName(entry, blueprintCatalog.entries);
     const renderImageAsset =
       typeof imageName === "string" ? assetByStem.get(assetStem(imageName)) : undefined;
@@ -395,7 +413,7 @@ const catalogWithAssets = {
       (asset.size.width > assetFrame.width || asset.size.height > assetFrame.height)
         ? true
         : undefined;
-    if (!assetPath) return entry;
+    if (!assetPath) return { ...entry, ...metadata };
     const presentationOverride = assetPresentationOverrides.get(entry.type) ?? {};
     const renderAsset = {
       path: assetPath,
@@ -411,7 +429,7 @@ const catalogWithAssets = {
       ...(cellScaledTypes.has(entry.type) ? { scale: { mode: "cell" } } : {}),
       ...presentationOverride,
     };
-    return { ...entry, renderAsset };
+    return { ...entry, ...metadata, renderAsset };
   }),
 };
 

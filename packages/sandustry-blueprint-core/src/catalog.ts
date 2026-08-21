@@ -30,6 +30,8 @@ export type CatalogEntry = {
   category?: string;
   footprint: { width: number; height: number };
   shape?: number[][] | string;
+  /** Whether the game registration writes this shape into underlying cells. */
+  rawShape?: boolean;
   rotations?: number[];
   buildModes?: unknown;
   variants?: unknown;
