@@ -3,6 +3,7 @@ import {
   decodeBrowserSave,
   normalizeSaveDocument,
   createSaveExplorerTileIndex,
+  renderMinimapRgba,
 } from "../src/index";
 
 const fixture = (name: string) => Bun.file(new URL(`../../../resources/${name}`, import.meta.url));
@@ -59,4 +60,17 @@ test("indexes large worlds without allocating one object per tile", () => {
     height: 4,
   });
   expect(index.tileForCell(3840, 0)).toBeUndefined();
+});
+
+test("does not mutate uploaded bytes or decoded source data", async () => {
+  const bytes = await fixture("new-world.save").bytes();
+  const originalBytes = bytes.slice();
+  const save = await decodeBrowserSave(bytes);
+  const originalPayload = JSON.stringify(save.payload);
+
+  normalizeSaveDocument(save);
+  renderMinimapRgba(save);
+
+  expect(bytes).toEqual(originalBytes);
+  expect(JSON.stringify(save.payload)).toBe(originalPayload);
 });
