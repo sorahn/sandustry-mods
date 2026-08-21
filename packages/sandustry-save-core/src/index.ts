@@ -66,6 +66,22 @@ export {
   type SaveExplorerWorld,
 } from "./model";
 
+export {
+  createSaveExplorerViewport,
+  fitSaveExplorerViewport,
+  panSaveExplorerViewport,
+  resetSaveExplorerViewport,
+  resizeSaveExplorerViewport,
+  SAVE_EXPLORER_ZOOM_LEVELS,
+  screenToWorld,
+  visibleMapRect,
+  worldToScreen,
+  zoomSaveExplorerViewport,
+  type SaveExplorerMapPoint,
+  type SaveExplorerViewport,
+  type SaveExplorerVisibleRect,
+} from "./viewport";
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
