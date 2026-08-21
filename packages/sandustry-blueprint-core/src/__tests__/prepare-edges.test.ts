@@ -8,6 +8,7 @@ import {
   shapeForStructure,
   structureTopY,
   structureVisualTopY,
+  underlyingCellCoordinates,
 } from "../prepare";
 
 describe("blueprint preparation edges", () => {
@@ -309,6 +310,14 @@ describe("blueprint preparation edges", () => {
     );
     expect(prepared.preparedStructures.every(contributesUnderlyingCells)).toBe(true);
     expect(foundationOutlinePath(prepared.preparedStructures, 0, 0, 1, 8)).not.toBe("");
+    const kineticPress = prepared.preparedStructures.find(({ structure }) => structure.type === 20);
+    expect(kineticPress).toBeDefined();
+    expect(underlyingCellCoordinates([kineticPress!])).toEqual([
+      { x: 16, y: 3 },
+      { x: 17, y: 3 },
+      { x: 18, y: 3 },
+      { x: 19, y: 3 },
+    ]);
     expect(foundationOutlinePath([prepared.preparedStructures[0]], 0, 0, 1, 8)).not.toBe(
       foundationOutlinePath([prepared.preparedStructures[1]], 0, 0, 1, 8),
     );

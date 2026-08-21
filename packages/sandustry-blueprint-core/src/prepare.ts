@@ -320,6 +320,11 @@ export function isBeltType(type: BlueprintType) {
 export function underlyingCellCoordinates(structures: PreparedStructure[]): UnderlyingCell[] {
   return structures.flatMap((prepared) => {
     if (!contributesUnderlyingCells(prepared)) return [];
+    // Kinetic Press uses a bottom-origin placement anchor, but its raw shape
+    // is authored at the top of the 4-cell footprint. The game writes the
+    // solid row at the structure's anchored position, three cells lower than
+    // `topY`.
+    const rawShapeOffsetY = prepared.structure.type === 20 ? 3 : 0;
     const shape =
       prepared.shape ??
       Array.from({ length: prepared.footprint.height }, () =>
@@ -327,7 +332,14 @@ export function underlyingCellCoordinates(structures: PreparedStructure[]): Unde
       );
     return shape.flatMap((row, rowIndex) =>
       row.flatMap((value, columnIndex) =>
-        value === 0 ? [] : [{ x: prepared.structure.x + columnIndex, y: prepared.topY + rowIndex }],
+        value === 0
+          ? []
+          : [
+              {
+                x: prepared.structure.x + columnIndex,
+                y: prepared.topY + rawShapeOffsetY + rowIndex,
+              },
+            ],
       ),
     );
   });
