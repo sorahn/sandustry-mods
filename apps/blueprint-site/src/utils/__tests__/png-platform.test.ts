@@ -6,7 +6,7 @@ import {
   createWorkerPngPlatform,
 } from "../png-platform";
 
-const globals = globalThis as typeof globalThis & Record<string, unknown>;
+const globals = globalThis as Record<string, unknown>;
 const originalFetch = globals.fetch;
 const originalDocument = globals.document;
 const originalImage = globals.Image;
@@ -48,7 +48,7 @@ describe("PNG platform utilities", () => {
   });
 
   test("returns undefined for failed or invalid asset requests", async () => {
-    globals.fetch = async (input) => {
+    globals.fetch = async (input: unknown) => {
       if (String(input).endsWith("missing.png")) return new Response(null, { status: 404 });
       throw new Error("network unavailable");
     };
@@ -127,7 +127,7 @@ describe("PNG platform utilities", () => {
     platform.drawImage(canvas, image, 4, 6);
     const png = await platform.encodePng(canvas);
 
-    expect(image).toEqual({ width: 1, height: 1 });
+    expect(image as unknown).toEqual({ width: 1, height: 1 });
     expect(canvas).toMatchObject({ width: 4, height: 6 });
     expect(new TextDecoder().decode(png)).toBe("worker-png");
     expect(calls).toEqual(["bitmap:image/svg+xml;charset=utf-8", "clear:0,0,4,6", "draw:5"]);

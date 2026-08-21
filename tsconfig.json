@@ -14,7 +14,7 @@
     "noEmit": true,
     "removeComments": true,
     "skipLibCheck": true,
-    "types": ["react", "react-dom"]
+    "types": ["react", "react-dom", "bun"]
   },
   "include": [
     "types/**/*.d.ts",

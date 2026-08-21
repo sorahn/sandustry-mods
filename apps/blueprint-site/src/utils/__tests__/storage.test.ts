@@ -30,8 +30,7 @@ function installStorage(values: Record<string, string> = {}) {
 }
 
 afterEach(() => {
-  if (originalWindow === undefined)
-    delete (globalThis as typeof globalThis & { window?: unknown }).window;
+  if (originalWindow === undefined) delete (globalThis as { window?: unknown }).window;
   else Object.defineProperty(globalThis, "window", { configurable: true, value: originalWindow });
 });
 
@@ -65,7 +64,7 @@ describe("site storage utilities", () => {
   });
 
   test("returns safe defaults when storage is unavailable", () => {
-    delete (globalThis as typeof globalThis & { window?: unknown }).window;
+    delete (globalThis as { window?: unknown }).window;
     expect(readStorageValue("mode")).toBeNull();
     expect(readStoredBoolean("grid", true)).toBe(true);
     writeStorageValue("mode", "dark");

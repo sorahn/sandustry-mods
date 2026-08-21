@@ -82,8 +82,24 @@ test("blueprint core baseline", async () => {
 
   const diagonalOutline = core.foundationOutlinePath(
     [
-      { structure: { type: 11, x: 0, y: 0 }, footprint: { width: 1, height: 1 }, topY: 0 },
-      { structure: { type: 11, x: 1, y: 1 }, footprint: { width: 1, height: 1 }, topY: 1 },
+      {
+        structure: { type: 11, x: 0, y: 0 },
+        index: 0,
+        footprint: { width: 1, height: 1 },
+        topY: 0,
+        visualTopY: 0,
+        z: 0,
+        bounds: { minX: 0, minY: 0, maxX: 0, maxY: 0 },
+      },
+      {
+        structure: { type: 11, x: 1, y: 1 },
+        index: 1,
+        footprint: { width: 1, height: 1 },
+        topY: 1,
+        visualTopY: 1,
+        z: 0,
+        bounds: { minX: 1, minY: 1, maxX: 1, maxY: 1 },
+      },
     ],
     0,
     0,
@@ -104,8 +120,12 @@ test("blueprint core baseline", async () => {
       [2, 2],
     ].map(([x, y]) => ({
       structure: { type: 11, x, y },
+      index: 0,
       footprint: { width: 1, height: 1 },
       topY: y,
+      visualTopY: y,
+      z: 0,
+      bounds: { minX: x, minY: y, maxX: x, maxY: y },
     })),
     0,
     0,

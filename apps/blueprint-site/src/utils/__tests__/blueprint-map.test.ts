@@ -22,8 +22,7 @@ function installStorage(value: string | null) {
 }
 
 afterEach(() => {
-  if (originalWindow === undefined)
-    delete (globalThis as typeof globalThis & { window?: unknown }).window;
+  if (originalWindow === undefined) delete (globalThis as { window?: unknown }).window;
   else Object.defineProperty(globalThis, "window", { configurable: true, value: originalWindow });
 });
 
@@ -121,7 +120,7 @@ describe("blueprint map utilities", () => {
   });
 
   test("rejects missing, malformed, or non-finite saved views", () => {
-    delete (globalThis as typeof globalThis & { window?: unknown }).window;
+    delete (globalThis as { window?: unknown }).window;
     expect(readStoredMapView("fixture")).toBeNull();
 
     installStorage("not json");

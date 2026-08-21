@@ -13,8 +13,16 @@ test("catalog invariants", () => {
 
   assertCatalogInvariants(catalog, { assetRoot });
 
-  const entries = new Map(
-    catalog.entries.map((entry: { type: string | number }) => [entry.type, entry]),
+  const entries = new Map<
+    string | number,
+    { type: string | number; renderAsset?: Record<string, unknown> }
+  >(
+    catalog.entries.map(
+      (entry: { type: string | number; renderAsset?: Record<string, unknown> }) => [
+        entry.type,
+        entry,
+      ],
+    ),
   );
   const expected = [
     [13, { rotation: 180 }],

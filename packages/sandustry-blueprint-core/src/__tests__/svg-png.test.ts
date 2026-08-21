@@ -114,6 +114,7 @@ describe("SVG and PNG adapters", () => {
   test("renders foundations and belts below outlines, structures, and signals", () => {
     const result = renderBlueprintToSvg(
       {
+        name: "SVG fixture",
         data: [
           { type: 11, x: 0, y: 0 },
           { type: "conveyorLeftMk2", x: 4, y: 0 },

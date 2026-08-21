@@ -4,8 +4,7 @@ import { copyToClipboard } from "../clipboard";
 const originalNavigator = (globalThis as typeof globalThis & { navigator?: unknown }).navigator;
 
 afterEach(() => {
-  if (originalNavigator === undefined)
-    delete (globalThis as typeof globalThis & { navigator?: unknown }).navigator;
+  if (originalNavigator === undefined) delete (globalThis as { navigator?: unknown }).navigator;
   else
     Object.defineProperty(globalThis, "navigator", {
       configurable: true,
@@ -15,7 +14,7 @@ afterEach(() => {
 
 describe("clipboard utility", () => {
   test("returns false when the clipboard API is unavailable", async () => {
-    delete (globalThis as typeof globalThis & { navigator?: unknown }).navigator;
+    delete (globalThis as { navigator?: unknown }).navigator;
     expect(await copyToClipboard("blueprint")).toBe(false);
   });
 
