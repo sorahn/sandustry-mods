@@ -18,8 +18,6 @@ type BlueprintMapPanelProps = {
   onShowGridChange: (value: boolean) => void;
   showPngBackground: boolean;
   onShowPngBackgroundChange: (value: boolean) => void;
-  resetVersion?: number;
-  onResetMapOptions: () => void;
 };
 
 export function BlueprintMapPanel({
@@ -32,8 +30,6 @@ export function BlueprintMapPanel({
   onShowGridChange,
   showPngBackground,
   onShowPngBackgroundChange,
-  resetVersion,
-  onResetMapOptions,
 }: BlueprintMapPanelProps) {
   return (
     <Panel
@@ -47,7 +43,6 @@ export function BlueprintMapPanel({
             storageKey={SHOW_GRID_KEY}
             defaultChecked={showGrid}
             onCheckedChange={onShowGridChange}
-            resetVersion={resetVersion}
           />
           <PersistentCheckbox
             boxed
@@ -56,7 +51,6 @@ export function BlueprintMapPanel({
             storageKey={SHOW_PNG_BACKGROUND_KEY}
             defaultChecked={showPngBackground}
             onCheckedChange={onShowPngBackgroundChange}
-            resetVersion={resetVersion}
           />
           <PersistentCheckbox
             boxed
@@ -65,7 +59,6 @@ export function BlueprintMapPanel({
             storageKey={SHOW_MAP_SIDEBAR_KEY}
             defaultChecked={showSidebar}
             onCheckedChange={onShowSidebarChange}
-            resetVersion={resetVersion}
           />
         </div>
       }
@@ -78,8 +71,6 @@ export function BlueprintMapPanel({
           showSidebar={showSidebar}
           showGrid={showGrid}
           showPngBackground={showPngBackground}
-          resetVersion={resetVersion}
-          onResetMapOptions={onResetMapOptions}
         />
         <p className="mt-4 text-xs text-slate-500">
           The captured native runtime catalog supplies names and footprints. Other content remains

@@ -23,13 +23,6 @@ import {
   SHOW_GRID_KEY,
   SHOW_MAP_SIDEBAR_KEY,
   SHOW_PNG_BACKGROUND_KEY,
-  SHOW_DEBUG_CELLS_KEY,
-  SHOW_NAMES_KEY,
-  SHOW_SPRITES_KEY,
-  SHOW_CUSTOM_SHAPES_KEY,
-  SHOW_FOUNDATION_OUTLINES_KEY,
-  SHOW_SIGNAL_LINKS_KEY,
-  SHOW_RAW_STRUCTURES_KEY,
 } from "../utils/storage-keys";
 
 function summarizeBlueprint(input: string, blueprint: Blueprint): BlueprintSummary {
@@ -71,28 +64,6 @@ export function BlueprintInspectorPage() {
   const [showPngBackground, setShowPngBackground] = useState(() =>
     readStoredBoolean(SHOW_PNG_BACKGROUND_KEY, false),
   );
-  const [resetVersion, setResetVersion] = useState<number | undefined>(undefined);
-  const resetMapOptions = () => {
-    setShowMapSidebar(true);
-    setShowGrid(true);
-    setShowPngBackground(false);
-    for (const key of [
-      SHOW_MAP_SIDEBAR_KEY,
-      SHOW_GRID_KEY,
-      SHOW_PNG_BACKGROUND_KEY,
-      SHOW_DEBUG_CELLS_KEY,
-      SHOW_NAMES_KEY,
-      SHOW_SPRITES_KEY,
-      SHOW_CUSTOM_SHAPES_KEY,
-      SHOW_FOUNDATION_OUTLINES_KEY,
-      SHOW_SIGNAL_LINKS_KEY,
-      SHOW_RAW_STRUCTURES_KEY,
-      SAVED_MAP_VIEW_KEY,
-    ]) {
-      removeStorageValue(key);
-    }
-    setResetVersion((version) => (version ?? 0) + 1);
-  };
   const [inspectedBlueprintKey, setInspectedBlueprintKey] = useState("");
   const [summary, setSummary] = useState<BlueprintSummary | null>(null);
   const [message, setMessage] = useState("Paste a v2 blueprint string to inspect it.");
@@ -188,8 +159,6 @@ export function BlueprintInspectorPage() {
               onShowGridChange={setShowGrid}
               showPngBackground={showPngBackground}
               onShowPngBackgroundChange={setShowPngBackground}
-              resetVersion={resetVersion}
-              onResetMapOptions={resetMapOptions}
             />
           </div>
           <BlueprintStructuresPanel blueprint={blueprint} structureLabel={structureLabel} />
