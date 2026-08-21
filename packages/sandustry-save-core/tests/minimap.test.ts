@@ -51,3 +51,20 @@ test("applies fog and structure visibility independently", () => {
   expect([...withoutStructures.pixels.slice(4, 8)]).toEqual([...FOG_COLOR]);
   expect(SKY_COLOR).toEqual([72, 200, 255, 255]);
 });
+
+test("composites the sectioned wall layer from the native save palette", async () => {
+  const save = await decodeBrowserSave(await fixture("main-save.save").bytes());
+  const withWalls = renderMinimapRgba(save);
+  const withoutWalls = renderMinimapRgba(save, { drawWalls: false });
+  let changedPixels = 0;
+  for (let offset = 0; offset < withWalls.pixels.length; offset += 4) {
+    if (
+      withWalls.pixels[offset] !== withoutWalls.pixels[offset] ||
+      withWalls.pixels[offset + 1] !== withoutWalls.pixels[offset + 1] ||
+      withWalls.pixels[offset + 2] !== withoutWalls.pixels[offset + 2] ||
+      withWalls.pixels[offset + 3] !== withoutWalls.pixels[offset + 3]
+    )
+      changedPixels++;
+  }
+  expect(changedPixels).toBeGreaterThan(100_000);
+});

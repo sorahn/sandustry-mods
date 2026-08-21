@@ -4,6 +4,7 @@ import {
   type SaveGameDocument,
   type SaveGamePayload,
 } from "./index";
+import { SAVE_EXPLORER_LAYER_ORDER, type SaveExplorerRenderLayer } from "./layers";
 
 export const MINIMAP_CELL_SIZE = 4;
 export const SKY_COLOR: RgbaColor = [72, 200, 255, 255];
@@ -21,8 +22,10 @@ export type MinimapRaster = {
 export type MinimapRenderOptions = {
   cellSize?: number;
   drawStructures?: boolean;
+  drawWalls?: boolean;
   palette?: Readonly<Record<number, RgbaColor>>;
   structureColor?: RgbaColor;
+  wallColor?: RgbaColor;
 };
 
 const DEFAULT_PALETTE: Readonly<Record<number, RgbaColor>> = {
@@ -30,16 +33,26 @@ const DEFAULT_PALETTE: Readonly<Record<number, RgbaColor>> = {
   1: [186, 186, 186, 255], // Element fallback
   2: [105, 76, 43, 255], // Dirt
   3: [90, 73, 53, 255], // Spore soil
+  4: [20, 25, 30, 255], // Fog fallback
+  5: [45, 56, 63, 255], // Fog jetpack block
+  6: [72, 178, 214, 255], // Fog water
   7: [195, 225, 240, 255], // Freezing ice soil
+  8: [100, 100, 100, 255], // Divider
   9: [83, 158, 54, 255], // Grass
   10: [66, 118, 62, 255], // Moss
   11: [176, 139, 59, 255], // Gold soil
   14: [75, 162, 193, 255], // Fluxite
   15: [126, 126, 126, 255], // Block
+  16: [150, 150, 150, 255], // Sliding block
+  17: [150, 150, 150, 255], // Sliding block left
+  18: [150, 150, 150, 255], // Sliding block right
   19: [229, 159, 24, 255], // Conveyor left
   20: [229, 159, 24, 255], // Conveyor right
   23: [112, 112, 112, 255], // Stone
+  24: [90, 90, 100, 255], // Velocity soaker
   25: [197, 232, 245, 255], // Ice
+  26: [104, 168, 75, 255], // Grower
+  27: [101, 181, 209, 255], // Nascent water
   28: [117, 84, 44, 255], // Sandium soil
   29: [67, 67, 76, 255], // Obsidian
   30: [90, 86, 80, 255], // Crackstone
@@ -58,6 +71,9 @@ const DEFAULT_PALETTE: Readonly<Record<number, RgbaColor>> = {
   112: [199, 235, 255, 255], // Freezing ice
   113: [255, 125, 46, 255], // Flame
   114: [92, 63, 48, 255], // Burnt residue
+  115: [133, 197, 83, 255], // Seed
+  116: [116, 178, 72, 255], // Wet seed
+  117: [91, 198, 93, 255], // Seedling
   118: [240, 107, 187, 255], // Petalium
   119: [255, 90, 54, 255], // Lava
   120: [92, 92, 102, 255], // Basalt
@@ -129,6 +145,63 @@ function fogBufferFor(payload: SaveGamePayload, width: number, height: number) {
   return Uint8Array.from(encoded, (value) => (typeof value === "number" ? value : 0));
 }
 
+function wallPaletteColor(payload: SaveGamePayload, paletteIndex: number, fallback: RgbaColor) {
+  const wall = payload.wall as Record<string, unknown> | undefined;
+  const palette =
+    wall && typeof wall.palette === "object" && wall.palette !== null
+      ? (wall.palette as Record<string, unknown>)
+      : undefined;
+  const data = palette?.data;
+  if (!Array.isArray(data)) return fallback;
+  const offset = paletteIndex * 4;
+  if (offset < 0 || offset + 3 >= data.length) return fallback;
+  const values = data.slice(offset, offset + 4);
+  if (values.some((value) => typeof value !== "number")) return fallback;
+  return values as unknown as RgbaColor;
+}
+
+function wallBufferFor(payload: SaveGamePayload, width: number, height: number, cellSize: number) {
+  const wall = payload.wall as Record<string, unknown> | undefined;
+  const tiles =
+    wall && typeof wall.tiles === "object" && wall.tiles !== null
+      ? (wall.tiles as Record<string, unknown>)
+      : undefined;
+  const sections = tiles?.sections;
+  const encoded = tiles?.data;
+  const tileWidth = tiles?.width;
+  const tileHeight = tiles?.height;
+  if (
+    !Array.isArray(sections) ||
+    !Array.isArray(encoded) ||
+    typeof tileWidth !== "number" ||
+    typeof tileHeight !== "number" ||
+    tileWidth <= 0 ||
+    tileHeight <= 0
+  )
+    return new Uint8Array(width * height);
+  const blockSize = 16;
+  const blockColumns = Math.ceil(tileWidth / blockSize);
+  const blockRows = Math.ceil(tileHeight / blockSize);
+  const sectionIndexes = expandRunLengthPairs<number>(encoded, blockColumns * blockRows);
+  const output = new Uint8Array(width * height);
+  for (let block = 0; block < sectionIndexes.length; block++) {
+    const section = sections[sectionIndexes[block]];
+    if (!Array.isArray(section)) continue;
+    const blockX = (block % blockColumns) * blockSize;
+    const blockY = Math.floor(block / blockColumns) * blockSize;
+    for (let local = 0; local < Math.min(section.length, blockSize * blockSize); local++) {
+      const value = section[local];
+      if (typeof value !== "number" || value === 0) continue;
+      const worldX = blockX + (local % blockSize);
+      const worldY = blockY + Math.floor(local / blockSize);
+      if (worldX >= tileWidth || worldY >= tileHeight) continue;
+      const outputIndex = Math.floor(worldY / cellSize) * width + Math.floor(worldX / cellSize);
+      if (output[outputIndex] === 0) output[outputIndex] = value;
+    }
+  }
+  return output;
+}
+
 /** Build the native-style one-pixel-per-4×4-cell minimap raster. */
 export function renderMinimapRgba(
   document: SaveGameDocument,
@@ -165,29 +238,56 @@ export function renderMinimapRgba(
     throw new Error(`Matrix expanded to ${position}; expected ${worldWidth * worldHeight}`);
 
   const fog = fogBufferFor(document.payload, width, height);
+  const walls =
+    options.drawWalls === false
+      ? new Uint8Array(width * height)
+      : wallBufferFor(document.payload, width, height, cellSize);
   const palette = options.palette || DEFAULT_PALETTE;
+  const wallFallback = options.wallColor || [166, 166, 166, 255];
   const pixels = new Uint8ClampedArray(width * height * 4);
-  for (let index = 0; index < values.length; index++) {
-    const offset = index * 4;
-    if (fog[index] !== 255) copyColor(pixels, offset, FOG_COLOR);
-    else if (values[index] === 0) copyColor(pixels, offset, SKY_COLOR);
-    else copyColor(pixels, offset, colorForValue(values[index], palette));
-  }
-
-  if (options.drawStructures !== false) {
-    const structures = storeValue(document.payload, ["structures"]);
-    const structureColor = options.structureColor || [208, 152, 30, 255];
-    if (Array.isArray(structures)) {
-      for (const structure of structures) {
-        if (typeof structure !== "object" || structure === null) continue;
-        const record = structure as Record<string, unknown>;
-        if (typeof record.x !== "number" || typeof record.y !== "number") continue;
-        const x = Math.floor(record.x / cellSize);
-        const y = Math.floor(record.y / cellSize);
-        if (x < 0 || x >= width || y < 0 || y >= height || fog[y * width + x] !== 255) continue;
-        copyColor(pixels, (y * width + x) * 4, structureColor);
+  const structureColor = options.structureColor || [208, 152, 30, 255];
+  const renderLayers: Partial<Record<SaveExplorerRenderLayer, () => void>> = {
+    background: () => {
+      for (let index = 0; index < values.length; index++) copyColor(pixels, index * 4, SKY_COLOR);
+    },
+    matrix: () => {
+      for (let index = 0; index < values.length; index++) {
+        if (values[index] !== 0)
+          copyColor(pixels, index * 4, colorForValue(values[index], palette));
       }
-    }
-  }
+    },
+    wall: () => {
+      if (options.drawWalls === false) return;
+      for (let index = 0; index < walls.length; index++) {
+        if (walls[index] !== 0)
+          copyColor(
+            pixels,
+            index * 4,
+            wallPaletteColor(document.payload, walls[index], wallFallback),
+          );
+      }
+    },
+    structures: () => {
+      if (options.drawStructures === false) return;
+      const structures = storeValue(document.payload, ["structures"]);
+      if (Array.isArray(structures)) {
+        for (const structure of structures) {
+          if (typeof structure !== "object" || structure === null) continue;
+          const record = structure as Record<string, unknown>;
+          if (typeof record.x !== "number" || typeof record.y !== "number") continue;
+          const x = Math.floor(record.x / cellSize);
+          const y = Math.floor(record.y / cellSize);
+          if (x < 0 || x >= width || y < 0 || y >= height) continue;
+          copyColor(pixels, (y * width + x) * 4, structureColor);
+        }
+      }
+    },
+    fog: () => {
+      for (let index = 0; index < fog.length; index++) {
+        if (fog[index] !== 255) copyColor(pixels, index * 4, FOG_COLOR);
+      }
+    },
+  };
+  for (const layer of SAVE_EXPLORER_LAYER_ORDER) renderLayers[layer]?.();
   return { width, height, pixels };
 }

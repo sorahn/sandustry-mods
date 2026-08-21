@@ -82,6 +82,12 @@ export {
   type SaveExplorerVisibleRect,
 } from "./viewport";
 
+export {
+  SAVE_EXPLORER_LAYER_ORDER,
+  saveExplorerLayerIndex,
+  type SaveExplorerRenderLayer,
+} from "./layers";
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }

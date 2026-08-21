@@ -13,3 +13,7 @@ export const SHOW_CUSTOM_SHAPES_KEY = "sandustry.blueprintInspector.showCustomSh
 export const SHOW_FOUNDATION_OUTLINES_KEY = "sandustry.blueprintInspector.showFoundationOutlines";
 export const SHOW_SIGNAL_LINKS_KEY = "sandustry.blueprintInspector.showSignalLinks";
 export const SHOW_RAW_STRUCTURES_KEY = "sandustry.blueprintInspector.showRawStructures";
+
+export const REMEMBER_SAVE_EXPLORER_KEY = "sandustry.saveExplorer.remember";
+export const SAVED_SAVE_EXPLORER_KEY = "sandustry.saveExplorer.save";
+export const SAVED_SAVE_EXPLORER_NAME_KEY = "sandustry.saveExplorer.name";
