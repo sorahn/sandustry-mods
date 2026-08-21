@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import {
   decodeBrowserSave,
   classifySaveExplorerMatrixValue,
+  inspectSaveExplorerCell,
   normalizeSaveDocument,
   createSaveExplorerTileIndex,
   renderMinimapRgba,
@@ -16,6 +17,37 @@ test("classifies terrain, settled elements, and moving particles", () => {
   );
   expect(classifySaveExplorerMatrixValue({ type: 10, particle: true })).toBe("moving-particle");
   expect(classifySaveExplorerMatrixValue({ particle: true })).toBe("unknown");
+});
+
+test("inspects revealed minimap cells without exposing fogged contents", () => {
+  const save = {
+    metadata: { id: "fixture" },
+    payload: {
+      store: {
+        world: { size: { width: 8, height: 4 } },
+        mods: { map: { fogBuffer: [255, 0], fogWidth: 2, fogHeight: 1 } },
+        structures: [{ type: 16, x: 0, y: 0 }],
+      },
+      matrix: [2, 4, { type: 10, particle: true }, 4, 0, 24],
+    },
+    compressedPayloadBytes: 1,
+    decompressedPayloadBytes: 1,
+  } as import("../src/index").SaveGameDocument;
+  expect(inspectSaveExplorerCell(save, 0, 0)).toMatchObject({
+    revealed: true,
+    kind: "terrain",
+    structures: [{ type: 16, x: 0, y: 0 }],
+  });
+  expect(inspectSaveExplorerCell(save, 1, 0)).toEqual({
+    mapX: 1,
+    mapY: 0,
+    worldX: 4,
+    worldY: 0,
+    width: 4,
+    height: 4,
+    fogValue: 0,
+    revealed: false,
+  });
 });
 
 const fixture = (name: string) => Bun.file(new URL(`../../../resources/${name}`, import.meta.url));

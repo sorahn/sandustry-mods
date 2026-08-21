@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Checkbox, Panel } from "@sandustry/ui";
-import type { MinimapRenderOptions, SaveExplorerDocument } from "@sandustry/save-core";
+import type {
+  MinimapRenderOptions,
+  SaveExplorerCellInspection,
+  SaveExplorerDocument,
+} from "@sandustry/save-core";
 import { PageHeader } from "../components/PageHeader";
 import { readStorageValue, writeStoredBoolean } from "../utils/storage";
 import { forgetRememberedSave, readRememberedSave, rememberSave } from "../utils/save-storage";
@@ -18,6 +22,7 @@ type ExplorerWorkerResponse =
       document: SaveExplorerDocument;
       raster: { width: number; height: number; pixels: ArrayBuffer };
     }
+  | { type: "inspection"; inspection?: SaveExplorerCellInspection }
   | { type: "error"; message: string };
 
 function formatPlayTime(seconds?: number) {
@@ -68,6 +73,9 @@ export function SaveExplorerPage() {
   const fitMapRef = useRef<() => void>(() => {});
   const [document, setDocument] = useState<SaveExplorerDocument | null>(null);
   const [raster, setRaster] = useState<ExplorerRaster | null>(null);
+  const [inspection, setInspection] = useState<SaveExplorerCellInspection | null>(null);
+  const [hoverCell, setHoverCell] = useState<{ mapX: number; mapY: number } | null>(null);
+  const hoverCellRef = useRef<{ mapX: number; mapY: number } | null>(null);
   const [message, setMessage] = useState("Drop a .save file here to begin.");
   const [busy, setBusy] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -81,6 +89,7 @@ export function SaveExplorerPage() {
     structures: true,
     fog: true,
   });
+  const [customCursor, setCustomCursor] = useState(false);
   const currentSaveRef = useRef<{ bytes: Uint8Array; name: string } | null>(null);
   const [view, setView] = useState({ scale: 1, offsetX: 0, offsetY: 0 });
 
@@ -113,6 +122,17 @@ export function SaveExplorerPage() {
     workerRef.current = worker;
     worker.onmessage = (event: MessageEvent<ExplorerWorkerResponse>) => {
       const response = event.data;
+      if (response.type === "inspection") {
+        const current = hoverCellRef.current;
+        if (
+          response.inspection &&
+          current?.mapX === response.inspection.mapX &&
+          current.mapY === response.inspection.mapY
+        ) {
+          setInspection(response.inspection);
+        }
+        return;
+      }
       setBusy(false);
       if (response.type === "error") {
         setDocument(null);
@@ -311,7 +331,7 @@ export function SaveExplorerPage() {
             {raster ? (
               <canvas
                 ref={canvasRef}
-                className="save-explorer-map"
+                className={`save-explorer-map${customCursor ? " save-explorer-map--custom-cursor" : ""}`}
                 aria-label="Save minimap"
                 style={{
                   width: raster.width * view.scale,
@@ -331,18 +351,35 @@ export function SaveExplorerPage() {
                 }}
                 onPointerMove={(event) => {
                   const drag = dragRef.current;
-                  if (!drag || drag.pointerId !== event.pointerId) return;
-                  setView((current) => ({
-                    ...current,
-                    offsetX: drag.offsetX + event.clientX - drag.startX,
-                    offsetY: drag.offsetY + event.clientY - drag.startY,
-                  }));
+                  if (drag && drag.pointerId === event.pointerId) {
+                    setView((current) => ({
+                      ...current,
+                      offsetX: drag.offsetX + event.clientX - drag.startX,
+                      offsetY: drag.offsetY + event.clientY - drag.startY,
+                    }));
+                    return;
+                  }
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  const mapX = Math.floor((event.clientX - rect.left) / view.scale);
+                  const mapY = Math.floor((event.clientY - rect.top) / view.scale);
+                  const previous = hoverCellRef.current;
+                  if (previous?.mapX === mapX && previous.mapY === mapY) return;
+                  const nextCell = { mapX, mapY };
+                  hoverCellRef.current = nextCell;
+                  setHoverCell(nextCell);
+                  setInspection(null);
+                  workerRef.current?.postMessage({ type: "inspect", mapX, mapY });
                 }}
                 onPointerUp={() => {
                   dragRef.current = null;
                 }}
                 onPointerCancel={() => {
                   dragRef.current = null;
+                }}
+                onPointerLeave={() => {
+                  hoverCellRef.current = null;
+                  setHoverCell(null);
+                  setInspection(null);
                 }}
               />
             ) : (
@@ -377,6 +414,48 @@ export function SaveExplorerPage() {
                 <Button type="button" onClick={fitMap}>
                   Fit
                 </Button>
+              </div>
+            ) : null}
+            {customCursor && hoverCell ? (
+              <div
+                className="save-explorer-map-cursor"
+                style={{
+                  left: view.offsetX + (hoverCell.mapX + 0.5) * view.scale,
+                  top: view.offsetY + (hoverCell.mapY + 0.5) * view.scale,
+                  width: Math.max(16, view.scale + 4),
+                  height: Math.max(16, view.scale + 4),
+                }}
+                aria-hidden="true"
+              />
+            ) : null}
+            {hoverCell ? (
+              <div
+                className="save-explorer-map-tooltip"
+                style={{
+                  left: view.offsetX + (hoverCell.mapX + 1) * view.scale + 12,
+                  top: view.offsetY + hoverCell.mapY * view.scale + 12,
+                }}
+              >
+                {inspection ? (
+                  <>
+                    <div>
+                      world {inspection.worldX},{inspection.worldY}
+                    </div>
+                    {inspection.revealed ? (
+                      <>
+                        <div>{inspection.kind ?? "unknown"}</div>
+                        {inspection.type === undefined ? null : <div>type {inspection.type}</div>}
+                        {inspection.structures?.length ? (
+                          <div>{inspection.structures.length} structure(s)</div>
+                        ) : null}
+                      </>
+                    ) : (
+                      <div>unrevealed</div>
+                    )}
+                  </>
+                ) : (
+                  <div>inspecting…</div>
+                )}
               </div>
             ) : null}
           </div>
@@ -427,6 +506,15 @@ export function SaveExplorerPage() {
                   onChange={(event) => updateLayer(layer, event.target.checked)}
                 />
               ))}
+            {import.meta.env.DEV ? (
+              <Checkbox
+                boxed
+                size="small"
+                label="custom cursor"
+                checked={customCursor}
+                onChange={(event) => setCustomCursor(event.target.checked)}
+              />
+            ) : null}
           </Panel>
           <Panel
             title="Current scope"

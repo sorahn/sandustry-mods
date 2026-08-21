@@ -3,9 +3,11 @@
 import {
   decodeBrowserSave,
   decodeBrowserSaveDocument,
+  inspectSaveExplorerCell,
   renderMinimapRgba,
   type MinimapRenderOptions,
   type NormalizeSaveOptions,
+  type SaveExplorerCellInspection,
   type SaveExplorerDocument,
 } from "@sandustry/save-core";
 
@@ -16,7 +18,8 @@ export type SaveWorkerRequest =
       options?: NormalizeSaveOptions;
       render?: MinimapRenderOptions;
     }
-  | { type: "render"; render?: MinimapRenderOptions };
+  | { type: "render"; render?: MinimapRenderOptions }
+  | { type: "inspect"; mapX: number; mapY: number };
 
 export type SaveWorkerResponse =
   | {
@@ -24,6 +27,7 @@ export type SaveWorkerResponse =
       document: SaveExplorerDocument;
       raster: { width: number; height: number; pixels: ArrayBuffer };
     }
+  | { type: "inspection"; inspection?: SaveExplorerCellInspection }
   | { type: "error"; message: string };
 
 const workerScope = globalThis as unknown as {
@@ -41,6 +45,13 @@ workerScope.onmessage = async ({ data }) => {
       decodedDocument = await decodeBrowserSaveDocument(data.bytes, data.options);
     }
     if (!decodedSave || !decodedDocument) throw new Error("No save is loaded");
+    if (data.type === "inspect") {
+      workerScope.postMessage({
+        type: "inspection",
+        inspection: inspectSaveExplorerCell(decodedSave, data.mapX, data.mapY),
+      });
+      return;
+    }
     const raster = renderMinimapRgba(decodedSave, data.render);
     workerScope.postMessage(
       {
