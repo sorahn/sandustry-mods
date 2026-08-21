@@ -70,6 +70,21 @@ export type SaveExplorerElement = {
   raw?: unknown;
 };
 
+export type SaveExplorerCellKind =
+  | "empty"
+  | "terrain"
+  | "settled-element"
+  | "moving-particle"
+  | "unknown";
+
+/** Classify one decoded value from the game's run-length encoded matrix. */
+export function classifySaveExplorerMatrixValue(value: unknown): SaveExplorerCellKind {
+  if (value === 0) return "empty";
+  if (typeof value === "number") return "terrain";
+  if (!isRecord(value) || !Number.isSafeInteger(value.type)) return "unknown";
+  return value.particle === true ? "moving-particle" : "settled-element";
+}
+
 export type SaveExplorerDocument = {
   documentVersion: typeof SAVE_EXPLORER_DOCUMENT_VERSION;
   format: "browser-json-gzip";

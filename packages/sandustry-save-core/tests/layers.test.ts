@@ -4,8 +4,8 @@ import { SAVE_EXPLORER_LAYER_ORDER, saveExplorerLayerIndex } from "../src/index"
 test("defines the save explorer layers from back to front", () => {
   expect(SAVE_EXPLORER_LAYER_ORDER).toEqual([
     "background",
-    "matrix",
     "wall",
+    "matrix",
     "structures",
     "lights",
     "authorization",

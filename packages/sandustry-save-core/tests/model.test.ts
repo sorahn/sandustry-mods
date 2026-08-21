@@ -1,10 +1,22 @@
 import { expect, test } from "bun:test";
 import {
   decodeBrowserSave,
+  classifySaveExplorerMatrixValue,
   normalizeSaveDocument,
   createSaveExplorerTileIndex,
   renderMinimapRgba,
 } from "../src/index";
+
+test("classifies terrain, settled elements, and moving particles", () => {
+  expect(classifySaveExplorerMatrixValue(0)).toBe("empty");
+  expect(classifySaveExplorerMatrixValue(12)).toBe("terrain");
+  expect(classifySaveExplorerMatrixValue(-1204)).toBe("terrain");
+  expect(classifySaveExplorerMatrixValue({ type: 10, velocity: { x: 0, y: 0 } })).toBe(
+    "settled-element",
+  );
+  expect(classifySaveExplorerMatrixValue({ type: 10, particle: true })).toBe("moving-particle");
+  expect(classifySaveExplorerMatrixValue({ particle: true })).toBe("unknown");
+});
 
 const fixture = (name: string) => Bun.file(new URL(`../../../resources/${name}`, import.meta.url));
 

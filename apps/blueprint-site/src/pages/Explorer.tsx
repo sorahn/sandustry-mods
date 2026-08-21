@@ -157,6 +157,14 @@ export function SaveExplorerPage() {
     return () => observer.disconnect();
   }, [fitMap]);
 
+  useEffect(() => {
+    const frame = mapFrameRef.current;
+    if (!frame) return;
+    const preventPageScroll = (event: WheelEvent) => event.preventDefault();
+    frame.addEventListener("wheel", preventPageScroll, { passive: false });
+    return () => frame.removeEventListener("wheel", preventPageScroll);
+  }, []);
+
   const decodeFile = async (file?: File) => {
     if (!file) return;
     if (!file.name.endsWith(".save")) {
@@ -237,7 +245,6 @@ export function SaveExplorerPage() {
             className="save-explorer-map-frame"
             onWheel={(event) => {
               if (!raster) return;
-              event.preventDefault();
               const rect = event.currentTarget.getBoundingClientRect();
               const pointX = event.clientX - rect.left;
               const pointY = event.clientY - rect.top;

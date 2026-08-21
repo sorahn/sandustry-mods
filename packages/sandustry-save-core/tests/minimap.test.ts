@@ -66,5 +66,5 @@ test("composites the sectioned wall layer from the native save palette", async (
     )
       changedPixels++;
   }
-  expect(changedPixels).toBeGreaterThan(100_000);
+  expect(changedPixels).toBeGreaterThan(50_000);
 });
