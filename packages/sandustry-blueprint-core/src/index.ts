@@ -36,6 +36,7 @@ export {
   type StructureCatalogEntry,
   type RenderAsset,
   customShapeFromStructure,
+  contributesUnderlyingCells,
   shapeForStructure,
   structureTopY,
   structureVisualTopY,

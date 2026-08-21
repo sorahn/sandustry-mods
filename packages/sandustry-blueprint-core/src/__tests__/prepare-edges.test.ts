@@ -159,4 +159,47 @@ describe("blueprint preparation edges", () => {
     });
     expect(foundationOutlinePath(prepared.preparedStructures, 0, 0, 1, 8)).toBe("");
   });
+
+  test("uses raw-shape metadata instead of generic structure shapes", () => {
+    const transparent = prepareBlueprint(
+      {
+        name: "Transparent machine",
+        data: [{ type: "machine", x: 0, y: 0 }],
+        signalLinks: null,
+      },
+      {
+        catalog: {
+          get: () => ({
+            footprint: { width: 4, height: 4 },
+            shape: Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 1)),
+            rawShape: false,
+          }),
+        },
+      },
+    );
+    expect(foundationOutlinePath(transparent.preparedStructures, 0, 0, 1, 8)).toBe("");
+
+    const raw = prepareBlueprint(
+      {
+        name: "Raw machine",
+        data: [{ type: "machine", x: 0, y: 0 }],
+        signalLinks: null,
+      },
+      {
+        catalog: {
+          get: () => ({
+            footprint: { width: 4, height: 4 },
+            shape: [
+              [1, 1, 0, 0],
+              [1, 1, 0, 0],
+              [0, 0, 0, 0],
+              [0, 0, 0, 0],
+            ],
+            rawShape: true,
+          }),
+        },
+      },
+    );
+    expect(foundationOutlinePath(raw.preparedStructures, 0, 0, 1, 8)).not.toBe("");
+  });
 });

@@ -11,7 +11,7 @@ import {
   type BlueprintRenderModel,
   type BlueprintRenderOptions,
 } from "./render-model";
-import { foundationOutlinePath, isBeltType } from "./prepare";
+import { contributesUnderlyingCells, foundationOutlinePath } from "./prepare";
 
 export type BlueprintSvgRenderOptions = BlueprintRenderOptions & {
   assetBaseUrl?: string;
@@ -97,12 +97,7 @@ function renderShapeRects(
 
 function isFoundationStructure(model: BlueprintRenderModel, index: number) {
   const prepared = model.preparedBlueprint.preparedStructures[index];
-  const type = prepared.structure.type;
-  return (
-    (typeof type === "number" && type >= 11 && type <= 15) ||
-    prepared.customShape !== undefined ||
-    (prepared.shape !== undefined && prepared.sprite === undefined)
-  );
+  return contributesUnderlyingCells(prepared);
 }
 
 function renderStructure(
@@ -210,15 +205,11 @@ export function renderBlueprintToSvg(
   const showGrid = options.showGrid ?? true;
   const showFoundationOutlines = options.showFoundationOutlines ?? true;
   const showSignalLinks = options.showSignalLinks ?? true;
-  const foundationAndBeltStructures = model.renderStructures.filter(
-    ({ index }) =>
-      isFoundationStructure(model, index) ||
-      isBeltType(model.preparedBlueprint.preparedStructures[index].structure.type),
+  const foundationAndBeltStructures = model.renderStructures.filter(({ index }) =>
+    isFoundationStructure(model, index),
   );
   const otherStructures = model.renderStructures.filter(
-    ({ index }) =>
-      !isFoundationStructure(model, index) &&
-      !isBeltType(model.preparedBlueprint.preparedStructures[index].structure.type),
+    ({ index }) => !isFoundationStructure(model, index),
   );
   const foundationAndBeltMarkup = foundationAndBeltStructures
     .map(({ index }) => renderStructure(model, index, options))

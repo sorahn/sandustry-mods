@@ -16,6 +16,7 @@ export type StructureCatalogEntry = {
   name?: string;
   footprint?: { width: number; height: number };
   shape?: number[][];
+  rawShape?: boolean;
   signalPoints?: SignalPoints;
   z?: number;
   renderAsset?: RenderAsset;
@@ -80,6 +81,7 @@ export type PreparedStructure = {
   lightColor?: string;
   customShape?: number[][];
   shape?: number[][];
+  rawShape?: boolean;
   footprint: { width: number; height: number };
   topY: number;
   visualTopY: number;
@@ -290,7 +292,7 @@ export function structureVisualTopY(
   );
 }
 
-const FOUNDATION_TYPES = new Set<BlueprintType>([11, 12, 13, 14, 15]);
+const NATIVE_RAW_SHAPE_TYPES = new Set<BlueprintType>([1, 2, 8, 9, 10, 11, 12, 13, 14, 15, 19, 20]);
 const BELT_TYPES = new Set<BlueprintType>([
   1,
   2,
@@ -299,6 +301,15 @@ const BELT_TYPES = new Set<BlueprintType>([
   "burnerBeltLeft",
   "burnerBeltRight",
 ]);
+
+export function contributesUnderlyingCells(prepared: PreparedStructure) {
+  return (
+    prepared.customShape !== undefined ||
+    prepared.rawShape === true ||
+    NATIVE_RAW_SHAPE_TYPES.has(prepared.structure.type) ||
+    BELT_TYPES.has(prepared.structure.type)
+  );
+}
 
 export function isBeltType(type: BlueprintType) {
   return BELT_TYPES.has(type);
@@ -314,14 +325,7 @@ export function foundationOutlinePath(
   const outlineOffset = 0.5 / 4;
   const occupied = new Set<string>();
   for (const prepared of structures) {
-    const type = prepared.structure.type;
-    if (
-      !FOUNDATION_TYPES.has(type) &&
-      !BELT_TYPES.has(type) &&
-      prepared.customShape === undefined
-    ) {
-      continue;
-    }
+    if (!contributesUnderlyingCells(prepared)) continue;
     const shape =
       prepared.shape ??
       Array.from({ length: prepared.footprint.height }, () =>
@@ -599,6 +603,7 @@ export function prepareBlueprint(
       lightColor: lightColorFor(structure),
       customShape,
       shape,
+      rawShape: catalogEntry?.rawShape,
       footprint,
       topY,
       visualTopY,
