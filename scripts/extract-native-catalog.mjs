@@ -26,6 +26,18 @@ const shippedRawShapeTypes = new Set([
   "conveyorRightMk2",
   "burnerBeltLeft",
   "burnerBeltRight",
+  // First-party structures registered by the bundled gameplay mods. Their
+  // serialized masks are part of the same solid-cell layer as native masks.
+  "electricityConnector",
+  "heatCannonDown",
+  "heatCannonLeft",
+  "heatCannonRight",
+  "heatCannonUp",
+  "smelter",
+  "snowmaker",
+  "thermalRelay",
+  "thermodryer",
+  "thermofroster",
 ]);
 
 function hasRawShape(entry) {

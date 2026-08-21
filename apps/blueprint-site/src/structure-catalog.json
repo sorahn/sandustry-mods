@@ -2374,6 +2374,7 @@
         "description": "A passive conductor that bridges power structures so Energy can flow between them. For example, connecting a Steam Turbine to a Power Brick network.\n\nStores no Energy itself."
       },
       "source": "runtime structure definition",
+      "rawShape": true,
       "renderAsset": {
         "path": "catalog/mods__electricity_connector.png",
         "sourceSize": {
@@ -3004,6 +3005,7 @@
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
       },
       "source": "runtime structure definition",
+      "rawShape": true,
       "renderAsset": {
         "path": "catalog/mods__heat_cannon.png",
         "sourceSize": {
@@ -3092,6 +3094,7 @@
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
       },
       "source": "runtime structure definition",
+      "rawShape": true,
       "renderAsset": {
         "path": "catalog/mods__heat_cannon.png",
         "sourceSize": {
@@ -3180,6 +3183,7 @@
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
       },
       "source": "runtime structure definition",
+      "rawShape": true,
       "renderAsset": {
         "path": "catalog/mods__heat_cannon.png",
         "sourceSize": {
@@ -3267,6 +3271,7 @@
         "description": "Fires a flame burst every {seconds} seconds in the direction it was placed. Each shot consumes heat from an adjacent Thermal Buffer."
       },
       "source": "runtime structure definition",
+      "rawShape": true,
       "renderAsset": {
         "path": "catalog/mods__heat_cannon.png",
         "sourceSize": {
@@ -6396,6 +6401,7 @@
         "description": "Periodically smelts resources placed on top into liquid form. Uses heat from an adjacent Thermal Buffer or Lava."
       },
       "source": "runtime structure definition",
+      "rawShape": true,
       "renderAsset": {
         "path": "catalog/mods__smelter.png",
         "sourceSize": {
@@ -6510,6 +6516,7 @@
         "description": "Consumes Water above and {amount} Energy to spawn Snow below."
       },
       "source": "runtime structure definition",
+      "rawShape": true,
       "renderAsset": {
         "path": "catalog/mods__snowmaker.png",
         "sourceSize": {
@@ -6787,6 +6794,7 @@
         "skipCopyData": true
       },
       "source": "runtime structure definition",
+      "rawShape": true,
       "renderAsset": {
         "path": "catalog/mods__thermal_relay.png",
         "sourceSize": {
@@ -6884,6 +6892,7 @@
         "description": "Converts Amethelis into Dry Amethelis when put on top, using Steam below as fuel."
       },
       "source": "runtime structure definition",
+      "rawShape": true,
       "renderAsset": {
         "path": "catalog/mods__thermodryer.png",
         "sourceSize": {
@@ -6981,6 +6990,7 @@
         "description": "Condenses adjacent gases into their liquid forms (e.g. Florin into Florinol). Uses cold from an adjacent Thermal Buffer or Snow above."
       },
       "source": "runtime structure definition",
+      "rawShape": true,
       "renderAsset": {
         "path": "catalog/mods__thermofroster.png",
         "sourceSize": {
