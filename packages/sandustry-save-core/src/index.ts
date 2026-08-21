@@ -1,3 +1,5 @@
+import { normalizeSaveDocument, type NormalizeSaveOptions } from "./model";
+
 export type SaveGameMetadata = {
   id: string;
   timestamp?: string;
@@ -49,6 +51,7 @@ export type DamagedTerrainValue = {
 
 export {
   normalizeSaveDocument,
+  createSaveExplorerTileIndex,
   SAVE_EXPLORER_DOCUMENT_VERSION,
   type NormalizeSaveOptions,
   type SaveExplorerDiagnostic,
@@ -58,6 +61,8 @@ export {
   type SaveExplorerLayerName,
   type SaveExplorerMetadata,
   type SaveExplorerStructure,
+  type SaveExplorerTile,
+  type SaveExplorerTileIndex,
   type SaveExplorerWorld,
 } from "./model";
 
@@ -123,6 +128,13 @@ export async function decodeBrowserSave(
     compressedPayloadBytes: compressed.byteLength,
     decompressedPayloadBytes: decompressed.byteLength,
   };
+}
+
+export async function decodeBrowserSaveDocument(
+  input: ArrayBuffer | Uint8Array,
+  options: NormalizeSaveOptions = {},
+) {
+  return normalizeSaveDocument(await decodeBrowserSave(input), options);
 }
 
 /** Expand the game's alternating value/count representation with validation. */

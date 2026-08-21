@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import {
   decodeBrowserSave,
+  createSaveExplorerTileIndex,
   expandRunLengthPairs,
   normalizeSaveDocument,
   renderMinimapRgba,
@@ -57,4 +58,21 @@ test("reports malformed matrix data and invalid structures", () => {
     "truncated-section",
     "invalid-structure",
   ]);
+});
+
+test("indexes large worlds by compact four-cell tiles", () => {
+  const index = createSaveExplorerTileIndex(3840, 3840);
+
+  expect(index.columns).toBe(960);
+  expect(index.rows).toBe(960);
+  expect(index.tileCount).toBe(921600);
+  expect(index.tileForCell(3839, 3839)).toEqual({
+    column: 959,
+    row: 959,
+    x: 3836,
+    y: 3836,
+    width: 4,
+    height: 4,
+  });
+  expect(index.tileForCell(3840, 0)).toBeUndefined();
 });

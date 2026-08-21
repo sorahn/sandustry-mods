@@ -89,6 +89,69 @@ export type NormalizeSaveOptions = {
   supportedGameVersions?: readonly string[];
 };
 
+export type SaveExplorerTile = {
+  column: number;
+  row: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+export type SaveExplorerTileIndex = {
+  tileSize: number;
+  columns: number;
+  rows: number;
+  tileCount: number;
+  tileAt(column: number, row: number): SaveExplorerTile | undefined;
+  tileForCell(x: number, y: number): SaveExplorerTile | undefined;
+};
+
+export function createSaveExplorerTileIndex(
+  width: number,
+  height: number,
+  tileSize = 4,
+): SaveExplorerTileIndex {
+  if (!positiveInteger(width) || !positiveInteger(height) || !positiveInteger(tileSize))
+    throw new Error("Tile index dimensions and tile size must be positive integers");
+  const columns = Math.ceil(width / tileSize);
+  const rows = Math.ceil(height / tileSize);
+  const tileAt = (column: number, row: number) => {
+    if (!Number.isSafeInteger(column) || !Number.isSafeInteger(row) || column < 0 || row < 0)
+      return undefined;
+    if (column >= columns || row >= rows) return undefined;
+    const x = column * tileSize;
+    const y = row * tileSize;
+    return {
+      column,
+      row,
+      x,
+      y,
+      width: Math.min(tileSize, width - x),
+      height: Math.min(tileSize, height - y),
+    };
+  };
+  return {
+    tileSize,
+    columns,
+    rows,
+    tileCount: columns * rows,
+    tileAt,
+    tileForCell: (x, y) => {
+      if (
+        !Number.isSafeInteger(x) ||
+        !Number.isSafeInteger(y) ||
+        x < 0 ||
+        y < 0 ||
+        x >= width ||
+        y >= height
+      )
+        return undefined;
+      return tileAt(Math.floor(x / tileSize), Math.floor(y / tileSize));
+    },
+  };
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
