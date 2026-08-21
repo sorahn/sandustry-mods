@@ -95,3 +95,19 @@ test("can hide representative minimap layers independently", () => {
     208, 152, 30, 255,
   ]);
 });
+
+test("uses representative colors for known structure types", () => {
+  const save = {
+    metadata: { id: "fixture" },
+    payload: {
+      store: {
+        world: { size: { width: 4, height: 4 } },
+        structures: [{ type: 16, x: 0, y: 0 }],
+      },
+      matrix: [0, 16],
+    },
+    compressedPayloadBytes: 1,
+    decompressedPayloadBytes: 1,
+  } as SaveGameDocument;
+  expect([...renderMinimapRgba(save).pixels.slice(0, 4)]).toEqual([255, 220, 40, 255]);
+});

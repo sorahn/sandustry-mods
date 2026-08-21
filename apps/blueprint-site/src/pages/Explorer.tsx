@@ -444,7 +444,23 @@ export function SaveExplorerPage() {
                     {inspection.revealed ? (
                       <>
                         <div>{inspection.kind ?? "unknown"}</div>
-                        {inspection.type === undefined ? null : <div>type {inspection.type}</div>}
+                        {inspection.type === undefined ? (
+                          <div>unknown value</div>
+                        ) : (
+                          <div>type {inspection.type}</div>
+                        )}
+                        {inspection.terrainHp === undefined ? null : (
+                          <div>terrain HP {inspection.terrainHp}</div>
+                        )}
+                        {inspection.particle === undefined ? null : (
+                          <div>particle {inspection.particle ? "yes" : "no"}</div>
+                        )}
+                        {inspection.velocity ? (
+                          <div>
+                            velocity {inspection.velocity.x.toFixed(2)},
+                            {inspection.velocity.y.toFixed(2)}
+                          </div>
+                        ) : null}
                         {inspection.structures?.length ? (
                           <div>{inspection.structures.length} structure(s)</div>
                         ) : null}

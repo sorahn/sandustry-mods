@@ -28,7 +28,15 @@ export type MinimapRenderOptions = {
   drawWalls?: boolean;
   palette?: Readonly<Record<number, RgbaColor>>;
   structureColor?: RgbaColor;
+  structurePalette?: Readonly<Record<string, RgbaColor>>;
   wallColor?: RgbaColor;
+};
+
+const DEFAULT_STRUCTURE_PALETTE: Readonly<Record<string, RgbaColor>> = {
+  // Representative colors for common catalog structures; unknown types use
+  // the configured fallback marker color.
+  "11": [165, 165, 165, 255], // Foundation
+  "16": [255, 220, 40, 255], // Collector
 };
 
 const DEFAULT_PALETTE: Readonly<Record<number, RgbaColor>> = {
@@ -123,6 +131,14 @@ function copyColor(target: Uint8ClampedArray, offset: number, color: RgbaColor) 
   target[offset + 1] = color[1];
   target[offset + 2] = color[2];
   target[offset + 3] = color[3];
+}
+
+function structureColorFor(
+  type: unknown,
+  fallback: RgbaColor,
+  palette: Readonly<Record<string, RgbaColor>>,
+) {
+  return palette[String(type)] || fallback;
 }
 
 function colorForValue(value: number, palette: Readonly<Record<number, RgbaColor>>) {
@@ -255,6 +271,7 @@ export function renderMinimapRgba(
   const wallFallback = options.wallColor || [166, 166, 166, 255];
   const pixels = new Uint8ClampedArray(width * height * 4);
   const structureColor = options.structureColor || [208, 152, 30, 255];
+  const structurePalette = options.structurePalette || DEFAULT_STRUCTURE_PALETTE;
   const renderLayers: Partial<Record<SaveExplorerRenderLayer, () => void>> = {
     background: () => {
       for (let index = 0; index < values.length; index++) copyColor(pixels, index * 4, SKY_COLOR);
@@ -289,7 +306,11 @@ export function renderMinimapRgba(
           const x = Math.floor(record.x / cellSize);
           const y = Math.floor(record.y / cellSize);
           if (x < 0 || x >= width || y < 0 || y >= height) continue;
-          copyColor(pixels, (y * width + x) * 4, structureColor);
+          copyColor(
+            pixels,
+            (y * width + x) * 4,
+            structureColorFor(record.type, structureColor, structurePalette),
+          );
         }
       }
     },

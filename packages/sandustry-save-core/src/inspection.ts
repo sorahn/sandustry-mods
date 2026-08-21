@@ -1,5 +1,5 @@
 import { classifySaveExplorerMatrixValue, type SaveExplorerCellKind } from "./model";
-import { expandRunLengthPairs, type SaveGameDocument } from "./index";
+import { decodeDamagedTerrainValue, expandRunLengthPairs, type SaveGameDocument } from "./index";
 
 export type SaveExplorerCellInspection = {
   mapX: number;
@@ -12,6 +12,9 @@ export type SaveExplorerCellInspection = {
   revealed: boolean;
   kind?: SaveExplorerCellKind;
   type?: number;
+  terrainHp?: number;
+  particle?: boolean;
+  velocity?: { x: number; y: number };
   raw?: unknown;
   structures?: Array<{ type: string | number; x: number; y: number }>;
 };
@@ -85,7 +88,21 @@ export function inspectSaveExplorerCell(
       const value = matrixValueAt(save.payload.matrix, y * size.width + x);
       if (value === 0) continue;
       inspection.kind = classifySaveExplorerMatrixValue(value);
-      if (isRecord(value) && typeof value.type === "number") inspection.type = value.type;
+      if (typeof value === "number") {
+        const damaged = decodeDamagedTerrainValue(value);
+        inspection.type = damaged?.cellType ?? value;
+        if (damaged) inspection.terrainHp = damaged.hp;
+      } else if (isRecord(value) && typeof value.type === "number") {
+        inspection.type = value.type;
+        inspection.particle = value.particle === true;
+        if (
+          isRecord(value.velocity) &&
+          typeof value.velocity.x === "number" &&
+          typeof value.velocity.y === "number"
+        ) {
+          inspection.velocity = { x: value.velocity.x, y: value.velocity.y };
+        }
+      }
       inspection.raw = value;
       break;
     }
