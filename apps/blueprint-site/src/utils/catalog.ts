@@ -113,6 +113,7 @@ export function blueprintCatalog() {
         name: entry.name,
         footprint: entry.footprint,
         shape: Array.isArray(entry.shape) ? entry.shape : undefined,
+        rawShape: entry.rawShape,
         signalPoints: entry.signalPoints,
         z: typeof render?.z === "number" ? render.z : undefined,
         renderAsset,
