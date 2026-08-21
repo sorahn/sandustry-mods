@@ -68,3 +68,30 @@ test("composites the sectioned wall layer from the native save palette", async (
   }
   expect(changedPixels).toBeGreaterThan(50_000);
 });
+
+test("can hide representative minimap layers independently", () => {
+  const save = {
+    metadata: { id: "fixture" },
+    payload: {
+      store: {
+        world: { size: { width: 8, height: 4 } },
+        structures: [{ type: "visible", x: 0, y: 0 }],
+        mods: { map: { fogBuffer: [255, 255], fogWidth: 2, fogHeight: 1 } },
+      },
+      matrix: [2, 4, { type: 3, particle: true }, 4, 0, 24],
+    },
+    compressedPayloadBytes: 1,
+    decompressedPayloadBytes: 1,
+  } as SaveGameDocument;
+
+  const hidden = renderMinimapRgba(save, {
+    drawTerrain: false,
+    drawElements: false,
+    drawStructures: false,
+  });
+  expect([...hidden.pixels.slice(0, 4)]).toEqual([...SKY_COLOR]);
+  expect([...hidden.pixels.slice(4, 8)]).toEqual([...SKY_COLOR]);
+  expect([...renderMinimapRgba(save, { drawFog: false }).pixels.slice(0, 4)]).toEqual([
+    208, 152, 30, 255,
+  ]);
+});

@@ -21,6 +21,9 @@ export type MinimapRaster = {
 
 export type MinimapRenderOptions = {
   cellSize?: number;
+  drawTerrain?: boolean;
+  drawElements?: boolean;
+  drawFog?: boolean;
   drawStructures?: boolean;
   drawWalls?: boolean;
   palette?: Readonly<Record<number, RgbaColor>>;
@@ -214,11 +217,14 @@ export function renderMinimapRgba(
   const width = Math.ceil(worldWidth / cellSize);
   const height = Math.ceil(worldHeight / cellSize);
   const values = new Int32Array(width * height);
+  const valueKinds = new Uint8Array(width * height);
   let position = 0;
   const encoded = document.payload.matrix;
   if (encoded.length % 2 !== 0) throw new Error("Invalid matrix: incomplete value/count pair");
   for (let index = 0; index < encoded.length; index += 2) {
-    const value = matrixValueCode(encoded[index]);
+    const rawValue = encoded[index];
+    const value = matrixValueCode(rawValue);
+    const kind = typeof rawValue === "number" ? 1 : 2;
     const count = encoded[index + 1];
     if (typeof count !== "number" || !Number.isSafeInteger(count) || count < 0)
       throw new Error(`Invalid matrix count at pair ${index / 2}`);
@@ -229,7 +235,10 @@ export function renderMinimapRgba(
         const x = Math.floor((cursor % worldWidth) / cellSize);
         const y = Math.floor(Math.floor(cursor / worldWidth) / cellSize);
         const outputIndex = y * width + x;
-        if (values[outputIndex] === 0) values[outputIndex] = value;
+        if (values[outputIndex] === 0) {
+          values[outputIndex] = value;
+          valueKinds[outputIndex] = kind;
+        }
       }
     }
     position = end;
@@ -252,7 +261,9 @@ export function renderMinimapRgba(
     },
     matrix: () => {
       for (let index = 0; index < values.length; index++) {
-        if (values[index] !== 0)
+        const terrain = valueKinds[index] === 1 && options.drawTerrain !== false;
+        const element = valueKinds[index] === 2 && options.drawElements !== false;
+        if (values[index] !== 0 && (terrain || element))
           copyColor(pixels, index * 4, colorForValue(values[index], palette));
       }
     },
@@ -283,6 +294,7 @@ export function renderMinimapRgba(
       }
     },
     fog: () => {
+      if (options.drawFog === false) return;
       for (let index = 0; index < fog.length; index++) {
         if (fog[index] !== 255) copyColor(pixels, index * 4, FOG_COLOR);
       }

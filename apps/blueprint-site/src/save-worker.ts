@@ -4,15 +4,19 @@ import {
   decodeBrowserSave,
   decodeBrowserSaveDocument,
   renderMinimapRgba,
+  type MinimapRenderOptions,
   type NormalizeSaveOptions,
   type SaveExplorerDocument,
 } from "@sandustry/save-core";
 
-export type SaveWorkerRequest = {
-  type: "decode";
-  bytes: ArrayBuffer;
-  options?: NormalizeSaveOptions;
-};
+export type SaveWorkerRequest =
+  | {
+      type: "decode";
+      bytes: ArrayBuffer;
+      options?: NormalizeSaveOptions;
+      render?: MinimapRenderOptions;
+    }
+  | { type: "render"; render?: MinimapRenderOptions };
 
 export type SaveWorkerResponse =
   | {
@@ -27,16 +31,21 @@ const workerScope = globalThis as unknown as {
   postMessage: (message: SaveWorkerResponse, transfer?: Transferable[]) => void;
 };
 
+let decodedSave: Awaited<ReturnType<typeof decodeBrowserSave>> | null = null;
+let decodedDocument: SaveExplorerDocument | null = null;
+
 workerScope.onmessage = async ({ data }) => {
-  if (data.type !== "decode") return;
   try {
-    const save = await decodeBrowserSave(data.bytes);
-    const document = await decodeBrowserSaveDocument(data.bytes, data.options);
-    const raster = renderMinimapRgba(save);
+    if (data.type === "decode") {
+      decodedSave = await decodeBrowserSave(data.bytes);
+      decodedDocument = await decodeBrowserSaveDocument(data.bytes, data.options);
+    }
+    if (!decodedSave || !decodedDocument) throw new Error("No save is loaded");
+    const raster = renderMinimapRgba(decodedSave, data.render);
     workerScope.postMessage(
       {
         type: "result",
-        document,
+        document: decodedDocument,
         raster: {
           width: raster.width,
           height: raster.height,

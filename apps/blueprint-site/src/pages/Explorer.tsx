@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Panel } from "@sandustry/ui";
-import type { SaveExplorerDocument } from "@sandustry/save-core";
+import { Button, Checkbox, Panel } from "@sandustry/ui";
+import type { MinimapRenderOptions, SaveExplorerDocument } from "@sandustry/save-core";
 import { PageHeader } from "../components/PageHeader";
 import { readStorageValue, writeStoredBoolean } from "../utils/storage";
 import { forgetRememberedSave, readRememberedSave, rememberSave } from "../utils/save-storage";
@@ -64,6 +64,8 @@ export function SaveExplorerPage() {
     offsetX: number;
     offsetY: number;
   } | null>(null);
+  const fitNextRasterRef = useRef(true);
+  const fitMapRef = useRef<() => void>(() => {});
   const [document, setDocument] = useState<SaveExplorerDocument | null>(null);
   const [raster, setRaster] = useState<ExplorerRaster | null>(null);
   const [message, setMessage] = useState("Drop a .save file here to begin.");
@@ -72,6 +74,13 @@ export function SaveExplorerPage() {
   const [remember, setRemember] = useState(
     () => readStorageValue(REMEMBER_SAVE_EXPLORER_KEY) === "true",
   );
+  const [layers, setLayers] = useState({
+    terrain: true,
+    elements: true,
+    walls: true,
+    structures: true,
+    fog: true,
+  });
   const currentSaveRef = useRef<{ bytes: Uint8Array; name: string } | null>(null);
   const [view, setView] = useState({ scale: 1, offsetX: 0, offsetY: 0 });
 
@@ -94,6 +103,10 @@ export function SaveExplorerPage() {
       offsetY: (frame.clientHeight - raster.height * scale) / 2,
     });
   }, [raster]);
+
+  useEffect(() => {
+    fitMapRef.current = fitMap;
+  }, [fitMap]);
 
   useEffect(() => {
     const worker = new Worker(new URL("../save-worker.ts", import.meta.url), { type: "module" });
@@ -126,7 +139,7 @@ export function SaveExplorerPage() {
         setBusy(true);
         setMessage(`Restoring ${saved.name}…`);
         const bytes = saved.bytes.buffer;
-        worker.postMessage({ type: "decode", bytes }, [bytes]);
+        worker.postMessage({ type: "decode", bytes, render: minimapOptions }, [bytes]);
       }
     }
     return () => {
@@ -149,13 +162,19 @@ export function SaveExplorerPage() {
   }, [raster]);
 
   useEffect(() => {
-    fitMap();
+    if (raster && fitNextRasterRef.current) {
+      fitNextRasterRef.current = false;
+      fitMap();
+    }
+  }, [fitMap, raster]);
+
+  useEffect(() => {
     const frame = mapFrameRef.current;
     if (!frame) return;
-    const observer = new ResizeObserver(fitMap);
+    const observer = new ResizeObserver(() => fitMapRef.current());
     observer.observe(frame);
     return () => observer.disconnect();
-  }, [fitMap]);
+  }, []);
 
   useEffect(() => {
     const frame = mapFrameRef.current;
@@ -173,10 +192,38 @@ export function SaveExplorerPage() {
     }
     setBusy(true);
     setMessage(`Reading ${file.name}…`);
+    fitNextRasterRef.current = true;
     const bytes = new Uint8Array(await file.arrayBuffer());
     currentSaveRef.current = { bytes: bytes.slice(), name: file.name };
     if (remember) rememberSave(bytes, file.name);
-    workerRef.current?.postMessage({ type: "decode", bytes: bytes.buffer }, [bytes.buffer]);
+    workerRef.current?.postMessage(
+      { type: "decode", bytes: bytes.buffer, render: minimapOptions },
+      [bytes.buffer],
+    );
+  };
+
+  const minimapOptions: MinimapRenderOptions = {
+    drawTerrain: layers.terrain,
+    drawElements: layers.elements,
+    drawWalls: layers.walls,
+    drawStructures: layers.structures,
+    drawFog: layers.fog,
+  };
+
+  const updateLayer = (layer: keyof typeof layers, checked: boolean) => {
+    const next = { ...layers, [layer]: checked };
+    setLayers(next);
+    if (document)
+      workerRef.current?.postMessage({
+        type: "render",
+        render: {
+          drawTerrain: next.terrain,
+          drawElements: next.elements,
+          drawWalls: next.walls,
+          drawStructures: next.structures,
+          drawFog: next.fog,
+        },
+      });
   };
 
   const toggleRemember = () => {
@@ -367,6 +414,20 @@ export function SaveExplorerPage() {
               <Metadata document={document} />
             </Panel>
           ) : null}
+          <Panel title="Minimap layers" contentClassName="space-y-2 p-4 text-xs">
+            {(Object.keys(layers) as Array<keyof typeof layers>)
+              .filter((layer) => layer !== "fog" || import.meta.env.DEV)
+              .map((layer) => (
+                <Checkbox
+                  key={layer}
+                  boxed
+                  size="small"
+                  label={layer}
+                  checked={layers[layer]}
+                  onChange={(event) => updateLayer(layer, event.target.checked)}
+                />
+              ))}
+          </Panel>
           <Panel
             title="Current scope"
             contentClassName="space-y-2 p-4 text-xs leading-5 text-slate-500"
@@ -374,7 +435,8 @@ export function SaveExplorerPage() {
             <p>✓ browser save decoding</p>
             <p>✓ 4×4 cell minimap aggregation</p>
             <p>✓ fog masking</p>
-            <p>○ zoom, pan, and cell inspection</p>
+            <p>✓ minimap zoom, pan, and layer toggles</p>
+            <p>○ cell inspection</p>
           </Panel>
         </div>
       </div>
