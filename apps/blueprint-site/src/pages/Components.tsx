@@ -83,29 +83,29 @@ const colorGroups: ColorGroup[] = [
     description: "Bedrock, dark rock, and deep UI surfaces",
     colors: [
       { name: "Bedrock", value: "#222222", use: "terrain" },
-      { name: "Blackrock", value: "#141414", use: "terrain" },
-      { name: "Oil", value: "#1a1410", use: "element" },
       { name: "BG Dark", value: "#1a1a2e", use: "UI" },
+      { name: "Oil", value: "#1a1410", use: "element" },
+      { name: "Blackrock", value: "#141414", use: "terrain" },
     ],
   },
   {
     name: "Red",
     description: "Lava, fire, danger, and red soil",
     colors: [
-      { name: "Sandium Soil", value: "#8b0000", use: "terrain" },
-      { name: "Lava Fog", value: "#b22222", use: "terrain" },
-      { name: "Lava", value: "#ff3300", use: "element" },
       { name: "Danger", value: "#ef4444", use: "status" },
+      { name: "Lava", value: "#ff3300", use: "element" },
+      { name: "Lava Fog", value: "#b22222", use: "terrain" },
+      { name: "Sandium Soil", value: "#8b0000", use: "terrain" },
     ],
   },
   {
     name: "Green",
     description: "Grass, moss, plants, and success states",
     colors: [
+      { name: "Success", value: "#4ade80", use: "tutorial" },
+      { name: "Primary", value: "#22c55e", use: "status" },
       { name: "Grass", value: "#228b22", use: "terrain" },
       { name: "Moss", value: "#1dae1d", use: "terrain" },
-      { name: "Primary", value: "#22c55e", use: "status" },
-      { name: "Success", value: "#4ade80", use: "tutorial" },
     ],
   },
   {
@@ -113,42 +113,42 @@ const colorGroups: ColorGroup[] = [
     description: "Gold, sand, warning, and the primary game accent",
     colors: [
       { name: "Game accent", value: "#ffe700", use: "selected/focused" },
-      { name: "Gold", value: "#ffd700", use: "element/UI" },
-      { name: "Gold Soil", value: "#daa520", use: "terrain" },
       { name: "Dune", value: "#eed975", use: "terrain" },
+      { name: "Gold", value: "#ffd700", use: "element/UI" },
       { name: "Warning", value: "#ffaa44", use: "status" },
+      { name: "Gold Soil", value: "#daa520", use: "terrain" },
     ],
   },
   {
     name: "Blue",
-    description: "Water, ice, coolant, and informational states",
+    description: "Water, ice, coolant, and mineral colors",
     colors: [
-      { name: "Water", value: "#1e90ff", use: "element" },
-      { name: "Water accent", value: "#66ccff", use: "UI/material" },
       { name: "Ice", value: "#afeeee", use: "terrain" },
+      { name: "Water", value: "#1e90ff", use: "element" },
+      { name: "Water Fog", value: "#4682b4", use: "terrain" },
+      { name: "Pyronol", value: "#3050c8", use: "element" },
       { name: "Coolant", value: "#0033aa", use: "element" },
-      { name: "Logistics", value: "#60a5fa", use: "tutorial" },
     ],
   },
   {
     name: "Magenta",
-    description: "Petalium, fluxite, void materials, and secondary accents",
+    description: "Petalium, prism, fluxite, and void materials",
     colors: [
-      { name: "Fluxite", value: "#8a2be2", use: "terrain" },
+      { name: "Prismaline", value: "#ff99cc", use: "element" },
       { name: "Petalium", value: "#cc5cdb", use: "element" },
-      { name: "Hot Pink", value: "#ff1493", use: "UI/effect" },
-      { name: "Void Seeds", value: "#9932cc", use: "element" },
       { name: "Purple", value: "#9966ff", use: "status" },
+      { name: "Void Seeds", value: "#9932cc", use: "element" },
+      { name: "Fluxite", value: "#8a2be2", use: "terrain" },
     ],
   },
   {
     name: "Cyan",
     description: "Steam, freezing materials, crystal, and information",
     colors: [
-      { name: "Info", value: "#00ffff", use: "status" },
-      { name: "Freezing Ice Soil", value: "#add8e6", use: "terrain" },
       { name: "Freezing Ice", value: "#e0ffff", use: "element" },
-      { name: "Water tutorial", value: "#4fc3f7", use: "tutorial" },
+      { name: "Freezing Ice Soil", value: "#add8e6", use: "terrain" },
+      { name: "Info", value: "#00ffff", use: "status" },
+      { name: "Void Petal", value: "#00ced1", use: "element" },
       { name: "Crystal", value: "#0094b3", use: "terrain" },
     ],
   },
@@ -159,8 +159,8 @@ const colorGroups: ColorGroup[] = [
       { name: "Text", value: "#ffffff", use: "UI" },
       { name: "Steam", value: "#f7f7f7", use: "element" },
       { name: "Residue", value: "#cccccc", use: "element" },
-      { name: "Stone", value: "#808080", use: "terrain" },
       { name: "Muted", value: "#888888", use: "UI" },
+      { name: "Stone", value: "#808080", use: "terrain" },
     ],
   },
 ];
@@ -176,7 +176,7 @@ function ShowcaseSection({ title, children }: { title: string; children: React.R
   );
 }
 
-export function DebugPage() {
+export function ComponentsPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [switchOn, setSwitchOn] = useState(true);
@@ -188,7 +188,7 @@ export function DebugPage() {
   if (!import.meta.env.DEV) {
     return (
       <Panel className="mx-auto max-w-xl p-8">
-        The component debug page is available in development builds only.
+        The Components page is available in development builds only.
       </Panel>
     );
   }
@@ -197,7 +197,7 @@ export function DebugPage() {
     <div className="space-y-10">
       <header className="border-b border-slate-800 pb-6">
         <p className="font-mono text-xs uppercase tracking-[0.25em] text-yellow-300/80">
-          Debug only
+          Development only
         </p>
         <h1 className="mt-2 text-3xl font-bold text-white">Component showcase</h1>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-400">
@@ -262,8 +262,9 @@ export function DebugPage() {
         <Panel className="p-5">
           <p className="mb-4 max-w-3xl text-sm leading-6 text-slate-400">
             A compact view of the catalog, grouped into broad color families for easier browsing.
-            The grouping is for navigation rather than an exact color conversion; each swatch keeps
-            its original game-facing hex value and role.
+            Each family runs from lightest to darkest by perceived brightness. The grouping is for
+            navigation rather than an exact color conversion; each swatch keeps its original
+            game-facing hex value and role.
           </p>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {colorGroups.map((group) => (

@@ -22,7 +22,7 @@ export function Header() {
               <Link to="/explorer" activeProps={{ className: "text-yellow-300" }}>
                 Explorer
               </Link>
-              <Link to="/debug" activeProps={{ className: "text-yellow-300" }}>
+              <Link to="/components" activeProps={{ className: "text-yellow-300" }}>
                 Components
               </Link>
             </>

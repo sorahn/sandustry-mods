@@ -76,7 +76,7 @@ handing off the work:
 npm --workspace apps/blueprint-site run tsc
 ```
 
-The blueprint site includes a development-only component showcase at `/debug`.
+The blueprint site includes a development-only component showcase at `/components`.
 Keep that page up to date whenever the UI library gains or changes a component,
 variant, interaction state, or accessibility behavior. Use it to exercise the
 new behavior and representative states before handing off UI-library changes;

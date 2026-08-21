@@ -3,7 +3,7 @@ import { AppLayout } from "./components/AppLayout";
 import { BlueprintCodecPage } from "./pages/Codec";
 import { BlueprintInspectorPage } from "./pages/Inspector";
 import { BlueprintVisualFixturePage } from "./pages/VisualFixture";
-import { DebugPage } from "./pages/Debug";
+import { ComponentsPage } from "./pages/Components";
 import { HomePage } from "./pages/HomePage";
 import { SaveExplorerPage } from "./pages/Explorer";
 
@@ -24,10 +24,10 @@ const visualFixtureRoute = createRoute({
   path: "/inspect/fixture",
   component: BlueprintVisualFixturePage,
 });
-const debugRoute = createRoute({
+const componentsRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/debug",
-  component: DebugPage,
+  path: "/components",
+  component: ComponentsPage,
 });
 const explorerRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -40,6 +40,6 @@ export const routeTree = rootRoute.addChildren([
   codecRoute,
   inspectorRoute,
   visualFixtureRoute,
-  debugRoute,
+  componentsRoute,
   explorerRoute,
 ]);
