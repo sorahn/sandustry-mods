@@ -147,6 +147,8 @@ export function SaveExplorerPage() {
               className="hidden"
               onChange={(event) => void decodeFile(event.target.files?.[0])}
             />
+            {/* @TODO when changing this file later, the button breaks the drop
+             zone target when hovering, and then the parent container never reacquires it */}
             <Button
               type="button"
               variant="accent"
