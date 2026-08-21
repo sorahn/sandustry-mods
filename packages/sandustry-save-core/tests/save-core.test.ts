@@ -1,5 +1,10 @@
 import { expect, test } from "bun:test";
-import { decodeBrowserSave, expandRunLengthPairs, renderMinimapRgba } from "../src/index";
+import {
+  decodeBrowserSave,
+  expandRunLengthPairs,
+  normalizeSaveDocument,
+  renderMinimapRgba,
+} from "../src/index";
 
 const fixture = (name: string) => Bun.file(new URL(`../../../resources/${name}`, import.meta.url));
 
@@ -16,3 +21,40 @@ for (const name of ["new-world.save", "main-save.save", "sm3f52pn6i9-exitsave.sa
     expect(raster.pixels).toHaveLength(960 * 960 * 4);
   });
 }
+
+test("normalizes save metadata, layers, structures, and elements", async () => {
+  const save = await decodeBrowserSave(await fixture("main-save.save").bytes());
+  const document = normalizeSaveDocument(save, { supportedGameVersions: ["0.5.2"] });
+
+  expect(document.documentVersion).toBe(1);
+  expect(document.format).toBe("browser-json-gzip");
+  expect(document.metadata.worldId).toBe("sm3f52pn6i9");
+  expect(document.world).toEqual({
+    width: 3840,
+    height: 3840,
+    playerPosition: { x: 5498.258793999692, y: 5103.159626600357 },
+  });
+  expect(document.layers.matrix?.encoding).toBe("run-length");
+  expect(document.layers.wall?.encoding).toBe("sectioned");
+  expect(document.structures).toHaveLength(19858);
+  expect(document.elements).toContainEqual({ type: 1 });
+  expect(document.diagnostics).toEqual([]);
+});
+
+test("reports malformed matrix data and invalid structures", () => {
+  const save = {
+    metadata: { id: "fixture" },
+    payload: {
+      store: { world: { size: { width: 2, height: 2 } }, structures: [{ type: "x", x: 0 }] },
+      matrix: [0, 3],
+    },
+    compressedPayloadBytes: 1,
+    decompressedPayloadBytes: 1,
+  };
+  const document = normalizeSaveDocument(save);
+
+  expect(document.diagnostics.map(({ code }) => code)).toEqual([
+    "truncated-section",
+    "invalid-structure",
+  ]);
+});

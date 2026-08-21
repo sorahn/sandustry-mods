@@ -47,6 +47,20 @@ export type DamagedTerrainValue = {
   hp: number;
 };
 
+export {
+  normalizeSaveDocument,
+  SAVE_EXPLORER_DOCUMENT_VERSION,
+  type NormalizeSaveOptions,
+  type SaveExplorerDiagnostic,
+  type SaveExplorerDocument,
+  type SaveExplorerElement,
+  type SaveExplorerLayer,
+  type SaveExplorerLayerName,
+  type SaveExplorerMetadata,
+  type SaveExplorerStructure,
+  type SaveExplorerWorld,
+} from "./model";
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
