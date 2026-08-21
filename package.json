@@ -7,17 +7,14 @@
   ],
   "scripts": {
     "catalog:extract": "node scripts/extract-native-catalog.mjs",
-    "check": "npm run tsc && npm run tsc:tests && npm run lint && npm run test:catalog",
+    "check": "npm run tsc && npm run tsc:tests && npm run lint && npm test",
     "format:bundles": "node scripts/format-bundles.mjs",
     "format:check": "oxfmt --check .",
     "format": "oxfmt --write .",
     "lint": "node scripts/check-jsx.mjs && oxlint --ignore-pattern '**/build/**' --ignore-pattern 'resources/**' --ignore-pattern '*.zip' tests scripts types mods",
     "prepare": "husky",
-    "test:all": "npm run tsc && npm run tsc:tests && npm run lint && npm run test && npm --workspace @sandustry/blueprint-core run tsc && npm --workspace @sandustry/blueprint-core run lint && npm --workspace @sandustry/blueprint-node run tsc && npm --workspace @sandustry/blueprint-node run lint && npm --workspace apps/blueprint-site run tsc",
-    "test:blueprint": "bun test packages/sandustry-blueprint-core/src",
-    "test:bun:site": "npm --workspace apps/blueprint-site run test",
-    "test:catalog": "bun test scripts/test-catalog-invariants.test.ts",
-    "test": "bun test packages/sandustry-blueprint-core/src packages/sandustry-blueprint-core/tests apps/blueprint-site/src scripts/*.test.ts",
+    "test:all": "npm test && npm --workspace @sandustry/blueprint-core test && npm --workspace @sandustry/blueprint-node test && npm --workspace @sandustry/save-core test && npm --workspace @sandustry/ui test && npm --workspace @sandustry/blueprint-site test",
+    "test": "bun test scripts/test-catalog-invariants.test.ts",
     "tsc:tests": "tsc --noEmit -p tsconfig.tests.json",
     "tsc": "tsc --noEmit",
     "visual:diff": "bun packages/sandustry-blueprint-core/tests/visual/render-visual.mjs --diff",
@@ -29,11 +26,17 @@
     "@types/node": "^26.2.0",
     "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
+    "bun": "^1.4.0",
     "esbuild": "0.28.2",
     "husky": "9.1.7",
     "lint-staged": "17.3.0",
     "oxfmt": "0.63.0",
     "oxlint": "1.78.0",
     "typescript": "7.0.2"
+  },
+  "allowScripts": {
+    "fsevents": true,
+    "bun@1.4.0": true,
+    "esbuild@0.28.2": true
   }
 }

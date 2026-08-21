@@ -8,7 +8,6 @@
     "dev": "vite",
     "lint": "oxlint src",
     "test": "bun test src",
-    "test:bun": "bun test src",
     "postbuild": "node scripts/copy-404.mjs",
     "preview": "npm run build:preview && vite preview",
     "tsc": "tsc --noEmit"

@@ -12,6 +12,7 @@
   },
   "scripts": {
     "lint": "oxlint src",
+    "test": "node -e \"console.log('no tests')\"",
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
