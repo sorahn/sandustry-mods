@@ -1,0 +1,14 @@
+{
+  "name": "@sandustry/save-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "oxlint src",
+    "tsc": "tsc --noEmit",
+    "test": "bun test src tests"
+  }
+}
