@@ -17,14 +17,7 @@ export function BlueprintMapSidebar({
   return (
     <aside className="flex flex-col border-l border-slate-800 pl-4 text-xs text-slate-400">
       {debugOptions}
-      <p
-        className={cx(
-          debugOptions && "pt-4",
-          "font-mono uppercase tracking-[0.18em] text-slate-500",
-        )}
-      >
-        Selected record
-      </p>
+      <p className={cx("font-mono uppercase tracking-[0.18em] text-slate-500")}>Selected record</p>
       {selected ? (
         <div className="mt-3 space-y-3">
           {(() => {

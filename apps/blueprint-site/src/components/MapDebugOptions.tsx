@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import cx from "clsx";
 import { PersistentCheckbox } from "./PersistentCheckbox";
 import {
   SHOW_CUSTOM_SHAPES_KEY,
@@ -9,6 +10,7 @@ import {
   SHOW_SIGNAL_LINKS_KEY,
   SHOW_SPRITES_KEY,
 } from "../utils/storage-keys";
+import { Divider, IconButton } from "@sandustry/ui";
 
 type MapDebugOptionsProps = {
   showDebugCells: boolean;
@@ -25,6 +27,8 @@ type MapDebugOptionsProps = {
   onShowSignalLinksChange: (value: boolean) => void;
   showRawStructures: boolean;
   onShowRawStructuresChange: (value: boolean) => void;
+  resetVersion?: number;
+  onReset: () => void;
 };
 
 export function MapDebugOptions({
@@ -42,6 +46,8 @@ export function MapDebugOptions({
   onShowSignalLinksChange,
   showRawStructures,
   onShowRawStructuresChange,
+  resetVersion,
+  onReset,
 }: MapDebugOptionsProps) {
   const toggles = [
     <PersistentCheckbox
@@ -52,6 +58,7 @@ export function MapDebugOptions({
       defaultChecked={showDebugCells}
       onCheckedChange={onShowDebugCellsChange}
       onInitialCheckedChange={onShowDebugCellsChange}
+      resetVersion={resetVersion}
     />,
     <PersistentCheckbox
       boxed
@@ -61,6 +68,7 @@ export function MapDebugOptions({
       defaultChecked={showNames}
       onCheckedChange={onShowNamesChange}
       onInitialCheckedChange={onShowNamesChange}
+      resetVersion={resetVersion}
     />,
     <PersistentCheckbox
       boxed
@@ -70,15 +78,17 @@ export function MapDebugOptions({
       defaultChecked={showSprites}
       onCheckedChange={onShowSpritesChange}
       onInitialCheckedChange={onShowSpritesChange}
+      resetVersion={resetVersion}
     />,
     <PersistentCheckbox
       boxed
       size="small"
-      label="custom shapes"
+      label="shapes"
       storageKey={SHOW_CUSTOM_SHAPES_KEY}
       defaultChecked={showCustomShapes}
       onCheckedChange={onShowCustomShapesChange}
       onInitialCheckedChange={onShowCustomShapesChange}
+      resetVersion={resetVersion}
     />,
     <PersistentCheckbox
       boxed
@@ -88,32 +98,49 @@ export function MapDebugOptions({
       defaultChecked={showSignalLinks}
       onCheckedChange={onShowSignalLinksChange}
       onInitialCheckedChange={onShowSignalLinksChange}
+      resetVersion={resetVersion}
     />,
     <PersistentCheckbox
       boxed
       size="small"
-      label="foundation outlines"
+      label="outlines"
       storageKey={SHOW_FOUNDATION_OUTLINES_KEY}
       defaultChecked={showFoundationOutlines}
       onCheckedChange={onShowFoundationOutlinesChange}
       onInitialCheckedChange={onShowFoundationOutlinesChange}
+      resetVersion={resetVersion}
     />,
     <PersistentCheckbox
       boxed
       size="small"
-      label="raw structures"
+      label="structures"
       storageKey={SHOW_RAW_STRUCTURES_KEY}
       defaultChecked={showRawStructures}
       onCheckedChange={onShowRawStructuresChange}
       onInitialCheckedChange={onShowRawStructuresChange}
+      resetVersion={resetVersion}
     />,
   ];
 
   return (
-    <div className="flex flex-row flex-wrap gap-2">
-      {toggles.map((toggle, index) => (
-        <Fragment key={index}>{toggle}</Fragment>
-      ))}
-    </div>
+    <>
+      <p
+        className={cx(
+          "font-mono uppercase tracking-[0.18em] text-slate-500 flex flex-row items-center justify-between",
+        )}
+      >
+        <span>Debug Options</span>
+        <IconButton size="small" label="Reset" onClick={onReset}>
+          ↺
+        </IconButton>
+      </p>
+
+      <div className="flex flex-row flex-wrap gap-2 mt-3">
+        {toggles.map((toggle, index) => (
+          <Fragment key={index}>{toggle}</Fragment>
+        ))}
+      </div>
+      <Divider className="my-4" />
+    </>
   );
 }

@@ -7,6 +7,7 @@ type PersistentCheckboxProps = Omit<ComponentProps<typeof Checkbox>, "checked" |
   defaultChecked: boolean;
   onCheckedChange?: (checked: boolean) => void;
   onInitialCheckedChange?: (checked: boolean) => void;
+  resetVersion?: number;
 };
 
 export function PersistentCheckbox({
@@ -14,6 +15,7 @@ export function PersistentCheckbox({
   defaultChecked,
   onCheckedChange,
   onInitialCheckedChange,
+  resetVersion,
   ...props
 }: PersistentCheckboxProps) {
   const [checked, setChecked] = useState(() => readStoredBoolean(storageKey, defaultChecked));
@@ -21,6 +23,11 @@ export function PersistentCheckbox({
   useEffect(() => {
     onInitialCheckedChange?.(checked);
   }, []);
+
+  useEffect(() => {
+    if (resetVersion === undefined) return;
+    setChecked(defaultChecked);
+  }, [defaultChecked, resetVersion]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const nextChecked = event.target.checked;

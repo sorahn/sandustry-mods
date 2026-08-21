@@ -153,6 +153,8 @@ export function BlueprintMap({
   showSidebar,
   showGrid,
   showPngBackground,
+  resetVersion,
+  onResetMapOptions,
   captureOnly,
 }: {
   blueprint: Blueprint;
@@ -161,6 +163,8 @@ export function BlueprintMap({
   showSidebar: boolean;
   showGrid: boolean;
   showPngBackground: boolean;
+  resetVersion?: number;
+  onResetMapOptions: () => void;
   captureOnly?: boolean;
 }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -171,6 +175,19 @@ export function BlueprintMap({
   const [showFoundationOutlines, setShowFoundationOutlines] = useState(true);
   const [showSignalLinks, setShowSignalLinks] = useState(true);
   const [showRawStructures, setShowRawStructures] = useState(false);
+  useEffect(() => {
+    if (resetVersion === undefined) return;
+    setShowDebugCells(false);
+    setShowNames(false);
+    setShowSprites(true);
+    setShowCustomShapes(false);
+    setShowFoundationOutlines(true);
+    setShowSignalLinks(true);
+    setShowRawStructures(false);
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+    fitModeRef.current = true;
+  }, [resetVersion]);
   // Sprite hiding is a local renderer debugging aid. Keep the production
   // render path hard-wired to sprites regardless of persisted debug state.
   const spritesVisible = import.meta.env.PROD || showSprites;
@@ -278,6 +295,8 @@ export function BlueprintMap({
     onShowSignalLinksChange: setShowSignalLinks,
     showRawStructures,
     onShowRawStructuresChange: setShowRawStructures,
+    resetVersion,
+    onReset: onResetMapOptions,
   });
   useEffect(() => {
     const stored = remember && !captureOnly ? readStoredMapView(blueprintKey) : null;
