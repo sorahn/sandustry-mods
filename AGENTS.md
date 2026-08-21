@@ -122,6 +122,23 @@ fresh clone.
   follow-up work as a new section or a new plan rather than replacing the
   historical context.
 
+## Research notes
+
+Use `planning/notes/` as the persistent notebook for discoveries made while
+inspecting reference bundles, runtime captures, reverse-engineering material,
+or other repository evidence. Before starting related investigation, read the
+relevant notes; as new facts are learned, update the notes during the task so
+future agents do not have to rediscover them.
+
+- Keep notes in descriptive Markdown files, grouped by topic or subsystem.
+- Record the evidence or source, the observed behavior, confidence or
+  inferences, unresolved questions, and any compatibility limitations.
+- Put actionable implementation steps and completion checkboxes in the
+  relevant `*-PLAN.md`; cross-reference the research note instead of copying
+  large investigations into the plan.
+- Treat notes as local working material. Do not add generated output, archives,
+  secrets, or transient logs.
+
 ## Project goal
 
 This repository contains a Sandustry v1 mod that adds two creative utility

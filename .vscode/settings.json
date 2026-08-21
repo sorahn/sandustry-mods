@@ -9,5 +9,6 @@
   "files.exclude": {
     "**/build": true
   },
-  "js/ts.preferences.autoImportEntrypointDirectorySearch": true
+  "js/ts.preferences.autoImportEntrypointDirectorySearch": true,
+  "workbench.colorTheme": "Dark 2026"
 }
