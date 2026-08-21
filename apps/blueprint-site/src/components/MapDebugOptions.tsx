@@ -5,6 +5,7 @@ import {
   SHOW_DEBUG_CELLS_KEY,
   SHOW_FOUNDATION_OUTLINES_KEY,
   SHOW_NAMES_KEY,
+  SHOW_RAW_STRUCTURES_KEY,
   SHOW_SIGNAL_LINKS_KEY,
   SHOW_SPRITES_KEY,
 } from "../utils/storage-keys";
@@ -22,6 +23,8 @@ type MapDebugOptionsProps = {
   onShowFoundationOutlinesChange: (value: boolean) => void;
   showSignalLinks: boolean;
   onShowSignalLinksChange: (value: boolean) => void;
+  showRawStructures: boolean;
+  onShowRawStructuresChange: (value: boolean) => void;
 };
 
 export function MapDebugOptions({
@@ -37,6 +40,8 @@ export function MapDebugOptions({
   onShowFoundationOutlinesChange,
   showSignalLinks,
   onShowSignalLinksChange,
+  showRawStructures,
+  onShowRawStructuresChange,
 }: MapDebugOptionsProps) {
   const toggles = [
     <PersistentCheckbox
@@ -92,6 +97,15 @@ export function MapDebugOptions({
       defaultChecked={showFoundationOutlines}
       onCheckedChange={onShowFoundationOutlinesChange}
       onInitialCheckedChange={onShowFoundationOutlinesChange}
+    />,
+    <PersistentCheckbox
+      boxed
+      size="small"
+      label="raw structures"
+      storageKey={SHOW_RAW_STRUCTURES_KEY}
+      defaultChecked={showRawStructures}
+      onCheckedChange={onShowRawStructuresChange}
+      onInitialCheckedChange={onShowRawStructuresChange}
     />,
   ];
 

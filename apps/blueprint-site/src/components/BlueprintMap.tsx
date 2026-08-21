@@ -18,6 +18,7 @@ import { BlueprintMapViewportControls } from "./BlueprintMapViewportControls";
 import {
   BlueprintMapFoundationOutlineLayer,
   BlueprintMapGridLayer,
+  BlueprintMapRawStructuresLayer,
   BlueprintMapSignalLinksLayer,
 } from "./BlueprintMapLayers";
 import { useBlueprintMapViewport } from "../hooks/useBlueprintMapViewport";
@@ -169,6 +170,7 @@ export function BlueprintMap({
   const [showCustomShapes, setShowCustomShapes] = useState(false);
   const [showFoundationOutlines, setShowFoundationOutlines] = useState(true);
   const [showSignalLinks, setShowSignalLinks] = useState(true);
+  const [showRawStructures, setShowRawStructures] = useState(false);
   // Sprite hiding is a local renderer debugging aid. Keep the production
   // render path hard-wired to sprites regardless of persisted debug state.
   const spritesVisible = import.meta.env.PROD || showSprites;
@@ -274,6 +276,8 @@ export function BlueprintMap({
     onShowFoundationOutlinesChange: setShowFoundationOutlines,
     showSignalLinks,
     onShowSignalLinksChange: setShowSignalLinks,
+    showRawStructures,
+    onShowRawStructuresChange: setShowRawStructures,
   });
   useEffect(() => {
     const stored = remember && !captureOnly ? readStoredMapView(blueprintKey) : null;
@@ -613,6 +617,14 @@ export function BlueprintMap({
               </>
             );
           })()}
+          <BlueprintMapRawStructuresLayer
+            preparedBlueprint={preparedBlueprint}
+            visible={showRawStructures}
+            minX={minX}
+            minY={minY}
+            padding={padding}
+            cell={cell}
+          />
           <BlueprintMapSignalLinksLayer
             preparedBlueprint={preparedBlueprint}
             visible={signalLinksVisible}

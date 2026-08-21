@@ -12,3 +12,4 @@ export const SHOW_SPRITES_KEY = "sandustry.blueprintInspector.showSprites";
 export const SHOW_CUSTOM_SHAPES_KEY = "sandustry.blueprintInspector.showCustomShapes";
 export const SHOW_FOUNDATION_OUTLINES_KEY = "sandustry.blueprintInspector.showFoundationOutlines";
 export const SHOW_SIGNAL_LINKS_KEY = "sandustry.blueprintInspector.showSignalLinks";
+export const SHOW_RAW_STRUCTURES_KEY = "sandustry.blueprintInspector.showRawStructures";

@@ -2,11 +2,46 @@ import {
   foundationOutlinePath,
   NATIVE_PIXELS_PER_CELL,
   renderPixelScale,
+  underlyingCellCoordinates,
 } from "@sandustry/blueprint-core";
 import { memo } from "react";
 import { type BlueprintMapModel, mapLayerStyle } from "../utils/blueprint-map";
 
 type PreparedBlueprint = BlueprintMapModel["preparedBlueprint"];
+
+export const BlueprintMapRawStructuresLayer = memo(function BlueprintMapRawStructuresLayer({
+  preparedBlueprint,
+  visible,
+  minX,
+  minY,
+  padding,
+  cell,
+}: {
+  preparedBlueprint: PreparedBlueprint;
+  visible: boolean;
+  minX: number;
+  minY: number;
+  padding: number;
+  cell: number;
+}) {
+  if (!visible) return null;
+  return (
+    <g opacity="0.9" pointerEvents="none" style={mapLayerStyle("debugCells")}>
+      {underlyingCellCoordinates(preparedBlueprint.preparedStructures).map(({ x, y }, index) => (
+        <rect
+          key={`raw-structure-${x}-${y}-${index}`}
+          x={(x - minX + padding) * cell}
+          y={(y - minY + padding) * cell}
+          width={cell}
+          height={cell}
+          fill="#ff0000"
+          stroke="#000000"
+          strokeWidth="1"
+        />
+      ))}
+    </g>
+  );
+});
 
 export const BlueprintMapGridLayer = memo(function BlueprintMapGridLayer({
   width,

@@ -90,6 +90,8 @@ export type PreparedStructure = {
   sprite?: PreparedSprite;
 };
 
+export type UnderlyingCell = { x: number; y: number };
+
 export type PreparedBlueprint = Blueprint & {
   bounds: { minX: number; minY: number; maxX: number; maxY: number };
   signalCoordinateOffset: BlueprintCoordinate;
@@ -315,6 +317,22 @@ export function isBeltType(type: BlueprintType) {
   return BELT_TYPES.has(type);
 }
 
+export function underlyingCellCoordinates(structures: PreparedStructure[]): UnderlyingCell[] {
+  return structures.flatMap((prepared) => {
+    if (!contributesUnderlyingCells(prepared)) return [];
+    const shape =
+      prepared.shape ??
+      Array.from({ length: prepared.footprint.height }, () =>
+        Array.from({ length: prepared.footprint.width }, () => 1),
+      );
+    return shape.flatMap((row, rowIndex) =>
+      row.flatMap((value, columnIndex) =>
+        value === 0 ? [] : [{ x: prepared.structure.x + columnIndex, y: prepared.topY + rowIndex }],
+      ),
+    );
+  });
+}
+
 export function foundationOutlinePath(
   structures: PreparedStructure[],
   minX: number,
@@ -323,22 +341,7 @@ export function foundationOutlinePath(
   cell: number,
 ) {
   const outlineOffset = 0.5 / 4;
-  const occupied = new Set<string>();
-  for (const prepared of structures) {
-    if (!contributesUnderlyingCells(prepared)) continue;
-    const shape =
-      prepared.shape ??
-      Array.from({ length: prepared.footprint.height }, () =>
-        Array.from({ length: prepared.footprint.width }, () => 1),
-      );
-    shape.forEach((row, rowIndex) => {
-      row.forEach((value, columnIndex) => {
-        if (value !== 0) {
-          occupied.add(`${prepared.structure.x + columnIndex},${prepared.topY + rowIndex}`);
-        }
-      });
-    });
-  }
+  const occupied = new Set(underlyingCellCoordinates(structures).map(({ x, y }) => `${x},${y}`));
 
   const edges: Array<{ from: [number, number]; to: [number, number] }> = [];
   const edge = (x: number, y: number, nextX: number, nextY: number) => {
