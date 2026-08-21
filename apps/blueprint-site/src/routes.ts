@@ -5,6 +5,7 @@ import { BlueprintInspectorPage } from "./pages/Inspector";
 import { BlueprintVisualFixturePage } from "./pages/VisualFixture";
 import { DebugPage } from "./pages/Debug";
 import { HomePage } from "./pages/HomePage";
+import { SaveExplorerPage } from "./pages/Explorer";
 
 const rootRoute = createRootRoute({ component: AppLayout });
 const indexRoute = createRoute({ getParentRoute: () => rootRoute, path: "/", component: HomePage });
@@ -28,6 +29,11 @@ const debugRoute = createRoute({
   path: "/debug",
   component: DebugPage,
 });
+const explorerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/explorer",
+  component: SaveExplorerPage,
+});
 
 export const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -35,4 +41,5 @@ export const routeTree = rootRoute.addChildren([
   inspectorRoute,
   visualFixtureRoute,
   debugRoute,
+  explorerRoute,
 ]);

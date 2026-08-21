@@ -84,6 +84,37 @@ p a {
   max-width: 100%;
 }
 
+.save-explorer-dropzone {
+  display: flex;
+  min-height: 5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-bottom: 1px solid rgb(30 41 59 / 0.9);
+  background: rgb(15 23 42 / 0.45);
+  padding: 1rem;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+.save-explorer-dropzone--active {
+  border-color: rgb(255 231 0 / 0.7);
+  background: rgb(113 63 18 / 0.28);
+}
+.save-explorer-map-frame {
+  display: flex;
+  min-height: min(65vh, 42rem);
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  background: #000;
+  padding: 1rem;
+}
+.save-explorer-map {
+  display: block;
+  width: min(100%, 60rem);
+  height: auto;
+  image-rendering: pixelated;
+}
+
 .blueprint-visual-test--capture .blueprint-core-png {
   max-width: none;
 }
