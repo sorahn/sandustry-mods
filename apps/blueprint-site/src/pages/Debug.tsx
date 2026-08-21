@@ -74,6 +74,97 @@ const hotbarSlots = [
   { id: "light", label: "Light", icon: <span className="text-xl text-yellow-300">✦</span> },
 ];
 
+type ColorEntry = { name: string; value: string; use: string };
+type ColorGroup = { name: string; description: string; colors: ColorEntry[] };
+
+const colorGroups: ColorGroup[] = [
+  {
+    name: "Black",
+    description: "Bedrock, dark rock, and deep UI surfaces",
+    colors: [
+      { name: "Bedrock", value: "#222222", use: "terrain" },
+      { name: "Blackrock", value: "#141414", use: "terrain" },
+      { name: "Oil", value: "#1a1410", use: "element" },
+      { name: "BG Dark", value: "#1a1a2e", use: "UI" },
+    ],
+  },
+  {
+    name: "Red",
+    description: "Lava, fire, danger, and red soil",
+    colors: [
+      { name: "Sandium Soil", value: "#8b0000", use: "terrain" },
+      { name: "Lava Fog", value: "#b22222", use: "terrain" },
+      { name: "Lava", value: "#ff3300", use: "element" },
+      { name: "Danger", value: "#ef4444", use: "status" },
+    ],
+  },
+  {
+    name: "Green",
+    description: "Grass, moss, plants, and success states",
+    colors: [
+      { name: "Grass", value: "#228b22", use: "terrain" },
+      { name: "Moss", value: "#1dae1d", use: "terrain" },
+      { name: "Primary", value: "#22c55e", use: "status" },
+      { name: "Success", value: "#4ade80", use: "tutorial" },
+    ],
+  },
+  {
+    name: "Yellow",
+    description: "Gold, sand, warning, and the primary game accent",
+    colors: [
+      { name: "Game accent", value: "#ffe700", use: "selected/focused" },
+      { name: "Gold", value: "#ffd700", use: "element/UI" },
+      { name: "Gold Soil", value: "#daa520", use: "terrain" },
+      { name: "Dune", value: "#eed975", use: "terrain" },
+      { name: "Warning", value: "#ffaa44", use: "status" },
+    ],
+  },
+  {
+    name: "Blue",
+    description: "Water, ice, coolant, and informational states",
+    colors: [
+      { name: "Water", value: "#1e90ff", use: "element" },
+      { name: "Water accent", value: "#66ccff", use: "UI/material" },
+      { name: "Ice", value: "#afeeee", use: "terrain" },
+      { name: "Coolant", value: "#0033aa", use: "element" },
+      { name: "Logistics", value: "#60a5fa", use: "tutorial" },
+    ],
+  },
+  {
+    name: "Magenta",
+    description: "Petalium, fluxite, void materials, and secondary accents",
+    colors: [
+      { name: "Fluxite", value: "#8a2be2", use: "terrain" },
+      { name: "Petalium", value: "#cc5cdb", use: "element" },
+      { name: "Hot Pink", value: "#ff1493", use: "UI/effect" },
+      { name: "Void Seeds", value: "#9932cc", use: "element" },
+      { name: "Purple", value: "#9966ff", use: "status" },
+    ],
+  },
+  {
+    name: "Cyan",
+    description: "Steam, freezing materials, crystal, and information",
+    colors: [
+      { name: "Info", value: "#00ffff", use: "status" },
+      { name: "Freezing Ice Soil", value: "#add8e6", use: "terrain" },
+      { name: "Freezing Ice", value: "#e0ffff", use: "element" },
+      { name: "Water tutorial", value: "#4fc3f7", use: "tutorial" },
+      { name: "Crystal", value: "#0094b3", use: "terrain" },
+    ],
+  },
+  {
+    name: "White",
+    description: "Text, steam, residue, and pale material highlights",
+    colors: [
+      { name: "Text", value: "#ffffff", use: "UI" },
+      { name: "Steam", value: "#f7f7f7", use: "element" },
+      { name: "Residue", value: "#cccccc", use: "element" },
+      { name: "Stone", value: "#808080", use: "terrain" },
+      { name: "Muted", value: "#888888", use: "UI" },
+    ],
+  },
+];
+
 function ShowcaseSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section>
@@ -163,6 +254,51 @@ export function DebugPage() {
               <span>ProgressBar</span>
               <span>68%</span>
             </div>
+          </div>
+        </Panel>
+      </ShowcaseSection>
+
+      <ShowcaseSection title="Color catalog">
+        <Panel className="p-5">
+          <p className="mb-4 max-w-3xl text-sm leading-6 text-slate-400">
+            A compact view of the catalog, grouped into broad color families for easier browsing.
+            The grouping is for navigation rather than an exact color conversion; each swatch keeps
+            its original game-facing hex value and role.
+          </p>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {colorGroups.map((group) => (
+              <section
+                key={group.name}
+                className="overflow-hidden rounded border border-slate-700/80 bg-black/40"
+              >
+                <div className="border-b border-slate-700/70 px-3 py-2">
+                  <h3 className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-white">
+                    {group.name}
+                  </h3>
+                  <p className="mt-1 text-[11px] leading-4 text-slate-500">{group.description}</p>
+                </div>
+                <div className="divide-y divide-slate-800/80">
+                  {group.colors.map((color) => (
+                    <div
+                      key={`${group.name}-${color.name}`}
+                      className="flex items-center gap-2 px-3 py-2"
+                    >
+                      <span
+                        className="h-6 w-6 shrink-0 rounded-sm border border-white/20 shadow-inner"
+                        style={{ backgroundColor: color.value }}
+                        title={`${color.name}: ${color.value}`}
+                      />
+                      <div className="min-w-0">
+                        <div className="truncate text-xs text-slate-200">{color.name}</div>
+                        <div className="font-mono text-[10px] text-slate-500">
+                          {color.value} · {color.use}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
           </div>
         </Panel>
       </ShowcaseSection>
