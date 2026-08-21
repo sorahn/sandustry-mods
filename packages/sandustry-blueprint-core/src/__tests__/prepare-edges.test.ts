@@ -2,6 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   customShapeFromStructure,
   defaultSignalPoints,
+  contributesUnderlyingCells,
   foundationOutlinePath,
   prepareBlueprint,
   shapeForStructure,
@@ -244,5 +245,72 @@ describe("blueprint preparation edges", () => {
       signalLinks: null,
     });
     expect(foundationOutlinePath(prefab.preparedStructures, 0, 0, 1, 8)).not.toBe("");
+  });
+
+  test("recognizes every remaining raw native and shipped mask", () => {
+    const shapes = new Map([
+      [
+        8,
+        [
+          [0, 1, 1, 0],
+          [1, 1, 0, 0],
+          [1, 0, 0, 0],
+          [1, 0, 0, 0],
+        ],
+      ],
+      [
+        9,
+        [
+          [0, 1, 1, 0],
+          [0, 0, 1, 1],
+          [0, 0, 0, 1],
+          [0, 0, 0, 1],
+        ],
+      ],
+      [
+        10,
+        [
+          [1, 0, 0, 1],
+          [1, 0, 1, 1],
+          [1, 0, 1, 1],
+          [0, 1, 1, 1],
+        ],
+      ],
+      [19, Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 1))],
+      [
+        20,
+        [
+          [1, 1, 1, 1],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+          [0, 0, 0, 0],
+        ],
+      ],
+      ["conveyorLeftMk2", Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 1))],
+      ["conveyorRightMk2", Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 1))],
+      ["burnerBeltLeft", Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 1))],
+      ["burnerBeltRight", Array.from({ length: 4 }, () => Array.from({ length: 4 }, () => 1))],
+    ]);
+    const prepared = prepareBlueprint(
+      {
+        name: "Raw masks",
+        data: [...shapes.keys()].map((type, index) => ({ type, x: index * 4, y: 0 })),
+        signalLinks: null,
+      },
+      {
+        catalog: {
+          get: (type) => ({
+            footprint: { width: 4, height: 4 },
+            shape: shapes.get(type),
+            rawShape: true,
+          }),
+        },
+      },
+    );
+    expect(prepared.preparedStructures.every(contributesUnderlyingCells)).toBe(true);
+    expect(foundationOutlinePath(prepared.preparedStructures, 0, 0, 1, 8)).not.toBe("");
+    expect(foundationOutlinePath([prepared.preparedStructures[0]], 0, 0, 1, 8)).not.toBe(
+      foundationOutlinePath([prepared.preparedStructures[1]], 0, 0, 1, 8),
+    );
   });
 });
