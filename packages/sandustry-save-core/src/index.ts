@@ -92,6 +92,13 @@ export {
 
 export { inspectSaveExplorerCell, type SaveExplorerCellInspection } from "./inspection";
 
+export {
+  saveExplorerCellName,
+  saveExplorerElementName,
+  saveExplorerStructureName,
+  saveExplorerTerrainName,
+} from "./catalog";
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }

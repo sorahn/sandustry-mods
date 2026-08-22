@@ -1,5 +1,6 @@
 import { classifySaveExplorerMatrixValue, type SaveExplorerCellKind } from "./model";
 import { decodeDamagedTerrainValue, expandRunLengthPairs, type SaveGameDocument } from "./index";
+import { saveExplorerCellName, saveExplorerStructureName } from "./catalog";
 
 export type SaveExplorerCellInspection = {
   mapX: number;
@@ -12,11 +13,12 @@ export type SaveExplorerCellInspection = {
   revealed: boolean;
   kind?: SaveExplorerCellKind;
   type?: number;
+  name?: string;
   terrainHp?: number;
   particle?: boolean;
   velocity?: { x: number; y: number };
   raw?: unknown;
-  structures?: Array<{ type: string | number; x: number; y: number }>;
+  structures?: Array<{ type: string | number; name?: string; x: number; y: number }>;
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -103,6 +105,7 @@ export function inspectSaveExplorerCell(
           inspection.velocity = { x: value.velocity.x, y: value.velocity.y };
         }
       }
+      inspection.name = saveExplorerCellName(inspection.kind, inspection.type);
       inspection.raw = value;
       break;
     }
@@ -117,7 +120,14 @@ export function inspectSaveExplorerCell(
         return [];
       if (typeof value.x !== "number" || typeof value.y !== "number") return [];
       return Math.floor(value.x / cellSize) === mapX && Math.floor(value.y / cellSize) === mapY
-        ? [{ type: value.type, x: value.x, y: value.y }]
+        ? [
+            {
+              type: value.type,
+              name: saveExplorerStructureName(value.type),
+              x: value.x,
+              y: value.y,
+            },
+          ]
         : [];
     });
   }

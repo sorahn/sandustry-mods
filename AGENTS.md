@@ -9,6 +9,15 @@ runtime surface captures and reverse-engineering notes, so use it to guide
 investigation and type declarations while keeping unstable private engine
 internals local to the diagnostic code that needs them.
 
+## First-party bundled mod compatibility
+
+Treat first-party bundled mods as supported content for anything in any
+project we work on. Every feature, parser, catalog, renderer, UI, lookup, and
+integration must account for bundled mod content alongside base-game content.
+Prefer runtime or captured catalog data over hard-coded base-game-only
+assumptions, and retain a clear fallback when a bundled mod definition cannot
+be resolved.
+
 ## Blueprint renderer terminology
 
 Use these native-unit terms precisely when discussing the blueprint renderer

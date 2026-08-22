@@ -6,7 +6,19 @@ import {
   normalizeSaveDocument,
   createSaveExplorerTileIndex,
   renderMinimapRgba,
+  saveExplorerElementName,
+  saveExplorerStructureName,
+  saveExplorerTerrainName,
 } from "../src/index";
+
+test("resolves known first-party catalog names", () => {
+  expect(saveExplorerTerrainName(44)).toBe("Copper");
+  expect(saveExplorerTerrainName(54)).toBeUndefined();
+  expect(saveExplorerElementName(19)).toBe("Lava");
+  expect(saveExplorerElementName(33)).toBeUndefined();
+  expect(saveExplorerStructureName(16)).toBe("Collector");
+  expect(saveExplorerStructureName("signalAnd")).toBe("Signal AND");
+});
 
 test("classifies terrain, settled elements, moving elements, and particles", () => {
   expect(classifySaveExplorerMatrixValue(0)).toBe("empty");
@@ -42,6 +54,7 @@ test("inspects revealed minimap cells without exposing fogged contents", () => {
   expect(inspectSaveExplorerCell(save, 0, 0)).toMatchObject({
     revealed: true,
     kind: "terrain",
+    name: "Dirt",
     structures: [{ type: 16, x: 0, y: 0 }],
   });
 
@@ -52,6 +65,7 @@ test("inspects revealed minimap cells without exposing fogged contents", () => {
   expect(inspectSaveExplorerCell(numericElementSave, 0, 0)).toMatchObject({
     kind: "settled-element",
     type: 19,
+    name: "Lava",
   });
 
   expect(inspectSaveExplorerCell(save, 1, 0)).toEqual({

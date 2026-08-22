@@ -453,7 +453,9 @@ export function SaveExplorerPage() {
                         {inspection.type === undefined ? (
                           <div>unknown value</div>
                         ) : (
-                          <div>type {inspection.type}</div>
+                          <div>
+                            {inspection.name ?? "unknown"} (type {inspection.type})
+                          </div>
                         )}
                         {inspection.terrainHp === undefined ? null : (
                           <div>terrain HP {inspection.terrainHp}</div>
@@ -468,7 +470,12 @@ export function SaveExplorerPage() {
                           </div>
                         ) : null}
                         {inspection.structures?.length ? (
-                          <div>{inspection.structures.length} structure(s)</div>
+                          <div>
+                            structures:{" "}
+                            {inspection.structures
+                              .map((structure) => structure.name ?? `type ${structure.type}`)
+                              .join(", ")}
+                          </div>
                         ) : null}
                       </>
                     ) : (
