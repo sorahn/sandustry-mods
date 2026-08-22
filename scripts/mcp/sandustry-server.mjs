@@ -184,7 +184,23 @@ class DebugTargets {
       apiNamespaces: typeof globalThis.sandkit?.api === "object" && globalThis.sandkit?.api
         ? Object.keys(globalThis.sandkit.api).sort()
         : [],
-      globals: ["SMLN", "sandkit", "React"].filter((key) => key in globalThis)
+      globals: ["SMLN", "sandkit", "React", "electron", "webpackChunksand_v1"].filter((key) => key in globalThis),
+      electronMembers: typeof globalThis.electron === "object"
+        ? Object.fromEntries(Object.entries(globalThis.electron).map(([key, value]) => [key, typeof value]))
+        : {},
+      hmrHosts: globalThis.__sandustryDevHmrHosts__
+        ? Object.fromEntries(Object.entries(globalThis.__sandustryDevHmrHosts__).map(([modId, host]) => [modId, {
+            installed: host.installed,
+            booted: host.booted,
+            reloading: host.reloading,
+            disposerCount: typeof host.disposers?.size === "number"
+              ? host.disposers.size
+              : Array.isArray(host.disposers) ? host.disposers.length : null
+          }]))
+        : {},
+      webpackRuntime: globalThis.webpackChunksand_v1
+        ? { type: typeof globalThis.webpackChunksand_v1, keys: Object.keys(globalThis.webpackChunksand_v1) }
+        : null
     }))()`);
     return value;
   }
@@ -245,7 +261,7 @@ class WebSocketClient {
         reject(error);
         return;
       }
-      const socket = net.createConnection({ host: url.hostname, port: Number(url.port) || 80 });
+      const socket = new net.Socket();
       const key = crypto.randomBytes(16).toString("base64");
       let header = "";
       let client;
