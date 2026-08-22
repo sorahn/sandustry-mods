@@ -1,0 +1,44 @@
+{
+  "manifestVersion": 1,
+  "id": "sorahn.sandustry-jailbreak-limits",
+  "name": "Jailbreak Building Limits",
+  "version": "0.1.1",
+  "apiVersion": 1,
+  "author": "sorahn",
+  "entry": "entry.js",
+  "description": "Removes placement limits on Stratacores, Fluxite Generators, Void Seed Spawners, and other capped buildings.",
+  "dependencies": [],
+  "loadOrder": 1000,
+  "configSchema": {
+    "uncapAll": {
+      "type": "boolean",
+      "default": false,
+      "labelKey": "Uncap all structures globally",
+      "descriptionKey": "When enabled, removes placement limits for every structure in the game instead of only target structures."
+    },
+    "uncapStratacore": {
+      "type": "boolean",
+      "default": true,
+      "labelKey": "Uncap Stratacores",
+      "descriptionKey": "Allow placing unlimited Stratacores."
+    },
+    "uncapFluxiteGenerator": {
+      "type": "boolean",
+      "default": true,
+      "labelKey": "Uncap Fluxite Generators",
+      "descriptionKey": "Allow placing unlimited Fluxite Generators / Emanators."
+    },
+    "uncapVoidSeedSpawner": {
+      "type": "boolean",
+      "default": true,
+      "labelKey": "Uncap Void Seed Spawners",
+      "descriptionKey": "Allow placing unlimited Void Seed Spawners / Void Converters."
+    },
+    "stabilizeCosts": {
+      "type": "boolean",
+      "default": true,
+      "labelKey": "Stabilize placement costs",
+      "descriptionKey": "Prevents placement costs from scaling exponentially as more jailbroken structures are placed."
+    }
+  }
+}

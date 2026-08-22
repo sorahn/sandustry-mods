@@ -54,9 +54,9 @@ interface SandustryEvents {
 }
 
 interface SandustrySettings {
-  get<T = unknown>(key: string): T;
+  get<T = unknown>(key: string, secondaryKey?: string): T;
   getAll(): Record<string, unknown>;
-  onChange(callback: () => void): void;
+  onChange(modIdOrCallback: string | (() => void), callback?: () => void): void;
 }
 
 interface SandustryStructureBuildMode {
@@ -150,7 +150,12 @@ interface SandustryApi {
   hooks: {
     modify(
       hookId: string,
-      callback: (args: Record<string, any>) => void,
+      callback: (...args: any[]) => any,
+      options?: Record<string, unknown>,
+    ): () => void;
+    intercept?(
+      hookId: string,
+      callback: (...args: any[]) => any,
       options?: Record<string, unknown>,
     ): () => void;
   };
@@ -186,6 +191,12 @@ interface SandustryApi {
   structures: {
     forEachOfType(id: string, callback: (structure: SandustryStructure) => void): void;
     register(definition: SandustryStructureDefinition): void;
+    buildAtCellWhenIdle?(
+      x: number,
+      y: number,
+      type: string,
+      options?: Record<string, unknown>,
+    ): void;
     setSpritesheetIndex(structure: SandustryStructure, index: number): void;
     update(structure: SandustryStructure, options?: SandustryPropagationOptions): void;
     setData(
@@ -193,6 +204,10 @@ interface SandustryApi {
       data: SandustryStructureData,
       options?: SandustryPropagationOptions,
     ): void;
+    getTypeFromId?(id: number | string): string | null;
+    getUnlockedTypes?(): string[];
+    getDefinitionByType?(type: string | number): SandustryStructureDefinition | null;
+    updateDefinition?(type: string | number, partial: Record<string, unknown>): void;
   };
   terrains: {
     getTypeFromId(id: string): number | null;
