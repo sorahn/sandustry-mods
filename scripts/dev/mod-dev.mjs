@@ -42,6 +42,7 @@ const manifestPath = join(modDir, "modinfo.json");
 const sourcePath = join(modDir, "src", "entry.tsx");
 const buildDir = join(modDir, "build");
 const packageDir = join(buildDir, "package");
+const devEntryPath = join(buildDir, "dev-entry.js");
 const reloadConfigPath = join(modDir, "dev-reload.json");
 const manifest = readJson(manifestPath);
 const modId = requiredString(manifest.id, "modinfo.id");
@@ -316,11 +317,11 @@ async function buildAndInstall(reason) {
       jsxFactory: "sandkit.react.createElement",
       jsxFragment: "sandkit.react.Fragment",
       alias: { "~shared": join(ROOT, "shared") },
-      outfile: join(buildDir, "entry.js"),
+      outfile: devEntryPath,
       logLevel: "info",
     });
 
-    const entryPath = join(buildDir, "entry.js");
+    const entryPath = devEntryPath;
     const bundle = readFileSync(entryPath, "utf8");
     const hmrConfig = {
       modId,
@@ -362,7 +363,7 @@ function reloadMode() {
 async function installPackage() {
   captureInstalledWorkshopId();
   await mkdir(packageDir, { recursive: true });
-  await cp(join(buildDir, "entry.js"), join(packageDir, "entry.js"));
+  await cp(devEntryPath, join(packageDir, "entry.js"));
   await cp(manifestPath, join(packageDir, "modinfo.json"));
 
   for (const name of ["assets", "preview.png"]) {

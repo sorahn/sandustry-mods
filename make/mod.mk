@@ -13,15 +13,17 @@ PACKAGE_DIR := $(BUILD_DIR)/package
 SANDUSTRY_MODS_DIR ?= /Users/daryl/Library/Application Support/sandustry/mods
 INSTALL_DIR := $(SANDUSTRY_MODS_DIR)/$(MOD_ID)
 
-.PHONY: all build package install check format version major minor patch clean
+.PHONY: all build package install check format version major minor patch clean FORCE
 all: build
+
+FORCE:
 build: $(ARCHIVE)
 
-$(BUILD_DIR)/entry.js: $(shell find $(SRC_DIR) -type f -print 2>/dev/null) $(REPO_ROOT)/tsconfig.json $(REPO_ROOT)/types/sandustry.d.ts
+$(BUILD_DIR)/entry.js: FORCE $(shell find $(SRC_DIR) -type f -print 2>/dev/null) $(REPO_ROOT)/tsconfig.json $(REPO_ROOT)/types/sandustry.d.ts
 	@mkdir -p "$(BUILD_DIR)"
 	@echo "Compiling $(MOD_ID)"
 	@cd "$(REPO_ROOT)" && npx tsc --noEmit
-	@cd "$(REPO_ROOT)" && npx esbuild "$(SRC_DIR)/entry.tsx" --bundle --format=esm --platform=neutral --target=es2022 --jsx-factory=sandkit.react.createElement --jsx-fragment=sandkit.react.Fragment --alias:~shared="$(REPO_ROOT)/shared" --outfile="$(BUILD_DIR)/entry.js"
+	@cd "$(REPO_ROOT)" && npx esbuild "$(SRC_DIR)/entry.tsx" --bundle --format=esm --platform=neutral --target=es2022 --drop:console --jsx-factory=sandkit.react.createElement --jsx-fragment=sandkit.react.Fragment --alias:~shared="$(REPO_ROOT)/shared" --outfile="$(BUILD_DIR)/entry.js"
 
 $(ARCHIVE): $(BUILD_DIR)/entry.js $(MANIFEST) $(shell find $(MOD_DIR)/assets -type f -print 2>/dev/null) $(wildcard $(MOD_DIR)/preview.png)
 	@rm -rf "$(PACKAGE_DIR)"
