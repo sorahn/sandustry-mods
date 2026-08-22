@@ -69,7 +69,9 @@ export const BlueprintMapStructure = memo(function BlueprintMapStructure({
   const labelFontSize = Math.max(8, cell * 0.9);
   const labelLineHeight = labelFontSize * 1.15;
   const labelLines = wrapLabel(label, Math.max(3, Math.floor(tileWidth / (labelFontSize * 0.6))));
-  const labelY = top + tileHeight / 2 - ((labelLines.length - 1) * labelLineHeight) / 2 + 12;
+  // `y` is the centerline of each line, so the complete wrapped label is
+  // centered in the structure block rather than being biased below it.
+  const labelY = top + tileHeight / 2 - ((labelLines.length - 1) * labelLineHeight) / 2;
 
   return (
     <g
@@ -145,6 +147,7 @@ export const BlueprintMapStructure = memo(function BlueprintMapStructure({
           x={labelX}
           y={labelY}
           textAnchor="middle"
+          dominantBaseline="middle"
           fill="#f8fafc"
           fontSize={labelFontSize}
           fontWeight="700"

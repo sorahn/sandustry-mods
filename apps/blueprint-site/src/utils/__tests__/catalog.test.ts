@@ -18,6 +18,27 @@ describe("site catalog utilities", () => {
       name: "Infinite Source",
       footprint: { width: 4, height: 4 },
     });
+    expect(catalogEntry(1)?.name).toBe("Conveyor Left");
+    expect(catalogEntry(3)?.name).toBe("Shaker Left");
+    expect(catalogEntry(6)?.name).toBe("Launcher Left");
+    expect(catalogEntry(7)?.name).toBe("Launcher Right");
+    expect(catalogEntry(8)?.name).toBe("Splitter Left");
+    expect(catalogEntry(9)?.name).toBe("Splitter Right");
+    expect(catalogEntry(10)?.name).toBe("Dropper");
+    expect(catalogEntry(19)?.name).toBe("Sliding Foundation");
+    expect(catalogEntry(22)?.name).toBe("Sound Box");
+    expect(catalogEntry("quantumPortalExit")?.name).toBe("Conveyor Portal Exit");
+    expect(catalogEntry("powerBrick")?.name).toBe("Power Brick");
+  });
+
+  test("uses the verified directional and sound-box assets", () => {
+    expect(catalogEntry(12)?.renderAsset?.path).toBe("catalog/img__triangle_left.png");
+    expect(catalogEntry(13)?.renderAsset?.path).toBe("catalog/img__triangle_left_del.png");
+    expect(catalogEntry(14)?.renderAsset?.path).toBe("catalog/img__triangle_right.png");
+    expect(catalogEntry(15)?.renderAsset?.path).toBe("catalog/img__triangle_right_del.png");
+    expect(catalogEntry(22)?.renderAsset?.path).toBe("catalog/img__sound_box.png");
+    expect(catalogEntry(10)?.renderAsset).toBeUndefined();
+    expect(catalogEntry(19)?.renderAsset).toBeUndefined();
   });
 
   test("returns undefined for unknown structure types", () => {

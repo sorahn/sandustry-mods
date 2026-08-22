@@ -121,7 +121,8 @@ function renderStructure(
   const label = entry?.name ?? structureLabel(prepared.structure.type);
   const labelFontSize = Math.max(8, model.cell * 0.9);
   const lines = wrapLabel(label, Math.max(3, Math.floor(tileWidth / (labelFontSize * 0.6))));
-  const labelY = top + tileHeight / 2 - ((lines.length - 1) * labelFontSize * 1.15) / 2 + 12;
+  const labelLineHeight = labelFontSize * 1.15;
+  const labelY = top + tileHeight / 2 - ((lines.length - 1) * labelLineHeight) / 2;
   let output = `<g data-structure-index="${index}">`;
   const customAsset = isCustomShape ? options.catalog?.get(11)?.renderAsset : undefined;
   const asset = prepared.sprite?.asset ?? customAsset;
@@ -189,7 +190,7 @@ function renderStructure(
     output += lines
       .map(
         (line, lineIndex) =>
-          `<text x="${number(left + tileWidth / 2)}" y="${number(labelY + lineIndex * labelFontSize * 1.15)}" text-anchor="middle" fill="#f8fafc" font-size="${number(labelFontSize)}" font-weight="700" font-family="ui-monospace,monospace">${escapeXml(line)}</text>`,
+          `<text x="${number(left + tileWidth / 2)}" y="${number(labelY + lineIndex * labelLineHeight)}" dominant-baseline="middle" text-anchor="middle" fill="#f8fafc" font-size="${number(labelFontSize)}" font-weight="700" font-family="ui-monospace,monospace">${escapeXml(line)}</text>`,
       )
       .join("");
   }

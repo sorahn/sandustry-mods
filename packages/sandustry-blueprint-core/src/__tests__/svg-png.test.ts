@@ -108,6 +108,7 @@ describe("SVG and PNG adapters", () => {
     expect(result).toContain("rotate(90");
     expect(result).toContain('fill="#fff"');
     expect(result).toContain("#00ff99");
+    expect(result).toContain('dominant-baseline="middle"');
     expect(result).toContain(">Mac</text>");
   });
 
