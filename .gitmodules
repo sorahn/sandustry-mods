@@ -7,3 +7,6 @@
 [submodule "resources/SandustryModTemplate"]
 	path = resources/SandustryModTemplate
 	url = https://github.com/IrishBruse/SandustryModTemplate
+[submodule "resources/SandLoader-Mods"]
+	path = resources/SandLoader-Mods
+	url = https://github.com/LopeKinz/SandLoader-Mods
