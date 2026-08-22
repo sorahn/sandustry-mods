@@ -73,6 +73,50 @@ test("composites the sectioned wall layer from the native save palette", async (
   expect(changedPixels).toBeGreaterThan(50_000);
 });
 
+test("renders authorization zones as an independent debug layer", () => {
+  const authorizationSection = Array.from({ length: 16 * 16 }, () => 0);
+  authorizationSection[0] = 1;
+  const save = {
+    metadata: { id: "fixture" },
+    payload: {
+      store: { world: { size: { width: 8, height: 4 } }, structures: [] },
+      matrix: [0, 32],
+      authorization: {
+        sections: [authorizationSection],
+        data: [0, 1],
+        width: 8,
+        height: 4,
+      },
+    },
+    compressedPayloadBytes: 1,
+    decompressedPayloadBytes: 1,
+  } as SaveGameDocument;
+
+  const withAuthorization = renderMinimapRgba(save, {
+    drawTerrain: false,
+    drawSettledElements: false,
+    drawElements: false,
+    drawParticles: false,
+    drawStructures: false,
+    drawWalls: false,
+    drawAuthorization: true,
+    drawFog: false,
+  });
+  expect([...withAuthorization.pixels.slice(0, 4)]).toEqual([255, 64, 192, 160]);
+
+  const withoutAuthorization = renderMinimapRgba(save, {
+    drawTerrain: false,
+    drawSettledElements: false,
+    drawElements: false,
+    drawParticles: false,
+    drawStructures: false,
+    drawWalls: false,
+    drawAuthorization: false,
+    drawFog: false,
+  });
+  expect([...withoutAuthorization.pixels.slice(0, 4)]).toEqual([...SKY_COLOR]);
+});
+
 test("can hide representative minimap layers independently", () => {
   const save = {
     metadata: { id: "fixture" },

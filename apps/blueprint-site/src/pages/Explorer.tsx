@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Checkbox, Panel } from "@sandustry/ui";
 import type {
   MinimapRenderOptions,
   SaveExplorerCellInspection,
   SaveExplorerDocument,
 } from "@sandustry/save-core";
 import { PageHeader } from "../components/PageHeader";
+import {
+  SaveExplorerMapPanel,
+  type ExplorerDrag,
+  type ExplorerRaster,
+  type ExplorerView,
+} from "../components/SaveExplorerMapPanel";
+import { SaveExplorerSidebar, type SaveExplorerLayers } from "../components/SaveExplorerSidebar";
 import { readStorageValue, writeStoredBoolean } from "../utils/storage";
 import { forgetRememberedSave, readRememberedSave, rememberSave } from "../utils/save-storage";
 import { REMEMBER_SAVE_EXPLORER_KEY } from "../utils/storage-keys";
-
-type ExplorerRaster = {
-  width: number;
-  height: number;
-  pixels: Uint8ClampedArray;
-};
 
 type ExplorerWorkerResponse =
   | {
@@ -25,50 +25,12 @@ type ExplorerWorkerResponse =
   | { type: "inspection"; inspection?: SaveExplorerCellInspection }
   | { type: "error"; message: string };
 
-function formatPlayTime(seconds?: number) {
-  if (seconds === undefined) return "—";
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  return `${hours.toLocaleString()}h ${minutes}m`;
-}
-
-function Metadata({ document }: { document: SaveExplorerDocument }) {
-  const values = [
-    ["world", document.metadata.worldName || "unnamed"],
-    ["version", document.metadata.gameVersion || "unknown"],
-    ["seed", document.metadata.seed || "unknown"],
-    ["dimensions", `${document.world.width} × ${document.world.height} cells`],
-    ["structures", document.structures.length.toLocaleString()],
-    ["play time", formatPlayTime(document.metadata.playTime)],
-  ];
-  return (
-    <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-      {values.map(([label, value]) => (
-        <div key={label}>
-          <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500">
-            {label}
-          </dt>
-          <dd className="mt-1 truncate text-sm text-slate-200" title={value}>
-            {value}
-          </dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
 export function SaveExplorerPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mapFrameRef = useRef<HTMLDivElement>(null);
   const workerRef = useRef<Worker | null>(null);
-  const dragRef = useRef<{
-    pointerId: number;
-    startX: number;
-    startY: number;
-    offsetX: number;
-    offsetY: number;
-  } | null>(null);
+  const dragRef = useRef<ExplorerDrag | null>(null);
   const fitNextRasterRef = useRef(true);
   const fitMapRef = useRef<() => void>(() => {});
   const [document, setDocument] = useState<SaveExplorerDocument | null>(null);
@@ -82,7 +44,7 @@ export function SaveExplorerPage() {
   const [remember, setRemember] = useState(
     () => readStorageValue(REMEMBER_SAVE_EXPLORER_KEY) === "true",
   );
-  const [layers, setLayers] = useState({
+  const [layers, setLayers] = useState<SaveExplorerLayers>({
     terrain: true,
     settledElements: true,
     elements: true,
@@ -90,10 +52,22 @@ export function SaveExplorerPage() {
     walls: true,
     structures: true,
     fog: true,
+    authorization: false,
   });
   const [customCursor, setCustomCursor] = useState(false);
   const currentSaveRef = useRef<{ bytes: Uint8Array; name: string } | null>(null);
-  const [view, setView] = useState({ scale: 1, offsetX: 0, offsetY: 0 });
+  const [view, setView] = useState<ExplorerView>({ scale: 1, offsetX: 0, offsetY: 0 });
+
+  const minimapOptions: MinimapRenderOptions = {
+    drawTerrain: layers.terrain,
+    drawSettledElements: layers.settledElements,
+    drawElements: layers.elements,
+    drawParticles: layers.particles,
+    drawWalls: layers.walls,
+    drawStructures: layers.structures,
+    drawFog: layers.fog,
+    drawAuthorization: layers.authorization,
+  };
 
   const fitMap = useCallback(() => {
     const frame = mapFrameRef.current;
@@ -130,9 +104,8 @@ export function SaveExplorerPage() {
           response.inspection &&
           current?.mapX === response.inspection.mapX &&
           current.mapY === response.inspection.mapY
-        ) {
+        )
           setInspection(response.inspection);
-        }
         return;
       }
       setBusy(false);
@@ -224,17 +197,7 @@ export function SaveExplorerPage() {
     );
   };
 
-  const minimapOptions: MinimapRenderOptions = {
-    drawTerrain: layers.terrain,
-    drawSettledElements: layers.settledElements,
-    drawElements: layers.elements,
-    drawParticles: layers.particles,
-    drawWalls: layers.walls,
-    drawStructures: layers.structures,
-    drawFog: layers.fog,
-  };
-
-  const updateLayer = (layer: keyof typeof layers, checked: boolean) => {
+  const updateLayer = (layer: keyof SaveExplorerLayers, checked: boolean) => {
     const next = { ...layers, [layer]: checked };
     setLayers(next);
     if (document)
@@ -248,6 +211,7 @@ export function SaveExplorerPage() {
           drawWalls: next.walls,
           drawStructures: next.structures,
           drawFog: next.fog,
+          drawAuthorization: next.authorization,
         },
       });
   };
@@ -271,297 +235,55 @@ export function SaveExplorerPage() {
   return (
     <section className="space-y-6">
       <PageHeader title="Save Explorer">
-        Debug-only preview of the save parser and native-style minimap renderer. Files stay in this
-        browser session and are processed locally.
+        Work in progress: preview the save parser and native-style minimap renderer. This is an
+        early read-only explorer, so some game layers, colors, and bundled content are still being
+        resolved. Files stay in this browser session and are processed locally.
       </PageHeader>
-
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem]">
-        <Panel className="overflow-hidden" contentClassName="p-0">
-          <div
-            className={`save-explorer-dropzone ${dragging ? "save-explorer-dropzone--active" : ""}`}
-            onDragEnter={(event) => {
-              event.preventDefault();
-              setDragging(true);
-            }}
-            onDragOver={(event) => event.preventDefault()}
-            onDragLeave={(event) => {
-              event.preventDefault();
-              setDragging(false);
-            }}
-            onDrop={(event) => {
-              event.preventDefault();
-              setDragging(false);
-              void decodeFile(event.dataTransfer.files[0]);
-            }}
-          >
-            <input
-              ref={inputRef}
-              type="file"
-              accept=".save"
-              className="hidden"
-              onChange={(event) => void decodeFile(event.target.files?.[0])}
-            />
-            {/* @TODO when changing this file later, the button breaks the drop
-             zone target when hovering, and then the parent container never reacquires it */}
-            <Button
-              type="button"
-              variant="accent"
-              onClick={() => inputRef.current?.click()}
-              disabled={busy}
-            >
-              {busy ? "Decoding…" : document ? "Open another save" : "Choose save file"}
-            </Button>
-            <span className="text-xs text-slate-500">or drop a `.save` file</span>
-          </div>
-          <div
-            ref={mapFrameRef}
-            className="save-explorer-map-frame"
-            onWheel={(event) => {
-              if (!raster) return;
-              const rect = event.currentTarget.getBoundingClientRect();
-              const pointX = event.clientX - rect.left;
-              const pointY = event.clientY - rect.top;
-              const nextScale = Math.max(
-                0.25,
-                Math.min(8, view.scale * (event.deltaY < 0 ? 1.15 : 0.87)),
-              );
-              const mapX = (pointX - view.offsetX) / view.scale;
-              const mapY = (pointY - view.offsetY) / view.scale;
-              setView({
-                scale: nextScale,
-                offsetX: pointX - mapX * nextScale,
-                offsetY: pointY - mapY * nextScale,
-              });
-            }}
-          >
-            {raster ? (
-              <canvas
-                ref={canvasRef}
-                className={`save-explorer-map${customCursor ? " save-explorer-map--custom-cursor" : ""}`}
-                aria-label="Save minimap"
-                style={{
-                  width: raster.width * view.scale,
-                  height: raster.height * view.scale,
-                  left: view.offsetX,
-                  top: view.offsetY,
-                }}
-                onPointerDown={(event) => {
-                  event.currentTarget.setPointerCapture(event.pointerId);
-                  dragRef.current = {
-                    pointerId: event.pointerId,
-                    startX: event.clientX,
-                    startY: event.clientY,
-                    offsetX: view.offsetX,
-                    offsetY: view.offsetY,
-                  };
-                }}
-                onPointerMove={(event) => {
-                  const drag = dragRef.current;
-                  if (drag && drag.pointerId === event.pointerId) {
-                    setView((current) => ({
-                      ...current,
-                      offsetX: drag.offsetX + event.clientX - drag.startX,
-                      offsetY: drag.offsetY + event.clientY - drag.startY,
-                    }));
-                    return;
-                  }
-                  const rect = event.currentTarget.getBoundingClientRect();
-                  const mapX = Math.floor((event.clientX - rect.left) / view.scale);
-                  const mapY = Math.floor((event.clientY - rect.top) / view.scale);
-                  const previous = hoverCellRef.current;
-                  if (previous?.mapX === mapX && previous.mapY === mapY) return;
-                  const nextCell = { mapX, mapY };
-                  hoverCellRef.current = nextCell;
-                  setHoverCell(nextCell);
-                  setInspection(null);
-                  workerRef.current?.postMessage({ type: "inspect", mapX, mapY });
-                }}
-                onPointerUp={() => {
-                  dragRef.current = null;
-                }}
-                onPointerCancel={() => {
-                  dragRef.current = null;
-                }}
-                onPointerLeave={() => {
-                  hoverCellRef.current = null;
-                  setHoverCell(null);
-                  setInspection(null);
-                }}
-              />
-            ) : (
-              <div className="flex min-h-80 items-center justify-center p-8 text-center text-sm text-slate-500">
-                {message}
-              </div>
-            )}
-            {raster ? (
-              <div className="save-explorer-map-controls">
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setView((current) => ({ ...current, scale: Math.min(8, current.scale * 1.25) }))
-                  }
-                  aria-label="Zoom in"
-                >
-                  +
-                </Button>
-                <span>{Math.round(view.scale * 100)}%</span>
-                <Button
-                  type="button"
-                  onClick={() =>
-                    setView((current) => ({
-                      ...current,
-                      scale: Math.max(0.25, current.scale * 0.8),
-                    }))
-                  }
-                  aria-label="Zoom out"
-                >
-                  −
-                </Button>
-                <Button type="button" onClick={fitMap}>
-                  Fit
-                </Button>
-              </div>
-            ) : null}
-            {customCursor && hoverCell ? (
-              <div
-                className="save-explorer-map-cursor"
-                style={{
-                  left: view.offsetX + (hoverCell.mapX + 0.5) * view.scale,
-                  top: view.offsetY + (hoverCell.mapY + 0.5) * view.scale,
-                  width: Math.max(16, view.scale + 4),
-                  height: Math.max(16, view.scale + 4),
-                }}
-                aria-hidden="true"
-              />
-            ) : null}
-            {hoverCell ? (
-              <div
-                className="save-explorer-map-tooltip"
-                style={{
-                  left: view.offsetX + (hoverCell.mapX + 1) * view.scale + 12,
-                  top: view.offsetY + hoverCell.mapY * view.scale + 12,
-                }}
-              >
-                {inspection ? (
-                  <>
-                    <div>
-                      world {inspection.worldX},{inspection.worldY}
-                    </div>
-                    {inspection.revealed ? (
-                      <>
-                        <div>{inspection.kind ?? "unknown"}</div>
-                        {inspection.type === undefined ? (
-                          <div>unknown value</div>
-                        ) : (
-                          <div>
-                            {inspection.name ?? "unknown"} (type {inspection.type})
-                          </div>
-                        )}
-                        {inspection.terrainHp === undefined ? null : (
-                          <div>terrain HP {inspection.terrainHp}</div>
-                        )}
-                        {inspection.particle === undefined ? null : (
-                          <div>particle {inspection.particle ? "yes" : "no"}</div>
-                        )}
-                        {inspection.velocity ? (
-                          <div>
-                            velocity {inspection.velocity.x.toFixed(2)},
-                            {inspection.velocity.y.toFixed(2)}
-                          </div>
-                        ) : null}
-                        {inspection.structures?.length ? (
-                          <div>
-                            structures:{" "}
-                            {inspection.structures
-                              .map((structure) => structure.name ?? `type ${structure.type}`)
-                              .join(", ")}
-                          </div>
-                        ) : null}
-                      </>
-                    ) : (
-                      <div>unrevealed</div>
-                    )}
-                  </>
-                ) : (
-                  <div>inspecting…</div>
-                )}
-              </div>
-            ) : null}
-          </div>
-          {raster ? (
-            <div className="border-t border-slate-800 px-4 py-3 font-mono text-xs text-slate-500">
-              {message} · {raster.width}×{raster.height} minimap pixels
-            </div>
-          ) : null}
-        </Panel>
-
-        <div className="space-y-6">
-          <Panel title="Save status" contentClassName="space-y-4 p-4">
-            <div className="flex items-center justify-between gap-3 text-sm">
-              <div className="flex items-center gap-2">
-                <span
-                  className={`h-2 w-2 rounded-full ${document ? "bg-emerald-400" : busy ? "bg-yellow-300" : "bg-slate-600"}`}
-                />
-                <span className="text-slate-300">
-                  {busy ? "processing" : document ? "decoded" : "waiting"}
-                </span>
-              </div>
-              <Button
-                type="button"
-                onClick={toggleRemember}
-                disabled={!remember && !currentSaveRef.current}
-                aria-pressed={remember}
-              >
-                {remember ? "Forget save" : "Remember save"}
-              </Button>
-            </div>
-            <p className="text-xs leading-5 text-slate-500">{message}</p>
-          </Panel>
-          {document ? (
-            <Panel title="World metadata" contentClassName="p-4">
-              <Metadata document={document} />
-            </Panel>
-          ) : null}
-          <Panel title="Minimap layers" contentClassName="space-y-2 p-4 text-xs">
-            {(Object.keys(layers) as Array<keyof typeof layers>)
-              .filter((layer) => layer !== "fog" || import.meta.env.DEV)
-              .map((layer) => (
-                <Checkbox
-                  key={layer}
-                  boxed
-                  size="small"
-                  label={
-                    layer === "settledElements"
-                      ? "settled elements"
-                      : layer === "particles"
-                        ? "particles"
-                        : layer
-                  }
-                  checked={layers[layer]}
-                  onChange={(event) => updateLayer(layer, event.target.checked)}
-                />
-              ))}
-            {import.meta.env.DEV ? (
-              <Checkbox
-                boxed
-                size="small"
-                label="custom cursor"
-                checked={customCursor}
-                onChange={(event) => setCustomCursor(event.target.checked)}
-              />
-            ) : null}
-          </Panel>
-          <Panel
-            title="Current scope"
-            contentClassName="space-y-2 p-4 text-xs leading-5 text-slate-500"
-          >
-            <p>✓ browser save decoding</p>
-            <p>✓ 4×4 cell minimap aggregation</p>
-            <p>✓ fog masking</p>
-            <p>✓ minimap zoom, pan, and layer toggles</p>
-            <p>○ cell inspection</p>
-          </Panel>
-        </div>
+        <SaveExplorerMapPanel
+          inputRef={inputRef}
+          canvasRef={canvasRef}
+          mapFrameRef={mapFrameRef}
+          dragRef={dragRef}
+          raster={raster}
+          inspection={inspection}
+          hoverCell={hoverCell}
+          hoverCellRef={hoverCellRef}
+          view={view}
+          customCursor={customCursor}
+          dragging={dragging}
+          busy={busy}
+          documentLoaded={Boolean(document)}
+          message={message}
+          onChooseFile={() => inputRef.current?.click()}
+          onFile={decodeFile}
+          onViewChange={setView}
+          onHover={(cell) => {
+            setHoverCell(cell);
+            setInspection(null);
+          }}
+          onClearHover={() => {
+            setHoverCell(null);
+            setInspection(null);
+          }}
+          onDraggingChange={setDragging}
+          fitMap={fitMap}
+          onInspect={(mapX, mapY) =>
+            workerRef.current?.postMessage({ type: "inspect", mapX, mapY })
+          }
+        />
+        <SaveExplorerSidebar
+          document={document}
+          busy={busy}
+          message={message}
+          remember={remember}
+          hasCurrentSave={Boolean(currentSaveRef.current)}
+          layers={layers}
+          customCursor={customCursor}
+          onRemember={toggleRemember}
+          onLayerChange={updateLayer}
+          onCustomCursorChange={setCustomCursor}
+        />
       </div>
     </section>
   );

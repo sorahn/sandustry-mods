@@ -29,10 +29,12 @@ export type MinimapRenderOptions = {
   drawFog?: boolean;
   drawStructures?: boolean;
   drawWalls?: boolean;
+  drawAuthorization?: boolean;
   palette?: Readonly<Record<number, RgbaColor>>;
   structureColor?: RgbaColor;
   structurePalette?: Readonly<Record<string, RgbaColor>>;
   wallColor?: RgbaColor;
+  authorizationColor?: RgbaColor;
 };
 
 const DEFAULT_STRUCTURE_PALETTE: Readonly<Record<string, RgbaColor>> = {
@@ -197,12 +199,16 @@ function wallPaletteColor(payload: SaveGamePayload, paletteIndex: number, fallba
   return values as unknown as RgbaColor;
 }
 
-function wallBufferFor(payload: SaveGamePayload, width: number, height: number, cellSize: number) {
-  const wall = payload.wall as Record<string, unknown> | undefined;
+function sectionedLayerBuffer(
+  layer: SaveGameLayerLike | undefined,
+  width: number,
+  height: number,
+  cellSize: number,
+) {
   const tiles =
-    wall && typeof wall.tiles === "object" && wall.tiles !== null
-      ? (wall.tiles as Record<string, unknown>)
-      : undefined;
+    layer && typeof layer.tiles === "object" && layer.tiles !== null
+      ? (layer.tiles as Record<string, unknown>)
+      : layer;
   const sections = tiles?.sections;
   const encoded = tiles?.data;
   const tileWidth = tiles?.width;
@@ -237,6 +243,21 @@ function wallBufferFor(payload: SaveGamePayload, width: number, height: number, 
     }
   }
   return output;
+}
+
+type SaveGameLayerLike = SaveGamePayload["wall"];
+
+function wallBufferFor(payload: SaveGamePayload, width: number, height: number, cellSize: number) {
+  return sectionedLayerBuffer(payload.wall, width, height, cellSize);
+}
+
+function authorizationBufferFor(
+  payload: SaveGamePayload,
+  width: number,
+  height: number,
+  cellSize: number,
+) {
+  return sectionedLayerBuffer(payload.authorization, width, height, cellSize);
 }
 
 /** Build the native-style one-pixel-per-4×4-cell minimap raster. */
@@ -315,8 +336,13 @@ export function renderMinimapRgba(
     options.drawWalls === false
       ? new Uint8Array(width * height)
       : wallBufferFor(document.payload, width, height, cellSize);
+  const authorization =
+    options.drawAuthorization !== true
+      ? new Uint8Array(width * height)
+      : authorizationBufferFor(document.payload, width, height, cellSize);
   const palette = options.palette || DEFAULT_PALETTE;
   const wallFallback = options.wallColor || [166, 166, 166, 255];
+  const authorizationColor = options.authorizationColor || [255, 64, 192, 160];
   const pixels = new Uint8ClampedArray(width * height * 4);
   const structureColor = options.structureColor || [208, 152, 30, 255];
   const structurePalette = options.structurePalette || DEFAULT_STRUCTURE_PALETTE;
@@ -382,6 +408,12 @@ export function renderMinimapRgba(
               structureColorFor(record.type, structureColor, structurePalette),
           );
         }
+      }
+    },
+    authorization: () => {
+      if (options.drawAuthorization !== true) return;
+      for (let index = 0; index < authorization.length; index++) {
+        if (authorization[index] !== 0) copyColor(pixels, index * 4, authorizationColor);
       }
     },
     fog: () => {
