@@ -5,9 +5,7 @@
 const api = sandkit.api;
 const engineApi = (sandkit as any).engine?.api;
 const MOD_ID = "sorahn.sandustry-jailbreak-limits";
-const STRATACORE_TYPE = "earthStratacore";
 const GLOOM_EMITTER_TYPE = 27;
-let internalStratacoreBuild = false;
 
 function getSetting<T>(key: string, defaultValue: T): T {
   try {
@@ -26,7 +24,6 @@ function isTargetStructure(idOrType: unknown): boolean {
   if (uncapAll) return true;
   if (idOrType === undefined || idOrType === null) return false;
 
-  const uncapStratacore = getSetting("uncapStratacore", true);
   const uncapFluxite = getSetting("uncapFluxiteGenerator", true);
   const uncapVoidSeed = getSetting("uncapVoidSeedSpawner", true);
 
@@ -42,12 +39,6 @@ function isTargetStructure(idOrType: unknown): boolean {
 
   const idStr = String(idOrType).toLowerCase();
 
-  if (
-    uncapStratacore &&
-    (idStr.includes("strata") || idStr.includes("core") || idStr.includes("earth"))
-  ) {
-    return true;
-  }
   if (
     uncapFluxite &&
     (idStr.includes("flux") || idStr.includes("emanator") || idStr.includes("generator"))
@@ -67,77 +58,6 @@ function isTargetStructure(idOrType: unknown): boolean {
   }
 
   return false;
-}
-
-function registerStratacorePlacementBypass(): void {
-  const callback = (...hookArgs: any[]) => {
-    const context = hookArgs.find(
-      (value) => value && typeof value === "object" && "structureId" in value,
-    );
-    const control = hookArgs.find(
-      (value) => value && typeof value === "object" && typeof value.cancel === "function",
-    );
-    console.log(
-      `[${MOD_ID}] building:place observed: ${String(context?.structureId ?? "<missing>")}`,
-    );
-    if (context?.structureId !== STRATACORE_TYPE) return;
-
-    if (internalStratacoreBuild) {
-      // The low-level build API re-enters building:place. Let the native
-      // callback continue, but prevent its one-instance callback from
-      // cancelling this internal build.
-      if (control) control.cancel = () => {};
-      internalStratacoreBuild = false;
-      console.log(`[${MOD_ID}] Allowed internal Stratacore build through native hook.`);
-      return;
-    }
-
-    const x = context.x;
-    const y = context.y;
-    if (!Number.isInteger(x) || !Number.isInteger(y)) return;
-
-    control?.cancel?.();
-    internalStratacoreBuild = true;
-    const build = api.structures?.buildAtCellWhenIdle;
-    if (typeof build === "function") {
-      try {
-        build(x, y, STRATACORE_TYPE, { bypassPlacementChecks: true });
-      } catch (err) {
-        internalStratacoreBuild = false;
-        throw err;
-      }
-      console.log(`[${MOD_ID}] Bypassed native Stratacore placement guard at ${x},${y}.`);
-      return;
-    }
-
-    const engineBuild = engineApi?.structures?.build;
-    if (typeof engineBuild === "function") {
-      try {
-        engineBuild({ x, y }, STRATACORE_TYPE, { bypassPlacementChecks: true });
-      } catch (err) {
-        internalStratacoreBuild = false;
-        throw err;
-      }
-      console.log(`[${MOD_ID}] Used engine Stratacore placement fallback at ${x},${y}.`);
-      return;
-    }
-    internalStratacoreBuild = false;
-  };
-
-  try {
-    const unregister = api.hooks?.intercept?.("building:place", callback, {
-      // Native Stratacore guard uses the default priority (0). Run first so
-      // the hook chain does not return before this bypass can handle the
-      // second placement.
-      priority: -100000,
-      modId: MOD_ID,
-    });
-    console.log(
-      `[${MOD_ID}] Registered wildcard building:place interceptor (unregister: ${typeof unregister === "function"}).`,
-    );
-  } catch (err) {
-    console.warn(`[${MOD_ID}] Failed to register Stratacore placement bypass:`, err);
-  }
 }
 
 function applyEngineEscapeHatch(): void {
@@ -178,8 +98,6 @@ function applyEngineEscapeHatch(): void {
 }
 
 function registerHooks(): void {
-  registerStratacorePlacementBypass();
-
   const placementLimitCallback = (...hookArgs: any[]) => {
     const context = hookArgs.find(
       (value) =>
@@ -225,28 +143,6 @@ function registerHooks(): void {
   } catch (_err) {
     // Engine API modify hook fallback
   }
-
-  const costCallback = (baseCost: any, context: any) => {
-    const stabilize = getSetting("stabilizeCosts", true);
-    if (!stabilize) return baseCost;
-
-    const id = context?.structureId ?? context?.structureType ?? context?.type ?? context?.id;
-    if (id && isTargetStructure(id)) {
-      if (typeof baseCost === "number") {
-        return baseCost;
-      }
-      if (typeof baseCost === "object" && baseCost !== null) {
-        return { ...baseCost, multiplier: 1 };
-      }
-    }
-    return baseCost;
-  };
-
-  try {
-    if (api.hooks?.modify) {
-      api.hooks.modify("progression:cost:prepare", costCallback);
-    }
-  } catch (_err) {}
 }
 
 // Initialize
