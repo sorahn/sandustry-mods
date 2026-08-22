@@ -18,7 +18,8 @@ import { fileURLToPath } from "node:url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const MODS_ROOT = join(ROOT, "mods");
 const WORKSHOP_REGISTRY = join(ROOT, "workshop-published-ids.json");
-const HMR_RUNTIME = readFileSync(join(ROOT, "scripts/dev/hmr-runtime.js"), "utf8");
+const HMR_RUNTIME_PATH = join(ROOT, "scripts/dev/hmr-runtime.js");
+const HMR_RUNTIME = readFileSync(HMR_RUNTIME_PATH, "utf8");
 const HMR_PORT = 19147;
 const HMR_PATH = "/hot-reload";
 const DEBOUNCE_MS = 100;
@@ -26,6 +27,7 @@ const POLL_MS = 250;
 
 const args = process.argv.slice(2);
 const takeover = args.includes("--takeover");
+const debug = args.includes("--debug");
 const modArgument = valueAfter("--mod");
 const once = args.includes("--once");
 
@@ -207,7 +209,9 @@ async function launchGame() {
     return;
   }
 
-  gameChild = spawn(gameBinary, ["--no-sandbox"], {
+  const gameArgs = ["--no-sandbox"];
+  if (debug) gameArgs.push("--inspect=9230", "--remote-debugging-port=9222");
+  gameChild = spawn(gameBinary, gameArgs, {
     cwd: dirname(gameBinary),
     detached: false,
     env: process.env,
@@ -321,6 +325,7 @@ async function buildAndInstall(reason) {
     const hmrConfig = {
       modId,
       url: `http://127.0.0.1:${HMR_PORT}${HMR_PATH}`,
+      autoContinue: debug,
     };
     writeFileSync(
       entryPath,
@@ -417,6 +422,7 @@ function snapshotWatchedFiles() {
     reloadConfigPath,
     join(modDir, "preview.png"),
     join(ROOT, "tsconfig.json"),
+    HMR_RUNTIME_PATH,
   ]) {
     addFileSnapshot(path, files);
   }

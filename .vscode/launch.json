@@ -2,12 +2,68 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach to Sandustry",
+      "name": "Sandustry Dev Watcher",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "${workspaceFolder}/scripts/dev/mod-dev.mjs",
+        "--mod",
+        "${input:sandustryMod}",
+        "--takeover",
+        "--debug"
+      ],
+      "console": "integratedTerminal",
+      "autoAttachChildProcesses": false,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Sandustry Main",
+      "type": "node",
+      "request": "attach",
+      "address": "127.0.0.1",
+      "port": 9230,
+      "restart": true,
+      "timeout": 120000,
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Sandustry Renderer",
       "type": "chrome",
       "request": "attach",
       "address": "127.0.0.1",
       "port": 9222,
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/mods/**",
+        "${userHome}/Library/Application Support/sandustry/mods/**",
+        "${userHome}/.config/sandustry/mods/**",
+        "${env:APPDATA}/sandustry/mods/**",
+        "!**/node_modules/**"
+      ],
+      "timeout": 120000
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Sandustry Dev",
+      "configurations": ["Sandustry Dev Watcher", "Sandustry Main", "Sandustry Renderer"],
+      "stopAll": true,
+      "presentation": {
+        "order": 1,
+        "group": "sandustry"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "sandustryMod",
+      "type": "promptString",
+      "description": "Mod directory/name to develop",
+      "default": "test-blocks"
     }
   ]
 }

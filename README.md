@@ -60,6 +60,11 @@ with `{ "mode": "hmr" }` only after the mod registers cleanup for every UI,
 timer, listener, and other reloadable registration. Without that file, builds
 still install automatically but the dev protocol reports `restart` mode.
 
+For VS Code debugging, press F5 and choose the `Sandustry Dev` compound. It
+prompts for a mod, launches Sandustry with main-process and renderer debug
+ports, attaches both debuggers, and automatically clicks Continue to load the
+last save. The debug compound takes over the existing game explicitly.
+
 The dev runner starts Sandustry when it is not already running and owns that
 process. For an already-running game, use `make dev MOD=test-blocks TAKEOVER=1`
 to explicitly hand ownership to the dev runner. Restart-mode changes then

@@ -25,7 +25,7 @@ install:
 
 dev:
 	@if [ -z "$(MOD)" ]; then echo "Usage: make dev MOD=<mod>" >&2; exit 2; fi
-	@node scripts/dev/mod-dev.mjs --mod "$(MOD)" $(if $(TAKEOVER),--takeover,)
+	@node scripts/dev/mod-dev.mjs --mod "$(MOD)" $(if $(TAKEOVER),--takeover,) $(if $(DEBUG),--debug,)
 
 check:
 	@if [ -n "$(MOD)" ]; then if [ -z "$(MOD_DIR)" ]; then echo "Unknown MOD='$(MOD)'. Available mods: $(MOD_NAMES)" >&2; exit 2; fi; $(MAKE) -C "mods/$(MOD_DIR)" check; else npm run check && for mod in $(MODS); do $(MAKE) -C "mods/$$mod" check || exit $$?; done; fi

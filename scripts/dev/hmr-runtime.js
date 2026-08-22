@@ -13,6 +13,8 @@
       reloading: false,
       installed: false,
       source: null,
+      booted: false,
+      continueVisibleSince: 0,
     });
   const hotReloadEval = host.installed;
 
@@ -141,6 +143,50 @@
     }
   }
 
+  function autoContinue() {
+    if (!config.autoContinue || host.booted) return;
+    const buttons = Array.from(
+      document.querySelectorAll(
+        "button, [role='button'], .cursor-pointer, [class*='cursor-pointer']",
+      ),
+    );
+    const button = buttons.find((element) => {
+      const label = (element.textContent || "").trim().toLowerCase();
+      return label === "continue" || label.endsWith(" continue");
+    });
+    const visible = button && !button.closest("[aria-hidden='true']") && isVisible(button);
+    if (!visible) {
+      host.continueVisibleSince = 0;
+      setTimeout(autoContinue, 250);
+      return;
+    }
+    if (host.continueVisibleSince === 0) {
+      host.continueVisibleSince = Date.now();
+      setTimeout(autoContinue, 250);
+      return;
+    }
+    if (Date.now() - host.continueVisibleSince < 400) {
+      setTimeout(autoContinue, 250);
+      return;
+    }
+    if (button) {
+      host.booted = true;
+      button.click();
+      return;
+    }
+    setTimeout(autoContinue, 250);
+  }
+
+  function isVisible(element) {
+    const rect = element.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return false;
+    const style = window.getComputedStyle(element);
+    return (
+      style.display !== "none" && style.visibility !== "hidden" && parseFloat(style.opacity) >= 0.05
+    );
+  }
+
   host.installed = true;
   connect();
+  autoContinue();
 })();
