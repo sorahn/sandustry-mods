@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
   "id": "sorahn.sandustry-test-blocks",
-  "name": "Source and Trash Blocks",
-  "version": "0.1.9",
+  "name": "Test Blocks",
+  "version": "0.1.10",
   "apiVersion": 1,
   "author": "sorahn",
   "entry": "entry.js",
