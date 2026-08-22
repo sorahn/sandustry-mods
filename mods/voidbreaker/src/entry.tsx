@@ -6,6 +6,8 @@ const api = sandkit.api;
 const engineApi = (sandkit as any).engine?.api;
 const MOD_ID = "sorahn.sandustry-voidbreaker";
 const GLOOM_EMITTER_TYPE = 27;
+const VOID_RIFT_TYPE = "voidRift";
+let internalVoidRiftBuild = false;
 
 function getSetting<T>(key: string, defaultValue: T): T {
   try {
@@ -83,7 +85,50 @@ function applyEngineEscapeHatch(): void {
   }
 }
 
+function registerVoidRiftPlacementBypass(): void {
+  const callback = (...hookArgs: any[]) => {
+    const context = hookArgs.find(
+      (value) => value && typeof value === "object" && "structureId" in value,
+    );
+    const control = hookArgs.find(
+      (value) => value && typeof value === "object" && typeof value.cancel === "function",
+    );
+    if (context?.structureId !== VOID_RIFT_TYPE) return;
+
+    if (internalVoidRiftBuild) {
+      if (control) control.cancel = () => {};
+      internalVoidRiftBuild = false;
+      return;
+    }
+
+    const x = context.x;
+    const y = context.y;
+    const build = api.structures?.buildAtCellWhenIdle;
+    if (!Number.isInteger(x) || !Number.isInteger(y) || typeof build !== "function") return;
+
+    control?.cancel?.();
+    internalVoidRiftBuild = true;
+    try {
+      build(x, y, VOID_RIFT_TYPE, { bypassPlacementChecks: true });
+    } catch (err) {
+      internalVoidRiftBuild = false;
+      throw err;
+    }
+  };
+
+  try {
+    api.hooks?.intercept?.("building:place", callback, {
+      priority: -100000,
+      modId: MOD_ID,
+    });
+  } catch (_err) {
+    // Ignore unavailable placement interceptors.
+  }
+}
+
 function registerHooks(): void {
+  registerVoidRiftPlacementBypass();
+
   const placementLimitCallback = (...hookArgs: any[]) => {
     const context = hookArgs.find(
       (value) =>
