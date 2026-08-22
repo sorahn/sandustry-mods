@@ -7,6 +7,7 @@
  * command owns only the selected mod's build/install loop for now.
  */
 import { build } from "esbuild";
+import { createServer } from "node:http";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { cp, mkdir, rm } from "node:fs/promises";
 import { homedir } from "node:os";
@@ -17,6 +18,9 @@ import { fileURLToPath } from "node:url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const MODS_ROOT = join(ROOT, "mods");
 const WORKSHOP_REGISTRY = join(ROOT, "workshop-published-ids.json");
+const HMR_RUNTIME = readFileSync(join(ROOT, "scripts/dev/hmr-runtime.js"), "utf8");
+const HMR_PORT = 19147;
+const HMR_PATH = "/hot-reload";
 const DEBOUNCE_MS = 100;
 const POLL_MS = 250;
 
@@ -35,6 +39,7 @@ const manifestPath = join(modDir, "modinfo.json");
 const sourcePath = join(modDir, "src", "entry.tsx");
 const buildDir = join(modDir, "build");
 const packageDir = join(buildDir, "package");
+const reloadConfigPath = join(modDir, "dev-reload.json");
 const manifest = readJson(manifestPath);
 const modId = requiredString(manifest.id, "modinfo.id");
 const entry = requiredString(manifest.entry, "modinfo.entry");
@@ -51,13 +56,19 @@ let buildQueued = false;
 let buildTimer = null;
 let pollTimer = null;
 let shuttingDown = false;
+let hotReloadServer = null;
+const hotReloadClients = new Set();
 
 console.log(`dev mod: ${modId}`);
 console.log(`source: ${relative(ROOT, modDir)}`);
 console.log(`install: ${installDir}`);
 
+startHotReloadServer();
 await buildAndInstall("initial build");
-if (once) process.exit(0);
+if (once) {
+  shutdown();
+  process.exit(0);
+}
 
 startPolling();
 
@@ -140,7 +151,19 @@ async function buildAndInstall(reason) {
       logLevel: "info",
     });
 
+    const entryPath = join(buildDir, "entry.js");
+    const bundle = readFileSync(entryPath, "utf8");
+    const hmrConfig = {
+      modId,
+      url: `http://127.0.0.1:${HMR_PORT}${HMR_PATH}`,
+    };
+    writeFileSync(
+      entryPath,
+      `globalThis.__sandustryDevHmrConfig__ = ${JSON.stringify(hmrConfig)};\n${HMR_RUNTIME}\n${bundle}`,
+    );
+
     await installPackage();
+    notifyHotReload();
     console.log(`built ${modId} in ${Date.now() - started}ms`);
   } catch (error) {
     console.error(`build failed: ${error instanceof Error ? error.message : String(error)}`);
@@ -150,6 +173,17 @@ async function buildAndInstall(reason) {
       buildQueued = false;
       scheduleBuild("queued change");
     }
+  }
+}
+
+function reloadMode() {
+  if (!existsSync(reloadConfigPath)) return "restart";
+  try {
+    const config = JSON.parse(readFileSync(reloadConfigPath, "utf8"));
+    return config.mode === "hmr" ? "hmr" : "restart";
+  } catch (error) {
+    console.error(`invalid ${relative(ROOT, reloadConfigPath)}: ${error.message}`);
+    return "restart";
   }
 }
 
@@ -211,7 +245,12 @@ function snapshotWatchedFiles() {
   for (const root of [join(modDir, "src"), join(modDir, "assets"), join(ROOT, "shared")]) {
     collectFiles(root, files);
   }
-  for (const path of [manifestPath, join(modDir, "preview.png"), join(ROOT, "tsconfig.json")]) {
+  for (const path of [
+    manifestPath,
+    reloadConfigPath,
+    join(modDir, "preview.png"),
+    join(ROOT, "tsconfig.json"),
+  ]) {
     addFileSnapshot(path, files);
   }
   return files;
@@ -261,7 +300,52 @@ function shutdown() {
   shuttingDown = true;
   if (buildTimer) clearTimeout(buildTimer);
   if (pollTimer) clearInterval(pollTimer);
+  for (const response of hotReloadClients) response.end();
+  hotReloadClients.clear();
+  hotReloadServer?.close();
   console.log("dev watcher stopped");
+}
+
+function startHotReloadServer() {
+  hotReloadServer = createServer((request, response) => {
+    if (request.url !== HMR_PATH) {
+      response.writeHead(404, { "Access-Control-Allow-Origin": "*" });
+      response.end("not found");
+      return;
+    }
+
+    response.writeHead(200, {
+      "Access-Control-Allow-Origin": "*",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+      "Content-Type": "text/event-stream",
+    });
+    response.write("\n");
+    hotReloadClients.add(response);
+    request.on("close", () => hotReloadClients.delete(response));
+  });
+  hotReloadServer.on("error", (error) => {
+    console.error(`hot reload server failed: ${error.message}`);
+  });
+  hotReloadServer.listen(HMR_PORT, "127.0.0.1", () => {
+    console.log(`hot reload notify: http://127.0.0.1:${HMR_PORT}${HMR_PATH}`);
+  });
+}
+
+function notifyHotReload() {
+  const chunk = `data: ${JSON.stringify({
+    v: 1,
+    modId,
+    changed: ["entry.js"],
+    mode: reloadMode(),
+  })}\n\n`;
+  for (const response of hotReloadClients) {
+    try {
+      response.write(chunk);
+    } catch {
+      hotReloadClients.delete(response);
+    }
+  }
 }
 
 function fail(message) {

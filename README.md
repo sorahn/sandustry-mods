@@ -55,6 +55,11 @@ source. Its `publishedFileId` is backed up in the tracked root-level
 Override the installed-mod destination with
 `SANDUSTRY_MODS_DIR=/path/to/sandustry/mods`.
 
+HMR is opt-in per mod. Add a local, un-packaged `mods/<name>/dev-reload.json`
+with `{ "mode": "hmr" }` only after the mod registers cleanup for every UI,
+timer, listener, and other reloadable registration. Without that file, builds
+still install automatically but the dev protocol reports `restart` mode.
+
 From the repository root, run `make install` to build the current version and
 copy the unzipped mod into an ID-named folder in the default Sandustry mods
 directory. Override the destination with
