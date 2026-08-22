@@ -20,8 +20,6 @@ function getSetting<T>(key: string, defaultValue: T): T {
 }
 
 function isTargetStructure(idOrType: unknown): boolean {
-  const uncapAll = getSetting("uncapAll", false);
-  if (uncapAll) return true;
   if (idOrType === undefined || idOrType === null) return false;
 
   const uncapFluxite = getSetting("uncapFluxiteGenerator", true);
@@ -45,15 +43,7 @@ function isTargetStructure(idOrType: unknown): boolean {
   ) {
     return true;
   }
-  if (
-    uncapVoidSeed &&
-    (idStr.includes("void") ||
-      idStr.includes("seed") ||
-      idStr.includes("spawner") ||
-      idStr.includes("voidgrazer") ||
-      idStr.includes("converter") ||
-      idStr.includes("extractor"))
-  ) {
+  if (uncapVoidSeed && idStr.includes("void")) {
     return true;
   }
 
@@ -112,7 +102,7 @@ function registerHooks(): void {
         `[${MOD_ID}] placement-limit observed: type=${String(id)} count=${String(context.currentCount)} max=${String(context.maxCount)}`,
       );
     }
-    if (getSetting("uncapAll", false) || (id && isGloomEmitter)) {
+    if (id && isGloomEmitter) {
       if (context) {
         // The native placement code treats non-finite values as the default
         // cap of 1. Its explicit unlimited sentinel is null.

@@ -10,12 +10,6 @@
   "dependencies": [],
   "loadOrder": 1000,
   "configSchema": {
-    "uncapAll": {
-      "type": "boolean",
-      "default": false,
-      "labelKey": "Uncap all structures globally",
-      "descriptionKey": "When enabled, removes placement limits for every structure in the game instead of only target structures."
-    },
     "uncapFluxiteGenerator": {
       "type": "boolean",
       "default": true,
