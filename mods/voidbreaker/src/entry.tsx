@@ -53,7 +53,6 @@ function isTargetStructure(idOrType: unknown): boolean {
 function applyEngineEscapeHatch(): void {
   try {
     const unlocked = api.structures?.getUnlockedTypes?.() ?? [];
-    let uncappedCount = 0;
 
     for (const type of unlocked) {
       if (isTargetStructure(type)) {
@@ -77,13 +76,10 @@ function applyEngineEscapeHatch(): void {
         } catch (_err) {
           // Ignore internal escape hatch fallback errors
         }
-
-        uncappedCount += 1;
       }
     }
-    console.log(`[${MOD_ID}] Engine escape hatch uncapped ${uncappedCount} structure definitions.`);
-  } catch (err) {
-    console.warn(`[${MOD_ID}] Error uncapping structure definitions:`, err);
+  } catch (_err) {
+    // Ignore escape hatch failures when the runtime is unavailable.
   }
 }
 
@@ -97,11 +93,6 @@ function registerHooks(): void {
     );
     const id = context?.structureId ?? context?.structureType ?? context?.type ?? context?.id;
     const isGloomEmitter = id === GLOOM_EMITTER_TYPE || isTargetStructure(id);
-    if (context) {
-      console.log(
-        `[${MOD_ID}] placement-limit observed: type=${String(id)} count=${String(context.currentCount)} max=${String(context.maxCount)}`,
-      );
-    }
     if (id && isGloomEmitter) {
       if (context) {
         // The native placement code treats non-finite values as the default
@@ -117,18 +108,14 @@ function registerHooks(): void {
   try {
     if (api.hooks?.modify) {
       api.hooks.modify("building:placement-limit", placementLimitCallback);
-      console.log(`[${MOD_ID}] Hook 'building:placement-limit' registered via public API.`);
     }
-  } catch (err) {
-    console.warn(`[${MOD_ID}] Failed to register public 'building:placement-limit' hook:`, err);
+  } catch (_err) {
+    // Ignore unavailable public hooks.
   }
 
   try {
     if (engineApi?.hooks?.modify) {
       engineApi.hooks.modify("building:placement-limit", placementLimitCallback);
-      console.log(
-        `[${MOD_ID}] Hook 'building:placement-limit' registered via engine API escape hatch.`,
-      );
     }
   } catch (_err) {
     // Engine API modify hook fallback
@@ -150,5 +137,3 @@ if (api.settings?.onChange) {
     applyEngineEscapeHatch();
   });
 }
-
-console.log(`[${MOD_ID}] Voidbreaker initialized cleanly via engine escape hatch.`);
