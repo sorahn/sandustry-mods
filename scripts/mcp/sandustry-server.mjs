@@ -44,6 +44,27 @@ const tools = [
   ),
   tool("capture_game_screenshot", "Capture the current renderer window as PNG.", {}, true),
   tool("discover_runtime", "Inspect the public sandkit and game API namespaces.", {}, true),
+  tool(
+    "inspect_state",
+    "Read a bounded snapshot from sandkit.state using a dotted path.",
+    {
+      path: { type: "string", default: "" },
+      maxDepth: { type: "integer", minimum: 0, maximum: 6, default: 3 },
+    },
+    true,
+  ),
+  tool("get_player_position", "Read the current player position and movement state.", {}, true),
+  tool("get_world_summary", "Read bounded world and structure counts.", {}, true),
+  tool(
+    "dom_computed_style",
+    "Read computed CSS properties for the first matching renderer DOM node.",
+    {
+      selector: { type: "string", minLength: 1 },
+      properties: { type: "array", items: { type: "string" }, default: [] },
+    },
+    true,
+    ["selector"],
+  ),
 ];
 
 class McpServer {
@@ -124,6 +145,63 @@ class McpServer {
       return { content: [{ type: "image", data: image, mimeType: "image/png" }] };
     }
     if (name === "discover_runtime") return textResult(await this.debugTargets.discoverRuntime());
+    if (name === "inspect_state") {
+      const path = typeof args.path === "string" ? args.path : "";
+      if (!/^(?:[A-Za-z_$][\w$]*)(?:\.[A-Za-z_$][\w$]*)*$/.test(path) && path !== "")
+        throw new Error("path must contain only dotted JavaScript property names");
+      const maxDepth = Math.min(Math.max(Number(args.maxDepth) || 3, 0), 6);
+      const expression = buildStateInspection(path, maxDepth);
+      return textResult(await this.debugTargets.evaluate(expression));
+    }
+    if (name === "get_player_position") {
+      return textResult(
+        await this.debugTargets.evaluate(`(() => {
+          const player = sandkit.state?.store?.player;
+          if (!player) return null;
+          return {
+            x: player.x, y: player.y, width: player.width, height: player.height,
+            velocity: player.velocity, onGround: player.onGround, isHovering: player.isHovering,
+            action: player.action ? { type: player.action.type, id: player.action.id } : null
+          };
+        })()`),
+      );
+    }
+    if (name === "get_world_summary") {
+      return textResult(
+        await this.debugTargets.evaluate(`(() => {
+          const state = sandkit.state;
+          const world = state?.store?.world;
+          const count = (value) => Array.isArray(value) ? value.length : null;
+          return {
+            size: world?.size ?? null,
+            structures: count(state?.store?.structures),
+            projectiles: count(state?.store?.projectiles),
+            fixtures: count(world?.fixtures),
+            lights: count(world?.lights),
+            sensors: count(world?.sensors),
+            teleportZones: count(world?.teleportZones),
+            runtime: state?.session?.runtime ?? null,
+            paused: state?.session?.paused ?? null
+          };
+        })()`),
+      );
+    }
+    if (name === "dom_computed_style") {
+      const selector = typeof args.selector === "string" ? args.selector : "body";
+      const properties = Array.isArray(args.properties) ? args.properties.slice(0, 50) : [];
+      const expression = `(() => {
+        const node = document.querySelector(${JSON.stringify(selector)});
+        if (!node) return null;
+        const style = getComputedStyle(node);
+        const names = ${JSON.stringify(properties)};
+        return {
+          selector: ${JSON.stringify(selector)},
+          tag: node.tagName,
+          properties: Object.fromEntries(names.map((name) => [name, style.getPropertyValue(name)]))
+        };
+      })()`;
+      return textResult(await this.debugTargets.evaluate(expression));
+    }
     throw new Error(`Unknown tool: ${name}`);
   }
 
@@ -452,6 +530,23 @@ function tool(name, description, properties, readOnly, required = []) {
 function textResult(value) {
   const text = typeof value === "string" ? value : JSON.stringify(value, null, 2);
   return { content: [{ type: "text", text }] };
+}
+
+function buildStateInspection(path, maxDepth) {
+  const access = path ? `sandkit.state?.${path}` : "sandkit.state";
+  return `(() => {
+    const value = ${access};
+    const seen = new WeakSet();
+    const clip = (item, depth) => {
+      if (item === null || typeof item !== "object") return item;
+      if (seen.has(item)) return "[Circular]";
+      if (depth >= ${maxDepth}) return Array.isArray(item) ? "[Array(" + item.length + ")]" : "[Object]";
+      seen.add(item);
+      if (Array.isArray(item)) return item.slice(0, 50).map((entry) => clip(entry, depth + 1));
+      return Object.fromEntries(Object.entries(item).slice(0, 50).map(([key, entry]) => [key, clip(entry, depth + 1)]));
+    };
+    return clip(value, 0);
+  })()`;
 }
 
 function numberArgument(flag, environment, fallback) {

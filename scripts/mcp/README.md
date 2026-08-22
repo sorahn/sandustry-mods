@@ -22,9 +22,10 @@ The game must be running with debug ports enabled, for example:
 make dev MOD=test-blocks TAKEOVER=1 DEBUG=1
 ```
 
-The current tools include status, DOM inspection, screenshots, and public
-runtime discovery. `renderer_eval` is an explicitly advanced tool that can
-mutate the running game and is annotated accordingly in the MCP schema.
+The current read-only tools include status, DOM inspection, computed styles,
+screenshots, bounded state inspection, player position, world summaries, and
+public runtime discovery. `renderer_eval` is an explicitly advanced tool that
+can mutate the running game and is annotated accordingly in the MCP schema.
 
 Local smoke checks:
 
