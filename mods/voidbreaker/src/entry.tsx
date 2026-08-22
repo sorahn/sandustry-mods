@@ -1,10 +1,10 @@
-/* Sandustry Jailbreak Building Limits Mod */
+/* Sandustry Voidbreaker Mod */
 
 "use strict";
 
 const api = sandkit.api;
 const engineApi = (sandkit as any).engine?.api;
-const MOD_ID = "sorahn.sandustry-jailbreak-limits";
+const MOD_ID = "sorahn.sandustry-voidbreaker";
 const GLOOM_EMITTER_TYPE = 27;
 
 function getSetting<T>(key: string, defaultValue: T): T {
@@ -151,4 +151,4 @@ if (api.settings?.onChange) {
   });
 }
 
-console.log(`[${MOD_ID}] Jailbreak Building Limits initialized cleanly via engine escape hatch.`);
+console.log(`[${MOD_ID}] Voidbreaker initialized cleanly via engine escape hatch.`);
