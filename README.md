@@ -48,7 +48,10 @@ over automatically.
 
 The watcher rebuilds on changes under the selected mod's `src/` and `assets/`
 directories, reusable `shared/` code, and changes to its manifest, preview, or
-root TypeScript configuration.
+root TypeScript configuration. Steam-managed `workshop.json` exists only in the
+installed mod directory and is deliberately preserved there, not copied from
+source. Its `publishedFileId` is backed up in the tracked root-level
+`workshop-published-ids.json` file.
 Override the installed-mod destination with
 `SANDUSTRY_MODS_DIR=/path/to/sandustry/mods`.
 

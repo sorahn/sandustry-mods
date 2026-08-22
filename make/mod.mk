@@ -23,14 +23,13 @@ $(BUILD_DIR)/entry.js: $(shell find $(SRC_DIR) -type f -print 2>/dev/null) $(REP
 	@cd "$(REPO_ROOT)" && npx tsc --noEmit
 	@cd "$(REPO_ROOT)" && npx esbuild "$(SRC_DIR)/entry.tsx" --bundle --format=esm --platform=neutral --target=es2022 --jsx-factory=sandkit.react.createElement --jsx-fragment=sandkit.react.Fragment --alias:~shared="$(REPO_ROOT)/shared" --outfile="$(BUILD_DIR)/entry.js"
 
-$(ARCHIVE): $(BUILD_DIR)/entry.js $(MANIFEST) $(shell find $(MOD_DIR)/assets -type f -print 2>/dev/null) $(wildcard $(MOD_DIR)/preview.png $(MOD_DIR)/workshop.json)
+$(ARCHIVE): $(BUILD_DIR)/entry.js $(MANIFEST) $(shell find $(MOD_DIR)/assets -type f -print 2>/dev/null) $(wildcard $(MOD_DIR)/preview.png)
 	@rm -rf "$(PACKAGE_DIR)"
 	@mkdir -p "$(PACKAGE_DIR)"
 	@cp "$(BUILD_DIR)/entry.js" "$(PACKAGE_DIR)/entry.js"
 	@cp "$(MANIFEST)" "$(PACKAGE_DIR)/modinfo.json"
 	@if [ -d "$(MOD_DIR)/assets" ]; then mkdir -p "$(PACKAGE_DIR)/assets"; cp -R "$(MOD_DIR)/assets/." "$(PACKAGE_DIR)/assets/"; fi
 	@if [ -f "$(MOD_DIR)/preview.png" ]; then cp "$(MOD_DIR)/preview.png" "$(PACKAGE_DIR)/preview.png"; fi
-	@if [ -f "$(MOD_DIR)/workshop.json" ]; then cp "$(MOD_DIR)/workshop.json" "$(PACKAGE_DIR)/workshop.json"; fi
 	@mkdir -p "$(ARTIFACTS_DIR)"
 	@rm -f "$(ARCHIVE)"
 	@cd "$(PACKAGE_DIR)" && zip -qr "$(ARCHIVE)" .
@@ -39,6 +38,7 @@ $(ARCHIVE): $(BUILD_DIR)/entry.js $(MANIFEST) $(shell find $(MOD_DIR)/assets -ty
 package: $(ARCHIVE)
 install: $(ARCHIVE)
 	@mkdir -p "$(INSTALL_DIR)"
+	@node "$(REPO_ROOT)/scripts/dev/capture-workshop-id.mjs" "$(MOD_ID)" "$(INSTALL_DIR)"
 	@cp -R "$(PACKAGE_DIR)/." "$(INSTALL_DIR)/"
 	@echo "Installed unzipped $(MOD_ID) mod to $(INSTALL_DIR)"
 

@@ -7,7 +7,7 @@
  * command owns only the selected mod's build/install loop for now.
  */
 import { build } from "esbuild";
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { cp, mkdir, rm } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
@@ -16,6 +16,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const MODS_ROOT = join(ROOT, "mods");
+const WORKSHOP_REGISTRY = join(ROOT, "workshop-published-ids.json");
 const DEBOUNCE_MS = 100;
 const POLL_MS = 250;
 
@@ -153,6 +154,7 @@ async function buildAndInstall(reason) {
 }
 
 async function installPackage() {
+  captureInstalledWorkshopId();
   await mkdir(packageDir, { recursive: true });
   await cp(join(buildDir, "entry.js"), join(packageDir, "entry.js"));
   await cp(manifestPath, join(packageDir, "modinfo.json"));
@@ -167,6 +169,31 @@ async function installPackage() {
 
   await mkdir(installDir, { recursive: true });
   await cp(packageDir, installDir, { recursive: true, force: true });
+}
+
+function captureInstalledWorkshopId() {
+  const installedWorkshop = join(installDir, "workshop.json");
+  if (!existsSync(installedWorkshop)) return;
+
+  const workshop = readJson(installedWorkshop);
+  const publishedFileId = workshop.publishedFileId;
+  if (publishedFileId == null || String(publishedFileId).trim() === "") return;
+
+  const registry = existsSync(WORKSHOP_REGISTRY) ? readJson(WORKSHOP_REGISTRY) : {};
+  const normalizedId = String(publishedFileId);
+  const recordedId = registry[modId];
+  if (recordedId != null && String(recordedId) !== normalizedId) {
+    throw new Error(
+      `publishedFileId mismatch for ${modId}: registry has ${recordedId}, installed workshop.json has ${normalizedId}`,
+    );
+  }
+  if (recordedId != null) return;
+
+  registry[modId] = normalizedId;
+  writeFileSync(WORKSHOP_REGISTRY, `${JSON.stringify(registry, null, 2)}\n`);
+  console.log(
+    `recorded ${modId} publishedFileId=${normalizedId} in ${relative(ROOT, WORKSHOP_REGISTRY)}`,
+  );
 }
 
 function startPolling() {
