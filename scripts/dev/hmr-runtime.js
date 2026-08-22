@@ -7,6 +7,11 @@
     const api = sandkit.api;
     const { enums, react } = sandkit;
     Object.assign(globalThis, { sandkit, api, enums, react });
+
+    // Prevent the game autosave trigger from writing over a development save.
+    // Manual saves remain available through the normal game controls/API.
+    const settings = sandkit.state?.session?.settings;
+    if (settings && "autosaveInterval" in settings) settings.autosaveInterval = 0;
   } catch {
     // The host may evaluate the prelude before its runtime argument is ready.
   }

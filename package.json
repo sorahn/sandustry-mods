@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "catalog:extract": "node scripts/extract-native-catalog.mjs",
-    "mcp:sandustry": "node scripts/mcp/sandustry-server.mjs",
+    "mcp:chrome-devtools": "chrome-devtools-mcp --browser-url=http://127.0.0.1:9222 --no-usage-statistics --no-performance-crux --no-update-checks",
     "check": "npm run tsc && npm run tsc:tests && npm run lint && npm test",
     "format:bundles": "node scripts/format-bundles.mjs",
     "format:check": "oxfmt --check .",
@@ -28,6 +28,7 @@
     "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
     "bun": "^1.4.0",
+    "chrome-devtools-mcp": "^1.7.0",
     "esbuild": "0.28.2",
     "husky": "9.1.7",
     "lint-staged": "17.3.0",
