@@ -176,7 +176,7 @@ function normalizeStructureEntry(context: DebugContext, type: StructureType, def
   };
 }
 
-export function copyStructureCatalog(context: DebugContext): void {
+export function getStructureCatalog(context: DebugContext) {
   const structures = context.api.structures as unknown as UnknownRecord;
   const candidates = new Set<StructureType>();
   const enums = (context.sandkit as unknown as UnknownRecord).enums;
@@ -205,7 +205,7 @@ export function copyStructureCatalog(context: DebugContext): void {
     })
     .filter((entry): entry is NonNullable<typeof entry> => entry !== null);
 
-  const catalog = {
+  return {
     format: 1,
     generatedAt: new Date().toISOString(),
     locale:
@@ -214,15 +214,17 @@ export function copyStructureCatalog(context: DebugContext): void {
         : null,
     entries,
   };
+}
+
+export function copyStructureCatalog(context: DebugContext): void {
+  const catalog = getStructureCatalog(context);
   const exportText = JSON.stringify(jsonSafe(catalog), null, 2);
   console.group(`${LOG_PREFIX} structure catalog`);
-  console.log(
-    `discovered ${entries.length} structure definition(s) from ${candidates.size} candidate value(s)`,
-  );
+  console.log(`discovered ${catalog.entries.length} structure definition(s)`);
   logCopyable("STRUCTURE_CATALOG", catalog);
   console.groupEnd();
   openCatalogExport(context, exportText);
-  toast(context, `generated ${entries.length} structure definitions`);
+  toast(context, `generated ${catalog.entries.length} structure definitions`);
 }
 
 export function dumpCatalogNamespaces(context: DebugContext): void {

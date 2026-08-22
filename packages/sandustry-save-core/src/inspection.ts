@@ -90,7 +90,7 @@ export function inspectSaveExplorerCell(
       inspection.kind = classifySaveExplorerMatrixValue(value);
       if (typeof value === "number") {
         const damaged = decodeDamagedTerrainValue(value);
-        inspection.type = damaged?.cellType ?? value;
+        inspection.type = damaged?.cellType ?? (value >= 101 ? value - 100 : value);
         if (damaged) inspection.terrainHp = damaged.hp;
       } else if (isRecord(value) && typeof value.type === "number") {
         inspection.type = value.type;

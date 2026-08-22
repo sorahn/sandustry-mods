@@ -8,11 +8,15 @@ import {
   type SaveGameDocument,
 } from "../src/index";
 
-const fixture = (name: string) => Bun.file(new URL(`../../../resources/${name}`, import.meta.url));
+const fixture = (name: string) => Bun.file(new URL(`./visual/saves/${name}`, import.meta.url));
+const repositoryFixture = (name: string) =>
+  Bun.file(new URL(`../../../resources/${name}`, import.meta.url));
 
 for (const name of ["new-world.save", "main-save.save", "sm3f52pn6i9-exitsave.save"]) {
   test(`${name} decodes and renders as a native-sized minimap`, async () => {
-    const save = await decodeBrowserSave(await fixture(name).bytes());
+    const save = await decodeBrowserSave(
+      await (name === "main-save.save" ? fixture(name) : repositoryFixture(name)).bytes(),
+    );
     const size = save.payload.store.world as { size: { width: number; height: number } };
     const cells = expandRunLengthPairs(save.payload.matrix, size.size.width * size.size.height);
     const raster = renderMinimapRgba(save);
@@ -86,7 +90,8 @@ test("can hide representative minimap layers independently", () => {
 
   const hidden = renderMinimapRgba(save, {
     drawTerrain: false,
-    drawElements: false,
+    drawSettledElements: false,
+    drawParticles: false,
     drawStructures: false,
   });
   expect([...hidden.pixels.slice(0, 4)]).toEqual([...SKY_COLOR]);
@@ -94,6 +99,59 @@ test("can hide representative minimap layers independently", () => {
   expect([...renderMinimapRgba(save, { drawFog: false }).pixels.slice(0, 4)]).toEqual([
     208, 152, 30, 255,
   ]);
+});
+
+test("preserves terrain, settled elements, and particles as independent samples", () => {
+  const save = {
+    metadata: { id: "fixture" },
+    payload: {
+      store: { world: { size: { width: 4, height: 4 } }, structures: [] },
+      matrix: [2, 4, { type: 1 }, 4, { type: 2, particle: true }, 8],
+    },
+    compressedPayloadBytes: 1,
+    decompressedPayloadBytes: 1,
+  } as SaveGameDocument;
+  const terrain = renderMinimapRgba(save, {
+    drawSettledElements: false,
+    drawParticles: false,
+    palette: { 2: [1, 2, 3, 255] },
+  });
+  const settled = renderMinimapRgba(save, {
+    drawTerrain: false,
+    drawParticles: false,
+    palette: { 101: [4, 5, 6, 255] },
+  });
+  const particle = renderMinimapRgba(save, {
+    drawTerrain: false,
+    drawSettledElements: false,
+    palette: { 102: [7, 8, 9, 255] },
+  });
+  expect([...terrain.pixels.slice(0, 4)]).toEqual([1, 2, 3, 255]);
+  expect([...settled.pixels.slice(0, 4)]).toEqual([4, 5, 6, 255]);
+  expect([...particle.pixels.slice(0, 4)]).toEqual([7, 8, 9, 255]);
+});
+
+test("renders numeric element matrix codes as settled elements", () => {
+  const save = {
+    metadata: { id: "fixture" },
+    payload: {
+      store: { world: { size: { width: 8, height: 4 } }, structures: [] },
+      matrix: [101, 4, 123, 4, 2, 24],
+    },
+    compressedPayloadBytes: 1,
+    decompressedPayloadBytes: 1,
+  } as SaveGameDocument;
+  const settled = renderMinimapRgba(save, {
+    drawTerrain: false,
+    drawElements: false,
+    drawParticles: false,
+    drawWalls: false,
+    drawStructures: false,
+    drawFog: false,
+    palette: { 101: [4, 5, 6, 255], 123: [7, 8, 9, 255] },
+  });
+  expect([...settled.pixels.slice(0, 4)]).toEqual([4, 5, 6, 255]);
+  expect([...settled.pixels.slice(4, 8)]).toEqual([7, 8, 9, 255]);
 });
 
 test("uses representative colors for known structure types", () => {
@@ -109,5 +167,21 @@ test("uses representative colors for known structure types", () => {
     compressedPayloadBytes: 1,
     decompressedPayloadBytes: 1,
   } as SaveGameDocument;
-  expect([...renderMinimapRgba(save).pixels.slice(0, 4)]).toEqual([255, 220, 40, 255]);
+  expect([...renderMinimapRgba(save).pixels.slice(0, 4)]).toEqual([101, 240, 0, 255]);
+});
+
+test("uses persisted custom structure colors before representative colors", () => {
+  const save = {
+    metadata: { id: "fixture" },
+    payload: {
+      store: {
+        world: { size: { width: 4, height: 4 } },
+        structures: [{ type: 26, x: 0, y: 0, color: "#ff8000" }],
+      },
+      matrix: [0, 16],
+    },
+    compressedPayloadBytes: 1,
+    decompressedPayloadBytes: 1,
+  } as SaveGameDocument;
+  expect([...renderMinimapRgba(save).pixels.slice(0, 4)]).toEqual([255, 128, 0, 255]);
 });

@@ -8,12 +8,18 @@ import {
   renderMinimapRgba,
 } from "../src/index";
 
-test("classifies terrain, settled elements, and moving particles", () => {
+test("classifies terrain, settled elements, moving elements, and particles", () => {
   expect(classifySaveExplorerMatrixValue(0)).toBe("empty");
   expect(classifySaveExplorerMatrixValue(12)).toBe("terrain");
   expect(classifySaveExplorerMatrixValue(-1204)).toBe("terrain");
+  expect(classifySaveExplorerMatrixValue(101)).toBe("settled-element");
+  expect(classifySaveExplorerMatrixValue(119)).toBe("settled-element");
+  expect(classifySaveExplorerMatrixValue(123)).toBe("settled-element");
   expect(classifySaveExplorerMatrixValue({ type: 10, velocity: { x: 0, y: 0 } })).toBe(
     "settled-element",
+  );
+  expect(classifySaveExplorerMatrixValue({ type: 10, velocity: { x: 1, y: 0 } })).toBe(
+    "moving-element",
   );
   expect(classifySaveExplorerMatrixValue({ type: 10, particle: true })).toBe("moving-particle");
   expect(classifySaveExplorerMatrixValue({ particle: true })).toBe("unknown");
@@ -38,6 +44,16 @@ test("inspects revealed minimap cells without exposing fogged contents", () => {
     kind: "terrain",
     structures: [{ type: 16, x: 0, y: 0 }],
   });
+
+  const numericElementSave = {
+    ...save,
+    payload: { ...save.payload, matrix: [119, 1, 0, 31] },
+  } as import("../src/index").SaveGameDocument;
+  expect(inspectSaveExplorerCell(numericElementSave, 0, 0)).toMatchObject({
+    kind: "settled-element",
+    type: 19,
+  });
+
   expect(inspectSaveExplorerCell(save, 1, 0)).toEqual({
     mapX: 1,
     mapY: 0,
@@ -50,7 +66,9 @@ test("inspects revealed minimap cells without exposing fogged contents", () => {
   });
 });
 
-const fixture = (name: string) => Bun.file(new URL(`../../../resources/${name}`, import.meta.url));
+const fixture = (name: string) => Bun.file(new URL(`./visual/saves/${name}`, import.meta.url));
+const repositoryFixture = (name: string) =>
+  Bun.file(new URL(`../../../resources/${name}`, import.meta.url));
 
 test("normalizes save metadata, layers, structures, and elements", async () => {
   const save = await decodeBrowserSave(await fixture("main-save.save").bytes());
@@ -107,7 +125,7 @@ test("indexes large worlds without allocating one object per tile", () => {
 });
 
 test("does not mutate uploaded bytes or decoded source data", async () => {
-  const bytes = await fixture("new-world.save").bytes();
+  const bytes = await repositoryFixture("new-world.save").bytes();
   const originalBytes = bytes.slice();
   const save = await decodeBrowserSave(bytes);
   const originalPayload = JSON.stringify(save.payload);

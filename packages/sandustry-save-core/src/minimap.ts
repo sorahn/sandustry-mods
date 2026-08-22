@@ -9,6 +9,7 @@ import { SAVE_EXPLORER_LAYER_ORDER, type SaveExplorerRenderLayer } from "./layer
 export const MINIMAP_CELL_SIZE = 4;
 export const SKY_COLOR: RgbaColor = [72, 200, 255, 255];
 export const FOG_COLOR: RgbaColor = [0, 0, 0, 255];
+const ELEMENT_MATRIX_MIN = 101;
 
 export type RgbaColor = readonly [red: number, green: number, blue: number, alpha: number];
 
@@ -22,7 +23,9 @@ export type MinimapRaster = {
 export type MinimapRenderOptions = {
   cellSize?: number;
   drawTerrain?: boolean;
+  drawSettledElements?: boolean;
   drawElements?: boolean;
+  drawParticles?: boolean;
   drawFog?: boolean;
   drawStructures?: boolean;
   drawWalls?: boolean;
@@ -36,7 +39,7 @@ const DEFAULT_STRUCTURE_PALETTE: Readonly<Record<string, RgbaColor>> = {
   // Representative colors for common catalog structures; unknown types use
   // the configured fallback marker color.
   "11": [165, 165, 165, 255], // Foundation
-  "16": [255, 220, 40, 255], // Collector
+  "16": [101, 240, 0, 255], // Collector (#65f000 in the game minimap)
 };
 
 const DEFAULT_PALETTE: Readonly<Record<number, RgbaColor>> = {
@@ -67,6 +70,8 @@ const DEFAULT_PALETTE: Readonly<Record<number, RgbaColor>> = {
   28: [117, 84, 44, 255], // Sandium soil
   29: [67, 67, 76, 255], // Obsidian
   30: [90, 86, 80, 255], // Crackstone
+  40: [240, 219, 117, 255], // Dune (terrain id resolved by Debug Lab)
+  41: [255, 223, 0, 255], // Pyramid terrain core (#ffdf00 in the game minimap)
   // ElementType values are represented in the saved matrix as type + 100.
   101: [222, 190, 122, 255], // Sand
   102: [188, 188, 188, 255], // Particle
@@ -141,11 +146,24 @@ function structureColorFor(
   return palette[String(type)] || fallback;
 }
 
-function colorForValue(value: number, palette: Readonly<Record<number, RgbaColor>>) {
+function parseStructureColor(value: unknown): RgbaColor | undefined {
+  if (typeof value !== "string") return undefined;
+  const match = /^#([0-9a-f]{6})(?:([0-9a-f]{2}))?$/i.exec(value);
+  if (!match) return undefined;
+  const rgb = Number.parseInt(match[1], 16);
+  const alpha = match[2] ? Number.parseInt(match[2], 16) : 255;
+  return [(rgb >>> 16) & 255, (rgb >>> 8) & 255, rgb & 255, alpha];
+}
+
+function colorForValue(
+  value: number,
+  palette: Readonly<Record<number, RgbaColor>>,
+  unknownFallback?: RgbaColor,
+) {
   const damaged = decodeDamagedTerrainValue(value);
   const color =
     palette[damaged?.cellType ?? value] ||
-    (value >= 100 ? [210, 210, 210, 255] : [105, 105, 105, 255]);
+    (value >= 100 ? (unknownFallback ?? [210, 210, 210, 255]) : [105, 105, 105, 255]);
   return color;
 }
 
@@ -232,15 +250,40 @@ export function renderMinimapRgba(
     throw new Error("Minimap cell size must be a positive integer");
   const width = Math.ceil(worldWidth / cellSize);
   const height = Math.ceil(worldHeight / cellSize);
-  const values = new Int32Array(width * height);
-  const valueKinds = new Uint8Array(width * height);
+  const terrainValues = new Int32Array(width * height);
+  const settledElementValues = new Int32Array(width * height);
+  const elementValues = new Int32Array(width * height);
+  const particleValues = new Int32Array(width * height);
   let position = 0;
   const encoded = document.payload.matrix;
   if (encoded.length % 2 !== 0) throw new Error("Invalid matrix: incomplete value/count pair");
   for (let index = 0; index < encoded.length; index += 2) {
     const rawValue = encoded[index];
     const value = matrixValueCode(rawValue);
-    const kind = typeof rawValue === "number" ? 1 : 2;
+    const kind =
+      typeof rawValue === "number"
+        ? rawValue >= ELEMENT_MATRIX_MIN
+          ? 2
+          : 1
+        : typeof rawValue === "object" &&
+            rawValue !== null &&
+            (rawValue as Record<string, unknown>).particle === true
+          ? 3
+          : typeof rawValue === "object" && rawValue !== null
+            ? (() => {
+                const velocity = (rawValue as Record<string, unknown>).velocity;
+                if (
+                  typeof velocity === "object" &&
+                  velocity !== null &&
+                  typeof (velocity as Record<string, unknown>).x === "number" &&
+                  typeof (velocity as Record<string, unknown>).y === "number" &&
+                  ((velocity as Record<string, unknown>).x !== 0 ||
+                    (velocity as Record<string, unknown>).y !== 0)
+                )
+                  return 4;
+                return 2;
+              })()
+            : 2;
     const count = encoded[index + 1];
     if (typeof count !== "number" || !Number.isSafeInteger(count) || count < 0)
       throw new Error(`Invalid matrix count at pair ${index / 2}`);
@@ -251,10 +294,15 @@ export function renderMinimapRgba(
         const x = Math.floor((cursor % worldWidth) / cellSize);
         const y = Math.floor(Math.floor(cursor / worldWidth) / cellSize);
         const outputIndex = y * width + x;
-        if (values[outputIndex] === 0) {
-          values[outputIndex] = value;
-          valueKinds[outputIndex] = kind;
-        }
+        const target =
+          kind === 1
+            ? terrainValues
+            : kind === 2
+              ? settledElementValues
+              : kind === 3
+                ? particleValues
+                : elementValues;
+        if (target[outputIndex] === 0) target[outputIndex] = value;
       }
     }
     position = end;
@@ -274,14 +322,35 @@ export function renderMinimapRgba(
   const structurePalette = options.structurePalette || DEFAULT_STRUCTURE_PALETTE;
   const renderLayers: Partial<Record<SaveExplorerRenderLayer, () => void>> = {
     background: () => {
-      for (let index = 0; index < values.length; index++) copyColor(pixels, index * 4, SKY_COLOR);
+      for (let index = 0; index < terrainValues.length; index++)
+        copyColor(pixels, index * 4, SKY_COLOR);
     },
     matrix: () => {
-      for (let index = 0; index < values.length; index++) {
-        const terrain = valueKinds[index] === 1 && options.drawTerrain !== false;
-        const element = valueKinds[index] === 2 && options.drawElements !== false;
-        if (values[index] !== 0 && (terrain || element))
-          copyColor(pixels, index * 4, colorForValue(values[index], palette));
+      for (let index = 0; index < terrainValues.length; index++) {
+        const terrain = options.drawTerrain !== false;
+        const settledElement = options.drawSettledElements !== false;
+        const element = options.drawElements !== false;
+        const particle = options.drawParticles !== false;
+        if (terrain && terrainValues[index] !== 0)
+          copyColor(pixels, index * 4, colorForValue(terrainValues[index], palette));
+        if (settledElement && settledElementValues[index] !== 0)
+          copyColor(
+            pixels,
+            index * 4,
+            colorForValue(settledElementValues[index], palette, [210, 210, 210, 255]),
+          );
+        if (element && elementValues[index] !== 0)
+          copyColor(
+            pixels,
+            index * 4,
+            colorForValue(elementValues[index], palette, [180, 220, 255, 255]),
+          );
+        if (particle && particleValues[index] !== 0)
+          copyColor(
+            pixels,
+            index * 4,
+            colorForValue(particleValues[index], palette, [255, 96, 192, 255]),
+          );
       }
     },
     wall: () => {
@@ -309,7 +378,8 @@ export function renderMinimapRgba(
           copyColor(
             pixels,
             (y * width + x) * 4,
-            structureColorFor(record.type, structureColor, structurePalette),
+            parseStructureColor(record.color) ||
+              structureColorFor(record.type, structureColor, structurePalette),
           );
         }
       }

@@ -74,15 +74,25 @@ export type SaveExplorerCellKind =
   | "empty"
   | "terrain"
   | "settled-element"
+  | "moving-element"
   | "moving-particle"
   | "unknown";
+
+const ELEMENT_MATRIX_MIN = 101;
 
 /** Classify one decoded value from the game's run-length encoded matrix. */
 export function classifySaveExplorerMatrixValue(value: unknown): SaveExplorerCellKind {
   if (value === 0) return "empty";
-  if (typeof value === "number") return "terrain";
+  if (typeof value === "number") return value >= ELEMENT_MATRIX_MIN ? "settled-element" : "terrain";
   if (!isRecord(value) || !Number.isSafeInteger(value.type)) return "unknown";
-  return value.particle === true ? "moving-particle" : "settled-element";
+  if (value.particle === true) return "moving-particle";
+  const velocity = isRecord(value.velocity) ? value.velocity : undefined;
+  return velocity &&
+    typeof velocity.x === "number" &&
+    typeof velocity.y === "number" &&
+    (velocity.x !== 0 || velocity.y !== 0)
+    ? "moving-element"
+    : "settled-element";
 }
 
 export type SaveExplorerDocument = {

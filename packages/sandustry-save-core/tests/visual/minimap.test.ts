@@ -1,16 +1,15 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "bun:test";
 import { decodeBrowserSave, renderMinimapRgba } from "../../src/index";
 
 const testRoot = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(testRoot, "../../../..");
+const packageRoot = path.resolve(testRoot, "../..");
+const repoRoot = path.resolve(packageRoot, "../..");
 const outputRoot = path.join(repoRoot, "artifacts/visual/save-explorer");
-const fixturePath = path.join(repoRoot, "resources/main-save.save");
-const referencePath = path.join(repoRoot, "resources/minimap.png");
 
 function runMagick(args: string[]) {
   return new Promise<{ code: number; stderr: string }>((resolve, reject) => {
@@ -24,7 +23,10 @@ function runMagick(args: string[]) {
   });
 }
 
-test("renders and compares the main-save minimap reference", async () => {
+async function compareFixture(fixtureName: string) {
+  const fixtureStem = path.basename(fixtureName, ".save");
+  const fixturePath = path.join(testRoot, "saves", fixtureName);
+  const referencePath = path.join(testRoot, "baselines", `${fixtureStem}.png`);
   await mkdir(outputRoot, { recursive: true });
   const save = await decodeBrowserSave(await readFile(fixturePath));
   const raster = renderMinimapRgba(save);
@@ -68,4 +70,11 @@ test("renders and compares the main-save minimap reference", async () => {
   );
   assert.ok((await stat(currentPath)).size > 0);
   assert.ok((await stat(diffPath)).size > 0);
-});
+}
+
+for (const fixtureName of (await readdir(path.join(testRoot, "saves")))
+  .filter((name) => name.endsWith(".save"))
+  .sort()) {
+  test(`renders and compares the ${path.basename(fixtureName, ".save")} minimap reference`, () =>
+    compareFixture(fixtureName));
+}

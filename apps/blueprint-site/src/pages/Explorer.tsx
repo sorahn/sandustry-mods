@@ -84,7 +84,9 @@ export function SaveExplorerPage() {
   );
   const [layers, setLayers] = useState({
     terrain: true,
+    settledElements: true,
     elements: true,
+    particles: true,
     walls: true,
     structures: true,
     fog: true,
@@ -224,7 +226,9 @@ export function SaveExplorerPage() {
 
   const minimapOptions: MinimapRenderOptions = {
     drawTerrain: layers.terrain,
+    drawSettledElements: layers.settledElements,
     drawElements: layers.elements,
+    drawParticles: layers.particles,
     drawWalls: layers.walls,
     drawStructures: layers.structures,
     drawFog: layers.fog,
@@ -238,7 +242,9 @@ export function SaveExplorerPage() {
         type: "render",
         render: {
           drawTerrain: next.terrain,
+          drawSettledElements: next.settledElements,
           drawElements: next.elements,
+          drawParticles: next.particles,
           drawWalls: next.walls,
           drawStructures: next.structures,
           drawFog: next.fog,
@@ -517,7 +523,13 @@ export function SaveExplorerPage() {
                   key={layer}
                   boxed
                   size="small"
-                  label={layer}
+                  label={
+                    layer === "settledElements"
+                      ? "settled elements"
+                      : layer === "particles"
+                        ? "particles"
+                        : layer
+                  }
                   checked={layers[layer]}
                   onChange={(event) => updateLayer(layer, event.target.checked)}
                 />
