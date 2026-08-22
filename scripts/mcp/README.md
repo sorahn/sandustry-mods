@@ -1,7 +1,7 @@
 # Sandustry debug MCP server
 
 This is a standalone, dependency-free MCP stdio server for the repository's
-debug launch workflow. Phase 1 discovers the two loopback debug endpoints used
+debug launch workflow. It discovers and connects to the two loopback debug endpoints used
 by VS Code and `make dev`:
 
 - main-process Node inspector: `127.0.0.1:9230`
@@ -21,6 +21,10 @@ The game must be running with debug ports enabled, for example:
 ```sh
 make dev MOD=test-blocks TAKEOVER=1 DEBUG=1
 ```
+
+The current tools include status, DOM inspection, screenshots, and public
+runtime discovery. `renderer_eval` is an explicitly advanced tool that can
+mutate the running game and is annotated accordingly in the MCP schema.
 
 Local smoke checks:
 
