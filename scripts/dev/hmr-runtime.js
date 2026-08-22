@@ -1,5 +1,16 @@
 /* Development-only renderer reload client. Prepended to watched mod bundles. */
 (function installSandustryDevHmr() {
+  // DevTools and the MCP bridge need access to the host-injected runtime. The
+  // normal mod loader passes `sandkit` as an entrypoint parameter, so expose
+  // only these debug conveniences in development bundles.
+  try {
+    const api = sandkit.api;
+    const { enums, react } = sandkit;
+    Object.assign(globalThis, { sandkit, api, enums, react });
+  } catch {
+    // The host may evaluate the prelude before its runtime argument is ready.
+  }
+
   const config = globalThis.__sandustryDevHmrConfig__;
   if (!config || !config.url || !config.modId) return;
 
