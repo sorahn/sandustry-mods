@@ -4,3 +4,6 @@
 [submodule "resources/sandustry-modding-types"]
 	path = resources/sandustry-modding-types
 	url = https://github.com/flamableassassin/sandustry-modding-types.git
+[submodule "resources/SandustryModTemplate"]
+	path = resources/SandustryModTemplate
+	url = https://github.com/IrishBruse/SandustryModTemplate
