@@ -7,6 +7,7 @@
   ],
   "scripts": {
     "catalog:extract": "node scripts/extract-native-catalog.mjs",
+    "mcp:sandustry": "node scripts/mcp/sandustry-server.mjs",
     "check": "npm run tsc && npm run tsc:tests && npm run lint && npm test",
     "format:bundles": "node scripts/format-bundles.mjs",
     "format:check": "oxfmt --check .",
