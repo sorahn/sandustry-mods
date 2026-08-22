@@ -11,14 +11,14 @@ export function Header() {
           <Link to="/" activeProps={{ className: "text-yellow-300" }}>
             Home
           </Link>
+          <Link to="/explorer" activeProps={{ className: "text-yellow-300" }}>
+            Save Explorer
+          </Link>
           <Link to="/inspect" activeProps={{ className: "text-yellow-300" }}>
             Blueprint Renderer
           </Link>
           <Link to="/codec" activeProps={{ className: "text-yellow-300" }}>
             Encoder / Decoder
-          </Link>
-          <Link to="/explorer" activeProps={{ className: "text-yellow-300" }}>
-            Explorer
           </Link>
           {import.meta.env.DEV ? (
             <>
