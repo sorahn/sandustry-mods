@@ -33,6 +33,25 @@ make check
 make format
 ```
 
+For development, watch one mod and keep its installed copy up to date with:
+
+```sh
+make dev MOD=test-blocks
+```
+
+The initial dev workflow targets one mod at a time. Restart-only behavior is
+the safe default; renderer hot reload will be enabled explicitly for mods once
+they provide disposal for their UI, timers, listeners, and other registrations.
+Changes that cannot be safely hot-reloaded will restart only the Sandustry
+process launched by that dev session. A pre-existing game process is not taken
+over automatically.
+
+The watcher rebuilds on changes under the selected mod's `src/` and `assets/`
+directories, reusable `shared/` code, and changes to its manifest, preview, or
+root TypeScript configuration.
+Override the installed-mod destination with
+`SANDUSTRY_MODS_DIR=/path/to/sandustry/mods`.
+
 From the repository root, run `make install` to build the current version and
 copy the unzipped mod into an ID-named folder in the default Sandustry mods
 directory. Override the destination with

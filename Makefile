@@ -10,7 +10,7 @@ INSTALL_MODS := $(filter-out $(DEPRECATED_MODS),$(MODS))
 MOD_DIR := $(or $(filter $(MOD),$(MODS)),$(filter sandustry-$(MOD),$(MODS)))
 MOD_NAMES := $(sort $(patsubst sandustry-%,%,$(filter sandustry-%,$(MODS))) $(filter-out sandustry-%,$(MODS)))
 
-.PHONY: all build install check format version major minor patch clean list-mods
+.PHONY: all build install dev check format version major minor patch clean list-mods
 
 all: build
 
@@ -22,6 +22,10 @@ build:
 
 install:
 	@if [ -n "$(MOD)" ]; then if [ -z "$(MOD_DIR)" ]; then echo "Unknown MOD='$(MOD)'. Available mods: $(MOD_NAMES)" >&2; exit 2; fi; $(MAKE) -C "mods/$(MOD_DIR)" install; else for mod in $(INSTALL_MODS); do $(MAKE) -C "mods/$$mod" install || exit $$?; done; fi
+
+dev:
+	@if [ -z "$(MOD)" ]; then echo "Usage: make dev MOD=<mod>" >&2; exit 2; fi
+	@node scripts/dev/mod-dev.mjs --mod "$(MOD)"
 
 check:
 	@if [ -n "$(MOD)" ]; then if [ -z "$(MOD_DIR)" ]; then echo "Unknown MOD='$(MOD)'. Available mods: $(MOD_NAMES)" >&2; exit 2; fi; $(MAKE) -C "mods/$(MOD_DIR)" check; else npm run check && for mod in $(MODS); do $(MAKE) -C "mods/$$mod" check || exit $$?; done; fi
