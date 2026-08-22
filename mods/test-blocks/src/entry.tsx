@@ -8,6 +8,7 @@
 "use strict";
 
 import noop from "~shared/noop";
+import { onDispose } from "~shared/dev-hmr";
 
 const api = sandkit.api;
 const MOD_ID = "sorahn.sandustry-test-blocks";
@@ -661,6 +662,7 @@ const registerPicker = () => {
   try {
     const dispose = api.ui.inject(PICKER_ID, ElementPicker);
     pickerOverlayReady = typeof dispose === "function";
+    if (pickerOverlayReady) onDispose(dispose as () => void);
     return pickerOverlayReady;
   } catch (error) {
     console.error(`[${MOD_ID}] element picker unavailable:`, error);

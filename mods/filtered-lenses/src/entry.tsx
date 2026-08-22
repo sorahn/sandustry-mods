@@ -2,6 +2,8 @@
 
 "use strict";
 
+import { onDispose } from "~shared/dev-hmr";
+
 const api = sandkit.api;
 const MOD_ID = "sorahn.sandustry-filtered-lenses";
 const LASER_ID = "laser";
@@ -477,6 +479,7 @@ const registerPicker = () => {
   try {
     const dispose = api.ui.inject(PICKER_ID, TerrainPicker);
     pickerOverlayReady = typeof dispose === "function";
+    if (pickerOverlayReady) onDispose(dispose as () => void);
     return pickerOverlayReady;
   } catch (error) {
     console.error(`[${MOD_ID}] element picker unavailable:`, error);
