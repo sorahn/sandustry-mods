@@ -8,11 +8,11 @@
  */
 import { build } from "esbuild";
 import { createServer } from "node:http";
+import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { cp, mkdir, rm } from "node:fs/promises";
 import { homedir } from "node:os";
 import { dirname, join, relative, resolve } from "node:path";
-import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
@@ -25,11 +25,12 @@ const DEBOUNCE_MS = 100;
 const POLL_MS = 250;
 
 const args = process.argv.slice(2);
+const takeover = args.includes("--takeover");
 const modArgument = valueAfter("--mod");
 const once = args.includes("--once");
 
 if (!modArgument) {
-  console.error("Usage: node scripts/dev/mod-dev.mjs --mod <mod> [--once]");
+  console.error("Usage: node scripts/dev/mod-dev.mjs --mod <mod> [--takeover] [--once]");
   process.exit(2);
 }
 
@@ -58,6 +59,11 @@ let pollTimer = null;
 let shuttingDown = false;
 let hotReloadServer = null;
 const hotReloadClients = new Set();
+let gameChild = null;
+let gameRestartTimer = null;
+let gameRestarting = false;
+let gameOwned = false;
+const gameBinary = resolveGameBinary();
 
 console.log(`dev mod: ${modId}`);
 console.log(`source: ${relative(ROOT, modDir)}`);
@@ -69,6 +75,8 @@ if (once) {
   shutdown();
   process.exit(0);
 }
+
+await ensureGame();
 
 startPolling();
 
@@ -119,6 +127,163 @@ function defaultModsDirectory() {
   return join(homedir(), ".config", "sandustry", "mods");
 }
 
+function resolveGameBinary() {
+  if (process.env.SANDUSTRY?.trim()) return process.env.SANDUSTRY.trim();
+  if (process.platform === "darwin") {
+    return join(
+      homedir(),
+      "Library",
+      "Application Support",
+      "Steam",
+      "steamapps",
+      "common",
+      "Sandustry",
+      "Sandustry.app",
+      "Contents",
+      "MacOS",
+      "Sandustry",
+    );
+  }
+  if (process.platform === "win32") {
+    return join(homedir(), "AppData", "Local", "Programs", "Sandustry", "Sandustry.exe");
+  }
+  return join(homedir(), ".steam", "steam", "steamapps", "common", "Sandustry", "sandustry");
+}
+
+function gamePids() {
+  if (process.platform === "win32") {
+    try {
+      const output = execFileSync(
+        "tasklist",
+        ["/FI", "IMAGENAME eq Sandustry.exe", "/FO", "CSV", "/NH"],
+        {
+          encoding: "utf8",
+          windowsHide: true,
+        },
+      );
+      return output
+        .split(/\r?\n/)
+        .map((line) => line.match(/"Sandustry\.exe","(\d+)"/i)?.[1])
+        .filter(Boolean)
+        .map(Number);
+    } catch {
+      return [];
+    }
+  }
+
+  try {
+    const output = execFileSync("ps", ["-axo", "pid=,comm="], { encoding: "utf8" });
+    const binaryName = process.platform === "darwin" ? "sandustry" : "sandustry";
+    return output
+      .split(/\r?\n/)
+      .map((line) => {
+        const match = line.trim().match(/^(\d+)\s+(.+)$/);
+        if (!match || !match[2].toLowerCase().endsWith(binaryName)) return null;
+        return Number(match[1]);
+      })
+      .filter((pid) => Number.isInteger(pid));
+  } catch {
+    return [];
+  }
+}
+
+async function ensureGame() {
+  const existing = gamePids();
+  if (existing.length > 0) {
+    if (!takeover) {
+      console.warn("Sandustry is already running and is not owned by this dev session.");
+      console.warn("Use TAKEOVER=1 to let make dev restart and manage it.");
+      return;
+    }
+    await stopGame(existing);
+  }
+  await launchGame();
+}
+
+async function launchGame() {
+  if (!existsSync(gameBinary)) {
+    console.error(`Sandustry binary not found: ${gameBinary}`);
+    console.error("Set SANDUSTRY to the executable path, or start Sandustry manually.");
+    return;
+  }
+
+  gameChild = spawn(gameBinary, ["--no-sandbox"], {
+    cwd: dirname(gameBinary),
+    detached: false,
+    env: process.env,
+    stdio: "ignore",
+  });
+  gameOwned = true;
+  gameChild.on("exit", (code, signal) => {
+    if (gameChild?.pid === undefined) return;
+    console.log(`Sandustry exited (${signal ?? code ?? "unknown"})`);
+    gameChild = null;
+    gameOwned = false;
+  });
+  console.log(`Launched Sandustry (pid ${gameChild.pid ?? "?"})`);
+}
+
+async function stopGame(pids = gamePids()) {
+  if (pids.length === 0) return;
+  console.log(`Stopping Sandustry (${pids.join(", ")})...`);
+  if (process.platform === "win32") {
+    try {
+      execFileSync("taskkill", ["/T", "/PID", String(pids[0])], {
+        stdio: "ignore",
+        windowsHide: true,
+      });
+    } catch {
+      // The process may already be exiting.
+    }
+  } else {
+    for (const pid of pids) {
+      try {
+        process.kill(pid, "SIGTERM");
+      } catch {
+        // The process may already be exiting.
+      }
+    }
+  }
+
+  const deadline = Date.now() + 2000;
+  while (Date.now() < deadline && gamePids().length > 0) {
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+  const remaining = gamePids();
+  if (remaining.length === 0) return;
+  for (const pid of remaining) {
+    try {
+      process.kill(pid, "SIGKILL");
+    } catch {
+      // The process may already be gone.
+    }
+  }
+}
+
+function scheduleGameRestart(reason) {
+  if (gameRestartTimer) clearTimeout(gameRestartTimer);
+  gameRestartTimer = setTimeout(() => {
+    gameRestartTimer = null;
+    void restartGame(reason);
+  }, 250);
+}
+
+async function restartGame(reason) {
+  if (gameRestarting) return;
+  if (!gameOwned) {
+    console.warn(`Skipping Sandustry restart (${reason}); this dev session does not own the game.`);
+    return;
+  }
+  gameRestarting = true;
+  try {
+    await stopGame(gameChild?.pid ? [gameChild.pid] : gamePids());
+    gameChild = null;
+    await launchGame();
+  } finally {
+    gameRestarting = false;
+  }
+}
+
 async function buildAndInstall(reason) {
   if (shuttingDown) return;
   if (building) {
@@ -164,6 +329,8 @@ async function buildAndInstall(reason) {
 
     await installPackage();
     notifyHotReload();
+    if (reason !== "initial build" && reloadMode() === "restart")
+      scheduleGameRestart("restart-mode change");
     console.log(`built ${modId} in ${Date.now() - started}ms`);
   } catch (error) {
     console.error(`build failed: ${error instanceof Error ? error.message : String(error)}`);
@@ -300,14 +467,34 @@ function shutdown() {
   shuttingDown = true;
   if (buildTimer) clearTimeout(buildTimer);
   if (pollTimer) clearInterval(pollTimer);
+  if (gameRestartTimer) clearTimeout(gameRestartTimer);
   for (const response of hotReloadClients) response.end();
   hotReloadClients.clear();
   hotReloadServer?.close();
+  if (gameOwned && gameChild?.pid) void stopGame([gameChild.pid]);
   console.log("dev watcher stopped");
 }
 
 function startHotReloadServer() {
   hotReloadServer = createServer((request, response) => {
+    if (request.method === "POST" && request.url === `${HMR_PATH}/status`) {
+      const chunks = [];
+      request.on("data", (chunk) => chunks.push(chunk));
+      request.on("end", () => {
+        try {
+          const payload = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+          if (payload.modId === modId && payload.status === "failed") {
+            scheduleGameRestart("HMR evaluation failure");
+          }
+        } catch {
+          // Ignore malformed development status reports.
+        }
+        response.writeHead(204, { "Access-Control-Allow-Origin": "*" });
+        response.end();
+      });
+      return;
+    }
+
     if (request.url !== HMR_PATH) {
       response.writeHead(404, { "Access-Control-Allow-Origin": "*" });
       response.end("not found");

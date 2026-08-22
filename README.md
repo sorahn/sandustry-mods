@@ -60,6 +60,11 @@ with `{ "mode": "hmr" }` only after the mod registers cleanup for every UI,
 timer, listener, and other reloadable registration. Without that file, builds
 still install automatically but the dev protocol reports `restart` mode.
 
+The dev runner starts Sandustry when it is not already running and owns that
+process. For an already-running game, use `make dev MOD=test-blocks TAKEOVER=1`
+to explicitly hand ownership to the dev runner. Restart-mode changes then
+restart the owned game automatically.
+
 From the repository root, run `make install` to build the current version and
 copy the unzipped mod into an ID-named folder in the default Sandustry mods
 directory. Override the destination with

@@ -78,10 +78,28 @@
       new Function("sandkit", source)(sandkit);
       host.source = source;
       console.log(`[${config.modId}] hot reloaded`);
+      report("ok");
     } catch (error) {
       console.error(`[${config.modId}] hot reload failed`, error);
+      report("failed", error);
     } finally {
       host.reloading = false;
+    }
+  }
+
+  function report(status, error) {
+    try {
+      fetch(`${config.url}/status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          modId: config.modId,
+          status,
+          error: error ? String(error) : undefined,
+        }),
+      }).catch(() => {});
+    } catch {
+      // The watcher may not be reachable while the game is starting.
     }
   }
 
@@ -99,7 +117,8 @@
         }
         if (payload.modId !== config.modId || payload.mode !== "hmr") return;
         void readEntry().then((next) => {
-          if (next && (payload.force || next !== host.source)) evaluate(next);
+          if (!next) return report("failed", new Error("could not read updated entry.js"));
+          if (payload.force || next !== host.source) evaluate(next);
         });
       };
       source.onerror = () => {
